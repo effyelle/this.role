@@ -1,15 +1,12 @@
 <?php
 
-/**
- * The goal of this file is to allow developers a location
- * where they can overwrite core procedural functions and
- * replace them with their own. This file is loaded during
- * the bootstrap process and is called during the framework's
- * execution.
- *
- * This can be looked at as a `master helper` file that is
- * loaded early on, and may also contain additional functions
- * that you'd like to use throughout your entire application
- *
- * @see: https://codeigniter4.github.io/CodeIgniter4/
- */
+function template(string $page = 'home', bool $header = true)
+{
+    if (is_file(APPPATH . 'Views/pages/' . $page . '.php')) {
+        return view('includes/head', ['page' => ucfirst($page)])
+            . ($header === true ? view('pages/header') : '')
+            . view('pages/' . $page)
+            . view('pages/footer')
+            . view('includes/foot');
+    }
+}

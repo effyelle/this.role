@@ -1,12 +1,14 @@
 <?php
 
-function template(string $page = 'home', bool $header = true)
+function template($lang, string $page = 'home')
 {
-    if (is_file(APPPATH . 'Views/pages/' . $page . '.php')) {
+    if (is_file(APPPATH . 'Views/pages/' . $lang . '/' . $page . '.php')) {
         return view('includes/head', ['page' => ucfirst($page)])
-            . ($header === true ? view('pages/header') : '')
-            . view('pages/' . $page)
-            . view('pages/footer')
+            . view('pages/' . $lang . '/header')
+            . view('pages/' . $lang . '/' . $page)
+            . view('pages/' . $lang . '/footer')
             . view('includes/foot');
+    } else{
+        return $lang;
     }
 }

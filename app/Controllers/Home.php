@@ -4,9 +4,10 @@ namespace App\Controllers;
 
 class Home extends BaseController
 {
-    public function index($lang = 'en'): string
+
+    public function index(): string
     {
-        return template($lang);
+        return template();
     }
 
 }

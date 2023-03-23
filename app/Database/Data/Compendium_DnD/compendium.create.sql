@@ -60,7 +60,8 @@ create table race(
   id int unsigned primary key auto_increment,
   size varchar(15),
   languages varchar(50),
-  speed varchar(50)
+  speed varchar(50),
+  lineage varchar(50)
 );
 create table background(
   id int unsigned primary key auto_increment,
@@ -69,7 +70,7 @@ create table background(
   equipment text,
   skill_profs_allowed tinyint default -1
 );
-create table rule(
+create table feature(
   id int unsigned primary key auto_increment,
   title varchar(50),
   description text,
@@ -77,9 +78,10 @@ create table rule(
 );
 create table language(
   id int unsigned primary key auto_increment,
-  name varchar(25),
-  lang_type enum('standard', 'secret', 'rare', 'exotic', 'ethnic') default null,
-  script varchar(25) default 'unknown'
+  name varchar(50),
+  lang_type enum('standard', 'secret', 'rare', 'exotic', 'ethnic'),
+  script varchar(25),
+  description text
 );
 
 # ############### #
@@ -249,7 +251,7 @@ values
 
 insert into language(id, name, lang_type, script)
 values
-  (1, 'aarakocra', null, NULL),
+  (1, 'aarakocra', null, null),
   (2, 'abanasinian', 'standard', 'common'),
   (3, 'abyssal', 'standard', 'infernal'),
   (4, 'alzhedo', 'ethnic', 'thorass'),

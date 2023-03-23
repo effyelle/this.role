@@ -1,40 +1,56 @@
 use this_roll;
 
-insert into race(id, name, size, languages, speed)
+# ################# #
+# Standard lineages #
+# ################# #
+-- human, tiefling
+
+# ################## #
+# Monstrous Lineages #
+# ################## #
+-- bugbear, grung, hobgoblin, kobold, lizardfolg, minotaur, orc, shifter, yuan-ti
+
+# ############### #
+# Exotic Lineages #
+# ############### #
+-- Githyanki, Githzerai, Harengon, Kenku, Locathah, Owlin, Satyr, Shadar-Kai, Tabaxi, Tortle, Triton, Verdan
+
+insert into race(id, name, size, languages, speed, lineage)
 values
-  (1, 'Aarakocra', 'medium', 'You can speak, read, and write Common, Aarakocra, and Auran.', '25 ft., fly 50 ft.'),
-  (2, 'Aasimar', 'medium', 'You can speak, read, and write Common and Celestial.', '30 ft.'),
-  (3, 'Centaur', 'medium', 'You can speak, read, and write Common and Sylvan. Sylvan is widely spoken in the Selesnya Conclave, for it is rich in vocabulary to describe natural phenomena and spiritual forces.', '40 ft'.),
-  (4, 'Changeling', 'small/medium', 'You can speak, read, and write Common and one other language that you and your DM agree is appropriate for your character.', '30 ft.'),
-  (5, 'Dragonborn', 'medium', 'You can speak, read, and write Common and Draconic. Draconic is thought to be one of the oldest languages and is often used in the study of magic. The language sounds harsh to most other creatures and includes numerous hard consonants and sibilants.', '30ft.'),
-  (6, 'Drow', 'medium', 'You can speak, read, and write Common and Elvish or one other language that you and your DM agree is appropriate for your character.', '30 ft.'),
-  (7, 'Duergar', 'medium', 'You can speak, read, and write Common and Dwarvish or one other language that you and your DM agree is appropriate for your character.', '25 ft.'),
-  (8, 'Eladrin', 'medium', 'You can speak, read, and write Common and Elvish.', '30 ft.'),
-  (9, 'Fairy', 'small', 'You can speak, read, and write Common and Sylvan or one other language that you and your DM agree is appropriate for your character.', '30 ft., fly always equals to your walking speed'),
+  (1, 'Aarakocra', 'medium', 'You can speak, read, and write Common, Aarakocra, and Auran.', '25 ft., fly 50 ft.', 'exotic'),
+  (2, 'Aasimar', 'medium', 'You can speak, read, and write Common and Celestial.', '30 ft.', 'exotic'),
+  (3, 'Centaur', 'medium', 'You can speak, read, and write Common and Sylvan. Sylvan is widely spoken in the Selesnya Conclave, for it is rich in vocabulary to describe natural phenomena and spiritual forces.', '40 ft.', 'monstrous'),
+  (4, 'Changeling', 'small/medium', 'You can speak, read, and write Common and one other language that you and your DM agree is appropriate for your character.', '30 ft.', 'exotic'),
+  (5, 'Dragonborn', 'medium', 'You can speak, read, and write Common and Draconic. Draconic is thought to be one of the oldest languages and is often used in the study of magic. The language sounds harsh to most other creatures and includes numerous hard consonants and sibilants.', '30ft.', 'standard'),
+  (6, 'Drow', 'medium', 'You can speak, read, and write Common and Elvish or one other language that you and your DM agree is appropriate for your character.', '30 ft.', 'standard'),
+  (7, 'Duergar', 'medium', 'You can speak, read, and write Common and Dwarvish or one other language that you and your DM agree is appropriate for your character.', '25 ft.', 'standard', 'exotic'),
+  (8, 'Eladrin', 'medium', 'You can speak, read, and write Common and Elvish.', '30 ft.', 'exotic'),
+  (9, 'Fairy', 'small', 'You can speak, read, and write Common and Sylvan or one other language that you and your DM agree is appropriate for your character.', '30 ft., fly always equals to your walking speed', 'exotic', 'exotic'),
   (10, 'Firbolg', 'medium', 'You can speak, read, and write Common, Elvish, and Giant, or Common and one other language that you and your DM agree is appropriate for your character.', '30 ft.'),
-  (11, 'High Elf', 'You can speak, read, and write Common and Elvish.', '30 ft.'),
-  (12, 'Pallid Elf', 'You can speak, read, and write Common and Elvish.', '30 ft.'),
-  (13, 'Sea Elf', 'You can speak, read, and write Common and Elvish.', '30 ft., swim 30ft.'),
-  (14, 'Woof Elf', 'You can speak, read, and write Common and Elvish.', '35 ft.'),
-  (15, 'Hill Dwarf', 'medium', 'You can speak, read, and write Common and Dwarvish or one other language that you and your DM agree is appropriate for your character. Dwarvish is full of hard consonants and guttural sounds, and those characteristics spill over into whatever other language a dwarf might speak.', '25 ft.'),
-  (16, 'Mountain Dwarf', 'medium', 'You can speak, read, and write Common and Dwarvish or one other language that you and your DM agree is appropriate for your character. Dwarvish is full of hard consonants and guttural sounds, and those characteristics spill over into whatever other language a dwarf might speak.', '25 ft.'),
-  (17, 'Air Genasi', 'medium', 'You can speak, read, and write Common and Primordial or one other language that you and your DM agree is appropriate for your character. Primordial is a guttural language, filled with harsh syllables and hard consonants.', '35 ft.'),
-  (18, 'Earth Genasi', 'medium', 'You can speak, read, and write Common and Primordial or one other language that you and your DM agree is appropriate for your character. Primordial is a guttural language, filled with harsh syllables and hard consonants.', '30 ft.'),
-  (19, 'Fire Genasi', 'medium', 'You can speak, read, and write Common and Primordial or one other language that you and your DM agree is appropriate for your character. Primordial is a guttural language, filled with harsh syllables and hard consonants.', '30 ft.'),
-  (20, 'Water Genasi', 'medium', 'You can speak, read, and write Common and Primordial or one other language that you and your DM agree is appropriate for your character. Primordial is a guttural language, filled with harsh syllables and hard consonants.', '30 ft., swim always equals to your walking speed'),
-  (21, 'Deep Gnome', 'small', 'You can speak, read, and write Common, Gnomish or one other language that you and your DM agree is appropriate for your character, and Undercommon.', '25 ft.'),
-  (22, 'Forest Gnome', 'small', 'You can speak, read, and write Common and Gnomish or one other language that you and your DM agree is appropriate for your character. The Gnomish language, which uses the Dwarvish script, is renowned for its technical treatises and its catalogs of knowledge about the natural world.', '25 ft.'),
-  (23, 'Rock Gnome', 'small', 'You can speak, read, and write Common and Gnomish or one other language that you and your DM agree is appropriate for your character. The Gnomish language, which uses the Dwarvish script, is renowned for its technical treatises and its catalogs of knowledge about the natural world.', '25 ft.'),
-  (24, 'Goblin', 'small', 'You can speak, read, and write Common and Goblin or one other language that you and your DM agree is appropriate for your character. Goblin is a simplistic language with a limited vocabulary and fluid rules of grammar, unsuited for any sophisticated conversation.', '30 ft.'),
-  (25, 'Goliath', 'medium', 'You can speak, read, and write Common and Giant or one other language that you and your DM agree is appropriate for your character.', '30 ft.'),
-  (26, 'Hadozee', 'small/medium', 'You can speak, read, and write Common and one other language that you and your DM agree is appropriate for your character.', '30 ft., climb equal to your walking speed'),
-  (27, 'Half-Elf, 'medium', 'You can speak, read, and write Common, Elvish, and one extra language of your choice.', '30 ft.),
-  (28, 'Half-Orc', 'medium', 'You can speak, read, and write Common and Orc. Orc is a harsh, grating language with hard consonants. It has no script of its own but is written in the Dwarvish script.', '30 ft.'),
-  (29, 'Ghostwise Halfling', 'small', 'You can speak, read, and write Common and Halfling. The Halfling language isn't secret, but halflings are loath to share it with others. They write very little, so they don't have a rich body of literature. Their oral tradition, however, is very strong. Almost all halflings speak Common to converse with the people in whose lands they dwell or through which they are traveling.', '25 ft.'),
-  (30, 'Lightfoot Halfling', 'small', 'You can speak, read, and write Common and Halfling. The Halfling language isn't secret, but halflings are loath to share it with others. They write very little, so they don't have a rich body of literature. Their oral tradition, however, is very strong. Almost all halflings speak Common to converse with the people in whose lands they dwell or through which they are traveling.', '25 ft.'),
-  (31, 'Lotusden Halfling', 'small', 'You can speak, read, and write Common and Halfling. The Halfling language isn't secret, but halflings are loath to share it with others. They write very little, so they don't have a rich body of literature. Their oral tradition, however, is very strong. Almost all halflings speak Common to converse with the people in whose lands they dwell or through which they are traveling.', '25 ft.'),
-  (32, 'Stout Halfling', 'small', 'You can speak, read, and write Common and Halfling. The Halfling language isn't secret, but halflings are loath to share it with others. They write very little, so they don't have a rich body of literature. Their oral tradition, however, is very strong. Almost all halflings speak Common to converse with the people in whose lands they dwell or through which they are traveling.', '25 ft.'),
+  (11, 'High Elf', 'You can speak, read, and write Common and Elvish.', '30 ft.', 'standard'),
+  (12, 'Pallid Elf', 'You can speak, read, and write Common and Elvish.', '30 ft.', "explorer's guide to wildemount"),
+  (13, 'Sea Elf', 'You can speak, read, and write Common and Elvish.', '30 ft., swim 30ft.', 'exotic'),
+  (14, 'Woof Elf', 'You can speak, read, and write Common and Elvish.', '35 ft.', 'standard'),
+  (15, 'Hill Dwarf', 'medium', 'You can speak, read, and write Common and Dwarvish or one other language that you and your DM agree is appropriate for your character. Dwarvish is full of hard consonants and guttural sounds, and those characteristics spill over into whatever other language a dwarf might speak.', '25 ft.', 'standard'),
+  (16, 'Mountain Dwarf', 'medium', 'You can speak, read, and write Common and Dwarvish or one other language that you and your DM agree is appropriate for your character. Dwarvish is full of hard consonants and guttural sounds, and those characteristics spill over into whatever other language a dwarf might speak.', '25 ft.', 'standard'),
+  (17, 'Air Genasi', 'medium', 'You can speak, read, and write Common and Primordial or one other language that you and your DM agree is appropriate for your character. Primordial is a guttural language, filled with harsh syllables and hard consonants.', '35 ft.', 'exotic'),
+  (18, 'Earth Genasi', 'medium', 'You can speak, read, and write Common and Primordial or one other language that you and your DM agree is appropriate for your character. Primordial is a guttural language, filled with harsh syllables and hard consonants.', '30 ft.', 'exotic'),
+  (19, 'Fire Genasi', 'medium', 'You can speak, read, and write Common and Primordial or one other language that you and your DM agree is appropriate for your character. Primordial is a guttural language, filled with harsh syllables and hard consonants.', '30 ft.', 'exotic'),
+  (20, 'Water Genasi', 'medium', 'You can speak, read, and write Common and Primordial or one other language that you and your DM agree is appropriate for your character. Primordial is a guttural language, filled with harsh syllables and hard consonants.', '30 ft., swim always equals to your walking speed', 'exotic'),
+  (21, 'Deep Gnome', 'small', 'You can speak, read, and write Common, Gnomish or one other language that you and your DM agree is appropriate for your character, and Undercommon.', '25 ft.', 'exotic'),
+  (22, 'Forest Gnome', 'small', 'You can speak, read, and write Common and Gnomish or one other language that you and your DM agree is appropriate for your character. The Gnomish language, which uses the Dwarvish script, is renowned for its technical treatises and its catalogs of knowledge about the natural world.', '25 ft.', 'standard'),
+  (23, 'Rock Gnome', 'small', 'You can speak, read, and write Common and Gnomish or one other language that you and your DM agree is appropriate for your character. The Gnomish language, which uses the Dwarvish script, is renowned for its technical treatises and its catalogs of knowledge about the natural world.', '25 ft.', 'standard'),
+  (24, 'Goblin', 'small', 'You can speak, read, and write Common and Goblin or one other language that you and your DM agree is appropriate for your character. Goblin is a simplistic language with a limited vocabulary and fluid rules of grammar, unsuited for any sophisticated conversation.', '30 ft.', 'monstrous'),
+  (25, 'Goliath', 'medium', 'You can speak, read, and write Common and Giant or one other language that you and your DM agree is appropriate for your character.', '30 ft.', 'exotic'),
+  (26, 'Hadozee', 'small/medium', 'You can speak, read, and write Common and one other language that you and your DM agree is appropriate for your character.', '30 ft., climb equal to your walking speed', 'spelljammer'),
+  (27, 'Half-Elf, 'medium', 'You can speak, read, and write Common, Elvish, and one extra language of your choice.', '30 ft.', 'standard'),
+  (28, 'Half-Orc', 'medium', 'You can speak, read, and write Common and Orc. Orc is a harsh, grating language with hard consonants. It has no script of its own but is written in the Dwarvish script.', '30 ft.', 'standard'),
+  (29, 'Ghostwise Halfling', 'small', 'You can speak, read, and write Common and Halfling. The Halfling language isn't secret, but halflings are loath to share it with others. They write very little, so they don't have a rich body of literature. Their oral tradition, however, is very strong. Almost all halflings speak Common to converse with the people in whose lands they dwell or through which they are traveling.', '25 ft.', 'standard'),
+  (30, 'Lightfoot Halfling', 'small', 'You can speak, read, and write Common and Halfling. The Halfling language isn't secret, but halflings are loath to share it with others. They write very little, so they don't have a rich body of literature. Their oral tradition, however, is very strong. Almost all halflings speak Common to converse with the people in whose lands they dwell or through which they are traveling.', '25 ft.', 'standard'),
+  (31, 'Lotusden Halfling', 'small', 'You can speak, read, and write Common and Halfling. The Halfling language isn't secret, but halflings are loath to share it with others. They write very little, so they don't have a rich body of literature. Their oral tradition, however, is very strong. Almost all halflings speak Common to converse with the people in whose lands they dwell or through which they are traveling.', '25 ft.', 'standard'),
+  (32, 'Stout Halfling', 'small', 'You can speak, read, and write Common and Halfling. The Halfling language isn't secret, but halflings are loath to share it with others. They write very little, so they don't have a rich body of literature. Their oral tradition, however, is very strong. Almost all halflings speak Common to converse with the people in whose lands they dwell or through which they are traveling.', '25 ft.', 'standard'),
   (33, 'Harengon'
+  (34, 'Human'
 
 insert into race_language(id_race, id_language)
 values

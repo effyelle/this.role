@@ -1,0 +1,175 @@
+.toastr {
+    opacity: 1 !important;
+}
+
+#toast-container > div {
+    opacity: 1 !important;
+}
+
+.select2-container .select2-search--inline .select2-search__field {
+    font-family: Poppins, sans-serif;
+}
+
+.custom-event_style {
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.evt-descr {
+    display: flex;
+    flex-flow: row;
+}
+
+input[type=time].form-control[disabled] {
+    color: #aaacb9;
+}
+
+textarea.form-control::-webkit-scrollbar {
+    width: 0.75rem;
+}
+
+textarea.form-control::-webkit-scrollbar-track {
+    background: #f5f8fa;
+}
+
+textarea.form-control::-webkit-scrollbar-thumb {
+    background-color: #0095e8 !important;
+    border-radius: 5px;
+    border: none;
+}
+
+.form-control[type=text], textarea.form-control {
+    cursor: pointer;
+}
+
+.fc-daygrid-day-events {
+    cursor: pointer;
+}
+
+.end-time {
+    position: relative;
+    display: block;
+}
+
+span.popup {
+    visibility: hidden;
+    position: absolute;
+    width: 360px;
+    background-color: #505050;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    z-index: 2000;
+    top: 125%;
+    right: 5%;
+}
+
+span.popup::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    right: 5%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #505050 transparent;
+}
+
+span.popup.show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.tooltip {
+    z-index: 9999 !important;
+}
+
+#deleteEvt {
+    display: none;
+}
+
+.modal.edit #deleteEvt {
+    display: block;
+}
+
+.top-2px {
+    top: 2px;
+}
+
+.btn-light:not([disabled]), .btn-light:hover:not([disabled]):not(.btn-active) {
+    color: var(--bs-dark);
+}
+
+#deleteEvt {
+    display: none;
+}
+
+.modal.edit #deleteEvt {
+    display: block;
+}
+
+.accordion-button:not(.collapsed) {
+    color: #ffffff;
+    background-color: #1e1e2d;
+    box-shadow: inset 0 -1px 0 #eff2f5;
+}
+
+.accordion-button:not(.collapsed)::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    transform: rotate(-180deg)
+}
+
+@media (min-width: 576px) {
+    #news-modal .modal-dialog {
+        max-width: 75%;
+    }
+}
+
+.ck-editor__main .ck.ck-content[contenteditable=false] > * {
+    pointer-events: none;
+}
+
+.ck .ck-widget.non-editable {
+    pointer-events: none;
+}
+
+.ck .ck-widget.non-editable:hover {
+    outline: 0 transparent;
+    pointer-events: none;
+}
+
+.ck .ck-widget.non-editable.ck-widget_with-selection-handle:hover .ck-widget__selection-handle,
+.ck .ck-widget.non-editable.ck-widget_with-selection-handle .ck-widget__selection-handle .ck-icon .ck-icon__selected-indicator,
+.ck .ck-widget.non-editable:hover > .ck-widget__type-around > .ck-widget__type-around__button,
+.ck .ck-widget.non-editable.ck-widget_selected > .ck-widget__type-around > .ck-widget__type-around__button,
+.ck .ck-widget.non-editable:hover > .ck-widget__type-around > .ck-widget__type-around__button {
+    outline: 0 transparent;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.ck.ck-editor__main > .ck-editor__editable:not(.ck-focused)[contenteditable=false] {
+    border: 0 transparent;
+}

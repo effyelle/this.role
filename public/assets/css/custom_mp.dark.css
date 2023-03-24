@@ -1,0 +1,102 @@
+.toastr {
+    opacity: 1 !important;
+}
+
+#toast-container > div {
+    opacity: 1 !important;
+}
+
+.select2-container .select2-search--inline .select2-search__field {
+    font-family: Poppins, sans-serif;
+}
+
+.custom-event_style {
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.evt-descr {
+    display: flex;
+    flex-flow: row;
+}
+
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+input[type=time].form-control[disabled] {
+    color: #65656b;
+}
+
+textarea.form-control::-webkit-scrollbar {
+    width: 0.75rem;
+}
+
+textarea.form-control::-webkit-scrollbar-track {
+    background: #1b1b29;
+}
+
+textarea.form-control::-webkit-scrollbar-thumb {
+    background-color: #0095e8 !important;
+    border-radius: 5px;
+    border: none;
+}
+
+.form-control[type=text], textarea.form-control {
+    cursor: pointer;
+}
+
+.fc-daygrid-day-events {
+    cursor: pointer;
+}
+
+.end-time {
+    position: relative;
+    display: block;
+}
+
+.end-time span.popup {
+    visibility: hidden;
+    position: absolute;
+    width: 360px;
+    background-color: #f5f8fa;
+    color: #505050;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    z-index: 1;
+    top: 125%;
+    right: 5%;
+}
+
+.end-time span.popup::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    right: 5%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #f5f8fa transparent;
+}
+
+.end-time span.popup.show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+}
+
+.tooltip {
+    z-index: 9999 !important;
+}

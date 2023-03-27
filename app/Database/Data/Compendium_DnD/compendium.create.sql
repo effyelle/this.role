@@ -7,7 +7,18 @@ USE this_roll;
 # ################### #
 # Non heritage tables #
 # ################### #
-
+create table ability_score(
+  id int unsigned primary key auto_increment,
+  saving_throw varchar(15),
+  slug char(3),
+  secondary key(slug)
+);
+create table skill(
+  id int unsigned primary key auto_increment,
+  ability_score char(3),
+  name varchar(50),
+  foreign key(ability_score) references ability_score(slug)
+);
 create table class(
   id int unsigned primary key auto_increment,
   name varchar(25),
@@ -15,49 +26,34 @@ create table class(
   hit_points varchar(20),
   hit_points_heigher_levels varchar(40),
   starting_equipment text,
-  skills_profs_allowed tinyint default -1 -- negative 1 means no skill profs are allowed
-);
-create table subclass(
-  id int unsigned primary key auto_increment,
-  id_class int unsigned,
-  name varchar(50),
-  description text
-);
-create table classtable(
-  id int unsigned primary key auto_increment,
-  name varchar(50)
-);
-create table classtable_detail(
-  id int unsigned primary key auto_increment,
-  id_classtable_property int unsigned,
-  details varchar(50),
-  level tinyint
+  skills_profs_allowed tinyint default 0,
+  classtable longtext,
+  features longtext
 );
 create table multiclass(
   id int unsigned primary key auto_increment,
   id_class int unsigned,
   ability_score_minimum tinyint unsigned,
-  skills_profs_allowed tinyint default -1
+  skills_profs_allowed tinyint default 0,
+  item_proficiencies text,
+  foreign key(id_class) references class(id)
 );
-create table ability_score(
+create table subclass(
   id int unsigned primary key auto_increment,
-  saving_throw varchar(15),
-  slug char(3)
-);
-create table skill(
-  id int unsigned primary key auto_increment,
-  id_ability int unsigned, -- ability_score(slug)
-  name varchar(50)
+  id_class int unsigned,
+  name varchar(50),
+  features longtext,
+  foreign key(id_class) references class(id)
 );
 create table feat(
   id int unsigned primary key auto_increment,
-  description longtext,
-  ability_score_allowed tinyint default -1,
   name varchar(50),
+  features longtext,
+  ability_score_allowed tinyint default 0,
   prequisite varchar(50)
 );
 create table race(
-  id int unsigned primary key AUTO_INCREMENT,
+  id int unsigned primary key auto_increment,
   name varchar(50),
   size varchar(15),
   languages varchar(50),
@@ -68,20 +64,21 @@ create table race(
 create table background(
   id int unsigned primary key auto_increment,
   name varchar(50),
-  languages_choice varchar(50),
   equipment text,
-  skill_profs_allowed tinyint default -1
-);
-create table common_features(
-  id int unsigned primary key auto_increment,
-  title varchar(50),
-  description text,
+  languages_choice varchar(50),
+  skill_profs_allowed tinyint default 0,
+  features longtext
 );
 create table language(
   id int unsigned primary key auto_increment,
   name varchar(50),
   lang_type enum('standard', 'secret', 'rare', 'exotic', 'ethnic'),
   script VARCHAR(50),
+  description text
+);
+create table common_features(
+  id int unsigned primary key auto_increment,
+  title varchar(50),
   description text
 );
 
@@ -111,15 +108,15 @@ create table spell(
   id_reference int unsigned,
   spell_level tinyint,
   spell_time varchar(15),
+  components varchar(50),
   duration varchar(25),
   school varchar(25),
-  spell_range varchar(25),
-  components varchar(50)
+  spell_range varchar(25)
 );
 create table bestiary(
   id int unsigned primary key auto_increment,
   id_reference int unsigned,
-  CR tinyint default -1, # Negative 1 will mean 'Unknown'
+  CR tinyint default -1, -- Negative 1 will mean 'Unknown'
   creature_type varchar(25)
 );
 create table conditions(
@@ -130,86 +127,71 @@ create table conditions(
 ########################
 # Relationships tables #
 ########################
-create table class_classtable(
-  id_class int unsigned,
-  id_classtable int unsigned
-);
+# Class
 create table class_saving_throw(
   id_class int unsigned,
-  id_saving_throw int unsigned
-);
-create table multiclass_saving_throw(
-  id_multiclass int unsigned,
-  id_saving_throw int unsigned
+  id_saving_throw int unsigned,
+  foreign key(id_class) references class(id),
+  foreign key(id_saving_throw) references ability_score(id),
+  primary key(id_class,id_saving_throw)
 );
 create table class_skill(
   id_class int unsigned,
-  id_skill int unsigned
-);
-create table multiclass_skill(
-  id_multiclass int unsigned,
-  id_skill int unsigned
-);
-create table class_item(
-  id_class int unsigned,
-  id_item int unsigned
-);
-create table multiclass_item(
-  id_multiclass int unsigned,
-  id_item int unsigned
+  id_skill int unsigned,
+  foreign key(id_class) references class(id),
+  foreign key(id_skill) references skill(id),
+  primary key(id_class,id_skill)
 );
 create table class_language(
   id_class int unsigned,
-  id_language int unsigned
-);
-create table multiclass_language(
-  id_multiclass int unsigned,
-  id_language int unsigned
-);
-create table class_spell(
-  id_class int unsigned,
-  id_spell int unsigned
-);
-create table subclass_spell(
-  id_subclass int unsigned,
-  id_spell int unsigned
+  id_language int unsigned,
+  foreign key(id_class) references class(id),
+  foreign key(id_language) references language(id),
+  primary key(id_class,id_language)
 );
 create table class_feat(
   id_class int unsigned,
-  id_feat int unsigned
-);
-create table class_feature(
-  id_class int unsigned,
-  id_feature int unsigned
-);
-create table subclass_feature(
-  id_subclass int unsigned,
-  id_feature int unsigned
-);
-create table race_ability_score(
-  id_race int unsigned,
-  id_ability_score int unsigned
-);
-create table race_language(
-  id_race int unsigned,
-  id_language int unsigned
-);
-create table bg_feature(
-  id_bg int unsigned,
-  id_feature int unsigned
-);
-create table bg_skill(
-  id_bg int unsigned,
-  id_skill int unsigned
-);
-create table reference_feature(
-  id_reference int unsigned,
-  id_feature int unsigned
-);
-create table feat_ability_score(
   id_feat int unsigned,
-  id_ability_score int UNSIGNED
+  foreign key(id_class) references class(id),
+  foreign key(id_feat) references feat(id),
+  primary key(id_class,id_feat)
 );
+create table class_item(
+  id_class int unsigned,
+  id_item int unsigned,
+  foreign key(id_class) references class(id),
+  foreign key(id_item) references item(id),
+  primary key(id_class,id_item)
+);
+create table class_spell(
+  id_class int unsigned,
+  id_spell int unsigned,
+  foreign key(id_class) references class(id),
+  foreign key(id_spell) references spell(id),
+  primary key(id_class,id_spell)
+);
+# Multiclass
+create table multiclass_skill(
+  id_multiclass int unsigned,
+  id_skill int unsigned,
+  foreign key(id_multiclass) references multiclass(id),
+  foreign key(id_skill) references skill(id),
+  primary key(id_multiclass,id_skill)
+);
+# Race
+create table race_ability_score(id_race,id_ability_score);
+create table race_language(id_race,id_language);
+# Background
+create table background_skill(id_bg,id_skill);
+# Feats
+create table feat_ability_score(id_feat,id_ability_score);
+create table feat_spell(id_feat,id_spell);
+# Common features
+create table common_feature_class(id_feature,id_class);
+create table common_feature_subclass(id_feature,id_subclass);
+create table common_feature_feat(id_feature,id_feat);
+create table common_feature_race(id_feature,id_race);
+create table common_feature_background(id_feature,id_bg);
 
 SELECT COUNT(*) AS total_number_of_tables FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'this_roll';
 

@@ -2,47 +2,51 @@
 # Non heritage tables #
 # ################### #
 
-class(  id,  hit_dice,  hit_points,  hit_points_heigher_level,  starting_equipment,  skills_profs_allowed);
-classtable_property(  id,  name);
-classtable_detail(  id,  id_classtable_property,  details,  level);
-multiclass(  id,  id_class,  ability_score_minimum,  skills_profs_allowed);
-ability_score(  id,  saving_throw);
-skill(  id,  id_ability_score,  name);
-feat(  id,  description,  ability_score_allowed,  name,  prequisite);
-race(  id,  size,  languages,  speed);
-background(  id,  name,  languages,  equipment,  skill_profs_allowed);
-rule(  id,  title,  description,  origin); # origin means if it's class origin, race, background...
+ability_score(id,saving_throw);
+skill(id,id_ability_score,name);
+class(id,name,hit_dice,hit_points,hit_points_heigher_level,starting_equipment,skills_profs_allowed,classtable,features);
+multiclass(id,id_class,ability_score_minimum,skills_profs_allowed,item_proficiencies);
+subclass(id,id_class,name,features,skills_prof_allowed);
+feat(id,name,features,ability_scores_allowed,prequisite);
+race(id,size,languages,speed,lineage,features);
+background(id,name,equipment,languages,skill_profs_allowed,features);
+language(id,name,lang_type,script,desc);
+common_features(id,title,desc);
 
 # ############### #
 # Heritage father #
 # ############### #
-reference(  id,  name,  description);
+reference(id,name,description);
 # Heritage children #
-item(  id,  id_reference,  type, cost, weight);
-action(  id,  id_reference,  time);
-language(  id,  id_reference,  type,  script);
-spell(  id,  id_reference,  level,  time,  duration,  school,  range);
-bestiary(  id,  id_reference,  CR,  type);
-condition(  id,  id_reference);
+item(id,id_reference,item_type, cost, weight);
+action(id,id_reference,time);
+spell(id,id_reference,level,time,components,duration,school,range);
+bestiary(id,id_reference,CR,creature_type);
+conditions(id,id_reference);
 
 ########################
 # Relationships tables #
 ########################
-class_classtable(  id_class,  id_classtable);
-class_saving_throw(  id_class,  id_saving_throw);
-multiclass_saving_throw(  id_multiclass,  id_saving_throw);
-class_skill(  id_class,  id_skill);
-multiclass_skill(  id_multiclass,  id_skill);
-class_item(  id_class,  id_item);
-multiclass_item(  id_multiclass,  id_item);
-class_language(  id_class,  id_language);
-multiclass_language(  id_multiclass,  id_language);
-class_feat(  id_class,  id_feat);
-class_rule(  id_class,  id_rule);
-race_ability_score(  id_race,  id_ability_score);
-race_language(  id_race,  id_language);
-race_rule(  id_race,  id_rule);
-bg_rule(  id_bg,  id_rule);
-bg_skill(  id_bg,  id_rule);
-reference_rule(  id_reference,  id_rule);
-feat_ability_score(  id_feat,  id_ability_score);
+# Class
+class_saving_throw(id_race,id_ability_score);
+class_skill(id_class,id_skill);
+class_language(id_class,id_language);
+class_feat(id_class,id_feat);
+class_item(id_class,id_item);
+class_spell(id_class,id_spell);
+# Multiclass
+multiclass_skill(id_multiclass,id_skill);
+# Race
+race_ability_score(id_race,id_ability_score);
+race_language(id_race,id_language);
+# Background
+background_skill(id_bg,id_skill);
+# Feats
+feat_ability_score(id_feat,id_ability_score);
+feat_spell(id_feat,id_spell);
+# Common features
+common_feature_class(id_feature,id_class);
+common_feature_subclass(id_feature,id_subclass);
+common_feature_feat(id_feature,id_feat);
+common_feature_race(id_feature,id_race);
+common_feature_background(id_feature,id_bg);

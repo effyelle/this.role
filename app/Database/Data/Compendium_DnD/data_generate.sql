@@ -1,4 +1,6 @@
-
+insert into common_features(id, title, desc)
+values
+  (1, 'Darkvision', '
   
 insert into race(id, name, size, languages, speed, lineage)
 values

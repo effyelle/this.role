@@ -385,8 +385,7 @@ values
   (37, "", null),
   (38, "", null),
   (39, "", null),
-  (40, "", null),
-
+  (40, "", null);
 
 -- race
 

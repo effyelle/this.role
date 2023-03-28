@@ -12,5 +12,4 @@ class BaseModel extends Model
     {
         parent::__construct($db, $validation);
     }
-
 }

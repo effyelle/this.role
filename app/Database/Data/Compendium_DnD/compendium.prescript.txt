@@ -2,13 +2,13 @@
 # Non heritage tables #
 # ################### #
 
-ability_score(id,saving_throw);
-skill(id,id_ability_score,name);
-class(id,name,hit_dice,hit_points,hit_points_heigher_level,starting_equipment,skills_profs_allowed,classtable,features);
+ability_score(id,slug,saving_throw);
+skill(id,ability_score,name);
+class(id,name,hit_dice,hit_points,hit_points_heigher_levels,starting_equipment,skills_profs_allowed,classtable,features);
 multiclass(id,id_class,ability_score_minimum,skills_profs_allowed,item_proficiencies);
-subclass(id,id_class,name,features,skills_prof_allowed);
+subclass(id,id_class,name,skills_profs_allowed,features);
 feat(id,name,features,ability_scores_allowed,prequisite);
-race(id,size,languages,speed,lineage,features);
+race(id,name,size,languages,speed,lineage,features);
 background(id,name,equipment,languages,skill_profs_allowed,features);
 language(id,name,lang_type,script,desc);
 common_features(id,title,desc);
@@ -18,9 +18,9 @@ common_features(id,title,desc);
 # ############### #
 reference(id,name,description);
 # Heritage children #
-item(id,id_reference,item_type, cost, weight);
-action(id,id_reference,time);
-spell(id,id_reference,level,time,components,duration,school,range);
+item(id,id_reference,item_type,cost,weight);
+action(id,id_reference,action_time);
+spell(id,id_reference,spell_level,spell_time,components,duration,school,spell_range);
 bestiary(id,id_reference,CR,creature_type);
 conditions(id,id_reference);
 

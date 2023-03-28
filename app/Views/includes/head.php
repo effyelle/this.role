@@ -7,9 +7,13 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>This.Role - <?php if (isset($page)) echo esc($page); ?></title>
-    <link rel="icon" href="/assets/img/icon-64x64.png" sizes="64x64"/>
+    <link rel="icon" href="assets/appmedia/logos/icon64x64.png" sizes="64x64"/>
 
     <!-- begin::CustomFonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarina&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
           rel="stylesheet">
     <!-- end::CustomFonts-->
@@ -27,4 +31,9 @@
     <!-- end::CSSTemplates -->
 
 </head>
-<body>
+<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed">
+<div class="d-flex flex-column flex-root">
+    <!--begin::Page-->
+    <div class="page d-flex flex-row flex-column-fluid">
+        <!--begin::Wrapper-->
+        <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">

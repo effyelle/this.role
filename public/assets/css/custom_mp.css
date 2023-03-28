@@ -1,3 +1,9 @@
+:root {
+    --this-role-garnet: #61113e;
+    --this-role-light: #eddec6;
+    --this-role-light-rgb: 237, 222, 198;
+}
+
 .toastr {
     opacity: 1 !important;
 }
@@ -172,4 +178,24 @@ span.popup.show {
 
 .ck.ck-editor__main > .ck-editor__editable:not(.ck-focused)[contenteditable=false] {
     border: 0 transparent;
+}
+
+.ff-sarina {
+    font-family: 'Sarina', cursive;
+}
+
+.ff-poiret {
+    font-family: 'Poiret One', cursive;
+}
+
+.bg-garnet {
+    background: var(--this-role-garnet) !important;
+}
+
+.header {
+    background: var(--this-role-garnet) !important;
+}
+
+body {
+    background: rgba(var(--this-role-light-rgb), 0.1) !important;
 }

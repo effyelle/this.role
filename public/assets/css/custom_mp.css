@@ -199,3 +199,14 @@ span.popup.show {
 body {
     background: rgba(var(--this-role-light-rgb), 0.1) !important;
 }
+
+@media (min-width: 992px) {
+    .aside {
+        width: 265px;
+        transition: width ease;
+        position: fixed;
+        left: 0;
+        top: 70px;
+        bottom: 0;
+    }
+}

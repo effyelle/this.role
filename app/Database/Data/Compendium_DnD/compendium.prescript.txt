@@ -3,9 +3,9 @@
 # ################### #
 
 ability_score(id,slug,saving_throw);
-skill(id,ability_score,name);
-class(id,name,hit_dice,hit_points,hit_points_heigher_levels,starting_equipment,skills_profs_allowed,classtable,features);
-multiclass(id,id_class,ability_score_minimum,skills_profs_allowed,item_proficiencies);
+skill(id,ability_score,name,description);
+class(id,name,hit_dice,starting_equipment,skills_profs_allowed,classtable,features);
+multiclass(id,id_class,skills_profs_allowed);
 subclass(id,id_class,name,skills_profs_allowed,features);
 feat(id,name,features,ability_scores_allowed,prequisite);
 race(id,name,size,languages,speed,lineage,features);
@@ -28,14 +28,14 @@ conditions(id,id_reference);
 # Relationships tables #
 ########################
 # Class
-class_saving_throw(id_race,id_ability_score);
+class_saving_throw(id_class,id_saving_throw);
 class_skill(id_class,id_skill);
 class_language(id_class,id_language);
-class_feat(id_class,id_feat);
 class_item(id_class,id_item);
 class_spell(id_class,id_spell);
 # Multiclass
-multiclass_skill(id_multiclass,id_skill);
+multiclass_item(id_multiclass,id_item);
+multiclass_ability_score(id_multiclass,id_ability_score)
 # Race
 race_ability_score(id_race,id_ability_score);
 race_language(id_race,id_language);

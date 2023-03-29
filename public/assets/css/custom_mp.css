@@ -1,11 +1,21 @@
 :root {
     --this-role-garnet: #61113e;
+    --this-role-red: #F2614E;
+    --this-role-green: #34a795;
     --this-role-light: #eddec6;
     --this-role-light-rgb: 237, 222, 198;
 }
 
 .toastr {
     opacity: 1 !important;
+}
+
+.toastr.toastr-error {
+    background: var(--this-role-red);
+}
+
+.toastr.toastr-success {
+    background: var(--this-role-green);
 }
 
 #toast-container > div {
@@ -43,10 +53,6 @@ textarea.form-control::-webkit-scrollbar-thumb {
     background-color: #0095e8 !important;
     border-radius: 5px;
     border: none;
-}
-
-.form-control[type=text], textarea.form-control {
-    cursor: pointer;
 }
 
 .fc-daygrid-day-events {
@@ -185,6 +191,7 @@ span.popup.show {
 }
 
 .ff-poiret {
+    text-transform: uppercase;
     font-family: 'Poiret One', cursive;
 }
 
@@ -192,12 +199,58 @@ span.popup.show {
     background: var(--this-role-garnet) !important;
 }
 
+.bg-red {
+    background: var(--this-role-red) !important;
+}
+
+body {
+    background: rgba(var(--this-role-light-rgb), 0.05) !important;
+}
+
 .header {
     background: var(--this-role-garnet) !important;
 }
 
-body {
-    background: rgba(var(--this-role-light-rgb), 0.1) !important;
+.fa-hover-2xl:hover {
+    font-size: 2em;
+    line-height: .03125em;
+    vertical-align: -0.1875em;
+    transition: font-size 0.8s ease;
+}
+
+.fa-hover-2xl {
+    transition: font-size 0.5s ease;
+}
+
+label[for=searchRule] {
+    display: block !important;
+    cursor: pointer;
+}
+
+@media (max-width: 420px) {
+    #searchRule {
+        position: absolute;
+        opacity: 0;
+        top: 0;
+        left: 10px;
+        width: 90% !important;
+        z-index: 0;
+        transition: top 0.5s ease, opacity 0.3s ease;
+        pointer-events: none;
+    }
+
+    #searchRule:focus {
+        opacity: 1;
+        top: 70px;
+        transition: top 0.5s ease-out, opacity 0.8s ease-in;
+        pointer-events: all;
+    }
+}
+
+@media (min-width: 500px) {
+    #searchRule {
+        width: 250px !important;
+    }
 }
 
 @media (min-width: 992px) {
@@ -208,5 +261,64 @@ body {
         left: 0;
         top: 70px;
         bottom: 0;
+    }
+}
+
+a .hover-flip {
+    transition: 0.75s all ease;
+}
+
+.menu-item:hover .fa.hover-flip {
+    transform: rotate3d(var(--fa-flip-x, 0), var(--fa-flip-y, 1), var(--fa-flip-z, 0), var(--fa-flip-angle, -180deg));
+    transition: all 1s ease;
+}
+
+.account-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-width: 100%;
+}
+
+.btn.btn-primary {
+    background: var(--this-role-green);
+}
+
+.btn-check:active + .btn.btn-primary, .btn-check:checked + .btn.btn-primary, .btn.btn-primary.active,
+.btn.btn-primary.show, .btn.btn-primary:active:not(.btn-active), .btn.btn-primary:focus:not(.btn-active),
+.btn.btn-primary:hover:not(.btn-active), .show > .btn.btn-primary {
+    background: #249785 !important;
+}
+
+.bg-brush {
+    background: url("/assets/appmedia/imgs/brush-1.png") no-repeat center;
+    background-size: cover;
+    opacity: 0.75;
+    height: 40px;
+    width: 155px;
+    transition: all 0.2s ease;
+}
+
+.account-option:hover .bg-brush.hover {
+    opacity: 1;
+    height: 45px;
+    width: 170px;
+    transition: all 0.4s ease;
+}
+
+.account-option ~ input.form-control.form-control-solid {
+    border: 0 !important;
+    border-radius: 0;
+    border-bottom: 1px solid var(--bs-gray-400) !important;
+}
+
+.circle {
+    border-radius: 50% !important;
+}
+
+@media (min-width: 992px) {
+    .wrapper.Signin, .wrapper.Signup {
+        padding-left: 0;
     }
 }

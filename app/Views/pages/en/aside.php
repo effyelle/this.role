@@ -16,7 +16,7 @@
                      data-kt-menu="true">
                     <!--begin::Menu Item-->
                     <div class="menu-item">
-                        <a class="menu-link <?php if ($page === 'Games') echo 'hover'; ?>" href="/games/list" title=""
+                        <a class="menu-link <?php if ($title === 'Games') echo 'hover'; ?>" href="/games/list" title=""
                            data-bs-toggle="tooltip" data-bs-trigger="hover"
                            data-bs-dismiss="click" data-bs-placement="right"
                            data-bs-original-title="Manage your games">
@@ -29,7 +29,7 @@
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
                     <div class="menu-item">
-                        <a class="menu-link <?php if ($page === 'Compendium') echo 'hover'; ?>" href="/compendium/index"
+                        <a class="menu-link <?php if ($title === 'Compendium') echo 'hover'; ?>" href="/compendium/index"
                            title="" data-bs-toggle="tooltip" data-bs-trigger="hover"
                            data-bs-dismiss="click" data-bs-placement="right"
                            data-bs-original-title="Search freely in the API">
@@ -43,7 +43,7 @@
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
                     <div class="menu-item">
-                        <a class="menu-link <?php if ($page === 'About') echo 'hover'; ?>" href="/about" title=""
+                        <a class="menu-link <?php if ($title === 'About') echo 'hover'; ?>" href="/about" title=""
                            data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
                            data-bs-placement="right" data-bs-original-title="How did we started this?">
                             <span class="menu-icon">

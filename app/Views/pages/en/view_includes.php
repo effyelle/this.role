@@ -1,7 +1,7 @@
 <?php
 switch (esc($page)) {
-    case 'Signin':
-    case 'Signup':
+    case 'signin':
+    case 'signup':
         include 'header.php';
         break;
     default:

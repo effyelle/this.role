@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>This.Role - <?php if (isset($page)) echo esc($page); ?></title>
+    <title>This.Role - <?php if (isset($title)) echo esc($title); ?></title>
     <link rel="icon" href="/assets/appmedia/logos/icon64x64.png" sizes="64x64"/>
 
     <!-- begin::CustomFonts-->
@@ -40,4 +40,4 @@
     <!--begin::Page-->
     <div class="page d-flex flex-row flex-column-fluid">
         <!--begin::Wrapper-->
-        <div class="wrapper d-flex flex-column flex-row-fluid <?= esc($page); ?>" id="kt_wrapper">
+        <div class="wrapper d-flex flex-column flex-row-fluid <?= esc($title); ?>" id="kt_wrapper">

@@ -68,9 +68,3 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
         </div>
         <!--end::Post-->
     </div>
-
-<?php
-
-foreach ($gamesSample as $game) {
-    echo "<img src='" . $gamesPicFolder . $game['img_src'] . "' alt='' height='200'/><br/><br/><br/>" . $game['title'] . "<br/>" . $game['username'];
-}

@@ -64,7 +64,7 @@
                 dataType: "json"
             }).done(data => {
                 console.log(data);
-                window.location.assign('/home/dev_index');
+                window.location.assign('/app/dev_index');
             }).fail(e => {
                 console.log("ERROR: " + e);
             });

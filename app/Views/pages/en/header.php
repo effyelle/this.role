@@ -4,7 +4,7 @@
         <!--begin::Brand-->
         <div class="d-flex align-items-center ms-6">
             <!--begin::Logo-->
-            <a href="/home/dev_index">
+            <a href="/">
                 <img src="/assets/appmedia/logos/icon64x64.png" alt="" width="40"/>
             </a>
             <!--end::Logo-->

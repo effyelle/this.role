@@ -29,11 +29,10 @@
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
                     <div class="menu-item">
-                        <a class="menu-link <?php if ($page === 'Compendium') echo 'hover'; ?>" href="/app/compendium"
-                           title="" data-bs-toggle="tooltip"
-                           data-bs-trigger="hover"
+                        <a class="menu-link <?php if ($page === 'Compendium') echo 'hover'; ?>" href="/compendium/main"
+                           title="" data-bs-toggle="tooltip" data-bs-trigger="hover"
                            data-bs-dismiss="click" data-bs-placement="right"
-                           data-bs-original-title="Search in freely in the API">
+                           data-bs-original-title="Search freely in the API">
                             <span class="menu-icon">
                                 <i class="fa fa-solid fa-dragon fa-lg hover-flip"></i>
                                 <!--end::Svg Icon-->
@@ -45,9 +44,8 @@
                     <!--begin::Menu Item-->
                     <div class="menu-item">
                         <a class="menu-link <?php if ($page === 'About') echo 'hover'; ?>" href="/about" title=""
-                           data-bs-toggle="tooltip" data-bs-trigger="hover"
-                           data-bs-dismiss="click" data-bs-placement="right"
-                           data-bs-original-title="How did we started this?">
+                           data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
+                           data-bs-placement="right" data-bs-original-title="How did we started this?">
                             <span class="menu-icon">
                                 <i class="fa fa-solid fa-mug-hot fa-lg hover-flip"></i>
                             </span>
@@ -57,8 +55,8 @@
                     <!--end::Menu Item-->
                     <!--begin::Menu Accordion-->
                     <div class="menu-item">
-                        <div class="menu-content">
-                            <div class="separator mx-1 my-4"></div>
+                        <div class="menu-content p-0">
+                            <div class="separator mx-1"></div>
                         </div>
                     </div>
                     <!--end::Menu Accordion-->
@@ -114,8 +112,8 @@
                         <!--end:Menu sub-->
                     </div>
                     <div class="menu-item">
-                        <div class="menu-content">
-                            <div class="separator mx-1 my-4"></div>
+                        <div class="menu-content p-0">
+                            <div class="separator mx-1"></div>
                         </div>
                     </div>
                 </div>

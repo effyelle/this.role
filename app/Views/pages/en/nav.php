@@ -42,7 +42,7 @@
                     <i class="fa-solid fa-magnifying-glass fa-2xl"></i>
                 </label>
                 <input id="searchRule" class="form-control form-control-solid bg-secondary border-0" type="text"
-                       placeholder="Search in Compendium...">
+                       placeholder="Search...">
             </div>
             <div class="d-flex align-items-center flex-shrink-0">
                 <!--begin::User-->

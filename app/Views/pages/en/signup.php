@@ -1,34 +1,52 @@
-<div class="d-flex flex-column justify-content-center align-items-center account-options mx-auto col-10 w-sm-400px">
-    <!--begin::Form Field-->
-    <div class="my-4">
-        <div class="account-option float-left position-relative w-100px ff-poiret ">
-            <label for="username" class="h2 z-index-3 my-2">Username</label>
-            <span class="bg-brush position-absolute"></span>
+<div class="d-flex flex-column justify-content-center align-items-center account-options mx-auto col-10">
+    <!--begin::Row-->
+    <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
+        <!--begin::Form Field-->
+        <div class="my-4">
+            <div class="account-option float-left position-relative w-100px ff-poiret ">
+                <label for="username" class="h2 z-index-3 my-2">Username</label>
+                <span class="bg-brush position-absolute"></span>
+            </div>
+            <input type="text" id="username"
+                   class="form-control form-control-solid ajax-login bg-transparent text-center"/>
         </div>
-        <input type="text" id="username"
-               class="form-control form-control-solid ajax-login bg-transparent text-center"/>
-    </div>
-    <!--end::Form Field-->
-    <!--begin::Form Field-->
-    <div class="my-4">
-        <div class="account-option float-right position-relative w-100px ff-poiret ">
-            <label for="pwd" class="h2 z-index-3 my-2">Password</label>
-            <span class="bg-brush position-absolute"></span>
+        <!--end::Form Field-->
+        <!--begin::Form Field-->
+        <div class="my-4">
+            <div class="account-option float-right position-relative w-100px ff-poiret ">
+                <label for="email" class="h2 z-index-3 my-2">Email</label>
+                <span class="bg-brush position-absolute"></span>
+            </div>
+            <input type="email" id="email"
+                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6"/>
         </div>
-        <input type="password" id="pwd"
-               class="form-control form-control-solid ajax-login bg-transparent text-center mb-6"/>
+        <!--end::Form Field-->
     </div>
-    <!--end::Form Field-->
-    <!--begin::Form Field-->
-    <div class="my-4">
-        <div class="account-option float-right position-relative w-100px ff-poiret ">
-            <label for="pwd-repeat" class="h2 z-index-3 my-2">Repeat Password</label>
-            <span class="bg-brush position-absolute"></span>
+    <!--end::Row-->
+    <!--begin::Row-->
+    <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
+        <!--begin::Form Field-->
+        <div class="my-4">
+            <div class="account-option float-right position-relative w-100px ff-poiret ">
+                <label for="pwd" class="h2 z-index-3 my-2">Password</label>
+                <span class="bg-brush position-absolute"></span>
+            </div>
+            <input type="password" id="pwd"
+                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6"/>
         </div>
-        <input type="password" id="pwd-repeat"
-               class="form-control form-control-solid ajax-login bg-transparent text-center mb-6"/>
+        <!--end::Form Field-->
+        <!--begin::Form Field-->
+        <div class="my-4">
+            <div class="account-option float-right position-relative w-100px ff-poiret ">
+                <label for="pwd-repeat" class="h2 z-index-3 my-2">Repeat Password</label>
+                <span class="bg-brush position-absolute"></span>
+            </div>
+            <input type="password" id="pwd-repeat"
+                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6"/>
+        </div>
+        <!--end::Form Field-->
     </div>
-    <!--end::Form Field-->
+    <!--end::Row-->
     <!--begin::Form Button-->
     <div class="my-4">
         <button type="button" id="signinBtn" class="btn btn-primary">Signin</button>
@@ -65,8 +83,7 @@
         }
 
         function checkPassword() {
-            console.log('here')
-            return false;
+            return true;
         }
 
         function sendSignup(username, pwd) {
@@ -79,9 +96,11 @@
                         pwd: pwd,
                     }
                 },
-                //dataType: "json"
+                dataType: "json"
             }).done(data => {
                 console.log(data);
+                alert('An activation email has been sent.');
+                window.location.assign('/account/signin');
             }).fail(e => {
                 console.log("ERROR: " + e);
             });

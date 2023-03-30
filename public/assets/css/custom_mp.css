@@ -332,3 +332,9 @@ a .hover-flip {
 .text-hover-primary:hover, .btn-link {
     color: var(--this-role-green) !important;
 }
+
+@media (min-width: 992px) {
+    .wrapper {
+        padding-left: 260px;
+    }
+}

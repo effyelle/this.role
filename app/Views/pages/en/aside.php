@@ -29,7 +29,7 @@
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
                     <div class="menu-item">
-                        <a class="menu-link <?php if ($page === 'Compendium') echo 'hover'; ?>" href="/compendium/main"
+                        <a class="menu-link <?php if ($page === 'Compendium') echo 'hover'; ?>" href="/compendium/index"
                            title="" data-bs-toggle="tooltip" data-bs-trigger="hover"
                            data-bs-dismiss="click" data-bs-placement="right"
                            data-bs-original-title="Search freely in the API">

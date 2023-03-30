@@ -34,7 +34,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                             <!--begin::Section-->
                             <div class="d-flex flex-row-fluid flex-wrap h-75px gap-5">
                                 <div class="flex-grow-1 me-2 mt-4">
-                                    <a href="/games/game/<?= $game['gameId'] . '/' . $game['title'] ?>"
+                                    <a href="/games/game/<?= $game['gameId'] . '/' . $game['title'] ?>" target="_blank"
                                        class="h4 text-gray-800 text-hover-primary fw-bolder">
                                         <?= $game['title'] ?>
                                     </a>

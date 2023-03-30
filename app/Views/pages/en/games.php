@@ -67,69 +67,6 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
             <!--end::Row-->
         </div>
         <!--end::Post-->
-        <!--begin::NewsModal -->
-        <div class="modal fade" id="news-modal">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header justify-content-between">
-                        <!--begin::NewsTitle-->
-                        <div class="position-relative w-100 pe-3">
-                            <label class="h1" for="news-title"></label>
-                            <input type="text" id="news-title"
-                                   class="form-control form-control-solid is-required news-field d-none">
-                            <span class="popup news-feedback">El título de la noticia no puede estar vacío.</span>
-                        </div>
-                        <!--end::NewsTitle-->
-                        <!--start::EditButton-->
-                        <button type="button" class="btn btn-dark d-none align-self-end mx-1" id="edit_news-btn">
-                            Editar
-                        </button>
-                        <!--end::EditButton-->
-                        <!--start::DeleteButton-->
-                        <button type="button" class="btn btn-danger d-none align-self-end mx-1" id="delete_news-btn">
-                            Borrar
-                        </button>
-                        <!--end::DeleteButton-->
-                        <!--start::SaveButton-->
-                        <button type="button" class="btn btn-primary d-none align-self-end mx-1" id="save_news-btn">
-                            Guardar
-                        </button>
-                        <!--end::SaveButton-->
-                        <!--begin::CloseBtn-->
-                        <button class="btn btn-close align-self-start" data-bs-dismiss="modal"></button>
-                        <!--end::CloseBtn-->
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-5 position-relative news-icon d-none">
-                            <label for="news-icon" class="required form-label">Icono</label>
-                            <input type="file" id="news-icon" accept="image/*"
-                                   class="form-control form-control-solid is-required">
-                        </div>
-                        <div class="mb-5 position-relative">
-                            <label for="news-body" class="required form-label d-none">Cuerpo de la noticia</label>
-                            <div class="mb-5" id="news-body"></div>
-                            <span class="popup news-feedback">El cuerpo de la noticia no puede estar vacío.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--end::NewsModal -->
-        <!-- CONTENT GOES HERE -->
-
-        <!--end::Post-->
-        <!--begin::Footer-->
-        <div class="footer py-4 d-flex flex-column flex-md-row flex-stack" id="kt_footer">
-            <!--begin::Copyright-->
-            <div class="text-dark order-2 order-md-1">
-                <span class="text-muted fw-bold me-1">2023©</span>
-                <a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Embou</a>
-            </div>
-            <!--end::Copyright-->
-            <!--begin::Menu-->
-
-            <!--end::Menu-->
-        </div>                        <!--end::Footer-->
     </div>
 
 <?php

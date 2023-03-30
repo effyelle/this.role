@@ -12,10 +12,12 @@
                  data-kt-scroll-dependencies="#kt_header, #kt_aside_footer"
                  data-kt-scroll-wrappers="#kt_aside, #kt_aside_menu" data-kt-scroll-offset="{lg: '75px'}" style="">
                 <!--begin::Menu-->
-                <div class="menu menu-column menu-rounded fw-bold fs-5 gap-6 mt-6" id="#kt_aside_menu" data-kt-menu="true">
+                <div class="menu menu-column menu-rounded fw-bold fs-5 gap-6 mt-6" id="#kt_aside_menu"
+                     data-kt-menu="true">
                     <!--begin::Menu Item-->
                     <div class="menu-item">
-                        <a class="menu-link" href="/games/list" title="" data-bs-toggle="tooltip" data-bs-trigger="hover"
+                        <a class="menu-link <?php if ($page === 'Games') echo 'hover'; ?>" href="/games/list" title=""
+                           data-bs-toggle="tooltip" data-bs-trigger="hover"
                            data-bs-dismiss="click" data-bs-placement="right"
                            data-bs-original-title="Manage your games">
                             <span class="menu-icon">
@@ -27,7 +29,8 @@
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
                     <div class="menu-item">
-                        <a class="menu-link" href="/app/compendium" title="" data-bs-toggle="tooltip"
+                        <a class="menu-link <?php if ($page === 'Compendium') echo 'hover'; ?>" href="/app/compendium"
+                           title="" data-bs-toggle="tooltip"
                            data-bs-trigger="hover"
                            data-bs-dismiss="click" data-bs-placement="right"
                            data-bs-original-title="Search in freely in the API">
@@ -41,7 +44,8 @@
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
                     <div class="menu-item">
-                        <a class="menu-link" href="/about" title="" data-bs-toggle="tooltip" data-bs-trigger="hover"
+                        <a class="menu-link <?php if ($page === 'About') echo 'hover'; ?>" href="/about" title=""
+                           data-bs-toggle="tooltip" data-bs-trigger="hover"
                            data-bs-dismiss="click" data-bs-placement="right"
                            data-bs-original-title="How did we started this?">
                             <span class="menu-icon">

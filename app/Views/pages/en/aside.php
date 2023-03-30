@@ -45,7 +45,7 @@
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
                     <div class="menu-item">
-                        <a class="menu-link <?php if ($title === 'About') echo 'hover'; ?>" href="/about" title=""
+                        <a class="menu-link <?php if ($title === 'About') echo 'hover'; ?>" href="/app/about" title=""
                            data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
                            data-bs-placement="right" data-bs-original-title="How did we started this?">
                             <span class="menu-icon">

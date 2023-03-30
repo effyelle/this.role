@@ -33,7 +33,6 @@
         <link rel="stylesheet" href="/assets/css/custom_mp.dark.css"/>
     <?php endif; ?>
     <!--end::CSSTemplates-->
-
 </head>
 <body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed bg-light-opacity-25">
 <!--begin::Page Container-->

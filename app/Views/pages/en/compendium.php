@@ -7,7 +7,7 @@
             <!--begin::Header-->
             <div class="card-header">
                 <div class="card-toolbar gap-5">
-                    <h2>Compendium</h2>
+                    <h2><?= $title ?></h2>
                 </div>
             </div>
             <!--end::Header-->

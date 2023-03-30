@@ -322,3 +322,9 @@ a .hover-flip {
         padding-left: 0;
     }
 }
+
+.aside .aside-menu .menu .menu-item .menu-link.hover,
+.aside .aside-menu .menu .menu-item .menu-link.hover .menu-icon i,
+.aside .aside-menu .menu .menu-item .menu-link.hover .menu-title {
+    color: #181c32;
+}

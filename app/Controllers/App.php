@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class Home extends BaseController
+class App extends BaseController
 {
 
     public function index(): string
@@ -11,7 +11,7 @@ class Home extends BaseController
         return template('signin');
     }
 
-    public function dev_index():string
+    public function dev_index(): string
     {
         return template();
     }
@@ -19,6 +19,11 @@ class Home extends BaseController
     function signin(): string
     {
         return template('signin');
+    }
+
+    function about(): string
+    {
+        return template('about');
     }
 
 }

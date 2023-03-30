@@ -1,0 +1,24 @@
+CRITICAL - 2023-03-28 11:28:57 --> Undefined variable $dark_theme
+in APPPATH\Views\includes\head.php on line 23.
+ 1 APPPATH\Views\includes\head.php(23): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $dark_theme', 'APPPATH\\Views\\includes\\head.php', 23)
+ 2 SYSTEMPATH\View\View.php(213): include('APPPATH\\Views\\includes\\head.php')
+ 3 SYSTEMPATH\View\View.php(216): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1184): CodeIgniter\View\View->render('includes/head', [], true)
+ 5 APPPATH\Common.php(7): view('includes/head', [...])
+ 6 APPPATH\Controllers\Home.php(10): template()
+ 7 SYSTEMPATH\CodeIgniter.php(934): App\Controllers\Home->index()
+ 8 SYSTEMPATH\CodeIgniter.php(499): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 9 SYSTEMPATH\CodeIgniter.php(368): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 FCPATH\index.php(67): CodeIgniter\CodeIgniter->run()
+CRITICAL - 2023-03-28 11:29:07 --> Undefined variable $dark_theme
+in APPPATH\Views\includes\head.php on line 23.
+ 1 APPPATH\Views\includes\head.php(23): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $dark_theme', 'APPPATH\\Views\\includes\\head.php', 23)
+ 2 SYSTEMPATH\View\View.php(213): include('APPPATH\\Views\\includes\\head.php')
+ 3 SYSTEMPATH\View\View.php(216): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1184): CodeIgniter\View\View->render('includes/head', [], true)
+ 5 APPPATH\Common.php(7): view('includes/head', [...])
+ 6 APPPATH\Controllers\Home.php(10): template()
+ 7 SYSTEMPATH\CodeIgniter.php(934): App\Controllers\Home->index()
+ 8 SYSTEMPATH\CodeIgniter.php(499): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 9 SYSTEMPATH\CodeIgniter.php(368): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 FCPATH\index.php(67): CodeIgniter\CodeIgniter->run()

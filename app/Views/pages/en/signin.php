@@ -46,7 +46,7 @@
                 sendLogin(username, pwd);
                 return;
             }
-            console.log("Faltan datos.");
+            toastr.error("Recuerda rellenar todos los campos", "Faltan datos.");
         }
 
         function sendLogin(username, pwd) {
@@ -59,9 +59,10 @@
                         pwd: pwd
                     }
                 },
-                //dataType: "json"
+                dataType: "json"
             }).done(data => {
                 console.log(data);
+                window.location.assign('/home/dev_index');
             }).fail(e => {
                 console.log("ERROR: " + e);
             });

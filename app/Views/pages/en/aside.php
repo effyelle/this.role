@@ -13,6 +13,19 @@
                  data-kt-scroll-wrappers="#kt_aside, #kt_aside_menu" data-kt-scroll-offset="{lg: '75px'}" style="">
                 <!--begin::Menu-->
                 <div class="menu menu-column menu-rounded fw-bold fs-5 gap-6 mt-6" id="#kt_aside_menu" data-kt-menu="true">
+                    <!--begin::Menu Item-->
+                    <div class="menu-item">
+                        <a class="menu-link" href="/games/list" title="" data-bs-toggle="tooltip" data-bs-trigger="hover"
+                           data-bs-dismiss="click" data-bs-placement="right"
+                           data-bs-original-title="Manage your games">
+                            <span class="menu-icon">
+                                <i class="fa fa-solid fa-dice-d20 fa-lg hover-flip"></i>
+                            </span>
+                            <span class="menu-title">Your Games</span>
+                        </a>
+                    </div>
+                    <!--end::Menu Item-->
+                    <!--begin::Menu Item-->
                     <div class="menu-item">
                         <a class="menu-link" href="/app/compendium" title="" data-bs-toggle="tooltip"
                            data-bs-trigger="hover"
@@ -25,16 +38,8 @@
                             <span class="menu-title">Compendium</span>
                         </a>
                     </div>
-                    <div class="menu-item">
-                        <a class="menu-link" href="/app/games" title="" data-bs-toggle="tooltip" data-bs-trigger="hover"
-                           data-bs-dismiss="click" data-bs-placement="right"
-                           data-bs-original-title="Manage your games">
-                            <span class="menu-icon">
-                                <i class="fa fa-solid fa-dice-d20 fa-lg hover-flip"></i>
-                            </span>
-                            <span class="menu-title">Your Games</span>
-                        </a>
-                    </div>
+                    <!--end::Menu Item-->
+                    <!--begin::Menu Item-->
                     <div class="menu-item">
                         <a class="menu-link" href="/about" title="" data-bs-toggle="tooltip" data-bs-trigger="hover"
                            data-bs-dismiss="click" data-bs-placement="right"
@@ -45,11 +50,14 @@
                             <span class="menu-title">About This.Role</span>
                         </a>
                     </div>
+                    <!--end::Menu Item-->
+                    <!--begin::Menu Accordion-->
                     <div class="menu-item">
                         <div class="menu-content">
                             <div class="separator mx-1 my-4"></div>
                         </div>
                     </div>
+                    <!--end::Menu Accordion-->
                     <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                         <!--begin:Menu link-->
                         <span class="menu-link">

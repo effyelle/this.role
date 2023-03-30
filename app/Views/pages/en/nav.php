@@ -42,7 +42,7 @@
                     <i class="fa-solid fa-magnifying-glass fa-2xl"></i>
                 </label>
                 <input id="searchRule" class="form-control form-control-solid bg-secondary border-0" type="text"
-                       placeholder="Buscar en el Compendium...">
+                       placeholder="Search in Compendium...">
             </div>
             <div class="d-flex align-items-center flex-shrink-0">
                 <!--begin::User-->
@@ -107,7 +107,7 @@
                                     <input class="form-check-input w-30px h-20px" type="checkbox" value="1" name="mode"
                                            id="kt_user_menu_dark_mode_toggle"><!--data-kt-url="app/set_theme/light"-->
                                     <span class="pulse-ring ms-n1"></span>
-                                    <span class="form-check-label text-gray-600 fs-7">Modo Oscuro</span>
+                                    <span class="form-check-label text-gray-600 fs-7">Dark Mode</span>
                                 </label>
                             </div>
                         </div>

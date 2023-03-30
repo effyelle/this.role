@@ -1,3 +1,4 @@
+<!--begin::Form-->
 <div class="d-flex flex-column justify-content-center align-items-center account-options mx-auto col-10">
     <!--begin::Row-->
     <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
@@ -53,6 +54,7 @@
     </div>
     <!--end::Form Button-->
 </div>
+<!--begin::Form-->
 <div class="m-auto my-4 text-center">
     <p>¿Ya tienes una cuenta?</p>
     <a href="/account/signin" class="link-info">Sign up</a>

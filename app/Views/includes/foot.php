@@ -1,3 +1,17 @@
+</div>
+<!--end::Content-->
+</div>
+<!--end::Container-->
+</div>
+<!--end::Content Wrapper2-->
+
+
+</div>
+<!--end::Wrapper-->
+</div>
+<!--end::Page-->
+</div>
+<!--end::Page Container-->
 <script src="/assets/plugins/jQuery-3.6.0/jquery-3.6.0.js"></script>
 <!-- begin::Templates Scripts-->
 <script>
@@ -22,9 +36,5 @@
 
 <!-- begin::Custom Scripts-->
 <!-- end::Custom Scripts-->
-            </div>
-        </div>
-    </div>
-</div>
 </body>
 </html>

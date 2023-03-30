@@ -22,9 +22,15 @@
     </div>
 </nav>
 <!--end::Navigation Pane-->
-<!--begin::Header-->
-<header class="d-flex flex-column align-items-center mb-4">
-    <img height="250" src="/assets/appmedia/imgs/dice_bag.png" alt=""/>
-    <h1 class="my-6 ff-sarina">Un slogan y tal aqui.</h1>
-</header>
-<!--end::Header-->
+<!--begin::Content Wrapper2-->
+<div class="d-flex flex-column">
+    <!--begin::Header-->
+    <header class="d-flex flex-column align-items-center mb-4">
+        <img height="250" src="/assets/appmedia/imgs/dice_bag.png" alt=""/>
+        <h1 class="my-6 ff-sarina">Un slogan y tal aqui.</h1>
+    </header>
+    <!--end::Header-->
+    <!--begin::Container-->
+    <div class="d-flex flex-column flex-column-fluid container-fluid">
+        <!--begin::Content-->
+        <div class="content flex-column-fluid" id="kt_content">

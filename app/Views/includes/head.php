@@ -36,6 +36,7 @@
 
 </head>
 <body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed bg-light-opacity-25">
+<!--begin::Page Container-->
 <div class="d-flex flex-column flex-root">
     <!--begin::Page-->
     <div class="page d-flex flex-row flex-column-fluid">

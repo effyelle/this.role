@@ -4,6 +4,9 @@ switch (esc($page)) {
     case 'signup':
         include 'header.php';
         break;
+    case 'game':
+        include 'nav.php';
+        break;
     default:
         include 'nav.php';
         include 'aside.php';

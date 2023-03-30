@@ -1,3 +1,4 @@
+<!--begin::Content Wrapper2-->
 <div class="d-flex flex-column-fluid">
     <!--begin::Aside-->
     <div id="kt_aside" class="aside card" data-kt-drawer="true"
@@ -29,7 +30,8 @@
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
                     <div class="menu-item">
-                        <a class="menu-link <?php if ($title === 'Compendium') echo 'hover'; ?>" href="/compendium/index"
+                        <a class="menu-link <?php if ($title === 'Compendium') echo 'hover'; ?>"
+                           href="/compendium/index"
                            title="" data-bs-toggle="tooltip" data-bs-trigger="hover"
                            data-bs-dismiss="click" data-bs-placement="right"
                            data-bs-original-title="Search freely in the API">
@@ -202,3 +204,7 @@
         </div>
     </div>
     <!--end::Aside-->
+    <!--begin::Container-->
+    <div class="d-flex flex-column flex-column-fluid container-fluid">
+        <!--begin::Content-->
+        <div class="content flex-column-fluid" id="kt_content">

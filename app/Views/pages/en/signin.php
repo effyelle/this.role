@@ -1,3 +1,4 @@
+<!--begin::Form-->
 <div class="d-flex flex-column justify-content-center align-items-center account-options mx-auto col-10 w-sm-400px">
     <!--begin::Form Field-->
     <div class="my-4">
@@ -25,6 +26,7 @@
     </div>
     <!--end::Form Button-->
 </div>
+<!--end::Form-->
 <div class="m-auto my-4 text-center">
     <p>¿Todavía no tienes una cuenta?</p>
     <a href="/account/signup" class="link-info">Sign up</a>

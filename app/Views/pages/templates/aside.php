@@ -17,6 +17,19 @@
                      data-kt-menu="true">
                     <!--begin::Menu Item-->
                     <div class="menu-item">
+                        <a class="menu-link <?php if ($title === 'Home') echo 'hover'; ?>" href="/app/index" title=""
+                           data-bs-toggle="tooltip" data-bs-trigger="hover"
+                           data-bs-dismiss="click" data-bs-placement="right"
+                           data-bs-original-title="">
+                            <span class="menu-icon">
+                                <i class="fa fa-solid fa-house fa-lg hover-flip"></i>
+                            </span>
+                            <span class="menu-title">Home</span>
+                        </a>
+                    </div>
+                    <!--end::Menu Item-->
+                    <!--begin::Menu Item-->
+                    <div class="menu-item">
                         <a class="menu-link <?php if ($title === 'Games') echo 'hover'; ?>" href="/games/list" title=""
                            data-bs-toggle="tooltip" data-bs-trigger="hover"
                            data-bs-dismiss="click" data-bs-placement="right"
@@ -29,6 +42,7 @@
                     </div>
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
+                    <!--
                     <div class="menu-item">
                         <a class="menu-link <?php if ($title === 'Compendium') echo 'hover'; ?>"
                            href="/compendium/index"
@@ -37,11 +51,11 @@
                            data-bs-original-title="Search freely in the API">
                             <span class="menu-icon">
                                 <i class="fa fa-solid fa-dragon fa-lg hover-flip"></i>
-                                <!--end::Svg Icon-->
                             </span>
                             <span class="menu-title">Compendium</span>
                         </a>
                     </div>
+                    -->
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
                     <div class="menu-item">
@@ -79,7 +93,7 @@
                                 <!--begin:Menu link-->
                                 <a class="menu-link" href="/admin/users">
 										<span class="menu-bullet">
-											<span class="bullet bullet-dot"></span>
+                                            <i class="fa fa-solid fa-user"></i>
 										</span>
                                     <span class="menu-title">Users</span>
                                 </a>
@@ -91,7 +105,7 @@
                                 <!--begin:Menu link-->
                                 <a class="menu-link" href="/admin/games">
 										<span class="menu-bullet">
-											<span class="bullet bullet-dot"></span>
+                                            <i class="fa fa-solid fa-dice-d20"></i>
 										</span>
                                     <span class="menu-title">Games</span>
                                 </a>
@@ -99,16 +113,16 @@
                             </div>
                             <!--end:Menu item-->
                             <!--begin:Menu item-->
+                            <!--
                             <div class="menu-item">
-                                <!--begin:Menu link-->
                                 <a class="menu-link" href="/admin/compendium">
 										<span class="menu-bullet">
 											<span class="bullet bullet-dot"></span>
 										</span>
                                     <span class="menu-title">Compendium</span>
                                 </a>
-                                <!--end:Menu link-->
                             </div>
+                            -->
                             <!--end:Menu item-->
                         </div>
                         <!--end:Menu sub-->
@@ -124,7 +138,7 @@
         </div>
         <!--end::Aside menu-->
         <!--begin::Footer-->
-        <!--
+
         <div class="aside-footer flex-column-auto pt-5 pb-7 px-5" id="kt_aside_footer">
             <a data-bs-toggle="modal" data-bs-target="#modal_suggestions"
                class="btn btn-bg-light btn-color-gray-500 btn-active-color-gray-900 w-100">
@@ -140,7 +154,7 @@
 			    </span>
             </a>
         </div>
-        -->
+
         <!--end::Footer-->
         <div class="modal fade show" tabindex="-1" id="modal_suggestions" aria-modal="true" role="dialog">
             <div class="modal-dialog">

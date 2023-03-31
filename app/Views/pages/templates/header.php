@@ -4,20 +4,16 @@
         <!--begin::Brand-->
         <div class="d-flex align-items-center ms-6">
             <!--begin::Logo-->
-            <a href="/">
+            <a href="/" class="d-flex align-items-center">
                 <img src="/assets/appmedia/logos/icon64x64.png" alt="" width="40"/>
+                <div class="ms-5">
+                    <div class="ff-poiret fs-4 fw-bolder text-white d-flex flex-column">
+                        <span>THIS.</span>
+                        <span class="ms-6">ROLE</span>
+                    </div>
+                </div>
             </a>
             <!--end::Logo-->
-            <!--begin::Nav-->
-            <div class="ms-5">
-                <!--begin::Toggle-->
-                <div class="ff-poiret fs-4 fw-bolder text-white d-flex flex-column">
-                    <span>THIS.</span>
-                    <span class="ms-6">ROLE</span>
-                </div>
-                <!--end::Toggle-->
-            </div>
-            <!--end::Nav-->
         </div>
     </div>
 </nav>

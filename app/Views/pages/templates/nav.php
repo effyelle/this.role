@@ -88,7 +88,7 @@
                     <!--end::Menu item-->
                     <!--begin::Menu item-->
                     <div class="menu-item px-5">
-                        <a href="app/logout" class="menu-link px-5">Logout</a>
+                        <a href="/app/logout" class="menu-link px-5">Logout</a>
                     </div>
                     <!--end::Menu item-->
                     <!--begin::Menu separator-->

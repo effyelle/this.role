@@ -8,22 +8,22 @@ class Games extends BaseController
     {
         $data['gamesSample'] = [
             [
-                'gameId' => 1,
-                'userId' => 3,
+                'idGame' => 1,
+                'idUser' => 3,
                 'username' => 'effyelle',
                 'title' => 'Timeless',
                 'img_src' => '9fa22b8469d26d2a93181739bc4a3fed.jpg'
             ],
             [
-                'gameId' => 2,
-                'userId' => 1,
+                'idGame' => 2,
+                'idUser' => 1,
                 'username' => 'keinarman',
                 'title' => 'Indamar Chronicles',
                 'img_src' => '18915186841312867612.jpg'
             ],
             [
-                'gameId' => 3,
-                'userId' => 2,
+                'idGame' => 3,
+                'idUser' => 2,
                 'username' => 'fedora',
                 'title' => 'Velkia Tales - Omen Seekers',
                 'img_src' => '543545785321847323124886.jpg'
@@ -35,6 +35,6 @@ class Games extends BaseController
 
     function game(int $id, string $title): string
     {
-        return template('game', ['title' => $title, 'gameId' => $id]);
+        return template('game', ['title' => $title, 'idGame' => $id]);
     }
 }

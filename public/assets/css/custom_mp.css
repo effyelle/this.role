@@ -11,7 +11,7 @@
 }
 
 .toastr.toastr-error {
-    background: var(--this-role-red);
+    background: var(--this-role-red) !important;
 }
 
 .toastr.toastr-success {
@@ -205,6 +205,30 @@ span.popup.show {
 
 body {
     background: rgba(var(--this-role-light-rgb), 0.05) !important;
+    scroll-behavior: smooth;
+}
+
+/*
+ * Scrollbar
+ */
+/* Width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 .header {
@@ -307,7 +331,7 @@ a .hover-flip {
     transition: all 0.4s ease;
 }
 
-.account-option ~ input.form-control.form-control-solid {
+input.this-role-input.form-control.form-control-solid {
     border: 0 !important;
     border-radius: 0;
     border-bottom: 1px solid var(--bs-gray-400) !important;
@@ -338,3 +362,43 @@ a .hover-flip {
         padding-left: 260px;
     }
 }
+
+.text-hover-danger:hover {
+    color: var(--this-role-red) !important;
+}
+
+.text-hover-success:hover, .text-primary-success:hover {
+    color: var(--this-role-green) !important;
+}
+
+.edit-game {
+    height: 0;
+    overflow: hidden;
+    transition: height 0.6s ease;
+}
+
+.edit-game.show {
+    height: 220px;
+    transition: height 0.8s ease;
+}
+
+.edit-btn ~ .fa-greater-than:before {
+    display: block;
+    transition: all 0.6s ease;
+}
+
+.edit-btn.active ~ .fa-greater-than:before {
+    transform: rotate(90deg);
+    transition: all 0.8s ease;
+}
+
+@media (min-width: 1200px) {
+    .aside {
+        width: 300px;
+    }
+
+    .wrapper {
+        padding-left: 310px;
+    }
+}
+

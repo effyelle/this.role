@@ -9,6 +9,7 @@ switch (esc($page)) {
         break;
     case 'game':
         include $templatesDir . '/rolls.historical.php';
+        include $templatesDir . '/game.img.list.php';
         break;
     default:
         include $templatesDir . '/nav.php';

@@ -2,22 +2,22 @@
 <div class="d-flex flex-column justify-content-center align-items-center account-options mx-auto col-10 w-sm-400px">
     <!--begin::Form Field-->
     <div class="my-4">
-        <div class="account-option float-left position-relative w-100px ff-poiret ">
+        <div class="float-left position-relative w-100px ff-poiret account-option">
             <label for="username" class="h2 z-index-3 my-2">Username</label>
             <span class="bg-brush position-absolute"></span>
         </div>
         <input type="text" id="username"
-               class="form-control form-control-solid ajax-login bg-transparent text-center"/>
+               class="form-control form-control-solid ajax-login bg-transparent text-center this-role-input"/>
     </div>
     <!--end::Form Field-->
     <!--begin::Form Field-->
     <div class="my-4">
-        <div class="account-option float-right position-relative w-100px ff-poiret ">
+        <div class="float-right position-relative w-100px ff-poiret account-option">
             <label for="pwd" class="h2 z-index-3 my-2">Password</label>
             <span class="bg-brush position-absolute"></span>
         </div>
         <input type="password" id="pwd"
-               class="form-control form-control-solid ajax-login bg-transparent text-center mb-6"/>
+               class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-input"/>
     </div>
     <!--end::Form Field-->
     <!--begin::Form Button-->

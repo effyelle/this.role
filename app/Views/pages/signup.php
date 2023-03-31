@@ -9,7 +9,7 @@
                 <span class="bg-brush position-absolute"></span>
             </div>
             <input type="text" id="username"
-                   class="form-control form-control-solid ajax-login bg-transparent text-center"/>
+                   class="form-control form-control-solid ajax-login bg-transparent text-center this-role-input"/>
         </div>
         <!--end::Form Field-->
         <!--begin::Form Field-->
@@ -19,7 +19,7 @@
                 <span class="bg-brush position-absolute"></span>
             </div>
             <input type="email" id="email"
-                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6"/>
+                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-input"/>
         </div>
         <!--end::Form Field-->
     </div>
@@ -33,7 +33,7 @@
                 <span class="bg-brush position-absolute"></span>
             </div>
             <input type="password" id="pwd"
-                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6"/>
+                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-input"/>
         </div>
         <!--end::Form Field-->
         <!--begin::Form Field-->
@@ -43,7 +43,7 @@
                 <span class="bg-brush position-absolute"></span>
             </div>
             <input type="password" id="pwd-repeat"
-                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6"/>
+                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-input"/>
         </div>
         <!--end::Form Field-->
     </div>

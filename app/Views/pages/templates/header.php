@@ -23,7 +23,7 @@
     <!--begin::Header-->
     <header class="d-flex flex-column align-items-center mb-4">
         <img height="250" src="/assets/appmedia/imgs/dice_bag.png" alt=""/>
-        <h1 class="my-6 ff-sarina">Un slogan y tal aqui.</h1>
+        <h1 class="my-6 ff-sarina">This.Role</h1>
     </header>
     <!--end::Header-->
     <!--begin::Container-->

@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 class Account extends BaseController
 {
-
     protected $model;
 
     public function __construct()
@@ -14,19 +13,17 @@ class Account extends BaseController
 
     function login(): void
     {
-        $user = $_POST['username'] ?? false;
+        $username = $_POST['username'] ?? false;
         $pwd = $_POST['pwd'] ?? false;
-        if ($user && $pwd) {
-            //$pwd = password_hash($pwd, PASSWORD_DEFAULT);
-            // I have to get password dehash it and then compare it
-            // This here and now does not work
-            if ($user = $this->model->login($user, $pwd)) {
+        if ($username && $pwd && $user = $this->model->login($username)) {
+            if (password_verify($pwd, $user['pwd'])) {
+                session_start();
                 $_SESSION['user'] = $user;
-                echo json_encode(['error' => false]);
+                echo json_encode(['response' => true]);
                 return;
             }
         }
-        echo json_encode(['error' => true]);
+        echo json_encode(['response' => false]);
     }
 
     function signup(): void
@@ -37,11 +34,11 @@ class Account extends BaseController
         if ($user && $email && $pwd) {
             $pwd = password_hash($pwd, PASSWORD_DEFAULT);
             if ($this->model->new($user, $email, $pwd)) {
-                echo json_encode(['error' => false]);
+                echo json_encode(['response' => true]);
                 return;
             }
         }
-        echo json_encode(['error' => true]);
+        echo json_encode(['response' => false]);
     }
 
     function created(): string

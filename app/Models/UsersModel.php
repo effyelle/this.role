@@ -18,19 +18,11 @@ class UsersModel extends Model
 
     protected $allowedFields = ['fname', 'username', 'prof_pic', 'email', 'pwd'];
 
-    protected $db;
-
-    public function __construct(?ConnectionInterface $db = null, ?ValidationInterface $validation = null)
-    {
-        parent::__construct($db, $validation);
-    }
-
-    function login(string $username, string $pwd): array|bool
+    function login(string $username): array|bool
     {
         $builder = (\Config\Database::connect())->table($this->table);
         $builder->select('*');
         $builder->where('username', $username);
-        $builder->where('pwd', $pwd);
         $user = $builder->get()->getResultArray();
         if (count($user) === 1) {
             return $user[0];

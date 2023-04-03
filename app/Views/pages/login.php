@@ -52,7 +52,7 @@
                 data: form,
                 dataType: "json",
                 success: function (data) {
-                    if (!data['error']) {
+                    if (data['response']) {
                         window.location.assign('/app/index');
                         return;
                     }

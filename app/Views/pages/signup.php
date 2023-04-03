@@ -77,7 +77,7 @@
                 data: form,
                 dataType: "json",
                 success: function (data) {
-                    if (!data['error']) window.location.assign('/account/created');
+                    if (data['response']) window.location.assign('/account/created');
                     console.log(data);
                 },
                 fail: function (e) {

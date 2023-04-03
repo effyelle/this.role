@@ -68,8 +68,8 @@ span.popup {
     visibility: hidden;
     position: absolute;
     width: 360px;
-    background-color: #505050;
-    color: #ffffff;
+    background-color: var(--bs-dark);
+    color: var(--bs-light);
     text-align: center;
     border-radius: 6px;
     padding: 8px 0;
@@ -89,7 +89,7 @@ span.popup::after {
     border-color: transparent transparent #505050 transparent;
 }
 
-span.popup.show {
+span.popup.show, .signup span.popup.show {
     visibility: visible;
     -webkit-animation: fadeIn 1s;
     animation: fadeIn 1s;
@@ -318,10 +318,14 @@ a .hover-flip {
 .bg-brush {
     background: url("/assets/appmedia/imgs/brush-1.png") no-repeat center;
     background-size: cover;
-    opacity: 0.75;
     height: 40px;
     width: 155px;
     transition: all 0.2s ease;
+    color: #ffffff;
+}
+
+a.bg-brush {
+
 }
 
 .account-option:hover .bg-brush.hover {
@@ -331,7 +335,7 @@ a .hover-flip {
     transition: all 0.4s ease;
 }
 
-input.this-role-input.form-control.form-control-solid {
+input.this-role-form-field.form-control.form-control-solid {
     border: 0 !important;
     border-radius: 0;
     border-bottom: 1px solid var(--bs-gray-400) !important;
@@ -342,7 +346,7 @@ input.this-role-input.form-control.form-control-solid {
 }
 
 @media (min-width: 992px) {
-    .wrapper.login, .wrapper.signup {
+    .wrapper.login, .wrapper.signup, .wrapper.account_created {
         padding-left: 0;
     }
 }
@@ -401,7 +405,13 @@ input.this-role-input.form-control.form-control-solid {
         padding-left: 310px;
     }
 
-    .header > div, .wrapper:not(.signup):not(.login) > div {
+    .header > div, .wrapper:not(.signup):not(.login):not(.account_created) > div {
         max-width: 1200px;
     }
+}
+
+.signup span.popup {
+    width: 200px;
+    padding: 5px 0;
+    top: 100px;
 }

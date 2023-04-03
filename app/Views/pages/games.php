@@ -62,55 +62,53 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                         <?php if ($game['idUser'] === 3): ?>
                             <!--begin::Edit Item-->
                             <div class="edit-game top-0 start-0">
-                                <!--begin::Edit Wrapper-->
-                                <div class="d-flex flex-row justify-content-start gap-12">
-                                    <!--begin::Form-->
-                                    <form action="/games/change_icon" method="post">
-                                        <!--begin::Icon-->
-                                        <div class="d-flex flex-column gap-6 align-items-start text-start">
-                                            <div class="symbol symbol-125px symbol-xl-175px me-5 circle position-relative">
-                                                <input id="game-img" type="file" accept="image/*" class="d-none"/>
-                                                <span class="symbol-label circle game-img-input-holder"
-                                                      style=" background: url(<?= $gamesPicFolder . $game['img_src'] ?>) no-repeat;
-                                                              background-size: cover;">
+                                <!--begin::Form-->
+                                <form action="/games/change_icon" method="post"
+                                      class="d-flex flex-row justify-content-start gap-12">
+                                    <!--begin::Icon-->
+                                    <div class="d-flex flex-column gap-6 align-items-start text-start">
+                                        <div class="symbol symbol-125px symbol-xl-175px me-5 circle position-relative">
+                                            <input id="game-img" type="file" accept="image/*" class="d-none"/>
+                                            <span class="symbol-label circle game-img-input-holder"
+                                                  style=" background: url(<?= $gamesPicFolder . $game['img_src'] ?>) no-repeat;
+                                                          background-size: cover;">
                                                 </span>
-                                            </div>
-                                            <div class="d-flex flex-row flex-wrap gap-4">
-                                                <label for="game-img" class="btn p-1 text-hover-primary fs-7">
-                                                    Cambiar
-                                                </label>
-                                                <button class="btn p-1 text-hover-danger fs-7 del-game-img">
-                                                    Borrar
-                                                </button>
-                                            </div>
                                         </div>
-                                        <!--end::Icon-->
-                                        <!--begin::Col-->
-                                        <div class="d-flex flex-column w-50">
-                                            <!--begin::Title-->
-                                            <div class="mb-5">
-                                                <label for="game-title" class="h3">Title</label>
-                                                <input type="text" id="game-title" value="<?= $game['title'] ?>"
-                                                       class="form-control form-control-solid bg-transparent text-center this-role-input"/>
-                                            </div>
-                                            <!--end::Title-->
-                                            <!--begin::Buttons-->
-                                            <div class="mt-5 d-flex flex-row gap-4 justify-content-between">
-                                                <button class="btn btn-dark py-2 px-4 py-xl-3 px-xl-6 cancel-edit">
-                                                    Cancelar
-                                                </button>
-                                                <button class="btn btn-primary py-2 px-4"
-                                                        value="<?= $game['idGame'] ?>">
-                                                    Guardar
-                                                </button>
-                                            </div>
-                                            <!--end::Buttons-->
+                                        <div class="d-flex flex-row flex-wrap gap-4">
+                                            <label for="game-img" class="btn p-1 text-hover-primary fs-7">
+                                                Cambiar
+                                            </label>
+                                            <button type="button" class="btn p-1 text-hover-danger fs-7 del-game-img">
+                                                Borrar
+                                            </button>
                                         </div>
-                                        <!--end::Col-->
-                                    </form>
-                                    <!--end::Form-->
-                                </div>
-                                <!--begin::Edit Wrapper-->
+                                    </div>
+                                    <!--end::Icon-->
+                                    <!--begin::Col-->
+                                    <div class="d-flex flex-column w-50">
+                                        <!--begin::Title-->
+                                        <div class="mb-5">
+                                            <label for="game-title" class="h3">Title</label>
+                                            <input type="text" id="game-title" value="<?= $game['title'] ?>"
+                                                   class="form-control form-control-solid bg-transparent text-center this-role-form-field"/>
+                                        </div>
+                                        <!--end::Title-->
+                                        <!--begin::Buttons-->
+                                        <div class="mt-5 d-flex flex-row gap-4 justify-content-between">
+                                            <button type="button"
+                                                    class="btn btn-dark py-2 px-4 py-xl-3 px-xl-6 cancel-edit">
+                                                Cancelar
+                                            </button>
+                                            <button class="btn btn-primary py-2 px-4"
+                                                    value="<?= $game['idGame'] ?>">
+                                                Guardar
+                                            </button>
+                                        </div>
+                                        <!--end::Buttons-->
+                                    </div>
+                                    <!--end::Col-->
+                                </form>
+                                <!--end::Form-->
                             </div>
                             <!--end::Edit Item-->
                         <?php endif; ?>

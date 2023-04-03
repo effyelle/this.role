@@ -44,7 +44,7 @@
                     <!--begin::Menu Item-->
                     <div class="menu-item">
                         <a class="menu-link <?php if ($title === 'Patch') echo 'hover'; ?>"
-                           href="/patch/index"
+                           href="/patch/notes"
                            title="" data-bs-toggle="tooltip" data-bs-trigger="hover"
                            data-bs-dismiss="click" data-bs-placement="right"
                            data-bs-original-title="Search freely in the API">
@@ -114,7 +114,7 @@
                             <div class="menu-item">
                                 <a class="menu-link" href="/admin/patch_notes">
 										<span class="menu-bullet">
-											<span class="bullet bullet-dot"></span>
+                                            <i class="fa fa-solid fa-dragon"></i>
 										</span>
                                     <span class="menu-title">Patch Notes</span>
                                 </a>

@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 class Patch extends BaseController
 {
-    function index()
+    function notes()
     {
         $compendiumSectionsFolder = '/assets/appmedia/compendium/sections_profile/';
         if (!is_dir(__DIR__ . '/../../public' . $compendiumSectionsFolder)) $compendiumSectionsFolder = 'not_a_folder/';

@@ -1,10 +1,12 @@
 <?php
 
+namespace App\Models;
+
 use CodeIgniter\Model;
 
 class BaseModel extends Model
 {
-    protected $db = 'this_role';
+    protected $db;
 
     protected $conn;
 

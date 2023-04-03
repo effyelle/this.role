@@ -11,15 +11,16 @@ class App extends BaseController
         return template('login');
     }
 
-    public function dev_index(): string
-    {
-        $_SESSION['user'] = 'effy';
-        return template();
-    }
-
     function login(): string
     {
+        if (isset($_SESSION['user'])) return template();
         return template('login');
+    }
+
+    function signup(): string
+    {
+        if (isset($_SESSION['user'])) return template();
+        return template('signup');
     }
 
     function logout(): string
@@ -30,7 +31,8 @@ class App extends BaseController
 
     function about(): string
     {
-        return template('about');
+        if (isset($_SESSION['user'])) return template('about');
+        return template('login');
     }
 
 }

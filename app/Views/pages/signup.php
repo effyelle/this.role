@@ -3,23 +3,19 @@
     <!--begin::Row-->
     <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
         <!--begin::Form Field-->
-        <div class="my-4">
-            <div class="account-option float-left position-relative w-100px ff-poiret">
-                <label for="username" class="h2 z-index-3 my-2">Username</label>
-                <span class="bg-brush position-absolute"></span>
-            </div>
-            <input type="text" id="username"
-                   class="form-control form-control-solid ajax-login bg-transparent text-center this-role-input"/>
+        <div class="my-4 position-relative">
+            <label for="username" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">Username</label>
+            <input type="text" id="username" name="username"
+                   class="form-control form-control-solid ajax-login bg-transparent text-center this-role-form-field"/>
+            <span class="popup alert-feedback">Necessary field.</span>
         </div>
         <!--end::Form Field-->
         <!--begin::Form Field-->
-        <div class="my-4">
-            <div class="account-option float-right position-relative w-100px ff-poiret">
-                <label for="email" class="h2 z-index-3 my-2">Email</label>
-                <span class="bg-brush position-absolute"></span>
-            </div>
-            <input type="email" id="email"
-                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-input"/>
+        <div class="my-4 position-relative">
+            <label for="email" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">Email</label>
+            <input type="email" id="email" name="email"
+                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
+            <span class="popup alert-feedback">Enter a valid email.</span>
         </div>
         <!--end::Form Field-->
     </div>
@@ -27,23 +23,19 @@
     <!--begin::Row-->
     <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
         <!--begin::Form Field-->
-        <div class="my-4">
-            <div class="account-option float-right position-relative w-100px ff-poiret">
-                <label for="pwd" class="h2 z-index-3 my-2">Password</label>
-                <span class="bg-brush position-absolute"></span>
-            </div>
-            <input type="password" id="pwd"
-                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-input"/>
+        <div class="my-4 position-relative">
+            <label for="pwd" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">Password</label>
+            <input type="password" id="pwd" name="pwd"
+                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
+            <span class="popup alert-feedback">Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character (@#$%^&+=).</span>
         </div>
         <!--end::Form Field-->
         <!--begin::Form Field-->
-        <div class="my-4">
-            <div class="account-option float-right position-relative w-100px ff-poiret">
-                <label for="pwd-repeat" class="h2 z-index-3 my-2">Repeat Password</label>
-                <span class="bg-brush position-absolute"></span>
-            </div>
+        <div class="my-4 position-relative">
+            <label for="pwd-repeat" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">Repeat Password</label>
             <input type="password" id="pwd-repeat"
-                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-input"/>
+                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
+            <span class="popup alert-feedback">Passwords don't match.</span>
         </div>
         <!--end::Form Field-->
     </div>
@@ -57,55 +49,106 @@
 <!--begin::Form-->
 <div class="m-auto my-4 text-center">
     <p>¿Ya tienes una cuenta?</p>
-    <a href="/account/login" class="link-info">Log in</a>
+    <a href="/app/login" class="link-info">Log in</a>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
 
-        $('#signinBtn').click(attemptLogin);
+        $('#signupBtn').click(attemptSignup);
 
         $('.form-control.ajax-login').keyup(function (e) {
-            if (e.originalEvent.key === 'Enter') attemptLogin();
+            if (e.originalEvent.key === 'Enter') attemptSignup();
         });
 
-        function attemptLogin() {
-            let username = $('#username').val();
-            let pwd = $('#pwd').val();
-            let pwdRepeat = $('#pwd-repeat')
-            if (username !== '' && pwd !== '' && pwdRepeat !== '') {
-                if (checkPassword()) {
-                    sendSignup(username, pwd, pwdRepeat);
-                    return;
+        function attemptSignup() {
+            if (validateFields()) {
+                let form = getForm('.signup');
+                if (form) {
+                    sendForm(form);
                 }
-                toastr.error("Make sure password meets all the requirements.", "Password is incorrect");
-                return;
             }
-            toastr.error("Some fields seem to be empty.", "Information missing");
         }
 
-        function checkPassword() {
-            return true;
-        }
-
-        function sendSignup(username, pwd) {
+        function sendForm(form) {
             $.ajax({
-                method: "POST",
-                url: "/account/attempt_signup",
-                data: {
-                    login: {
-                        username: username,
-                        pwd: pwd,
-                    }
+                type: "POST",
+                url: "/account/signup",
+                data: form,
+                dataType: "json",
+                success: function (data) {
+                    if (!data['error']) window.location.assign('/account/created');
+                    console.log(data);
                 },
-                dataType: "json"
-            }).done(data => {
-                console.log(data);
-                alert('An activation email has been sent.');
-                window.location.assign('/account/signin');
-            }).fail(e => {
-                console.log("ERROR: " + e);
+                fail: function (e) {
+                    console.log(e);
+                }
             });
         }
+
+        function validateFields() {
+            let usernameVal = validateUsername();
+            let emailVal = validateEmail();
+            let pwdVal = validatePwds();
+
+            return (usernameVal && emailVal && pwdVal);
+
+            function validateUsername() {
+                let user = document.querySelector('#username');
+                if (user.value.length > 2) {
+                    user.classList.add('is-valid');
+                    user.classList.remove('is-invalid');
+                    return true;
+                }
+                console.log(document.querySelector('#username ~ .popup'))
+                spanPopup(document.querySelector('#username ~ .popup'));
+                user.classList.remove('is-valid');
+                user.classList.add('is-invalid');
+                return false;
+            }
+
+            function validateEmail() {
+                let email = document.querySelector('#email');
+                if (email.value.match(/^[A-Za-z0-9]+@[A-Za-z0-9-]+\.[A-Za-z]+$/)) {
+                    email.classList.add('is-valid');
+                    email.classList.remove('is-invalid');
+                    return true;
+                }
+                spanPopup(document.querySelector('#email ~ .popup'));
+                email.classList.remove('is-valid');
+                email.classList.add('is-invalid');
+                return false;
+            }
+
+            function validatePwds() {
+                let pwd = document.querySelector('#pwd');
+                let pwdRepeat = document.querySelector('#pwd-repeat');
+                if (pwd.value.match(/^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$/)) {
+                    pwd.classList.add('is-valid');
+                    pwd.classList.remove('is-invalid');
+                    if (pwd.value === pwdRepeat.value) {
+                        pwdRepeat.classList.add('is-valid');
+                        pwdRepeat.classList.remove('is-invalid');
+                        return true;
+                    }
+                    spanPopup(document.querySelector('#pwd-repeat ~ .popup'));
+                    pwdRepeat.classList.remove('is-valid');
+                    pwdRepeat.classList.add('is-invalid');
+                    return false;
+                }
+                spanPopup(document.querySelector('#pwd ~ .popup'));
+                pwd.classList.remove('is-valid');
+                pwd.classList.add('is-invalid');
+                return false;
+            }
+        }
+
+        function spanPopup(popup) {
+            popup.classList.add('show');
+            setTimeout(function () {
+                popup.classList.remove('show');
+            }, 2000);
+        }
+
     });
 </script>

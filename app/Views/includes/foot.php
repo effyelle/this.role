@@ -14,9 +14,6 @@
 <!--end::Page Container-->
 <script src="/assets/plugins/jQuery-3.6.0/jquery-3.6.0.js"></script>
 <!-- begin::Templates Scripts-->
-<script>
-    let hostUrl = "assets/";
-</script>
 <script src="/assets/plugins/global/plugins.bundle.js"></script>
 <script src="/assets/js/scripts.bundle.js"></script>
 <script src="/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js"></script>
@@ -33,8 +30,21 @@
 <script src="https://cdn.jsdelivr.net/npm/d3-flextree@2.1.2/build/d3-flextree.js"></script>
 <script type="text/javascript" src="/assets/js/custom/apps/groups/teams.js"></script>
 <!-- end::Templates Scripts-->
-
 <!-- begin::Custom Scripts-->
+<script>
+    function getForm(parent) {
+        let formFields = document.querySelectorAll(parent + ' .this-role-form-field');
+        let form = {};
+        for (let i = 0; i < formFields.length; i++) {
+            if (formFields[i].value === '') return false;
+            let key = formFields[i].getAttribute('name');
+            if (key !== null) {
+                form[key] = formFields[i].value;
+            }
+        }
+        return form;
+    }
+</script>
 <!-- end::Custom Scripts-->
 </body>
 </html>

@@ -42,20 +42,18 @@
                     </div>
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
-                    <!--
                     <div class="menu-item">
-                        <a class="menu-link <?php if ($title === 'Compendium') echo 'hover'; ?>"
-                           href="/compendium/index"
+                        <a class="menu-link <?php if ($title === 'Patch') echo 'hover'; ?>"
+                           href="/patch/index"
                            title="" data-bs-toggle="tooltip" data-bs-trigger="hover"
                            data-bs-dismiss="click" data-bs-placement="right"
                            data-bs-original-title="Search freely in the API">
                             <span class="menu-icon">
                                 <i class="fa fa-solid fa-dragon fa-lg hover-flip"></i>
                             </span>
-                            <span class="menu-title">Compendium</span>
+                            <span class="menu-title">Patch Notes</span>
                         </a>
                     </div>
-                    -->
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
                     <div class="menu-item">
@@ -113,16 +111,14 @@
                             </div>
                             <!--end:Menu item-->
                             <!--begin:Menu item-->
-                            <!--
                             <div class="menu-item">
-                                <a class="menu-link" href="/admin/compendium">
+                                <a class="menu-link" href="/admin/patch_notes">
 										<span class="menu-bullet">
 											<span class="bullet bullet-dot"></span>
 										</span>
-                                    <span class="menu-title">Compendium</span>
+                                    <span class="menu-title">Patch Notes</span>
                                 </a>
                             </div>
-                            -->
                             <!--end:Menu item-->
                         </div>
                         <!--end:Menu sub-->
@@ -162,7 +158,8 @@
                         <h3 class="modal-title">Buzón de sugerencias</h3>
 
                         <!--begin::Close-->
-                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                             aria-label="Close">
                             <span class="svg-icon svg-icon-1"></span>
                         </div>
                         <!--end::Close-->
@@ -172,7 +169,7 @@
                         <!-- FORMULARIO PARA ENVIO DE SUGERENCIAS -->
                         <form enctype="multipart/form-data" id="form_suggestions" name="form_suggestions">
                             <div class="form-group">
-                                <label>Tipo</label>
+                                <label for="type">Tipo</label>
                                 <select class="form-select form-select-solid" id="type" name="type">
                                     <option value="Sugerencia">Sugerencia 💡</option>
                                     <option value="Queja">Queja 😩</option>
@@ -180,16 +177,19 @@
                                 </select>
                             </div>
                             <div class="form-group mt-5">
-                                <label for="name">Comentario</label>
-                                <textarea class="form-control form-control-solid" id="comment" name="comment" rows="3"></textarea>
+                                <label for="comment">Comentario</label>
+                                <textarea class="form-control form-control-solid" id="comment" name="comment"
+                                          rows="3"></textarea>
                             </div>
                             <!-- IMAGE INPUT -->
                             <div class="form-group mt-5">
                                 <label for="image">Imagen</label>
-                                <input class="form-control form-control-solid" multiple type="file" id="image" name="image[]" value="">
+                                <input class="form-control form-control-solid" multiple type="file" id="image"
+                                       name="image[]" value="">
                             </div>
                             <div class="form-check form-check-custom form-check-solid mt-5">
-                                <input class="form-check-input" name="anonymous" type="checkbox" value="1" id="anonymous"/>
+                                <input class="form-check-input" name="anonymous" type="checkbox" value="1"
+                                       id="anonymous"/>
                                 <label class="form-check-label" for="anonymous">
                                     Enviar anónimamente
                                 </label>
@@ -198,7 +198,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" onclick="send_suggestion()" id="send_suggestion_btn" class="btn btn-primary">
+                        <button type="button" id="send_suggestion_btn" class="btn btn-primary">
                             <!--begin::Indicator label-->
                             <span class="indicator-label">Enviar</span>
                             <!--end::Indicator label-->

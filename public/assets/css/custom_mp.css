@@ -400,5 +400,8 @@ input.this-role-input.form-control.form-control-solid {
     .wrapper {
         padding-left: 310px;
     }
-}
 
+    .header > div, .wrapper:not(.Signup):not(.Login) > div {
+        max-width: 1200px;
+    }
+}

@@ -4,9 +4,9 @@ namespace App\Controllers;
 
 class Account extends BaseController
 {
-    function signin(): string
+    function login(): string
     {
-        return template('signin');
+        return template('login');
     }
 
     function attempt_signin(): void

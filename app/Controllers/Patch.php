@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class Compendium extends BaseController
+class Patch extends BaseController
 {
     function index()
     {
@@ -18,6 +18,6 @@ class Compendium extends BaseController
             ['name' => 'Conditions & Diseases', 'img_src' => $compendiumSectionsFolder . 'conds_diseases.png'],
             ['name' => 'Actions', 'img_src' => $compendiumSectionsFolder . 'actions.png'],
         ];
-        return template('compendium', $data);
+        return template('patch', $data);
     }
 }

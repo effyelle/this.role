@@ -342,7 +342,7 @@ input.this-role-input.form-control.form-control-solid {
 }
 
 @media (min-width: 992px) {
-    .wrapper.Login, .wrapper.Signup {
+    .wrapper.login, .wrapper.signup {
         padding-left: 0;
     }
 }
@@ -401,7 +401,7 @@ input.this-role-input.form-control.form-control-solid {
         padding-left: 310px;
     }
 
-    .header > div, .wrapper:not(.Signup):not(.Login) > div {
+    .header > div, .wrapper:not(.signup):not(.login) > div {
         max-width: 1200px;
     }
 }

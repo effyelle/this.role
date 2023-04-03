@@ -11,6 +11,9 @@ function template(string $page = 'home', $data = null): string
             . view('pages/' . $page)
             . view('includes/foot');
     } else {
-        return 'View not found: "' . $page . '"';
+        return view('includes/head', $data)
+            . view('includes/view_includes')
+            . view('pages/view_not_found')
+            . view('includes/foot');
     }
 }

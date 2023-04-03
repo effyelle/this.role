@@ -4,7 +4,7 @@
     <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
         <!--begin::Form Field-->
         <div class="my-4">
-            <div class="account-option float-left position-relative w-100px ff-poiret ">
+            <div class="account-option float-left position-relative w-100px ff-poiret">
                 <label for="username" class="h2 z-index-3 my-2">Username</label>
                 <span class="bg-brush position-absolute"></span>
             </div>
@@ -14,7 +14,7 @@
         <!--end::Form Field-->
         <!--begin::Form Field-->
         <div class="my-4">
-            <div class="account-option float-right position-relative w-100px ff-poiret ">
+            <div class="account-option float-right position-relative w-100px ff-poiret">
                 <label for="email" class="h2 z-index-3 my-2">Email</label>
                 <span class="bg-brush position-absolute"></span>
             </div>
@@ -28,7 +28,7 @@
     <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
         <!--begin::Form Field-->
         <div class="my-4">
-            <div class="account-option float-right position-relative w-100px ff-poiret ">
+            <div class="account-option float-right position-relative w-100px ff-poiret">
                 <label for="pwd" class="h2 z-index-3 my-2">Password</label>
                 <span class="bg-brush position-absolute"></span>
             </div>
@@ -38,7 +38,7 @@
         <!--end::Form Field-->
         <!--begin::Form Field-->
         <div class="my-4">
-            <div class="account-option float-right position-relative w-100px ff-poiret ">
+            <div class="account-option float-right position-relative w-100px ff-poiret">
                 <label for="pwd-repeat" class="h2 z-index-3 my-2">Repeat Password</label>
                 <span class="bg-brush position-absolute"></span>
             </div>
@@ -50,14 +50,14 @@
     <!--end::Row-->
     <!--begin::Form Button-->
     <div class="my-4">
-        <button type="button" id="signinBtn" class="btn btn-primary">Signin</button>
+        <button type="button" id="signupBtn" class="btn btn-primary">Sign up</button>
     </div>
     <!--end::Form Button-->
 </div>
 <!--begin::Form-->
 <div class="m-auto my-4 text-center">
     <p>¿Ya tienes una cuenta?</p>
-    <a href="/account/signin" class="link-info">Sign up</a>
+    <a href="/account/login" class="link-info">Log in</a>
 </div>
 
 <script>

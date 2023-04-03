@@ -8,7 +8,7 @@ class App extends BaseController
     public function index(): string
     {
         if (isset($_SESSION['user'])) return template();
-        return template('signin');
+        return template('login');
     }
 
     public function dev_index(): string
@@ -17,15 +17,15 @@ class App extends BaseController
         return template();
     }
 
-    function signin(): string
+    function login(): string
     {
-        return template('signin');
+        return template('login');
     }
 
     function logout(): string
     {
         session_destroy();
-        return template('signin');
+        return template('login');
     }
 
     function about(): string

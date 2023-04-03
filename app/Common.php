@@ -9,7 +9,6 @@ function template(string $page = 'home', $data = null): string
         return view('includes/head', $data)
             . view('includes/view_includes')
             . view('pages/' . $page)
-            . view('pages/templates/footer')
             . view('includes/foot');
     } else {
         return 'View not found: "' . $page . '"';

@@ -342,7 +342,7 @@ input.this-role-input.form-control.form-control-solid {
 }
 
 @media (min-width: 992px) {
-    .wrapper.Signin, .wrapper.Signup {
+    .wrapper.Login, .wrapper.Signup {
         padding-left: 0;
     }
 }

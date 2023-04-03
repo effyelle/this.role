@@ -1,9 +1,9 @@
 <?php
 
-$templatesDir = __DIR__ . '/../pages/templates';
+$templatesDir = __DIR__ . '/../templates';
 
 switch (esc($page)) {
-    case 'signin':
+    case 'login':
     case 'signup':
         include $templatesDir . '/header.php';
         break;

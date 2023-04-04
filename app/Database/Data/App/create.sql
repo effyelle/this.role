@@ -8,7 +8,7 @@ CREATE TABLE user(
 	id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
 	fname VARCHAR(100),
 	username VARCHAR(25) UNIQUE,
-	prof_pic VARCHAR(200),
+	avatar VARCHAR(200),
 	email VARCHAR(100),
 	pwd VARCHAR(200)
 );
@@ -28,7 +28,3 @@ CREATE TABLE user_permission(
 
 INSERT INTO permissions(rol)
 VALUES ('admin'), ('master'), ('user');
-
-INSERT INTO user_permission(id_user, id_permission)
-VALUES (1, 1), (1, 2), (1, 3);
-

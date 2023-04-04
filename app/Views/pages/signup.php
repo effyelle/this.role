@@ -27,7 +27,7 @@
             <label for="pwd" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">Password</label>
             <input type="password" id="pwd" name="pwd"
                    class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
-            <span class="popup alert-feedback">Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character (@#$%^&+=).</span>
+            <span class="popup alert-feedback">Minimum eight characters: one uppercase letter, one lowercase letter, one number and one special character (@#$%^&+=).</span>
         </div>
         <!--end::Form Field-->
         <!--begin::Form Field-->

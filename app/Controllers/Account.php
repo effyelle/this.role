@@ -15,12 +15,13 @@ class Account extends BaseController
     {
         $username = $_POST['username'] ?? false;
         $pwd = $_POST['pwd'] ?? false;
-        if ($username && $pwd && $user = $this->model->login($username)) {
-            if (password_verify($pwd, $user['pwd'])) {
-                session_start();
-                $_SESSION['user'] = $user;
-                echo json_encode(['response' => true]);
-                return;
+        if ($username && $pwd) {
+            if ($user = $this->model->login($username)) {
+                if (password_verify($pwd, $user['pwd'])) {
+                    $_SESSION['user'] = $user;
+                    echo json_encode(['response' => true]);
+                    return;
+                }
             }
         }
         echo json_encode(['response' => false]);

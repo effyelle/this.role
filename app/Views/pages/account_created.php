@@ -10,6 +10,9 @@
                     <h2 class="m-auto">Your account was created.</h2>
                 </div>
                 <p>Please wait for your confirmation email to activate your account.</p>
+                <div class="m-auto my-4 text-center">
+                    <a href="/app/login" class="link-info">Log in</a>
+                </div>
             </div>
             <!--end::Header-->
         </div>

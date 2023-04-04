@@ -20,7 +20,7 @@
                         <a class="menu-link <?php if ($title === 'Home') echo 'hover'; ?>" href="/app/index" title=""
                            data-bs-toggle="tooltip" data-bs-trigger="hover"
                            data-bs-dismiss="click" data-bs-placement="right"
-                           data-bs-original-title="">
+                           data-bs-original-title="Welcome to This.Role!">
                             <span class="menu-icon">
                                 <i class="fa fa-solid fa-house fa-lg hover-flip"></i>
                             </span>
@@ -42,6 +42,7 @@
                     </div>
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
+                    <!--
                     <div class="menu-item">
                         <a class="menu-link <?php if ($title === 'Patch') echo 'hover'; ?>"
                            href="/patch/notes"
@@ -54,6 +55,7 @@
                             <span class="menu-title">Patch Notes</span>
                         </a>
                     </div>
+                    -->
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
                     <div class="menu-item">

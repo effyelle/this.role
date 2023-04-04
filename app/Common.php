@@ -9,6 +9,7 @@ function template(string $page = 'home', $data = null): string
         return view('includes/head', $data)
             . view('includes/view_includes')
             . view('pages/' . $page)
+            . view('templates/footer')
             . view('includes/foot');
     } else {
         return view('includes/head', $data)

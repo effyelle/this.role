@@ -9,6 +9,7 @@ use CodeIgniter\Validation\ValidationInterface;
 class UsersModel extends Model
 {
     protected $table = 'user';
+    protected $secondaryTable = 'user_permission';
     protected $primaryKey = 'id';
 
     protected $useAutoIncrement = true;
@@ -18,24 +19,33 @@ class UsersModel extends Model
 
     protected $allowedFields = ['fname', 'username', 'prof_pic', 'email', 'pwd'];
 
-    function login(string $username): array|bool
+    function get(string $username = null): array|bool
     {
         $builder = (\Config\Database::connect())->table($this->table);
         $builder->select('*');
-        $builder->where('username', $username);
-        $user = $builder->get()->getResultArray();
-        if (count($user) === 1) {
-            return $user[0];
+        if (isset($username)) {
+            $builder->where('username', $username);
+        }
+        if ($user = $builder->get()->getResultArray()) {
+            if (count($user) > 1) return $user;
+            if (count($user) === 1) return $user[0];
         }
         return false;
     }
 
-    function new(string $username, string $email, string $pwd): bool
+    function new(string $username, string $email, string $pwd): bool|array
     {
         $builder = (\Config\Database::connect())->table($this->table);
         if ($builder->insert(['username' => $username, 'email' => $email, 'pwd' => $pwd])) {
-            return true;
+            $builder->select('id');
+            $builder->where('username', $username);
+            return $builder->get()->getResultArray(); // ID insert with permission later
         }
         return false;
+    }
+
+    function user_has_permission($id_user, $id_permission)
+    {
+
     }
 }

@@ -10,7 +10,7 @@ CREATE TABLE user(
 	username VARCHAR(25) UNIQUE,
 	prof_pic VARCHAR(200),
 	email VARCHAR(100),
-	pwd VARCHAR(100)
+	pwd VARCHAR(200)
 );
 
 CREATE TABLE permissions(
@@ -31,3 +31,4 @@ VALUES ('admin'), ('master'), ('user');
 
 INSERT INTO user_permission(id_user, id_permission)
 VALUES (1, 1), (1, 2), (1, 3);
+

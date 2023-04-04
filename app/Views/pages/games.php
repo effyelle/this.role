@@ -76,10 +76,10 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                                         </div>
                                         <div class="d-flex flex-row flex-wrap gap-4">
                                             <label for="game-img" class="btn p-1 text-hover-primary fs-7">
-                                                Cambiar
+                                                Change
                                             </label>
                                             <button type="button" class="btn p-1 text-hover-danger fs-7 del-game-img">
-                                                Borrar
+                                                Delete
                                             </button>
                                         </div>
                                     </div>

@@ -16,9 +16,14 @@ class Account extends BaseController
         $username = $_POST['username'] ?? false;
         $pwd = $_POST['pwd'] ?? false;
         if ($username && $pwd) {
-            if ($user = $this->model->login($username)) {
+            if ($user = $this->model->get($username)) {
                 if (password_verify($pwd, $user['pwd'])) {
-                    $_SESSION['user'] = $user;
+                    $_SESSION['user'] = [
+                        'fname' => $user['fname'],
+                        'username' => $user['username'],
+                        'avatar' => $user['avatar'],
+                        'email' => $user['email'],
+                    ];
                     echo json_encode(['response' => true]);
                     return;
                 }
@@ -34,8 +39,8 @@ class Account extends BaseController
         $pwd = $_POST['pwd'] ?? false;
         if ($user && $email && $pwd) {
             $pwd = password_hash($pwd, PASSWORD_DEFAULT);
-            if ($this->model->new($user, $email, $pwd)) {
-                echo json_encode(['response' => true]);
+            if ($id = $this->model->new($user, $email, $pwd)) {
+                echo json_encode(['response' => true, 'id' => $id]);
                 return;
             }
         }
@@ -45,6 +50,21 @@ class Account extends BaseController
     function created(): string
     {
         return template('account_created');
+    }
+
+    function myprofile(): string
+    {
+        return template('profile');
+    }
+
+    function my_profile()
+    {
+        if (isset($_SESSION['user'])) {
+            $user = $this->model->get($_SESSION['user']['username']);
+            echo json_encode(['response' => true, 'user' => $user]);
+            return;
+        }
+        echo json_encode(['response' => false]);
     }
 
 }

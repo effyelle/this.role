@@ -315,6 +315,16 @@ a .hover-flip {
     background: #249785 !important;
 }
 
+.btn.btn-warning {
+    background: var(--this-role-red);
+}
+
+.btn-check:active + .btn.btn-warning, .btn-check:checked + .btn.btn-warning, .btn.btn-warning.active,
+.btn.btn-warning.show, .btn.btn-warning:active:not(.btn-active), .btn.btn-warning:focus:not(.btn-active),
+.btn.btn-warning:hover:not(.btn-active), .show > .btn.btn-warning {
+    background: #d35342 !important;
+}
+
 .bg-brush {
     background: url("/assets/appmedia/imgs/brush-1.png") no-repeat center;
     background-size: cover;
@@ -414,4 +424,20 @@ input.this-role-form-field.form-control.form-control-solid {
     width: 200px;
     padding: 5px;
     top: 100px;
+}
+
+.modal-dialog {
+    margin-top: 100px;
+}
+
+#user-profile > .flex-row > .flex-column > div {
+    min-height: 160px;
+}
+
+#user-profile input[disabled] {
+    border: none !important;
+}
+
+.justify-items-center {
+    justify-items: center !important;
 }

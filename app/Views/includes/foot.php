@@ -44,6 +44,16 @@
         }
         return form;
     }
+
+    function toSentenceCase(str) {
+        let strAr = str.split(' ');
+        str = '';
+        for (let i in strAr) {
+            str += strAr[i].charAt(0).toUpperCase() + strAr[i].substring(1).toLowerCase();
+            if (typeof strAr[i] !== 'undefined') str += ' ';
+        }
+        return str;
+    }
 </script>
 <!-- end::Custom Scripts-->
 </body>

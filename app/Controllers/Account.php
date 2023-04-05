@@ -17,17 +17,19 @@ class Account extends BaseController
         $pwd = $_POST['pwd'] ?? false;
         if ($username && $pwd) {
             if ($user = $this->model->get($username)) {
-                if (password_verify($pwd, $user['pwd'])) {
+                if (password_verify($pwd, $user['user_pwd'])) {
                     $_SESSION['user'] = [
-                        'id' => $user['id'],
-                        'fname' => $user['fname'],
-                        'username' => $user['username'],
-                        'avatar' => $user['avatar'],
-                        'email' => $user['email'],
+                        'id' => $user['user_id'],
+                        'fname' => $user['user_fname'],
+                        'username' => $user['user_username'],
+                        'avatar' => $user['user_avatar'],
+                        'email' => $user['user_email'],
                     ];
                     echo json_encode(['response' => true]);
                     return;
                 }
+                echo json_encode(['response' => false, 'user' => $user]);
+                return;
             }
         }
         echo json_encode(['response' => false]);
@@ -51,11 +53,6 @@ class Account extends BaseController
     function created(): string
     {
         return template('account_created');
-    }
-
-    function myprofile(): string
-    {
-        return template('profile');
     }
 
     function my_profile()

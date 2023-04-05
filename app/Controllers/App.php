@@ -4,10 +4,16 @@ namespace App\Controllers;
 
 class App extends BaseController
 {
+    public function __construct()
+    {
+        user_exists();
+    }
 
     public function index(): string
     {
-        if (isset($_SESSION['user'])) return template();
+        if (isset($_SESSION['user'])) {
+            return template();
+        }
         return template('login');
     }
 
@@ -35,4 +41,28 @@ class App extends BaseController
         return template('login');
     }
 
+    function myprofile(): string
+    {
+        return template('profile');
+    }
+
+    function games_list(): string
+    {
+        return (new Games)->list();
+    }
+
+    function admin_users():string
+    {
+        return template('admin/users');
+    }
+
+    function admin_games():string
+    {
+        return template('admin/games');
+    }
+
+    function admin_patch_notes():string
+    {
+        return template('admin/patch');
+    }
 }

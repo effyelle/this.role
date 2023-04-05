@@ -56,14 +56,33 @@ $app->initialize();
 $context = is_cli() ? 'php-cli' : 'web';
 $app->setContext($context);
 
-session_start();
-
 /*
  *---------------------------------------------------------------
  * LAUNCH THE APPLICATION
  *---------------------------------------------------------------
  * Now that everything is setup, it's time to actually fire
  * up the engines and make this app do its thang.
+ */
+
+/*
+ *---------------------------------------------------------------
+ * CONFIG TIMEOUT FOR SESSION
+ *---------------------------------------------------------------
+ */
+
+if (isset($_SESSION['session_last_activity']) && (time() - $_SESSION['session_last_activity']) > 1800) {// time() measure is in seconds
+    session_unset();
+    session_destroy();
+}
+
+session_start();
+$_SESSION['session_last_activity'] = time();
+
+/*
+ *---------------------------------------------------------------
+ * RUN APP
+ *---------------------------------------------------------------
+ * This line must always go last in this page
  */
 
 $app->run();

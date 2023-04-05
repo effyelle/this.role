@@ -3,6 +3,7 @@
     --this-role-red: #F2614E;
     --this-role-green: #34a795;
     --this-role-light: #eddec6;
+    --this-role-blue: #6645c5;
     --this-role-light-rgb: 237, 222, 198;
 }
 
@@ -305,8 +306,32 @@ a .hover-flip {
     min-width: 100%;
 }
 
+.text-primary {
+    color: var(--this-role-green) !important;
+}
+
+.text-hover-primary:hover {
+    color: #249785 !important;
+}
+
+.text-warning {
+    color: var(--this-role-red) !important;
+}
+
+.text-hover-warning:hover {
+    color: #d35342 !important;
+}
+
+.text-info {
+    color: var(--this-role-blue) !important;
+}
+
+.text-hover-info:hover {
+    color: #5134a7 !important;
+}
+
 .btn.btn-primary {
-    background: var(--this-role-green);
+    background: var(--this-role-green) !important;
 }
 
 .btn-check:active + .btn.btn-primary, .btn-check:checked + .btn.btn-primary, .btn.btn-primary.active,
@@ -332,10 +357,6 @@ a .hover-flip {
     width: 155px;
     transition: all 0.2s ease;
     color: #ffffff;
-}
-
-a.bg-brush {
-
 }
 
 .account-option:hover .bg-brush.hover {
@@ -485,4 +506,27 @@ input.form-control.this-role-form-field[disabled] {
 
 .border-radius-5px {
     border-radius: 5px;
+}
+
+.icon-login_error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 120px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 2px solid var(--this-role-red);
+    color: var(--this-role-red);
+    box-shadow: 0 0 3px 0 var(--this-role-garnet);
+}
+
+.icon-login_error::after {
+    content: "\00D7";
+}
+
+@media (min-width: 992px) {
+    .container-fluid {
+        padding: 0 65px !important;
+    }
 }

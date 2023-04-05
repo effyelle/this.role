@@ -9,10 +9,10 @@ document.addEventListener('DOMContentLoaded', function () {
     function formatProfile(data) {
         if (data['response']) {
             let user = data['user'];
-            $('#fname').val(user['fname']);
-            $('#username').val(user['username']);
-            $('#email').val(user['email']);
-            formatAvatar('/assets/uploads/avatars/' + user['avatar']);
+            $('#fname').val(user['user_fname']);
+            $('#username').val(user['user_username']);
+            $('#email').val(user['user_email']);
+            formatAvatar('/assets/uploads/avatars/' + user['user_avatar']);
         }
     }
 

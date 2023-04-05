@@ -30,10 +30,9 @@
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
                     <div class="menu-item">
-                        <a class="menu-link <?php if ($title === 'Games') echo 'hover'; ?>" href="/games/list" title=""
-                           data-bs-toggle="tooltip" data-bs-trigger="hover"
-                           data-bs-dismiss="click" data-bs-placement="right"
-                           data-bs-original-title="Manage your games">
+                        <a class="menu-link <?php if ($title === 'Games') echo 'hover'; ?>" href="/app/games_list"
+                           data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
+                           data-bs-placement="right" data-bs-original-title="Manage your games" title="">
                             <span class="menu-icon">
                                 <i class="fa fa-solid fa-dice-d20 fa-lg hover-flip"></i>
                             </span>
@@ -91,7 +90,7 @@
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                <a class="menu-link" href="/admin/users">
+                                <a class="menu-link" href="/app/admin_users">
 										<span class="menu-bullet">
                                             <i class="fa fa-solid fa-user"></i>
 										</span>
@@ -103,7 +102,7 @@
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                <a class="menu-link" href="/admin/games">
+                                <a class="menu-link" href="/app/admin_games">
 										<span class="menu-bullet">
                                             <i class="fa fa-solid fa-dice-d20"></i>
 										</span>
@@ -114,7 +113,7 @@
                             <!--end:Menu item-->
                             <!--begin:Menu item-->
                             <div class="menu-item">
-                                <a class="menu-link" href="/admin/patch_notes">
+                                <a class="menu-link" href="/app/admin_patch_notes">
 										<span class="menu-bullet">
                                             <i class="fa fa-solid fa-dragon"></i>
 										</span>
@@ -136,16 +135,17 @@
         </div>
         <!--end::Aside menu-->
         <div class="aside-footer flex-column-auto pt-5 pb-7 px-5" id="kt_aside_footer">
-            <a data-bs-toggle="modal" data-bs-target="#modal_suggestions"
+            <a data-bs-toggle="modal" data-bs-target="#contact-support"
                class="btn btn-bg-light btn-color-gray-500 btn-active-color-gray-900 w-100">
-                <span class="btn-label">Buzón de sugerencias</span>
+                <span class="btn-label">Contact Support</span>
                 <span class="svg-icon btn-icon svg-icon-2">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6 8.725C6 8.125 6.4 7.725 7 7.725H14L18 11.725V12.925L22 9.725L12.6 2.225C12.2 1.925 11.7 1.925 11.4 2.225L2 9.725L6 12.925V8.725Z"
-                              fill="currentColor"></path>
-                        <path opacity="0.3"
-                              d="M22 9.72498V20.725C22 21.325 21.6 21.725 21 21.725H3C2.4 21.725 2 21.325 2 20.725V9.72498L11.4 17.225C11.8 17.525 12.3 17.525 12.6 17.225L22 9.72498ZM15 11.725H18L14 7.72498V10.725C14 11.325 14.4 11.725 15 11.725Z"
-                              fill="currentColor"></path>
+                        <path fill="currentColor"
+                              d="M6 8.725C6 8.125 6.4 7.725 7 7.725H14L18 11.725V12.925L22 9.725L12.6 2.225C12.2 1.925 11.7 1.925 11.4 2.225L2 9.725L6 12.925V8.725Z">
+                        </path>
+                        <path opacity="0.3" fill="currentColor"
+                              d="M22 9.72498V20.725C22 21.325 21.6 21.725 21 21.725H3C2.4 21.725 2 21.325 2 20.725V9.72498L11.4 17.225C11.8 17.525 12.3 17.525 12.6 17.225L22 9.72498ZM15 11.725H18L14 7.72498V10.725C14 11.325 14.4 11.725 15 11.725Z">
+                        </path>
                     </svg>
 			    </span>
             </a>

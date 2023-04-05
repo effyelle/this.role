@@ -4,7 +4,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Buzón de sugerencias</h3>
-
                 <!--begin::Close-->
                 <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
                      aria-label="Close">
@@ -51,8 +50,10 @@
                     <span class="indicator-label">Enviar</span>
                     <!--end::Indicator label-->
                     <!--begin::Indicator progress-->
-                    <span class="indicator-progress">Por favor espere...
-                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                    <span class="indicator-progress">
+                        Por favor espere...
+                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
                     <!--end::Indicator progress-->
                 </button>
             </div>

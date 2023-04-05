@@ -13,18 +13,36 @@
         <label for="pwd" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">Password</label>
         <input type="password" id="pwd" name="pwd"
                class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
+        <a href="#" class="d-block fw-bolder text-info text-hover-info fs-7 mx-auto text-center">Forgot your password?</a>
     </div>
     <!--end::Form Field-->
     <!--begin::Form Button-->
-    <div class="my-4">
+    <div class="my-6">
         <button type="button" id="loginBtn" class="btn btn-primary">Login</button>
     </div>
     <!--end::Form Button-->
 </form>
 <!--end::Form-->
 <div class="m-auto my-4 text-center">
-    <p>Still don't have an account?</p>
-    <a href="/app/signup" class="link-info">Sign up</a>
+    <p class="m-0">Still don't have an account?</p>
+    <a href="/app/signup" class="link-info text-info text-hover-info">Sign up</a>
+</div>
+<button id="login_error" class="d-none" data-bs-toggle="modal" data-bs-target="#modal-login_error"></button>
+<div class="modal fade" tabindex="-1" id="modal-login_error">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header py-12">
+                <div class="icon-login_error mx-auto">
+                </div>
+            </div>
+            <div class="modal-body gap-5 d-flex flex-column justify-content-around">
+                <p class="text-center">
+                    We seem to have encoutered some errors, please try again.
+                </p>
+                <button class="btn btn-primary d-block mx-auto mt-5" data-bs-dismiss="modal">Okay</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -42,7 +60,7 @@
                 sendForm(form);
                 return;
             }
-            alert('Faltan datos');
+            $('#login_error').trigger('click');
         }
 
         function sendForm(form) {
@@ -52,12 +70,12 @@
                 data: form,
                 dataType: "json",
                 success: function (data) {
+                    console.log(data)
                     if (data['response']) {
                         window.location.assign('/app/index');
                         return;
                     }
-                    console.log(data);
-                    console.log('Los datos son incorrectos');
+                    $('#login_error').trigger('click');
                 }
             });
         }

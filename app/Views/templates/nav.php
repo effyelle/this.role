@@ -20,7 +20,7 @@
             </div>
             <!--begin::Logo-->
             <a href="/" class="d-flex align-items-center">
-                <img src="/assets/appmedia/logos/icon64x64.png" alt="" width="40"/>
+                <img class="w-40px w-lg-55px" src="/assets/appmedia/logos/icon64x64.png" alt=""/>
                 <div class="ms-5">
                     <div class="ff-poiret fs-4 fw-bolder text-white d-flex flex-column">
                         <span>THIS.</span>
@@ -83,7 +83,7 @@
                     <!--end::Menu separator-->
                     <!--begin::Menu item-->
                     <div class="menu-item px-5">
-                        <a href="/account/myprofile" class="menu-link px-5">My Profile</a>
+                        <a href="/app/myprofile" class="menu-link px-5">My Profile</a>
                     </div>
                     <!--end::Menu item-->
                     <!--begin::Menu item-->

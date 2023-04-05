@@ -17,14 +17,14 @@ class UsersModel extends Model
     protected $returnType = 'array';
     protected $useSoftDeletes = true;
 
-    protected $allowedFields = ['fname', 'username', 'prof_pic', 'email', 'pwd'];
+    protected $allowedFields = ['user_id', 'user_fname', 'user_username', 'user_avatar', 'user_email', 'user_pwd', 'user_confirmed_account', 'user_deleted'];
 
     function get(string $username = null): array|bool
     {
         $builder = (\Config\Database::connect())->table($this->table);
         $builder->select('*');
         if (isset($username)) {
-            $builder->where('username', $username);
+            $builder->where('user_username', $username);
         }
         if ($user = $builder->get()->getResultArray()) {
             if (count($user) > 1) return $user;
@@ -36,10 +36,10 @@ class UsersModel extends Model
     function new(string $username, string $email, string $pwd): bool|array
     {
         $builder = (\Config\Database::connect())->table($this->table);
-        if ($builder->insert(['username' => $username, 'email' => $email, 'pwd' => $pwd])) {
-            $builder->select('id');
-            $builder->where('username', $username);
-            return $builder->get()->getResultArray(); // ID insert with permission later
+        if ($builder->insert(['user_username' => $username, 'user_email' => $email, 'user_pwd' => $pwd])) {
+            $builder->select('user_id');
+            $builder->where('user_username', $username);
+            return $builder->get()->getResultArray()[0]; // ID insert with permission later
         }
         return false;
     }

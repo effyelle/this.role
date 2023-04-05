@@ -34,12 +34,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function toggleProfileEditable(editable = false) {
         const editProfileBtn = $('#editProfile');
-        $('.profile_editable').toggleClass('d-none', !editable);
+        // Toggle visibility for form inputs and other tags
+        $('.editable').toggleClass('show', editable);
         $('.this-role-form-field').prop('disabled', !editable);
         $('#deactivateProfile').toggleClass('d-none', editable);
+        $('#resetPwdBtn').toggleClass('d-none', editable);
+        $('#updateProfile').toggleClass('d-none', !editable);
+        // Change Button HTML
         if (editable) editProfileBtn.html('Cancel');
         else editProfileBtn.html('Edit Profile');
+        // Unbind previous event
         editProfileBtn.unbind('click');
+        // Bind again with contrary boolean
         editProfileBtn.click(function () {
             toggleProfileEditable(!editable);
         });

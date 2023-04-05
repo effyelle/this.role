@@ -371,6 +371,22 @@ input.this-role-form-field.form-control.form-control-solid {
     color: var(--this-role-green) !important;
 }
 
+.max-w-500px {
+    max-width: 500px !important;
+}
+
+.max-w-600px {
+    max-width: 600px !important;
+}
+
+.max-w-700px {
+    max-width: 700px !important;
+}
+
+.max-w-800px {
+    max-width: 800px !important;
+}
+
 @media (min-width: 992px) {
     .wrapper {
         padding-left: 260px;
@@ -403,6 +419,7 @@ input.this-role-form-field.form-control.form-control-solid {
 
 .edit-btn.active ~ .fa-greater-than:before {
     transform: rotate(90deg);
+    content: "\00D7";
     transition: all 0.8s ease;
 }
 
@@ -413,10 +430,6 @@ input.this-role-form-field.form-control.form-control-solid {
 
     .wrapper {
         padding-left: 310px;
-    }
-
-    .header > div, .wrapper:not(.signup):not(.login):not(.account_created) > div {
-        max-width: 1200px;
     }
 }
 
@@ -434,10 +447,42 @@ input.this-role-form-field.form-control.form-control-solid {
     min-height: 160px;
 }
 
-#user-profile input[disabled] {
+input.form-control.this-role-form-field[disabled] {
     border: none !important;
 }
 
 .justify-items-center {
     justify-items: center !important;
+}
+
+.h-100vh {
+    min-height: calc(100vh - 160px);
+}
+
+.editable .editable-item {
+    visibility: hidden;
+}
+
+.editable.show, .editable.show .editable-item {
+    visibility: visible;
+}
+
+.visibility-hidden {
+    visibility: hidden !important;
+}
+
+.flex-row-wrap {
+    flex-flow: row wrap;
+}
+
+.flex-row-nowrap {
+    flex-flow: row nowrap;
+}
+
+.box-shadow-700 {
+    box-shadow: 0 0 1px 0 var(--bs-gray-700);
+}
+
+.border-radius-5px {
+    border-radius: 5px;
 }

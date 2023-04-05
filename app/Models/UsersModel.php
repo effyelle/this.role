@@ -8,8 +8,8 @@ use CodeIgniter\Validation\ValidationInterface;
 
 class UsersModel extends Model
 {
-    protected $table = 'user';
-    protected $secondaryTable = 'user_permission';
+    protected $table = 'users';
+    protected $relatedTable = 'user_permission';
     protected $primaryKey = 'id';
 
     protected $useAutoIncrement = true;

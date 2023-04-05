@@ -19,6 +19,7 @@ class Account extends BaseController
             if ($user = $this->model->get($username)) {
                 if (password_verify($pwd, $user['pwd'])) {
                     $_SESSION['user'] = [
+                        'id' => $user['id'],
                         'fname' => $user['fname'],
                         'username' => $user['username'],
                         'avatar' => $user['avatar'],

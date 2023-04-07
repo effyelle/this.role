@@ -28,7 +28,7 @@
     <a href="/app/signup" class="link-info text-info text-hover-info">Sign up</a>
 </div>
 <button id="login_error" class="d-none" data-bs-toggle="modal" data-bs-target="#modal-login_error"></button>
-<div class="modal fade" tabindex="-1" id="modal-login_error">
+<div class="modal fade" id="modal-login_error">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header py-12">
@@ -39,7 +39,7 @@
                 <p class="text-center">
                     We seem to have encoutered some errors, please try again.
                 </p>
-                <button class="btn btn-primary d-block mx-auto mt-5" data-bs-dismiss="modal">Okay</button>
+                <button class="btn btn-primary d-block mx-auto mt-5" data-bs-dismiss="modal" tabindex="-1">Okay</button>
             </div>
         </div>
     </div>

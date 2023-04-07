@@ -1,5 +1,6 @@
 <!--begin::Form-->
-<div class="d-flex flex-column justify-content-center align-items-center account-options mx-auto col-10">
+<form autocomplete="off"
+      class="d-flex flex-column justify-content-center align-items-center account-options mx-auto col-10">
     <!--begin::Row-->
     <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
         <!--begin::Form Field-->
@@ -7,7 +8,8 @@
             <label for="username" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">Username</label>
             <input type="text" id="username" name="username"
                    class="form-control form-control-solid ajax-login bg-transparent text-center this-role-form-field"/>
-            <span class="popup alert-feedback">Necessary field.</span>
+            <span class="popup alert-feedback f1">Necessary field.</span>
+            <span class="popup alert-feedback f2">Only letters, numbers and [_-.] permitted.</span>
         </div>
         <!--end::Form Field-->
         <!--begin::Form Field-->
@@ -45,7 +47,7 @@
         <button type="button" id="signupBtn" class="btn btn-primary">Sign up</button>
     </div>
     <!--end::Form Button-->
-</div>
+</form>
 <!--begin::Form-->
 <div class="m-auto my-4 text-center">
     <p>¿Ya tienes una cuenta?</p>
@@ -59,6 +61,14 @@
 
         $('.form-control.ajax-login').keyup(function (e) {
             if (e.originalEvent.key === 'Enter') attemptSignup();
+        });
+
+        $('#username').keypress(function (e) {
+            let pressedK = e.originalEvent.key;
+            if (!pressedK.match(/^[a-z]|[A-Z]|[0-9]|[.\-_]+$/)) {
+                e.preventDefault();
+                spanPopup(document.querySelector('#username ~ .popup.f2'));
+            }
         });
 
         function attemptSignup() {
@@ -100,8 +110,7 @@
                     user.classList.remove('is-invalid');
                     return true;
                 }
-                console.log(document.querySelector('#username ~ .popup'))
-                spanPopup(document.querySelector('#username ~ .popup'));
+                spanPopup(document.querySelector('#username ~ .popup.f1'));
                 user.classList.remove('is-valid');
                 user.classList.add('is-invalid');
                 return false;

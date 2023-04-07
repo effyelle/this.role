@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS this_role_app;
+this_role_appDROP DATABASE IF EXISTS this_role_app;
 
 CREATE DATABASE this_role_app;
 
@@ -11,7 +11,7 @@ CREATE TABLE users(
 	user_avatar VARCHAR(200),
 	user_email VARCHAR(100),
 	user_pwd VARCHAR(200),
-	user_confirmed_account DATETIME DEFAULT NULL,
+	user_confirmed_acc DATETIME DEFAULT NULL,
 	user_deleted DATETIME DEFAULT NULL
 );
 
@@ -44,6 +44,10 @@ CREATE TABLE user_permission(
 	FOREIGN KEY(id_permission) REFERENCES permissions(permission_id),
 	PRIMARY KEY(id_user, id_permission)
 );
+
+INSERT INTO users(user_fname, user_username, user_email, user_pwd, user_confirmed_acc)
+VALUES
+	('Mario Sancho', 'escrotocolgante', 'mail@mail.mail', 
 
 INSERT INTO permissions(permission_rol)
 VALUES ('admin'), ('master');

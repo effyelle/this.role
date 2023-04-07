@@ -15,9 +15,6 @@
             <div class="card-boy d-flex flex-column align-items-center mb-4">
                 <img height="250" src="/assets/appmedia/imgs/dice_bag.png" alt=""/>
                 <h1 class="my-6">Welcome to This.Role!</h1>
-                <?php if (isset($_SESSION['user'])): ?>
-                    <h2><?php var_dump($_SESSION) ?></h2>
-                <?php endif; ?>
                 <div class="ff-poiret d-flex flex-row justify-content-center text-center gap-12">
                     <a href="/games/list"
                        class="d-flex align-items-center justify-content-center bg-brush h2 z-index-3 my-2 text-hover-light">

@@ -1,4 +1,4 @@
-this_role_appDROP DATABASE IF EXISTS this_role_app;
+DROP DATABASE IF EXISTS this_role_app;
 
 CREATE DATABASE this_role_app;
 
@@ -11,6 +11,7 @@ CREATE TABLE users(
 	user_avatar VARCHAR(200),
 	user_email VARCHAR(100),
 	user_pwd VARCHAR(200),
+	user_bday DATE DEFAULT NULL,
 	user_confirmed_acc DATETIME DEFAULT NULL,
 	user_deleted DATETIME DEFAULT NULL
 );
@@ -47,7 +48,10 @@ CREATE TABLE user_permission(
 
 INSERT INTO users(user_fname, user_username, user_email, user_pwd, user_confirmed_acc)
 VALUES
-	('Mario Sancho', 'escrotocolgante', 'mail@mail.mail', 
+	('Mario Sancho', 'escrotocolgante', 'mail@mail.mail', '$2y$10$bCXdj6kIDMAO/benyNLHs.JVtf2uIsB1aZ/f3EEYMEK0yVw87u0yO', NOW()),
+	('Jose Luis El Bizco', 'joseluis.ak.elbizco', 'com@com.com', '$2y$10$bCXdj6kIDMAO/benyNLHs.JVtf2uIsB1aZ/f3EEYMEK0yVw87u0yO', NOW()),
+	('Elisabeth Deaper', 'la.effy.d', 'effy@mail.co', '$2y$10$bCXdj6kIDMAO/benyNLHs.JVtf2uIsB1aZ/f3EEYMEK0yVw87u0yO', NOW()),
+	('Fernando Fernandez', 'ff_15', 'ffmail@email.f', '$2y$10$bCXdj6kIDMAO/benyNLHs.JVtf2uIsB1aZ/f3EEYMEK0yVw87u0yO', NOW());
 
 INSERT INTO permissions(permission_rol)
 VALUES ('admin'), ('master');

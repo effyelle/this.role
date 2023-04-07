@@ -20,7 +20,7 @@
             </div>
             <!--begin::Logo-->
             <a href="/" class="d-flex align-items-center">
-                <img class="w-40px w-lg-55px" src="/assets/appmedia/logos/icon64x64.png" alt=""/>
+                <img class="w-40px w-lg-55px" src="/assets/media/logos/icon64x64.png" alt=""/>
                 <div class="ms-5">
                     <div class="ff-poiret fs-4 fw-bolder text-white d-flex flex-column">
                         <span>THIS.</span>
@@ -47,8 +47,8 @@
                      data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                     <!--begin::Name-->
                     <div class="d-none d-md-flex flex-column align-items-end justify-content-center me-2 me-md-4">
-                        <span class="text-muted fs-8 fw-bold lh-1 mb-1">User Name</span>
-                        <span class="text-white fs-8 fw-bolder lh-1">Permission</span>
+                        <span class="text-muted fs-8 fw-bold lh-1 mb-1"><?= $_SESSION['user']['username'] ?></span>
+                        <span class="text-white fs-8 fw-bolder lh-1">Admin</span>
                     </div>
                     <!--end::Name-->
                     <!--begin::Symbol-->

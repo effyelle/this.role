@@ -71,7 +71,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const defaultGameImg = '/assets/appmedia/games/frame.png';
+        const defaultGameImg = '/assets/media/games/frame.png';
         let editBtn = $('.edit-btn');
     });
 </script>

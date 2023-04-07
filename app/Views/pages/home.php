@@ -13,7 +13,7 @@
             <!--end::Header-->
             <!--begin::Body-->
             <div class="card-boy d-flex flex-column align-items-center mb-4">
-                <img height="250" src="/assets/appmedia/imgs/dice_bag.png" alt=""/>
+                <img height="250" src="/assets/media/imgs/dice_bag.png" alt=""/>
                 <h1 class="my-6">Welcome to This.Role!</h1>
                 <div class="ff-poiret d-flex flex-row justify-content-center text-center gap-12">
                     <a href="/games/list"

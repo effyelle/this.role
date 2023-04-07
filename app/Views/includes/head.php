@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>This.Role - <?php if (isset($title)) echo esc($title); ?></title>
-    <link rel="icon" href="/assets/appmedia/logos/icon64x64.png" sizes="64x64"/>
+    <link rel="icon" href="/assets/media/logos/icon64x64.png" sizes="64x64"/>
 
     <!-- begin::CustomFonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com"/>

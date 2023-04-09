@@ -39,7 +39,7 @@
                                         <input id="avatar" name="avatar" type="file" accept="image/*" class="d-none">
                                         <span id="avatar-input-holder" class="symbol-label circle"></span>
                                     </div>
-                                    <div class="d-flex flex-row flex-wrap gap-4 editable-item d-none">
+                                    <div class="d-flex flex-row flex-wrap gap-4 editable-item">
                                         <label for="avatar" class="btn p-1 text-hover-primary fs-7">
                                             Change
                                         </label>

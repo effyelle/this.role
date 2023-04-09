@@ -23,9 +23,9 @@ class UsersModel extends Model
     {
         $builder = (\Config\Database::connect())->table($this->table);
         $builder->select('*');
-        $builder->where('user_confirmed_acc IS NOT NULL', null, false);
-        $builder->where('user_deleted IS NULL', null, false);
         if (isset($username)) {
+            $builder->where('user_confirmed_acc IS NOT NULL', null, false);
+            $builder->where('user_deleted IS NULL', null, false);
             $builder->where('user_username', $username);
         }
         if ($user = $builder->get()->getResultArray()) {

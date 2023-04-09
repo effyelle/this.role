@@ -16,7 +16,7 @@ class Games extends BaseController
         $data['gamesSample'] = [
             [
                 'id_game' => 1,
-                'id_user' => 3,
+                'id_user' => 5,
                 'username' => 'username1',
                 'title' => 'Titulo',
                 'img_src' => '9fa22b8469d26d2a93181739bc4a3fed.jpg'

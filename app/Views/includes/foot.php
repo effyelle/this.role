@@ -54,6 +54,16 @@
         }
         return str;
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        $.ajax({
+            type: "get",
+            url: "/app/hola",
+            success: function (data) {
+                console.log(data);
+            }
+        })
+    });
 </script>
 <!-- end::Custom Scripts-->
 </body>

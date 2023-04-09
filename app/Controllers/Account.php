@@ -31,6 +31,8 @@ class Account extends BaseController
                 echo json_encode(['response' => false, 'user' => $user]);
                 return;
             }
+            echo json_encode(['response' => false, 'user' => [$username, $pwd]]);
+            return;
         }
         echo json_encode(['response' => false]);
     }
@@ -55,7 +57,7 @@ class Account extends BaseController
         return template('account_created');
     }
 
-    function my_profile()
+    function my_profile(): void
     {
         if (isset($_SESSION['user'])) {
             $user = $this->model->get($_SESSION['user']['username']);
@@ -65,4 +67,24 @@ class Account extends BaseController
         echo json_encode(['response' => false]);
     }
 
+    function users()
+    {
+        if ($users = $this->model->get()) {
+            echo json_encode(['data' => $this->array_for_datatables($users)]);
+        }
+    }
+
+    function array_for_datatables($array): array
+    {
+        $json = [];
+        for ($i = 0; $i < count($array); $i++) {
+            foreach ($array[$i] as $k => $v) {
+                $val = isset($v) && $v !== ''
+                    ? '<input type="text" class="form-control form-control-solid this-role-form-field" value="' . $v . '" disabled/>'
+                    : '<input type="text" class="form-control form-control-solid this-role-form-field"/>';
+                $json[$i][$k] = $val;
+            }
+        }
+        return $json;
+    }
 }

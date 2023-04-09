@@ -6,7 +6,14 @@ class App extends BaseController
 {
     public function __construct()
     {
-        user_exists();
+        if (check_session()) {
+            user_exists();
+        }
+    }
+
+    public function hola(): bool
+    {
+        return true;
     }
 
     public function index(): string
@@ -43,26 +50,37 @@ class App extends BaseController
 
     function myprofile(): string
     {
-        return template('profile');
+        if (isset($_SESSION['user'])) return template('profile');
+        return template('login');
     }
 
     function games_list(): string
     {
-        return (new Games)->list();
+        if (isset($_SESSION['user'])) return (new Games)->list();
+        return template('login');
     }
 
-    function admin_users():string
+    function admin_users(): string
     {
-        return template('admin/users');
+        if (isset($_SESSION['user'])) return template('admin/users');
+        return template('login');
     }
 
-    function admin_games():string
+    function admin_games(): string
     {
-        return template('admin/games');
+        if (isset($_SESSION['user'])) return template('admin/games');
+        return template('login');
     }
 
-    function admin_patch_notes():string
+    function admin_patch_notes(): string
     {
-        return template('admin/patch');
+        if (isset($_SESSION['user'])) return template('admin/patch');
+        return template('login');
+    }
+
+    function admin($switch):string
+    {
+        if (isset($_SESSION['user'])) return (new Account())->$switch();
+        return template('login');
     }
 }

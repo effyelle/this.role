@@ -530,3 +530,7 @@ input.form-control.this-role-form-field[disabled] {
         padding: 0 65px !important;
     }
 }
+
+a.btn-link:hover, .btn-link:hover {
+    text-decoration: underline !important;
+}

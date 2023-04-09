@@ -64,19 +64,7 @@ $app->setContext($context);
  * up the engines and make this app do its thang.
  */
 
-/*
- *---------------------------------------------------------------
- * CONFIG TIMEOUT FOR SESSION
- *---------------------------------------------------------------
- */
-
-if (isset($_SESSION['session_last_activity']) && (time() - $_SESSION['session_last_activity']) > 1800) {// time() measure is in seconds
-    session_unset();
-    session_destroy();
-}
-
 session_start();
-$_SESSION['session_last_activity'] = time();
 
 /*
  *---------------------------------------------------------------

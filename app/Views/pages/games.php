@@ -28,10 +28,10 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                                 <!--begin::Icon-->
                                 <div class="d-flex flex-column">
                                     <div class="symbol symbol-125px symbol-sm-150px symbol-lg-150px symbol-xl-200px me-5 circle game-img">
-                                            <span class="symbol-label circle game-img"
-                                                  style=" background: url(<?= $gamesPicFolder . $game['img_src'] ?>) no-repeat;
-                                                          background-size: cover;">
-                                            </span>
+                                        <span class="symbol-label circle game-img"
+                                              style=" background: url(<?= $gamesPicFolder . $game['img_src'] ?>) no-repeat;
+                                                      background-size: cover;">
+                                        </span>
                                     </div>
                                 </div>
                                 <!--end::Icon-->
@@ -43,15 +43,16 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                                     </div>
                                     <!--end::Title-->
                                     <!--begin::Details-->
+                                    <!--
                                     <div class="d-flex flex-column justify-content-center">
                                         <span class="d-flex flex-row gap-4 align-items-center align-self-end">
-                                            <?= $game['id_user'] == $_SESSION['user']['id']
+                                            <?php /*echo $game['id_user'] == $_SESSION['user']['id']
                                                 ? '<span class="badge badge-light flex-column fw-bolder my-2 px-2">Created by you</span>
                                                     <button class="btn btn-link fs-7 fs-xl-5 text-end py-0 edit-btn">Edit</button>'
-                                                : ''
-                                            ?>
+                                                : '';*/ ?>
                                         </span>
                                     </div>
+                                    -->
                                     <!--end::Details-->
                                 </div>
                                 <!--end::Section-->

@@ -28,10 +28,10 @@ class Account extends BaseController
                     echo json_encode(['response' => true]);
                     return;
                 }
-                echo json_encode(['response' => false, 'user' => $user]);
+                echo json_encode(['response' => false, 'pwd_incorrect' => $user]);
                 return;
             }
-            echo json_encode(['response' => false, 'user' => [$username, $pwd]]);
+            echo json_encode(['response' => false, 'user_not_found' => [$username, $pwd]]);
             return;
         }
         echo json_encode(['response' => false]);
@@ -80,7 +80,7 @@ class Account extends BaseController
         for ($i = 0; $i < count($array); $i++) {
             foreach ($array[$i] as $k => $v) {
                 $val = isset($v) && $v !== ''
-                    ? '<input type="text" class="form-control form-control-solid this-role-form-field" value="' . $v . '" disabled/>'
+                    ? "<input type='text' class='form-control form-control-solid this-role-form-field' value='$v'/>"
                     : '<input type="text" class="form-control form-control-solid this-role-form-field"/>';
                 $json[$i][$k] = $val;
             }

@@ -30,8 +30,8 @@
             success: function (data) {
                 console.log(data);
             }
-        })
-
+        });
+        /*
         $('#users-admin_table').DataTable({
             ajax: '/app/admin/users',
             columns: [
@@ -41,6 +41,6 @@
                 {title: "Confirmed", data: "user_confirmed_acc"},
                 {title: "Deleted", data: "user_deleted"}
             ]
-        });
+        });*/
     });
 </script>

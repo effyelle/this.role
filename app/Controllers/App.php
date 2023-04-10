@@ -13,6 +13,7 @@ class App extends BaseController
 
     public function hola(): bool
     {
+        var_dump($_SESSION);
         return true;
     }
 
@@ -38,7 +39,7 @@ class App extends BaseController
 
     function logout(): string
     {
-        session_destroy();
+        if (isset($_SESSION['user'])) session_destroy();
         return template('login');
     }
 
@@ -60,27 +61,11 @@ class App extends BaseController
         return template('login');
     }
 
-    function admin_users(): string
+    function admin($switch): string
     {
-        if (isset($_SESSION['user'])) return template('admin/users');
-        return template('login');
-    }
-
-    function admin_games(): string
-    {
-        if (isset($_SESSION['user'])) return template('admin/games');
-        return template('login');
-    }
-
-    function admin_patch_notes(): string
-    {
-        if (isset($_SESSION['user'])) return template('admin/patch');
-        return template('login');
-    }
-
-    function admin($switch):string
-    {
-        if (isset($_SESSION['user'])) return (new Account())->$switch();
+        if (isset($_SESSION['user'])) {
+            return (new Users())->$switch();
+        }
         return template('login');
     }
 }

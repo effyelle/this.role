@@ -1,5 +1,5 @@
 <!--begin::Form-->
-<form id="login" action="/account/login" method="post"
+<form id="login" autocomplete="off"
       class="d-flex flex-column justify-content-center align-items-center account-options mx-auto col-10 w-sm-400px">
     <!--begin::Form Field-->
     <div class="my-4">
@@ -13,8 +13,7 @@
         <label for="pwd" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">Password</label>
         <input type="password" id="pwd" name="pwd"
                class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
-        <a href="#" class="d-block fw-bolder text-info text-hover-info fs-7 mx-auto text-center">Forgot your
-            password?</a>
+        <a href="#" class="d-block fw-bolder text-info text-hover-info fs-7 mx-auto text-center">Forgot your password?</a>
     </div>
     <!--end::Form Field-->
     <!--begin::Form Button-->
@@ -22,11 +21,6 @@
         <button type="button" id="loginBtn" class="btn btn-primary">Login</button>
     </div>
     <!--end::Form Button-->
-    <?php
-    if (isset($_SESSION)) {
-        var_dump($_SESSION);
-    }
-    ?>
 </form>
 <!--end::Form-->
 <div class="m-auto my-4 text-center">

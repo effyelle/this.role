@@ -9,7 +9,6 @@ use CodeIgniter\Validation\ValidationInterface;
 class UsersModel extends Model
 {
     protected $table = 'users';
-    protected array $relatedTable = ['user_permission', 'permissions'];
     protected $primaryKey = 'id';
 
     protected $useAutoIncrement = true;
@@ -23,10 +22,8 @@ class UsersModel extends Model
     {
         $builder = (\Config\Database::connect())->table($this->table);
         $builder->select('*');
-        $builder->join($this->relatedTable[0], $this->relatedTable[0] . '.id_user = ' . $this->table . '.user_id');
-        $builder->join($this->relatedTable[1], $this->relatedTable[0] . 'id_permission = ' . $this->relatedTable[1] . 'permission_id');
         if (isset($username)) {
-            $builder->where('user_confirmed_acc IS NOT NULL', null, false);
+            $builder->where('user_confirmed IS NOT NULL', null, false);
             $builder->where('user_deleted IS NULL', null, false);
             $builder->where('user_username', $username);
         }

@@ -68,67 +68,73 @@
                         </a>
                     </div>
                     <!--end::Menu Item-->
-                    <!--begin::Menu Accordion-->
-                    <div class="menu-item">
-                        <div class="menu-content p-0">
-                            <div class="separator mx-1"></div>
+                    <?php if (isset($_SESSION['user']) && ($_SESSION['user']['rol'] === 'admin' || $_SESSION['user']['rol'] === 'master')): ?>
+                        <!--begin::Admin section separator-->
+                        <div class="menu-item">
+                            <div class="menu-content p-0">
+                                <div class="separator mx-1"></div>
+                            </div>
                         </div>
-                    </div>
-                    <!--end::Menu Accordion-->
-                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                        <!--begin:Menu link-->
-                        <span class="menu-link">
+                        <!--begin::AdminMenu Accordion-->
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                            <!--begin:Menu link-->
+                            <span class="menu-link">
 							<span class="menu-icon">
                                 <i class="fa fa-solid fa-gear fa-lg hover-flip"></i>
 							</span>
 							<span class="menu-title">Settings</span>
 							<span class="menu-arrow"></span>
 						</span>
-                        <!--end:Menu link-->
-                        <!--begin:Menu sub-->
-                        <div class="menu-sub menu-sub-accordion">
-                            <!--begin:Menu item-->
-                            <div class="menu-item">
-                                <!--begin:Menu link-->
-                                <a class="menu-link" href="/app/admin_users">
+                            <!--end:Menu link-->
+                            <!--begin:Menu sub-->
+                            <div class="menu-sub menu-sub-accordion">
+                                <!--begin:Menu item-->
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link" href="/app/admin/users">
 										<span class="menu-bullet">
                                             <i class="fa fa-solid fa-user"></i>
 										</span>
-                                    <span class="menu-title">Users</span>
-                                </a>
-                                <!--end:Menu link-->
-                            </div>
-                            <!--end:Menu item-->
-                            <!--begin:Menu item-->
-                            <div class="menu-item">
-                                <!--begin:Menu link-->
-                                <a class="menu-link" href="/app/admin_games">
+                                        <span class="menu-title">Users</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                                <!--end:Menu item-->
+                                <!--begin:Menu item-->
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link" href="/app/admin/games">
 										<span class="menu-bullet">
                                             <i class="fa fa-solid fa-dice-d20"></i>
 										</span>
-                                    <span class="menu-title">Games</span>
-                                </a>
-                                <!--end:Menu link-->
-                            </div>
-                            <!--end:Menu item-->
-                            <!--begin:Menu item-->
-                            <div class="menu-item">
-                                <a class="menu-link" href="/app/admin_patch_notes">
+                                        <span class="menu-title">Games</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                                <!--end:Menu item-->
+                                <!--begin:Menu item-->
+                                <!--
+                                <div class="menu-item">
+                                    <a class="menu-link" href="/app/admin/patch_notes">
 										<span class="menu-bullet">
                                             <i class="fa fa-solid fa-dragon"></i>
 										</span>
-                                    <span class="menu-title">Patch Notes</span>
-                                </a>
+                                        <span class="menu-title">Patch Notes</span>
+                                    </a>
+                                </div>
+                                -->
+                                <!--end:Menu item-->
                             </div>
-                            <!--end:Menu item-->
+                            <!--end:Menu sub-->
                         </div>
-                        <!--end:Menu sub-->
-                    </div>
-                    <div class="menu-item">
-                        <div class="menu-content p-0">
-                            <div class="separator mx-1"></div>
+                        <!--end::AdminMenu Accordion-->
+                        <div class="menu-item">
+                            <div class="menu-content p-0">
+                                <div class="separator mx-1"></div>
+                            </div>
                         </div>
-                    </div>
+                        <!--end::Admin section separator-->
+                    <?php endif; ?>
                 </div>
                 <!--end::Menu-->
             </div>

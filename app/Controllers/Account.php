@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use Config\Paths;
+
 class Account extends BaseController
 {
     protected $model;
@@ -24,6 +26,7 @@ class Account extends BaseController
                         'username' => $user['user_username'],
                         'avatar' => $user['user_avatar'],
                         'email' => $user['user_email'],
+                        'rol' => $user['user_rol']
                     ];
                     echo json_encode(['response' => true]);
                     return;
@@ -43,13 +46,17 @@ class Account extends BaseController
         $email = $_POST['email'] ?? false;
         $pwd = $_POST['pwd'] ?? false;
         if ($user && $email && $pwd) {
-            $pwd = password_hash($pwd, PASSWORD_DEFAULT);
-            if ($id = $this->model->new($user, $email, $pwd)) {
-                echo json_encode(['response' => true, 'id' => $id]);
-                return;
+            if ($this->send_confirmation()) {
+                $pwd = password_hash($pwd, PASSWORD_DEFAULT);
+                if ($id = $this->model->new($user, $email, $pwd)) {
+                    echo json_encode(['response' => true, 'id' => $id]);
+                    return;
+                }
+                echo json_encode(['response' => false, 'msg' => 'User could not be added']);
             }
+            echo json_encode(['response' => false, 'msg' => 'Mail could not be sent']);
         }
-        echo json_encode(['response' => false]);
+        echo json_encode(['response' => false, 'msg' => 'Some or all fields are empty']);
     }
 
     function created(): string
@@ -67,24 +74,21 @@ class Account extends BaseController
         echo json_encode(['response' => false]);
     }
 
-    function users()
+    public function send_confirmation($token): bool
     {
-        if ($users = $this->model->get()) {
-            echo json_encode(['data' => $this->array_for_datatables($users)]);
-        }
+        $to = 'ericapastorgracia@gmail.com';
+        $email = \Config\Services::email();
+        $email->setTo($to);
+        $email->setSubject('Confirm Your Account');
+        $email->setMessage(view('templates/mail/confirm_account_html', ['token' => $token]));
+        $email->setAltMessage(view('templates/mail/confirm_account_txt', ['token' => $token]));
+        $email->setReplyTo(null);
+        return $email->send();
     }
 
-    function array_for_datatables($array): array
+    function read_file()
     {
-        $json = [];
-        for ($i = 0; $i < count($array); $i++) {
-            foreach ($array[$i] as $k => $v) {
-                $val = isset($v) && $v !== ''
-                    ? "<input type='text' class='form-control form-control-solid this-role-form-field' value='$v'/>"
-                    : '<input type="text" class="form-control form-control-solid this-role-form-field"/>';
-                $json[$i][$k] = $val;
-            }
-        }
-        return $json;
+        echo file_get_contents(__DIR__ . '/../Views/templates/mail/confirm_account.html', true);
+        //echo file_get_contents(__DIR__ . '/../Views/templates/mail/confirm_account.txt', true);
     }
 }

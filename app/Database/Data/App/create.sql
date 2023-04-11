@@ -19,9 +19,8 @@ CREATE TABLE users(
 
 CREATE TABLE tokens(
 	token VARCHAR(100) PRIMARY KEY,
-	token_user INT UNSIGNED,
-	token_expires DATETIME DEFAULT DATE_ADD(NOW(), INTERVAL 1 DAY),
-	FOREIGN KEY(token_user) REFERENCES users(user_id)
+	token_user VARCHAR(100),
+	token_expires DATETIME DEFAULT DATE_ADD(NOW(), INTERVAL 1 DAY)
 );
 
 CREATE TABLE games(

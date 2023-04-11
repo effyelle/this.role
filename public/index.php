@@ -64,6 +64,7 @@ $app->setContext($context);
  * up the engines and make this app do its thang.
  */
 
+date_default_timezone_set('Europe/Madrid');
 session_start();
 
 /*

@@ -4,14 +4,18 @@ namespace App\Controllers;
 
 class Account extends BaseController
 {
-    protected mixed $model;
+    protected mixed $usermodel;
+    protected mixed $tokenmodel;
+    protected mixed $mailer;
 
     /**
-     * Construct of this class will always set up users model.
+     * Construct of this class will always set up users model and the mailer.
      */
     public function __construct()
     {
-        $this->model = model('UsersModel');
+        $this->usermodel = model('UsersModel');
+        $this->tokenmodel = model('TokenModel');
+        $this->mailer = \Config\Services::email();
     }
 
     /**
@@ -36,7 +40,7 @@ class Account extends BaseController
         $username = $_POST['username'] ?? false;
         $pwd = $_POST['pwd'] ?? false;
         if ($username && $pwd) {
-            if ($user = $this->model->get($username)) {
+            if ($user = $this->usermodel->get($username)) {
                 if (password_verify($pwd, $user['user_pwd'])) {
                     $_SESSION['user'] = [
                         'id' => $user['user_id'],
@@ -55,7 +59,7 @@ class Account extends BaseController
             echo json_encode(['response' => false, 'msg' => 'User not found.']);
             return;
         }
-        echo json_encode(['response' => false]);
+        echo json_encode(['response' => false, 'data'=>[$username, $pwd]]);
     }
 
     /**
@@ -83,19 +87,19 @@ class Account extends BaseController
             return;
         }
         // Check username
-        if ($this->model->get($user)) {
+        if ($this->usermodel->get($user)) {
             echo json_encode(['response' => false, 'msg' => 'That username has already been chosen.']);
             return;
         }
         // Check email
-        if ($this->model->get($user, $email)) {
+        if ($this->usermodel->get($user, $email)) {
             echo json_encode(['response' => false, 'msg' => 'That email is already in use.']);
             return;
         }
         // Send confirmation email and insert new user into Database
-        if ($this->send_confirmation_email($email)) {
+        if ($this->sendConfirmationEmail($email)) {
             $pwd = password_hash($pwd, PASSWORD_DEFAULT);
-            if ($this->model->new($user, $email, $pwd)) {
+            if ($this->usermodel->new($user, $email, $pwd)) {
                 echo json_encode(['response' => true, 'msg' => '']);
                 return;
             }
@@ -105,47 +109,70 @@ class Account extends BaseController
         echo json_encode(['response' => false, 'msg' => 'Mail could not be sent']);
     }
 
+    /**
+     * -----------------------------------------------------------------------------------------------------------------
+     * Generate Token for email
+     * -----------------------------------------------------------------------------------------------------------------
+     *
+     * @param string $email
+     * @return string|bool
+     */
+    private function generateToken(string $email): string|bool
+    {
+        $token = time();
+        if ($this->tokenmodel->new($token, $email)) {
+            return $token;
+        }
+        return false;
+    }
+
+    /**
+     * -----------------------------------------------------------------------------------------------------------------
+     * Confirmation email
+     * -----------------------------------------------------------------------------------------------------------------
+     * Generates token and includes it in the email body sent to the address given.
+     *
+     * @param $email
+     * @return bool
+     */
+    function sendConfirmationEmail($email): bool
+    {
+        // Generate token
+        $token = $this->generateToken($email);
+        var_dump($token);
+        if (!$token) return false;
+        // Send email
+        echo '<br>here';
+        $to = $email;
+        $this->mailer->setTo($to);
+        $this->mailer->setSubject('Confirm Your Account');
+        $this->mailer->setMessage(view('templates/mail/confirm_account_html', ['token' => $token]));
+        $this->mailer->setAltMessage(view('templates/mail/confirm_account_txt', ['token' => $token]));
+        $this->mailer->setReplyTo(null);
+        return $this->mailer->send();
+    }
+
+    public function confirm($token): string
+    {
+        $t = $this->tokenmodel->get($token);
+        if (!$t) return template('tokens/token_expired', ['unlogged' => true]);
+        if (!$this->usermodel->confirmAccount($t['token_user'])) return template('tokens/confirm_problem', ['unlogged' => true]);
+        $this->tokenmodel->del($token);
+        return template('tokens/account_confirmed', ['unlogged' => true]);
+    }
+
     function created(): string
     {
-        return template('account_created');
+        return template('tokens/account_created');
     }
 
     function my_profile(): void
     {
         if (isset($_SESSION['user'])) {
-            $user = $this->model->get($_SESSION['user']['username']);
+            $user = $this->usermodel->get($_SESSION['user']['username']);
             echo json_encode(['response' => true, 'user' => $user]);
             return;
         }
         echo json_encode(['response' => false]);
-    }
-
-    public function generateToken(): string
-    {
-        $token = time();
-        $model = new \App\Models\TokenModel();
-        if ($t = $model->new($token, 3)) {
-            var_dump($t);
-        }
-        return $token;
-    }
-
-    public function send_confirmation_email($email): bool
-    {
-        $token = $this->generateToken();
-        $to = $email;
-        $email = \Config\Services::email();
-        $email->setTo($to);
-        $email->setSubject('Confirm Your Account');
-        $email->setMessage(view('templates/mail/confirm_account_html', ['token' => $token]));
-        $email->setAltMessage(view('templates/mail/confirm_account_txt', ['token' => $token]));
-        $email->setReplyTo(null);
-        return $email->send();
-    }
-
-    function read_file()
-    {
-        echo file_get_contents(__DIR__ . '/../Views/templates/mail/confirm_account.html', true);
-        //echo file_get_contents(__DIR__ . '/../Views/templates/mail/confirm_account.txt', true);
     }
 }

@@ -69,8 +69,12 @@ class UsersModel extends Model
         return false;
     }
 
-    function user_has_permission($id_user, $id_permission)
+    function confirmAccount($email): bool
     {
-
+        if (!$this->get(null, $email)) {
+            return false;
+        }
+        $builder = db::connect()->table($this->table);
+        return $builder->update(['user_confirmed' => date('Y-m-d h:i:s', time())], ['user_email' => $email]);
     }
 }

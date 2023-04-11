@@ -7,11 +7,13 @@
             <!--begin::Header-->
             <div class="card-header flex-column justify-content-center align-items-center py-3">
                 <div class="card-toolbar gap-5">
-                    <h2 class="m-auto">Your account was created.</h2>
+                    <h2 class="m-auto">There was a problem confirming your account.</h2>
                 </div>
-                <p>Please wait for your confirmation email to activate your account.</p>
                 <div class="m-auto my-4 text-center">
-                    <a href="/app/login" class="link-info">Log in</a>
+                    <a href="/app/signup" class="link-info">Sign up</a>
+                </div>
+                <div class="m-auto my-4 text-center">
+                    <a href="app/login" class="link-info">Login</a>
                 </div>
             </div>
             <!--end::Header-->

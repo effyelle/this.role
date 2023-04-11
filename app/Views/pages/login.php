@@ -1,6 +1,6 @@
 <!--begin::Form-->
 <form id="login" autocomplete="off"
-      class="d-flex flex-column justify-content-center align-items-center account-options mx-auto col-10 w-sm-400px">
+      class="d-flex flex-column justify-content-center align-items-center account-options mx-auto col-10 w-sm-400px login">
     <!--begin::Form Field-->
     <div class="my-4">
         <label for="username" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">Username</label>

@@ -1,6 +1,6 @@
 <!--begin::Form-->
 <form autocomplete="off"
-      class="d-flex flex-column justify-content-center align-items-center account-options mx-auto col-10">
+      class="d-flex flex-column justify-content-center align-items-center account-options mx-auto col-10 signup">
     <p id="ajax_signup-response" class="text-center text-danger"></p>
     <!--begin::Row-->
     <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">

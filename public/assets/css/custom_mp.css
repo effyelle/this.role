@@ -377,7 +377,7 @@ input.this-role-form-field.form-control.form-control-solid {
 }
 
 @media (min-width: 992px) {
-    .wrapper.login, .wrapper.signup, .wrapper.account_created {
+    .wrapper.unlogged {
         padding-left: 0;
     }
 }

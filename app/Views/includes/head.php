@@ -40,4 +40,5 @@
     <!--begin::Page-->
     <div class="page d-flex flex-row flex-column-fluid">
         <!--begin::Wrapper-->
-        <div class="wrapper d-flex flex-column flex-row-fluid <?= $page??''; ?>" id="kt_wrapper">
+        <div class="wrapper d-flex flex-column flex-row-fluid <?php if (isset($unlogged) && $unlogged) echo 'unlogged'; ?>"
+             id="kt_wrapper">

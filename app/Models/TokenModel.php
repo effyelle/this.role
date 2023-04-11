@@ -18,20 +18,23 @@ class TokenModel extends Model
     protected $allowedFields = ['token', 'token_user', 'token_expires'];
 
     /**
-     * @param string $token
+     * @param string|null $token
      * @param bool $exp
      * @return array|bool
      */
-    function get(string $token, bool $exp = true): array|bool
+    function get(string $token = null, bool $exp = true): array|bool
     {
         $builder = db::connect()->table($this->table);
         $builder->select('token, token_user');
-        $builder->where('token', $token);
+        if (isset($token)) {
+            $builder->where('token', $token);
+        }
         if ($exp) {
             $builder->where('token_expires >', date('Y-m-d h:i:s', time()));
         }
-        if ($token = $builder->get()->getResultArray()) {
-            if (count($token) === 1) return $token[0];
+        if ($tokens = $builder->get()->getResultArray()) {
+            if (count($tokens) === 1) return $tokens[0];
+            if (count($tokens) > 0) return $tokens;
         }
         return false;
     }
@@ -48,5 +51,15 @@ class TokenModel extends Model
             return $this->get($token);
         }
         return false;
+    }
+
+    /**
+     * @param string $token
+     * @return bool
+     */
+    function del(string $token): bool
+    {
+        $builder = db::connect()->table($this->table);
+        return $builder->update(['token_expires' => date('Y-m-d h:i:s', time())], ['token' => $token]);
     }
 }

@@ -39,6 +39,7 @@
                 <p class="text-center">
                     We seem to have encoutered some errors, please try again.
                 </p>
+                <p id="ajax_login-response" class="text-center text-danger"></p>
                 <button class="btn btn-primary d-block mx-auto mt-5" data-bs-dismiss="modal" tabindex="-1">Okay</button>
             </div>
         </div>
@@ -58,6 +59,7 @@
             let form = getForm('.login');
             if (form) {
                 sendForm(form);
+                $('#ajax_login-response').html('');
                 return;
             }
             $('#login_error').trigger('click');
@@ -76,6 +78,7 @@
                         return;
                     }
                     $('#login_error').trigger('click');
+                    $('#ajax_login-response').html(data['msg']);
                 }
             });
         }

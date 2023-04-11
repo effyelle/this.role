@@ -18,7 +18,7 @@ class UsersModel extends Model
 
     protected $allowedFields = ['user_id', 'user_fname', 'user_username', 'user_avatar', 'user_email', 'user_pwd', 'user_confirmed_account', 'user_deleted'];
 
-    function get(string $username = null): array|bool
+    function get(string $username = null, $email = null): array|bool
     {
         $builder = (\Config\Database::connect())->table($this->table);
         $builder->select('*');
@@ -26,6 +26,9 @@ class UsersModel extends Model
             $builder->where('user_confirmed IS NOT NULL', null, false);
             $builder->where('user_deleted IS NULL', null, false);
             $builder->where('user_username', $username);
+        }
+        if (isset($email)) {
+            $builder->where('user_email', $email);
         }
         if ($user = $builder->get()->getResultArray()) {
             if (count($user) > 1) return $user;

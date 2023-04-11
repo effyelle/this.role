@@ -13,8 +13,8 @@
         <label for="pwd" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">Password</label>
         <input type="password" id="pwd" name="pwd"
                class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
-        <a href="#" class="d-block fw-bolder text-info text-hover-info fs-7 mx-auto text-center">Forgot your
-            password?</a>
+        <a href="/app/reset_pwd"
+           class="d-block fw-bolder text-info text-hover-info fs-7 mx-auto text-center">Forgot password?</a>
     </div>
     <!--end::Form Field-->
     <!--begin::Form Button-->
@@ -93,6 +93,5 @@
                 }
             });
         }
-
     });
 </script>

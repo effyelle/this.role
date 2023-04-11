@@ -14,8 +14,8 @@
 <div style="margin:auto;padding:150px 40px;height: 200px; width: 600px;
     background: url('https://i.pinimg.com/564x/87/18/65/871865109e0425b869feee16a384402b.jpg') no-repeat;background-size: cover;">
     <p style="margin: 20px auto;">
-        Welcome to This.Role! To confirm your account, please follow this
-        <a href="this.role.com/account/confirm/<?= $token ?>" style="text-decoration: underline;color: #f0f0f0;">
+        Welcome to This.Role! To reset your password, please follow this
+        <a href="this.role.com/account/resetpwd/<?= $token ?>" style="text-decoration: underline;color: #f0f0f0;">
             link
         </a>.
     </p>

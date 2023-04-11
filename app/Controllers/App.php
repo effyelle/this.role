@@ -69,13 +69,39 @@ class App extends BaseController
         return template('login', ['unlogged' => true]);
     }
 
+    function reset_pwd(): string
+    {
+        return template('tokens/reset_password_request', ['unlogged' => true]);
+    }
+
     function send_confirmation_email()
     {
         if (isset($_POST['email']) && $this->validate(['email' => 'required|valid_email'], ['email' => $_POST['email']])) {
-            if ((new Account())->sendConfirmationEmail($_POST['email'])) {
-                return template('tokens/account_created', ['unlogged' => true]);
+            if (model('UsersModel')->get(null, $_POST['email'])) {
+                if ((new Account())->sendConfirmationEmail($_POST['email'])) {
+                    return template('tokens/email_sent', ['unlogged' => true]);
+                }
             }
+            return template('tokens/confirm_problem', ['unlogged' => true, 'problem' => 'Email given is not registered.']);
         }
         return template('tokens/token_expired', ['unlogged' => true]);
+    }
+
+    function send_reset_pwd()
+    {
+        if (isset($_POST['email']) && $this->validate(['email' => 'required|valid_email'], ['email' => $_POST['email']])) {
+            if (model('UsersModel')->get(null, $_POST['email'])) {
+                if ((new Account())->sendResetPasswordEmail($_POST['email'])) {
+                    return template('tokens/email_sent', ['unlogged' => true]);
+                }
+            }
+            return template('tokens/confirm_problem', ['unlogged' => true, 'problem' => 'Email given is not registered.']);
+        }
+        return template('tokens/token_expired', ['unlogged' => true]);
+    }
+
+    function pwd_was_resetted(): string
+    {
+        return template('tokens/pwd_was_resetted', ['unlogged' => true]);
     }
 }

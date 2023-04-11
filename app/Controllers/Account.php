@@ -154,6 +154,21 @@ class Account extends BaseController
         return $this->mailer->send();
     }
 
+    function sendResetPasswordEmail($email): bool
+    {
+        // Generate token
+        $token = $this->generateToken($email);
+        if (!$token) return false;
+        // Send email
+        $to = $email;
+        $this->mailer->setTo($to);
+        $this->mailer->setSubject('Password Reset');
+        $this->mailer->setMessage(view('templates/mail/reset_pwd_html', ['token' => $token]));
+        $this->mailer->setAltMessage(view('templates/mail/reset_pwd_txt', ['token' => $token]));
+        $this->mailer->setReplyTo(null);
+        return $this->mailer->send();
+    }
+
     public function confirm($token): string
     {
         $t = $this->tokenmodel->get($token);
@@ -163,9 +178,36 @@ class Account extends BaseController
         return template('tokens/account_confirmed', ['unlogged' => true]);
     }
 
+    public function resetpwd($token): string
+    {
+        // Declare data
+        $data = ['unlogged' => true, 'token' => $token];
+        // Exit if token has expired
+        if (!$this->tokenmodel->get($token)) return template('tokens/token_pwd_expired', $data);
+        return template('tokens/new_password', $data);
+
+    }
+
+    function reset_password(): void
+    {
+        // Check request fields
+        if (isset($_POST['pwd']) && isset($_POST['token'])) {
+            $hash = password_hash($_POST['pwd'], PASSWORD_DEFAULT);
+            $email=$this->tokenmodel->get($_POST['token'])['token_user'];
+            if ($this->usermodel->resetPassword($email, $hash)) {
+                $this->tokenmodel->del($_POST['token']);
+                echo json_encode(['response' => true]);
+                return;
+            }
+            echo json_encode(['response' => false, 'msg' => 'There was a problem in database']);
+            return;
+        }
+        echo json_encode(['response' => false, 'msg' => 'Fields are missing', 'data'=>$_POST]);
+    }
+
     function created(): string
     {
-        return template('tokens/account_created', ['unlogged' => true]);
+        return template('tokens/email_sent', ['unlogged' => true]);
     }
 
     function my_profile(): void

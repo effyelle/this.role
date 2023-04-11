@@ -3,14 +3,14 @@
     <!--begin::Col-->
     <div class="mb-xl-10">
         <!--begin::List Widget 6-->
-        <div class="card h-xl-100">
+        <div class="card h-xl-100 bg-transparent">
             <!--begin::Header-->
-            <div class="card-header flex-column justify-content-center align-items-center py-3">
+            <div class="card-header flex-column justify-content-center align-items-center py-6 bg-transparent border-0">
                 <div class="card-toolbar gap-5">
-                    <h2 class="m-auto">There was an unespected problem</h2>
+                    <h2 class="m-auto">Your password was resetted</h2>
                 </div>
-                <div class="m-auto my-4 text-center text-danger">
-                    <?= $problem ?? ''; ?>
+                <div class="card-toolbar gap-5 mt-5">
+                    <a href="/app/login" class="m-auto">Login</a>
                 </div>
             </div>
             <!--end::Header-->

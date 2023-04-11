@@ -78,4 +78,9 @@ class UsersModel extends Model
         $builder = db::connect()->table($this->table);
         return $builder->update(['user_confirmed' => date('Y-m-d h:i:s', time())], ['user_email' => $email]);
     }
+
+    function resetPassword($email, $pwd): bool
+    {
+        return (db::connect()->table($this->table))->update(['user_pwd' => $pwd], ['user_email' => $email]);
+    }
 }

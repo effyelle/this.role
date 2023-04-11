@@ -91,21 +91,6 @@
                         <a href="/app/logout" class="menu-link px-5">Logout</a>
                     </div>
                     <!--end::Menu item-->
-                    <!--begin::Menu separator-->
-                    <div class="separator my-2"></div>
-                    <!--end::Menu separator-->
-                    <!--begin::Menu item-->
-                    <div class="menu-item px-5">
-                        <div class="menu-content px-5">
-                            <label class="form-check form-switch form-check-custom form-check-solid pulse pulse-success"
-                                   for="kt_user_menu_dark_mode_toggle">
-                                <input class="form-check-input w-30px h-20px" type="checkbox" value="1" name="mode"
-                                       id="kt_user_menu_dark_mode_toggle"><!--data-kt-url="app/set_theme/light"-->
-                                <span class="pulse-ring ms-n1"></span>
-                                <span class="form-check-label text-gray-600 fs-7">Dark Mode</span>
-                            </label>
-                        </div>
-                    </div>
                 </div>
                 <!--end::User account menu-->
             </div>

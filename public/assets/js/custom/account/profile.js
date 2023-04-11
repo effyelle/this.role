@@ -6,6 +6,40 @@ document.addEventListener('DOMContentLoaded', function () {
         success: formatProfile
     });
 
+    $('#resetPwdBtn').click(function () {
+        openConfirmation(sendResetPwdMail);
+    });
+    $('#deactivateProfile').click(function () {
+        openConfirmation(deactivateAccount);
+    });
+
+    function openConfirmation(callback) {
+        $('.modal-header h3').html('Are you sure?')
+        $('.confirm_answer').unbind('click');
+        $('.confirm_answer').click(function () {
+            if (this.value === "true") {
+                callback();
+            }
+        });
+    }
+
+    function sendResetPwdMail() {
+        // send email
+        if ($('#email').val() !== '') {
+            $.ajax({
+                url: "/account/send_reset_password_email/" + $('#email').val(),
+                dataType: "json",
+                success: function (data) {
+                    $('.reset-pwd').html(data['msg']);
+                }
+            })
+        }
+    }
+
+    function deactivateAccount() {
+        console.log('Deactivate account -> yet to write');
+    }
+
     function formatProfile(data) {
         if (data['response']) {
             let user = data['user'];

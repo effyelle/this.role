@@ -113,6 +113,20 @@ class Account extends BaseController
         echo json_encode(['response' => false, 'msg' => 'Mail could not be sent']);
     }
 
+    function update(): string
+    {
+        if (isset($_SESSION['user'])) {
+            if (isset($_FILES['avatar'])) {
+                var_dump($_FILES);
+                echo "<br> UPLAOD == <br>";
+                var_dump(upload_img('avatar', '/assets/media/avatars'));
+            }
+            return '';
+            return template('profile');
+        }
+        return template('login', ['unlogged' => true]);
+    }
+
     /**
      * -----------------------------------------------------------------------------------------------------------------
      * Generate Token for email
@@ -154,6 +168,15 @@ class Account extends BaseController
         return $this->mailer->send();
     }
 
+    function send_reset_password_email($email): void
+    {
+        if ($this->sendResetPasswordEmail($email)) {
+            echo json_encode(['response' => true, 'msg' => 'An email has been sent to reset your password.']);
+            return;
+        }
+        echo json_encode(['response' => false, 'msg' => 'There was an error sending the email']);
+    }
+
     function sendResetPasswordEmail($email): bool
     {
         // Generate token
@@ -193,16 +216,17 @@ class Account extends BaseController
         // Check request fields
         if (isset($_POST['pwd']) && isset($_POST['token'])) {
             $hash = password_hash($_POST['pwd'], PASSWORD_DEFAULT);
-            $email=$this->tokenmodel->get($_POST['token'])['token_user'];
+            $email = $this->tokenmodel->get($_POST['token'])['token_user'];
             if ($this->usermodel->resetPassword($email, $hash)) {
                 $this->tokenmodel->del($_POST['token']);
+                if (isset($_SESSION['user'])) session_destroy();
                 echo json_encode(['response' => true]);
                 return;
             }
             echo json_encode(['response' => false, 'msg' => 'There was a problem in database']);
             return;
         }
-        echo json_encode(['response' => false, 'msg' => 'Fields are missing', 'data'=>$_POST]);
+        echo json_encode(['response' => false, 'msg' => 'Fields are missing', 'data' => $_POST]);
     }
 
     function created(): string

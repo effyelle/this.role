@@ -89,8 +89,10 @@
                 data: form,
                 dataType: "json",
                 success: function (data) {
-                    console.log(data)
-                    if (data['response']) window.location.assign('/account/created');
+                    if (data['response']) {
+                        window.location.assign('/account/created');
+                        return;
+                    }
                     $('#ajax_signup-response').html(data['msg']);
                     if (data.msg.match(/user/)) $('#username').addClass('is-invalid');
                     if (data.msg.match(/email/)) $('#email').addClass('is-invalid');

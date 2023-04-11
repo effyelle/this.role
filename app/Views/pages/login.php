@@ -13,7 +13,8 @@
         <label for="pwd" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">Password</label>
         <input type="password" id="pwd" name="pwd"
                class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
-        <a href="#" class="d-block fw-bolder text-info text-hover-info fs-7 mx-auto text-center">Forgot your password?</a>
+        <a href="#" class="d-block fw-bolder text-info text-hover-info fs-7 mx-auto text-center">Forgot your
+            password?</a>
     </div>
     <!--end::Form Field-->
     <!--begin::Form Button-->
@@ -36,10 +37,13 @@
                 </div>
             </div>
             <div class="modal-body gap-5 d-flex flex-column justify-content-around">
-                <p class="text-center">
-                    We seem to have encoutered some errors, please try again.
-                </p>
                 <p id="ajax_login-response" class="text-center text-danger"></p>
+                <form action="/app/send_confirmation_email" method="post" autocomplete="on" id="get-token"
+                      class="m-auto my-4 text-center">
+                    <label for="email" class="form-label"></label>
+                    <input type="email" id="email" name="email" placeholder="Your email..." required class="d-none"/>
+                    <button type="submit" class="btn btn-link text-primary mt-5">Get New Token</button>
+                </form>
                 <button class="btn btn-primary d-block mx-auto mt-5" data-bs-dismiss="modal" tabindex="-1">Okay</button>
             </div>
         </div>
@@ -57,6 +61,8 @@
 
         function attemptLogin() {
             let form = getForm('.login');
+            $('#get-token').css('display', 'none');
+            $('button[data-bs-dismiss=modal]').css('display', 'block');
             if (form) {
                 sendForm(form);
                 $('#ajax_login-response').html('');
@@ -79,6 +85,11 @@
                     }
                     $('#login_error').trigger('click');
                     $('#ajax_login-response').html(data['msg']);
+                    if (data['msg'].match(/activated/)) {
+                        $('#get-token').css('display', 'block');
+                        $('#email').val(data['email']);
+                        $('button[data-bs-dismiss=modal]').css('display', 'none');
+                    }
                 }
             });
         }

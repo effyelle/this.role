@@ -30,14 +30,15 @@ class UsersModel extends Model
      *
      * @return array|bool
      */
-    function get(string $username = null, string $email = null): array|bool
+    function get(string $username = null, string $email = null, bool $confirmed = true): array|bool
     {
         $builder = db::connect()->table($this->table);
         $builder->select('*');
         if (isset($email)) {
             $builder->where('user_email', $email);
         } else if (isset($username)) {
-            $builder->where('user_confirmed IS NOT NULL', null, false);
+            if ($confirmed) $builder->where('user_confirmed IS NOT NULL', null, false);
+            else $builder->where('user_confirmed IS NULL', null, false);
             $builder->where('user_deleted IS NULL', null, false);
             $builder->where('user_username', $username);
         }

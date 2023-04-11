@@ -40,6 +40,10 @@ class Account extends BaseController
         $username = $_POST['username'] ?? false;
         $pwd = $_POST['pwd'] ?? false;
         if ($username && $pwd) {
+            if ($user = $this->usermodel->get($username, null, false)) {
+                echo json_encode(['response' => false, 'msg' => 'This account has not been activated.', 'email' => $user['user_email']]);
+                return;
+            }
             if ($user = $this->usermodel->get($username)) {
                 if (password_verify($pwd, $user['user_pwd'])) {
                     $_SESSION['user'] = [
@@ -59,7 +63,7 @@ class Account extends BaseController
             echo json_encode(['response' => false, 'msg' => 'User not found.']);
             return;
         }
-        echo json_encode(['response' => false, 'data'=>[$username, $pwd]]);
+        echo json_encode(['response' => false, 'data' => [$username, $pwd]]);
     }
 
     /**
@@ -100,7 +104,7 @@ class Account extends BaseController
         if ($this->sendConfirmationEmail($email)) {
             $pwd = password_hash($pwd, PASSWORD_DEFAULT);
             if ($this->usermodel->new($user, $email, $pwd)) {
-                echo json_encode(['response' => true, 'msg' => '']);
+                echo json_encode(['response' => true, 'msg' => 'All good']);
                 return;
             }
             echo json_encode(['response' => false, 'msg' => 'User could not be added']);
@@ -139,10 +143,8 @@ class Account extends BaseController
     {
         // Generate token
         $token = $this->generateToken($email);
-        var_dump($token);
         if (!$token) return false;
         // Send email
-        echo '<br>here';
         $to = $email;
         $this->mailer->setTo($to);
         $this->mailer->setSubject('Confirm Your Account');
@@ -163,7 +165,7 @@ class Account extends BaseController
 
     function created(): string
     {
-        return template('tokens/account_created');
+        return template('tokens/account_created', ['unlogged' => true]);
     }
 
     function my_profile(): void

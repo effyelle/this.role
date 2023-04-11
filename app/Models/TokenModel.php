@@ -8,14 +8,14 @@ use \Config\Database as db;
 class TokenModel extends Model
 {
     protected $table = 'tokens';
-    protected $primaryKey = 'token_id';
+    protected $primaryKey = 'token';
 
     protected $useAutoIncrement = true;
 
     protected $returnType = 'array';
     protected $useSoftDeletes = true;
 
-    protected $allowedFields = ['token_id', 'token', 'token_user', 'token_expires', 'token_deleted'];
+    protected $allowedFields = ['token', 'token_user', 'token_expires'];
 
     /**
      * @param string $token

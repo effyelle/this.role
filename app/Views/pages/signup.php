@@ -1,6 +1,7 @@
 <!--begin::Form-->
 <form autocomplete="off"
       class="d-flex flex-column justify-content-center align-items-center account-options mx-auto col-10">
+    <p id="ajax_signup-response" class="text-center text-danger"></p>
     <!--begin::Row-->
     <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
         <!--begin::Form Field-->
@@ -75,6 +76,7 @@
             if (validateFields()) {
                 let form = getForm('.signup');
                 if (form) {
+                    $('#ajax_signup-response').html('');
                     sendForm(form);
                 }
             }
@@ -87,8 +89,11 @@
                 data: form,
                 dataType: "json",
                 success: function (data) {
+                    console.log(data)
                     if (data['response']) window.location.assign('/account/created');
-                    console.log(data);
+                    $('#ajax_signup-response').html(data['msg']);
+                    if (data.msg.match(/user/)) $('#username').addClass('is-invalid');
+                    if (data.msg.match(/email/)) $('#email').addClass('is-invalid');
                 },
                 fail: function (e) {
                     console.log(e);
@@ -158,6 +163,5 @@
                 popup.classList.remove('show');
             }, 2000);
         }
-
     });
 </script>

@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 class Account extends BaseController
 {
-    protected $model;
+    protected mixed $model;
 
     /**
      * Construct of this class will always set up users model.
@@ -21,10 +21,13 @@ class Account extends BaseController
      * Verify user exists and password is correct and send a response through json_encode. This function is to be called
      * from a Javascript AJAX.
      *
-     * @params @_POST['username'] -username to check account exists
-     * @params @_POST['pwd'] -password to verify
+     * -----------------------------------------------------------------------------------------------------------------
+     * Parameters via $_REQUEST:
+     * - $_POST['username']: username to check account exists
+     * - $_POST['pwd']: password to verify
      *
-     * After login, the user data will be saved in @_SESSION. Session has to be already initialized at this point.
+     * -----------------------------------------------------------------------------------------------------------------
+     * After login, the user data will be saved in $_SESSION. Session has to be already initialized at this point.
      *
      * @return void
      */
@@ -59,11 +62,13 @@ class Account extends BaseController
      * -----------------------------------------------------------------------------------------------------------------
      * SIGNUP
      * -----------------------------------------------------------------------------------------------------------------
-     * Checks is username and email already exist in Database. If they don't,
+     * Checks is username and email already exist in Database. If they don't, attempts to create a new user.
      *
-     * @params @_POST['username']
-     * @params @_POST['email']
-     * @params @_POST['pwd']
+     * -----------------------------------------------------------------------------------------------------------------
+     * Parameters via $_REQUEST:
+     * - $_POST['username']
+     * - $_POST['email']
+     * - $_POST['pwd']
      *
      * @return void
      */
@@ -72,25 +77,30 @@ class Account extends BaseController
         $user = $_POST['username'] ?? false;
         $email = $_POST['email'] ?? false;
         $pwd = $_POST['pwd'] ?? false;
+        // Check fields
         if (!($user && $email && $pwd)) {
             echo json_encode(['response' => false, 'msg' => 'Some or all fields are empty.']);
             return;
         }
+        // Check username
         if ($this->model->get($user)) {
-            echo json_encode(['response' => false, 'msg' => 'A user with that username already exists.']);
+            echo json_encode(['response' => false, 'msg' => 'That username has already been chosen.']);
             return;
         }
+        // Check email
         if ($this->model->get($user, $email)) {
             echo json_encode(['response' => false, 'msg' => 'That email is already in use.']);
             return;
         }
+        // Send confirmation email and insert new user into Database
         if ($this->send_confirmation_email($email)) {
             $pwd = password_hash($pwd, PASSWORD_DEFAULT);
-            if ($id = $this->model->new($user, $email, $pwd)) {
-                echo json_encode(['response' => true, 'id' => $id]);
+            if ($this->model->new($user, $email, $pwd)) {
+                echo json_encode(['response' => true, 'msg' => '']);
                 return;
             }
             echo json_encode(['response' => false, 'msg' => 'User could not be added']);
+            return;
         }
         echo json_encode(['response' => false, 'msg' => 'Mail could not be sent']);
     }
@@ -112,13 +122,18 @@ class Account extends BaseController
 
     public function generateToken(): string
     {
-        return time();
+        $token = time();
+        $model = new \App\Models\TokenModel();
+        if ($t = $model->new($token, 3)) {
+            var_dump($t);
+        }
+        return $token;
     }
 
     public function send_confirmation_email($email): bool
     {
         $token = $this->generateToken();
-        $to = 'ericapastorgracia@gmail.com';
+        $to = $email;
         $email = \Config\Services::email();
         $email->setTo($to);
         $email->setSubject('Confirm Your Account');

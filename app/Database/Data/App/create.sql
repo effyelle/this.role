@@ -17,6 +17,13 @@ CREATE TABLE users(
 	user_deleted DATETIME DEFAULT NULL
 );
 
+CREATE TABLE tokens(
+	token VARCHAR(100) PRIMARY KEY,
+	token_user INT UNSIGNED,
+	token_expires DATETIME DEFAULT DATE_ADD(NOW(), INTERVAL 1 DAY),
+	FOREIGN KEY(token_user) REFERENCES users(user_id)
+);
+
 CREATE TABLE games(
 	game_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
 	game_user_creator INT UNSIGNED,

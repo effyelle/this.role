@@ -38,13 +38,13 @@ class TokenModel extends Model
 
     /**
      * @param string $token
-     * @param int $user
+     * @param string $usermail
      * @return array|bool
      */
-    function new(string $token, int $user): array|bool
+    function new(string $token, string $usermail): array|bool
     {
         $builder = db::connect()->table($this->table);
-        if ($builder->insert(['token' => $token, 'token_user' => $user])) {
+        if ($builder->insert(['token' => $token, 'token_user' => $usermail])) {
             return $this->get($token);
         }
         return false;

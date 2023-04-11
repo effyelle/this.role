@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class Users extends BaseController
+class AdminUsers extends BaseController
 {
     protected $model;
 
@@ -11,6 +11,14 @@ class Users extends BaseController
         $this->model = model('UsersModel');
     }
 
+    /**
+     * -----------------------------------------------------------------------------------------------------------------
+     * Get all users
+     * -----------------------------------------------------------------------------------------------------------------
+     * Redirects the the admin view for users with a list of all users.
+     *
+     * @return string
+     */
     function users(): string
     {
         $data = [];

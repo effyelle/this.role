@@ -64,7 +64,7 @@ class App extends BaseController
     function admin($switch): string
     {
         if (isset($_SESSION['user'])) {
-            return (new Users())->$switch();
+            return (new AdminUsers())->$switch();
         }
         return template('login');
     }

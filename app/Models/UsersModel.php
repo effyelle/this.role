@@ -16,7 +16,7 @@ class UsersModel extends Model
     protected $useSoftDeletes = true;
 
     protected $allowedFields = ['user_id', 'user_fname', 'user_username', 'user_avatar', 'user_email', 'user_pwd',
-        'user_confirmed_account', 'user_deleted'];
+        'user_confirmed', 'user_deleted'];
 
     /**
      * -----------------------------------------------------------------------------------------------------------------
@@ -75,12 +75,16 @@ class UsersModel extends Model
         if (!$this->get(null, $email)) {
             return false;
         }
-        $builder = db::connect()->table($this->table);
-        return $builder->update(['user_confirmed' => date('Y-m-d h:i:s', time())], ['user_email' => $email]);
+        return db::connect()->table($this->table)->update(['user_confirmed' => date('Y-m-d h:i:s', time())], ['user_email' => $email]);
     }
 
-    function resetPassword($email, $pwd): bool
+    /**
+     * @param array $data
+     * @param array $where
+     * @return bool
+     */
+    function updt(array $data, array $where): bool
     {
-        return (db::connect()->table($this->table))->update(['user_pwd' => $pwd], ['user_email' => $email]);
+        return (db::connect()->table($this->table))->update($data, $where);
     }
 }

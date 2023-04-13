@@ -25,8 +25,9 @@
 </form>
 <!--end::Form-->
 <div class="m-auto my-4 text-center">
-    <p class="m-0">Still don't have an account?</p>
-    <a href="/app/signup" class="link-info text-info text-hover-info">Sign up</a>
+    <p class="m-0">Still don't have an account?
+        <a href="/app/signup" class="link-info text-info text-hover-info">Sign up</a>
+    </p>
 </div>
 <button id="login_error" class="d-none" data-bs-toggle="modal" data-bs-target="#modal-login_error"></button>
 <div class="modal fade" id="modal-login_error">
@@ -37,13 +38,7 @@
                 </div>
             </div>
             <div class="modal-body gap-5 d-flex flex-column justify-content-around">
-                <p id="ajax_login-response" class="text-center text-danger"></p>
-                <form action="/app/send_confirmation_email" method="post" autocomplete="on" id="get-token"
-                      class="m-auto my-4 text-center">
-                    <label for="email" class="form-label"></label>
-                    <input type="email" id="email" name="email" placeholder="Your email..." required class="d-none"/>
-                    <button type="submit" class="btn btn-link text-primary mt-5">Get New Token</button>
-                </form>
+                <p class="text-center text-danger">There was an error logging in.</p>
                 <button class="btn btn-primary d-block mx-auto mt-5" data-bs-dismiss="modal" tabindex="-1">Okay</button>
             </div>
         </div>
@@ -61,11 +56,9 @@
 
         function attemptLogin() {
             let form = getForm('.login');
-            $('#get-token').css('display', 'none');
             $('button[data-bs-dismiss=modal]').css('display', 'block');
             if (form) {
                 sendForm(form);
-                $('#ajax_login-response').html('');
                 return;
             }
             $('#login_error').trigger('click');
@@ -84,12 +77,6 @@
                         return;
                     }
                     $('#login_error').trigger('click');
-                    $('#ajax_login-response').html(data['msg']);
-                    if (data['msg'].match(/activated/)) {
-                        $('#get-token').css('display', 'block');
-                        $('#email').val(data['email']);
-                        $('button[data-bs-dismiss=modal]').css('display', 'none');
-                    }
                 }
             });
         }

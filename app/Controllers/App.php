@@ -74,7 +74,7 @@ class App extends BaseController
         return template('tokens/reset_password_request', ['unlogged' => true]);
     }
 
-    function send_confirmation_email()
+    function send_confirmation_email(): string
     {
         if (isset($_POST['email']) && $this->validate(['email' => 'required|valid_email'], ['email' => $_POST['email']])) {
             if (model('UsersModel')->get(null, $_POST['email'])) {
@@ -87,10 +87,13 @@ class App extends BaseController
         return template('tokens/token_expired', ['unlogged' => true]);
     }
 
-    function send_reset_pwd()
+    function send_reset_pwd(): string
     {
+        // Check email is not empty and is valid
         if (isset($_POST['email']) && $this->validate(['email' => 'required|valid_email'], ['email' => $_POST['email']])) {
+            // Check email is in Database
             if (model('UsersModel')->get(null, $_POST['email'])) {
+                // Send reset mail
                 if ((new Account())->sendResetPasswordEmail($_POST['email'])) {
                     return template('tokens/email_sent', ['unlogged' => true]);
                 }

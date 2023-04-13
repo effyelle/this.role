@@ -51,8 +51,8 @@
 </form>
 <!--begin::Form-->
 <div class="m-auto my-4 text-center">
-    <p>¿Ya tienes una cuenta?</p>
-    <a href="/app/login" class="link-info">Log in</a>
+    <p>Already have an account? <a href="/app/login" class="link-info">Log in</a></p>
+
 </div>
 
 <script>
@@ -125,7 +125,7 @@
 
             function validateEmail() {
                 let email = document.querySelector('#email');
-                if (email.value.match(/^[A-Za-z0-9]+@[A-Za-z0-9-]+\.[A-Za-z]+$/)) {
+                if (email.value.match(/^[A-Za-z0-9_.]+@[A-Za-z0-9-]+\.[A-Za-z]+$/)) {
                     email.classList.add('is-valid');
                     email.classList.remove('is-invalid');
                     return true;

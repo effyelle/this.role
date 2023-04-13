@@ -30,7 +30,7 @@ class TokenModel extends Model
             $builder->where('token', $token);
         }
         if ($exp) {
-            $builder->where('token_expires >', date('Y-m-d h:i:s', time()));
+            $builder->where('token_expires >', date('Y-m-d H:i:s', time()));
         }
         if ($tokens = $builder->get()->getResultArray()) {
             if (count($tokens) === 1) return $tokens[0];
@@ -54,12 +54,12 @@ class TokenModel extends Model
     }
 
     /**
-     * @param string $token
+     * @param array $data
+     * @param array $where
      * @return bool
      */
-    function del(string $token): bool
+    function updt(array $data, array $where): bool
     {
-        $builder = db::connect()->table($this->table);
-        return $builder->update(['token_expires' => date('Y-m-d h:i:s', time())], ['token' => $token]);
+        return (db::connect()->table($this->table))->update($data, $where);
     }
 }

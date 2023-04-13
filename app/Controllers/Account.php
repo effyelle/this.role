@@ -7,6 +7,7 @@ class Account extends BaseController
     protected mixed $usermodel;
     protected mixed $tokenmodel;
     protected mixed $mailer;
+    protected string $now;
 
     /**
      * Construct of this class will always set up users model and the mailer.
@@ -16,6 +17,7 @@ class Account extends BaseController
         $this->usermodel = model('UsersModel');
         $this->tokenmodel = model('TokenModel');
         $this->mailer = \Config\Services::email();
+        $this->now = date('Y-m-d H:i:s', time());
     }
 
     /**
@@ -57,13 +59,9 @@ class Account extends BaseController
                     echo json_encode(['response' => true]);
                     return;
                 }
-                echo json_encode(['response' => false, 'msg' => 'Password is incorrect.']);
-                return;
             }
-            echo json_encode(['response' => false, 'msg' => 'User not found.']);
-            return;
         }
-        echo json_encode(['response' => false, 'data' => [$username, $pwd]]);
+        echo json_encode(['response' => false]);
     }
 
     /**
@@ -196,7 +194,13 @@ class Account extends BaseController
     {
         $t = $this->tokenmodel->get($token);
         if (!$t) return template('tokens/token_expired', ['unlogged' => true]);
-        if (!$this->usermodel->confirmAccount($t['token_user'])) return template('tokens/confirm_problem', ['unlogged' => true]);
+        // Update data
+        if (!$this->usermodel->updt([
+            'user_email' => $t['token_user'],
+            'user_confirmed' => $this->now
+            // Return an error view if the update went wrong
+        ])) return template('tokens/confirm_problem', ['unlogged' => true]);
+        // Expire token if
         $this->tokenmodel->del($token);
         return template('tokens/account_confirmed', ['unlogged' => true]);
     }
@@ -215,10 +219,18 @@ class Account extends BaseController
     {
         // Check request fields
         if (isset($_POST['pwd']) && isset($_POST['token'])) {
+            // Hash new password
             $hash = password_hash($_POST['pwd'], PASSWORD_DEFAULT);
+            // Get email from token
             $email = $this->tokenmodel->get($_POST['token'])['token_user'];
-            if ($this->usermodel->resetPassword($email, $hash)) {
-                $this->tokenmodel->del($_POST['token']);
+            // Update fields
+            echo $this->now;
+            if ($this->usermodel->updt(
+                ['user_pwd' => $hash, 'user_confirmed' => $this->now],
+                ['user_email' => $email]
+            )) {
+                // If fields were updated, expire token and destroy any session that could exist
+                $this->tokenmodel->updt(['token_expires' => $this->now], ['token' => $_POST['token']]);
                 if (isset($_SESSION['user'])) session_destroy();
                 echo json_encode(['response' => true]);
                 return;

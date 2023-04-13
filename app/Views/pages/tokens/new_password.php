@@ -52,6 +52,9 @@
 <!--end::Row-->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        const pwd = $('#pwd');
+        const error = $('#error');
+
         $('.form-control.ajax-login').keyup(function (e) {
             if (e.originalEvent.key === 'Enter') $('#token').click();
         });
@@ -59,12 +62,13 @@
         $('#token').click(resetPwd);
 
         function resetPwd() {
-            if (!($('#pwd').val()).match(/^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$/)) {
-                $('#error').html('Minimum eight characters: one uppercase letter, one lowercase letter, one number and one special character (@#$%^&+=)');
+            /*
+            if (!(pwd.val()).match(/^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$/)) {
+                error.html('Minimum eight characters: one uppercase letter, one lowercase letter, one number and one special character (@#$%^&+=)');
                 return;
-            }
-            if (!($('#pwd').val() === $('#pwd-repeat').val())) {
-                $('#error').html('Passwords should match');
+            }*/
+            if (!(pwd.val() === $('#pwd-repeat').val())) {
+                error.html('Passwords should match');
                 return;
             }
             let form = getForm('#resetpwd-form');
@@ -79,7 +83,7 @@
                         window.location.assign('/app/pwd_was_resetted');
                         return;
                     }
-                    $('#error').html(data['msg']);
+                    error.html(data['msg']);
                 },
                 fail: function (e) {
                     console.log(e);

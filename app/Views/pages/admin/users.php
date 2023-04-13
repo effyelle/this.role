@@ -39,7 +39,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <?php foreach ($users_list as $user) {
+                            <?php foreach ($users_list as $k => $user) {
                                 echo '<tr>'
                                     . '   <td><img src="' . $user['user_avatar'] . '" alt="" width="35" class="circle"/></td>'
                                     . '   <td>' . $user['user_fname'] . '</td>'
@@ -48,8 +48,9 @@
                                     . '   <td>' . ucfirst($user['user_rol']) . '</td>'
                                     . '   <td>' . ($user['user_deleted'] ? 'Inactive' : 'Active') . '</td>'
                                     . '   <td>'
-                                    . '      <button value="' . $user['user_id'] . '" data-bs-toggle="modal" data-bs-target="#user_edit-modal"'
-                                    . '         class="user_id-edit_btn btn btn-danger ps-3 pe-2 py-1">'
+                                    . '      <button value="' . $k . '"'
+                                    . '         data-bs-toggle="modal" data-bs-target="#user_edit-modal"'
+                                    . '         class="user_id-edit_btn btn btn-danger ps-3 pe-2 py-1 usernameBtn">'
                                     . '         <i class="fa fa-edit"></i>'
                                     . '      </button>'
                                     . '   </td>'
@@ -85,41 +86,46 @@
             </div>
 
             <div class="modal-body">
-                <!-- FORMULARIO PARA ENVIO DE SUGERENCIAS -->
-                <form enctype="multipart/form-data" id="form_suggestions" name="form_suggestions">
-                    <div class="form-group">
-                        <label for="type">Tipo</label>
-                        <select class="form-select form-select-solid" id="type" name="type">
-                            <option value="Sugerencia">Sugerencia 💡</option>
-                            <option value="Queja">Queja 😩</option>
-                            <option value="Felicitación">Felicitación 🍾</option>
+                <form id="edit_user" name="edit_user">
+                    <div class="mt-5">
+                        <label class="form-label" for="fname">Full Name</label>
+                        <input id="fname" name="fname" type="text"
+                               class="form-control form-control-solid this-role-form-field"/>
+                    </div>
+                    <div class="mt-5">
+                        <label class="form-label" for="uname">Username</label>
+                        <input id="uname" name="uname" type="text"
+                               class="form-control form-control-solid this-role-form-field"/>
+                    </div>
+                    <div class="mt-5">
+                        <label class="form-label" for="email">Email</label>
+                        <input id="email" name="email" type="text"
+                               class="form-control form-control-solid this-role-form-field"/>
+                    </div>
+                    <div class="mt-5">
+                        <label class="form-label" for="user_rol">Rol</label>
+                        <select class="form-select form-select-solid this-role-form-field" id="user_rol"
+                                name="user_rol">
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                            <option value="master">Master</option>
                         </select>
                     </div>
-                    <div class="form-group mt-5">
-                        <label for="comment">Comentario</label>
-                        <textarea class="form-control form-control-solid" id="comment" name="comment"
-                                  rows="3"></textarea>
-                    </div>
-                    <!-- IMAGE INPUT -->
-                    <div class="form-group mt-5">
-                        <label for="image">Imagen</label>
-                        <input class="form-control form-control-solid" multiple type="file" id="image"
-                               name="image[]" value="">
-                    </div>
-                    <div class="form-check form-check-custom form-check-solid mt-5">
-                        <input class="form-check-input" name="anonymous" type="checkbox" value="1"
-                               id="anonymous"/>
-                        <label class="form-check-label" for="anonymous">
-                            Enviar anónimamente
-                        </label>
+                    <div class="mt-5">
+                        <label class="form-label" for="user_status">Status</label>
+                        <select class="form-select form-select-solid this-role-form-field" id="user_status"
+                                name="user_status">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" id="send_suggestion_btn" class="btn btn-primary">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="save_user_btn" class="btn btn-primary">
                     <!--begin::Indicator label-->
-                    <span class="indicator-label">Enviar</span>
+                    <span class="indicator-label">Send</span>
                     <!--end::Indicator label-->
                     <!--begin::Indicator progress-->
                     <span class="indicator-progress">
@@ -134,7 +140,31 @@
 </div>
 <!--end::User Edit Modal-->
 <script>
-    document.addEventListener('DOMContentLoaded', function (){
-        // Fill form for edition by button
+    document.addEventListener('DOMContentLoaded', function () {
+        const usersData =<?php echo json_encode($users_list)?>;
+        const userI = document.querySelectorAll('.usernameBtn');
+
+        for (let i = 0; i < userI.length; i++) {
+            userI[i].addEventListener('click', function () {
+                let user = usersData[this.value];
+                $('#fname').val(user.user_fname);
+                $('#uname').val(user.user_username);
+                $('#email').val(user.user_email);
+                $('#user_rol').val(user.user_rol);
+                $('#user_status').val(user.user_deleted ? 'inactive' : 'active');
+            });
+        }
+
+        $('#save_user_btn').click(function () {
+            let form = getForm('#edit_user');
+            $.ajax({
+                type: "post",
+                url: "/adminusers/update_user",
+                data: form,
+                success: function (data) {
+                    console.log(data);
+                }
+            })
+        });
     });
 </script>

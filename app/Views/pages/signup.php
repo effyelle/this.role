@@ -1,24 +1,16 @@
 <!--begin::Form-->
 <form autocomplete="off"
       class="d-flex flex-column justify-content-center align-items-center account-options mx-auto col-10 signup">
-    <p id="ajax_signup-response" class="text-center text-danger"></p>
+    <p id="ajax_signup-response" class="text-center text-danger fw-bold fs-6"></p>
+    <p id="email-response" class="text-center text-danger fw-bold fs-6"></p>
+    <p id="pwd-response" class="text-center text-danger fw-bold fs-6"></p>
     <!--begin::Row-->
     <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
         <!--begin::Form Field-->
         <div class="my-4 position-relative">
-            <label for="username" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">Username</label>
-            <input type="text" id="username" name="username"
-                   class="form-control form-control-solid ajax-login bg-transparent text-center this-role-form-field"/>
-            <span class="popup alert-feedback f1">Necessary field.</span>
-            <span class="popup alert-feedback f2">Only letters, numbers and [_-.] permitted.</span>
-        </div>
-        <!--end::Form Field-->
-        <!--begin::Form Field-->
-        <div class="my-4 position-relative">
-            <label for="email" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">Email</label>
+            <label for="email" class="form-label fs-5 my-2 required">Email</label>
             <input type="email" id="email" name="email"
                    class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
-            <span class="popup alert-feedback">Enter a valid email.</span>
         </div>
         <!--end::Form Field-->
     </div>
@@ -27,25 +19,36 @@
     <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
         <!--begin::Form Field-->
         <div class="my-4 position-relative">
-            <label for="pwd" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">Password</label>
+            <label for="pwd" class="form-label fs-5 my-2 required">Password</label>
             <input type="password" id="pwd" name="pwd"
                    class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
-            <span class="popup alert-feedback">Minimum eight characters: one uppercase letter, one lowercase letter, one number and one special character (@#$%^&+=).</span>
         </div>
         <!--end::Form Field-->
+    </div>
+    <!--end::Row-->
+    <!--begin::Row-->
+    <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
         <!--begin::Form Field-->
         <div class="my-4 position-relative">
-            <label for="pwd-repeat" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">Repeat Password</label>
+            <label for="pwd-repeat" class="form-label fs-5 my-2 required">Repeat Password</label>
             <input type="password" id="pwd-repeat"
                    class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
-            <span class="popup alert-feedback">Passwords don't match.</span>
         </div>
         <!--end::Form Field-->
     </div>
     <!--end::Row-->
     <!--begin::Form Button-->
     <div class="my-4">
-        <button type="button" id="signupBtn" class="btn btn-primary">Sign up</button>
+        <button type="button" id="signupBtn" class="btn btn-primary">
+            <!--begin::Indicator label-->
+            <span class="indicator-label">Send</span>
+            <!--end::Indicator label-->
+            <!--begin::Indicator progress-->
+            <span class="indicator-progress">Please wait...
+                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+            </span>
+            <!--end::Indicator progress-->
+        </button>
     </div>
     <!--end::Form Button-->
 </form>
@@ -57,113 +60,78 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-
         $('#signupBtn').click(attemptSignup);
 
         $('.form-control.ajax-login').keyup(function (e) {
             if (e.originalEvent.key === 'Enter') attemptSignup();
         });
 
-        $('#username').keypress(function (e) {
-            let pressedK = e.originalEvent.key;
-            if (!pressedK.match(/^[a-z]|[A-Z]|[0-9]|[.\-_]+$/)) {
-                e.preventDefault();
-                spanPopup(document.querySelector('#username ~ .popup.f2'));
-            }
-        });
-
         function attemptSignup() {
-            if (validateFields()) {
-                let form = getForm('.signup');
-                if (form) {
-                    $('#ajax_signup-response').html('');
-                    sendForm(form);
-                }
-            }
+            if (validateFields()) sendForm(getForm('.signup'));
         }
 
         function sendForm(form) {
+            $('#ajax_signup-response').html('');
+            $('.indicator-label').hide();
+            $('.indicator-progress').show();
             $.ajax({
                 type: "POST",
                 url: "/account/signup",
                 data: form,
                 dataType: "json",
                 success: function (data) {
+                    console.log(data);
                     if (data['response']) {
                         window.location.assign('/account/created');
                         return;
                     }
+                    $('.indicator-label').show();
+                    $('.indicator-progress').hide();
                     $('#ajax_signup-response').html(data['msg']);
-                    if (data.msg.match(/user/)) $('#username').addClass('is-invalid');
                     if (data.msg.match(/email/)) $('#email').addClass('is-invalid');
                 },
                 fail: function (e) {
+                    $('#ajax_signup-response').html('There was an unespected error');
                     console.log(e);
                 }
             });
         }
 
         function validateFields() {
-            let usernameVal = validateUsername();
-            let emailVal = validateEmail();
-            let pwdVal = validatePwds();
+            let emailVal = false;
+            let pwdVal = false;
 
-            return (usernameVal && emailVal && pwdVal);
-
-            function validateUsername() {
-                let user = document.querySelector('#username');
-                if (user.value.length > 2) {
-                    user.classList.add('is-valid');
-                    user.classList.remove('is-invalid');
-                    return true;
-                }
-                spanPopup(document.querySelector('#username ~ .popup.f1'));
-                user.classList.remove('is-valid');
-                user.classList.add('is-invalid');
-                return false;
+            if ($('#email').val().length > 0) {
+                let emailResponse = $('#email-response');
+                emailVal = validateEmail('#email');
+                if (emailVal) emailResponse.html('');
+                else emailResponse.html('Not a valid email');
+            }
+            let pwd = $('#pwd');
+            if (pwd.val().length > 0) {
+                pwdVal = validPasswords();
             }
 
-            function validateEmail() {
-                let email = document.querySelector('#email');
-                if (email.value.match(/^[A-Za-z0-9_.]+@[A-Za-z0-9-]+\.[A-Za-z]+$/)) {
-                    email.classList.add('is-valid');
-                    email.classList.remove('is-invalid');
-                    return true;
-                }
-                spanPopup(document.querySelector('#email ~ .popup'));
-                email.classList.remove('is-valid');
-                email.classList.add('is-invalid');
-                return false;
-            }
+            return (emailVal && pwdVal);
 
-            function validatePwds() {
-                let pwd = document.querySelector('#pwd');
-                let pwdRepeat = document.querySelector('#pwd-repeat');
-                if (pwd.value.match(/^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$/)) {
-                    pwd.classList.add('is-valid');
-                    pwd.classList.remove('is-invalid');
-                    if (pwd.value === pwdRepeat.value) {
-                        pwdRepeat.classList.add('is-valid');
-                        pwdRepeat.classList.remove('is-invalid');
+            function validPasswords() {
+                let pwdRepeat = $('#pwd-repeat');
+                let pwdResponse = $('#pwd-response');
+                pwdResponse.html('');
+                if (validatePwd('#pwd')) {
+                    if (pwd.val() === pwdRepeat.val()) {
+                        pwdRepeat.addClass('is-valid');
+                        pwdRepeat.removeClass('is-invalid');
                         return true;
                     }
-                    spanPopup(document.querySelector('#pwd-repeat ~ .popup'));
-                    pwdRepeat.classList.remove('is-valid');
-                    pwdRepeat.classList.add('is-invalid');
+                    pwdRepeat.removeClass('is-valid');
+                    pwdRepeat.addClass('is-invalid');
+                    pwdResponse.html('Passwords must match');
                     return false;
                 }
-                spanPopup(document.querySelector('#pwd ~ .popup'));
-                pwd.classList.remove('is-valid');
-                pwd.classList.add('is-invalid');
+                pwdResponse.html('Password shoul be at least 8 character length, minimum of 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character (!@#$%^&+=)');
                 return false;
             }
-        }
-
-        function spanPopup(popup) {
-            popup.classList.add('show');
-            setTimeout(function () {
-                popup.classList.remove('show');
-            }, 2000);
         }
     });
 </script>

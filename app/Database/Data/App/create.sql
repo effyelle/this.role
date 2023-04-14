@@ -7,7 +7,6 @@ USE this_role_app;
 CREATE TABLE users(
 	user_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
 	user_fname VARCHAR(100),
-	user_username VARCHAR(25) UNIQUE,
 	user_avatar VARCHAR(200) DEFAULT '/assets/media/avatars/blank.png',
 	user_email VARCHAR(100),
 	user_pwd VARCHAR(200),
@@ -49,11 +48,11 @@ CREATE TABLE issues(
   FOREIGN KEY(issue_user) REFERENCES users(user_id)
 );
 
-INSERT INTO users(user_fname, user_username, user_email, user_pwd, user_confirmed)
+INSERT INTO users(user_fname, user_email, user_pwd, user_confirmed)
 VALUES
-	('Mario Sancho', 'mario', 'mail@mail.mail', '$2y$10$AGx4O3bw8QhdhatZxETiJuuUiR.sRLBx5zwxYu9.fwj6LipePLag2', NOW()),
-	('Jose Luis El Bizco', 'joseluis.ak.elbizco', 'com@com.com', '$2y$10$AGx4O3bw8QhdhatZxETiJuuUiR.sRLBx5zwxYu9.fwj6LipePLag2', NOW()),
-	('La Effy', 'effy', 'effy@mail.co', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
-	('Fernando Fernandez', 'ff_98', 'ffmail@email.f', '$2y$10$AGx4O3bw8QhdhatZxETiJuuUiR.sRLBx5zwxYu9.fwj6LipePLag2', NOW());
+	('Mario Sancho', 'mail@mail.mail', '$2y$10$AGx4O3bw8QhdhatZxETiJuuUiR.sRLBx5zwxYu9.fwj6LipePLag2', NOW()),
+	('Jose Luis El Bizco', 'com@com.com', '$2y$10$AGx4O3bw8QhdhatZxETiJuuUiR.sRLBx5zwxYu9.fwj6LipePLag2', NOW()),
+	('La Effy', 'ericapastor@gmail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
+	('Fernando Fernandez', 'ffmail@email.f', '$2y$10$AGx4O3bw8QhdhatZxETiJuuUiR.sRLBx5zwxYu9.fwj6LipePLag2', NOW());
 
-UPDATE users SET user_rol='master' WHERE user_username='effy';
+UPDATE users SET user_rol='master' WHERE user_email='ericapastorgracia@gmail.com';

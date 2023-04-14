@@ -3,14 +3,14 @@
       class="d-flex flex-column justify-content-center align-items-center account-options mx-auto col-10 w-sm-400px login">
     <!--begin::Form Field-->
     <div class="my-4">
-        <label for="username" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">Username</label>
-        <input type="text" id="username" name="username"
+        <label for="email" class="form-label required fs-5 my-2">Email</label>
+        <input type="text" id="email" name="email"
                class="form-control form-control-solid ajax-login bg-transparent text-center this-role-form-field"/>
     </div>
     <!--end::Form Field-->
     <!--begin::Form Field-->
     <div class="my-4">
-        <label for="pwd" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">Password</label>
+        <label for="pwd" class="form-label required fs-5 my-2">Password</label>
         <input type="password" id="pwd" name="pwd"
                class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
         <a href="/app/reset_pwd"
@@ -19,7 +19,16 @@
     <!--end::Form Field-->
     <!--begin::Form Button-->
     <div class="my-6">
-        <button type="button" id="loginBtn" class="btn btn-primary">Login</button>
+        <button type="button" id="loginBtn" class="btn btn-primary">
+            <!--begin::Indicator label-->
+            <span class="indicator-label">Send</span>
+            <!--end::Indicator label-->
+            <!--begin::Indicator progress-->
+            <span class="indicator-progress">Please wait...
+                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+            </span>
+            <!--end::Indicator progress-->
+        </button>
     </div>
     <!--end::Form Button-->
 </form>
@@ -65,6 +74,8 @@
         }
 
         function sendForm(form) {
+            $('.indicator-label').hide();
+            $('.indicator-progress').show();
             $.ajax({
                 type: "POST",
                 url: "/account/login",
@@ -76,6 +87,8 @@
                         window.location.assign('/app/index');
                         return;
                     }
+                    $('.indicator-label').show();
+                    $('.indicator-progress').hide();
                     $('#login_error').trigger('click');
                 }
             });

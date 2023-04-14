@@ -61,7 +61,7 @@ function check_session(): bool
 function user_exists(): void
 {
     if (isset($_SESSION['user'])) {
-        $user = (model('\App\Models\UsersModel'))->get($_SESSION['user']['username']);
+        $user = (model('\App\Models\UsersModel'))->get($_SESSION['user']['email']);
         if (!$user) {
             session_unset();
             session_destroy();
@@ -70,21 +70,37 @@ function user_exists(): void
     }
 }
 
-function upload_img($formname, $target_dir)
+function update_session($user): void
 {
+    $_SESSION['user'] = [
+        'id' => $user['user_id'],
+        'fname' => $user['user_fname'],
+        'avatar' => $user['user_avatar'],
+        'email' => $user['user_email'],
+        'rol' => $user['user_rol'],
+        'confirmed' => $user['user_confirmed']
+    ];
+}
+
+function validate(string $str): string
+{
+    return htmlspecialchars(trim($str));
+}
+
+function upload_img($formname, $target): string|bool
+{
+    $target_dir = FCPATH . $target;
     $target_file = $target_dir . basename($_FILES[$formname]["name"]);
     // Save image file type
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     // Limit file types
     if (!preg_match('/jpg|png|jpeg|gif/', $imageFileType)) return 'Type not allowed';
-    // Check if image file is a actual image or fake image
-    $check = getimagesize($_FILES[$formname]["tmp_name"]);
-    if (!$check) return 'Not an image';
     // Check image size
     if ($_FILES[$formname]["size"] > 500000) return 'File too large';
     // Change image name
     do {
-        $new_filename = $target_dir . "/" . time() . "." . $imageFileType;
-    } while (file_exists($new_filename));
-    return move_uploaded_file($_FILES[$formname]["tmp_name"], $target_dir);
+        $new_filename = "/" . time() . "." . $imageFileType;
+    } while (file_exists($target_dir . $new_filename));
+    if (move_uploaded_file($_FILES[$formname]["tmp_name"], $target_dir . $new_filename)) return $target . $new_filename;
+    return false;
 }

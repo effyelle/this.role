@@ -1,82 +1,94 @@
 document.addEventListener('DOMContentLoaded', function () {
-    $.ajax({
-        type: "post",
-        url: "/account/my_profile",
-        dataType: "json",
-        success: formatProfile
-    });
-
-    $('#resetPwdBtn').click(function () {
+    // Reset password listener
+    const resetPwdBtn = $('#resetPwdBtn');
+    resetPwdBtn.click(function () {
         openConfirmation(sendResetPwdMail);
     });
-    $('#deactivateProfile').click(function () {
+
+    // Deactivate profile listener
+    const deactivateProfile = $('#deactivateProfile');
+    deactivateProfile.click(function () {
         openConfirmation(deactivateAccount);
     });
 
+    const avatar = $('#avatar');
+    avatar.change(function () {
+        console.log(avatar.val());
+    });
+
+    const emailBox = $('#email');
+    emailBox.keyup(function () {
+        console.log('here')
+        $('.emailchange').removeClass('d-none');
+    });
+
+    /**
+     * Open confirmation modal
+     * -----------------------
+     * Open confirmation modal, unbinds confirmation answer and binds it again according to a callback
+     *
+     * @param callback
+     */
     function openConfirmation(callback) {
-        $('.modal-header h3').html('Are you sure?')
-        $('.confirm_answer').unbind('click');
-        $('.confirm_answer').click(function () {
+        const confirmAnswer = $('.confirm_answer');
+        confirmAnswer.unbind('click');
+        confirmAnswer.click(function () {
             if (this.value === "true") {
                 callback();
             }
         });
     }
 
+    /**
+     * Send email to reset password
+     */
     function sendResetPwdMail() {
-        // send email
-        if ($('#email').val() !== '') {
+        if (emailBox.val() !== '') {
             $.ajax({
-                url: "/account/send_reset_password_email/" + $('#email').val(),
+                url: "/account/send_reset_password_email/" + emailBox.val(),
                 dataType: "json",
                 success: function (data) {
-                    $('.reset-pwd').html(data['msg']);
+                    $('.ajax-response').html(data['msg']);
                 }
             })
         }
     }
 
+    /**
+     * Deactivate account and close session
+     */
     function deactivateAccount() {
-        console.log('Deactivate account -> yet to write');
+        console.log("Deactivate account= ", "This is yet to write");
     }
 
     function formatProfile(data) {
-        if (data['response']) {
-            let user = data['user'];
-            $('#fname').val(user['user_fname']);
-            $('#username').val(user['user_username']);
-            $('#email').val(user['user_email']);
-            formatAvatar('/assets/uploads/avatars/' + user['user_avatar']);
-        }
+        if (!data['response']) return;
+        let user = data['user'];
+        $('#email').val(user['user_email']);
+        $('#fname').val(user['user_fname']);
     }
 
-    function formatAvatar(img) {
-        let avatarHolder = $('#avatar-input-holder');
-        $.ajax({
-            url: img,
-            type: 'HEAD',
-            error: function () {
-                avatarHolder.css('background', 'url("/assets/media/avatars/blank.png") no-repeat');
-                avatarHolder.css('background-size', 'cover');
-            },
-            success: function () {
-                avatarHolder.css('background', 'url("' + img + '") no-repeat');
-                avatarHolder.css('background-size', 'cover');
-            }
-        });
-    }
-
+    /**
+     * Toggle profile on editable
+     * --------------------------
+     * Toggle visibility and edition availability for form inputs and other tags
+     *
+     * @param editable
+     */
     function toggleProfileEditable(editable = false) {
         const editProfileBtn = $('#editProfile');
-        // Toggle visibility for form inputs and other tags
         $('.editable').toggleClass('show', editable);
         $('.this-role-form-field').prop('disabled', !editable);
-        $('#deactivateProfile').toggleClass('d-none', editable);
-        $('#resetPwdBtn').toggleClass('d-none', editable);
+        deactivateProfile.toggleClass('d-none', editable);
+        resetPwdBtn.toggleClass('d-none', editable);
         $('#updateProfile').toggleClass('d-none', !editable);
         // Change Button HTML
         if (editable) editProfileBtn.html('Cancel');
-        else editProfileBtn.html('Edit Profile');
+        else {
+            $('.emailchange').addClass('d-none');
+            editProfileBtn.html('Edit Profile');
+            updateSession(formatProfile);
+        }
         // Unbind previous event
         editProfileBtn.unbind('click');
         // Bind again with contrary boolean
@@ -85,5 +97,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Deactivate editable fields at page load
     toggleProfileEditable();
 });

@@ -140,6 +140,7 @@
             </div>
         </div>
         <!--end::Aside menu-->
+        <!--begin::Toggle Contact Support-->
         <div class="aside-footer flex-column-auto pt-5 pb-7 px-5" id="kt_aside_footer">
             <a data-bs-toggle="modal" data-bs-target="#contact-support"
                class="btn btn-bg-light btn-color-gray-500 btn-active-color-gray-900 w-100">
@@ -156,6 +157,7 @@
 			    </span>
             </a>
         </div>
+        <!--end::Toggle Contact Support-->
     </div>
     <!--end::Aside-->
     <!--begin::Container-->

@@ -30,27 +30,22 @@ class AdminUsers extends BaseController
         return template('admin/users', $data);
     }
 
-    function update_user(): void
+    public function update_user(): void
     {
         // Still have to write -> $_POST validation
-        $rules=[];
+        $data = [
+            'user_fname' => validate($_POST['fname']),
+            'user_email' => validate($_POST['email']),
+            'user_rol' => validate($_POST['user_rol']),
+            'user_deleted' => ($_POST['user_status']) === 'inactive' ? $this->now : null
+        ];
+        $where = ['user_id' => $_POST['user']];
 
-        if ($this->model->updt(
-            [ // Params to change
-                'user_fname' => $_POST['fname'],
-                'user_username' => $_POST['uname'],
-                'user_email' => $_POST['email'],
-                'user_rol' => $_POST['user_rol'],
-                'user_deleted' => $_POST['user_status'] === 'inactive' ? $this->now : null
-            ],
-            [ // Where condition
-                'user_username' => $_POST['uname']
-            ]
-        )) {
+        if ($this->model->updt($data, $where)) {
             echo json_encode(['response' => true]);
             return;
         }
-        echo json_encode(['response' => false]);
+        echo json_encode(['response' => false, 'data' => $_POST]);
     }
 
     function games(): string

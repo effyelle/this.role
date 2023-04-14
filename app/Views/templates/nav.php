@@ -47,7 +47,7 @@
                      data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                     <!--begin::Name-->
                     <div class="d-none d-md-flex flex-column align-items-end justify-content-center me-2 me-md-4">
-                        <span class="text-muted fs-7 fw-bold lh-1 mb-1"><?= $_SESSION['user']['username'] ?? ''; ?></span>
+                        <span class="text-muted fs-7 fw-bold lh-1 mb-1 nav_fname"><?= $_SESSION['user']['fname'] ?? ''; ?></span>
                         <span class="text-white fs-8 fw-bolder lh-1"><?= $_SESSION['user']['rol'] ?? '' ?></span>
                     </div>
                     <!--end::Name-->
@@ -59,7 +59,7 @@
                 </div>
                 <!--end::User info-->
                 <!--begin::User account menu-->
-                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px"
+                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-300px"
                      data-kt-menu="true">
                     <!--begin::Menu item-->
                     <div class="menu-item px-3">
@@ -71,8 +71,8 @@
                             <!--end::Avatar-->
                             <!--begin::Username-->
                             <div class="d-flex flex-column">
-                                <div class="fw-bolder d-flex align-items-center fs-5">User Name</div>
-                                <span class="fw-bold text-muted fs-7">email@mail.com</span>
+                                <div class="fw-bolder d-flex align-items-center fs-5 nav_fname"><?= $_SESSION['user']['fname'] ?? '' ?></div>
+                                <span class="fw-bold text-muted fs-7 nav_email"><?= $_SESSION['user']['email'] ?? '' ?></span>
                             </div>
                             <!--end::Username-->
                         </div>

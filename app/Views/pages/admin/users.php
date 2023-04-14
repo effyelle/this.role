@@ -31,8 +31,7 @@
                             <tr class="fw-bold fs-6 text-gray-800">
                                 <td>Avatar</td>
                                 <td>Full Name</td>
-                                <td>Username</td>
-                                <td>Email</td>
+                                <td class="col-2">Email</td>
                                 <td>User Rol</td>
                                 <td>Status</td>
                                 <td>Edit</td>
@@ -43,14 +42,13 @@
                                 echo '<tr>'
                                     . '   <td><img src="' . $user['user_avatar'] . '" alt="" width="35" class="circle"/></td>'
                                     . '   <td>' . $user['user_fname'] . '</td>'
-                                    . '   <td>' . $user['user_username'] . '</td>'
                                     . '   <td>' . $user['user_email'] . '</td>'
                                     . '   <td>' . ucfirst($user['user_rol']) . '</td>'
                                     . '   <td>' . ($user['user_deleted'] ? 'Inactive' : 'Active') . '</td>'
                                     . '   <td>'
                                     . '      <button value="' . $k . '"'
                                     . '         data-bs-toggle="modal" data-bs-target="#user_edit-modal"'
-                                    . '         class="user_id-edit_btn btn btn-danger ps-3 pe-2 py-1 usernameBtn">'
+                                    . '         class="btn btn-danger ps-3 pe-2 py-1 usernameBtn">'
                                     . '         <i class="fa fa-edit"></i>'
                                     . '      </button>'
                                     . '   </td>'
@@ -93,11 +91,6 @@
                                class="form-control form-control-solid this-role-form-field"/>
                     </div>
                     <div class="mt-5">
-                        <label class="form-label" for="uname">Username</label>
-                        <input id="uname" name="uname" type="text"
-                               class="form-control form-control-solid this-role-form-field"/>
-                    </div>
-                    <div class="mt-5">
                         <label class="form-label" for="email">Email</label>
                         <input id="email" name="email" type="text"
                                class="form-control form-control-solid this-role-form-field"/>
@@ -119,6 +112,7 @@
                             <option value="inactive">Inactive</option>
                         </select>
                     </div>
+                    <button id="user" name="user" class="d-none this-role-form-field"></button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -147,8 +141,8 @@
         for (let i = 0; i < userI.length; i++) {
             userI[i].addEventListener('click', function () {
                 let user = usersData[this.value];
+                $('#user').val(user.user_id);
                 $('#fname').val(user.user_fname);
-                $('#uname').val(user.user_username);
                 $('#email').val(user.user_email);
                 $('#user_rol').val(user.user_rol);
                 $('#user_status').val(user.user_deleted ? 'inactive' : 'active');
@@ -161,8 +155,11 @@
                 type: "post",
                 url: "/adminusers/update_user",
                 data: form,
+                dataType: "json",
                 success: function (data) {
-                    console.log(data);
+                    console.log(data)
+                    if (!data['response']) return;
+                    window.location.reload();
                 }
             })
         });

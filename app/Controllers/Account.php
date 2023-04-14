@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use org\bovigo\vfs\content\SeekableFileContent;
+
 class Account extends BaseController
 {
     protected mixed $usermodel;
@@ -39,23 +41,12 @@ class Account extends BaseController
      */
     function login(): void
     {
-        $username = $_POST['username'] ?? false;
+        $email = $_POST['email'] ?? false;
         $pwd = $_POST['pwd'] ?? false;
-        if ($username && $pwd) {
-            if ($user = $this->usermodel->get($username, null, false)) {
-                echo json_encode(['response' => false, 'msg' => 'This account has not been activated.', 'email' => $user['user_email']]);
-                return;
-            }
-            if ($user = $this->usermodel->get($username)) {
+        if ($email && $pwd) {
+            if ($user = $this->usermodel->get($email)) {
                 if (password_verify($pwd, $user['user_pwd'])) {
-                    $_SESSION['user'] = [
-                        'id' => $user['user_id'],
-                        'fname' => $user['user_fname'],
-                        'username' => $user['user_username'],
-                        'avatar' => $user['user_avatar'],
-                        'email' => $user['user_email'],
-                        'rol' => $user['user_rol']
-                    ];
+                    update_session($user);
                     echo json_encode(['response' => true]);
                     return;
                 }
@@ -80,49 +71,74 @@ class Account extends BaseController
      */
     function signup(): void
     {
-        $user = $_POST['username'] ?? false;
         $email = $_POST['email'] ?? false;
         $pwd = $_POST['pwd'] ?? false;
-        // Check fields
-        if (!($user && $email && $pwd)) {
-            echo json_encode(['response' => false, 'msg' => 'Some or all fields are empty.']);
-            return;
-        }
-        // Check username
-        if ($this->usermodel->get($user)) {
-            echo json_encode(['response' => false, 'msg' => 'That username has already been chosen.']);
+        // Check fields are not empty
+        if (!($email && $pwd)) {
+            echo json_encode(['response' => false, 'msg' => 'Necessary fields are empty.', 'data' => $_POST]);
             return;
         }
         // Check email
-        if ($this->usermodel->get($user, $email)) {
-            echo json_encode(['response' => false, 'msg' => 'That email is already in use.']);
+        if ($this->usermodel->get($email)) {
+            echo json_encode(['response' => false, 'msg' => 'The email is already in use.']);
             return;
         }
         // Send confirmation email and insert new user into Database
-        if ($this->sendConfirmationEmail($email)) {
-            $pwd = password_hash($pwd, PASSWORD_DEFAULT);
-            if ($this->usermodel->new($user, $email, $pwd)) {
-                echo json_encode(['response' => true, 'msg' => 'All good']);
-                return;
-            }
-            echo json_encode(['response' => false, 'msg' => 'User could not be added']);
+        //if ($this->sendConfirmationEmail($email)) {
+        $pwd = password_hash($pwd, PASSWORD_DEFAULT);
+        if ($this->usermodel->new(['user_email' => $email, 'user_pwd' => $pwd])) {
+            echo json_encode(['response' => true]);
             return;
         }
-        echo json_encode(['response' => false, 'msg' => 'Mail could not be sent']);
+        echo json_encode(['response' => false, 'msg' => 'User could not be added']);
+        return;
+        //}
+        //echo json_encode(['response' => false, 'msg' => 'Mail could not be sent']);
     }
 
-    function update(): string
+    function avatar_change()
+    {
+        if ($_FILES['avatar']['error'] === 0) {
+            $img = upload_img('avatar', 'assets/media/avatars');
+            echo json_encode(['reponse' => true, 'img' => '/' . $img]);
+            return;
+        }
+        echo json_encode(['reponse' => false]);
+    }
+
+    function update_profile(): string
+    {
+        if (isset($_POST['fname'])) {
+            $fname = $_POST['fname'];
+            $email = $_POST['email'];
+            $oldEmail = $_SESSION['user']['email'];
+            if ($fname === '') $fname = null;
+            $data = ['user_fname' => $fname, 'user_email' => $email];
+            $where = ['user_email' => $oldEmail];
+            if ($_FILES['avatar']['error'] === 0) {
+                $img = upload_img('avatar', 'assets/media/avatars');
+                if ($img) $data['user_avatar'] = '/' . $img;
+            }
+            if ($email !== $oldEmail) $data['user_confirmed'] = null;
+            if ($this->usermodel->updt($data, $where)) update_session($this->usermodel->get($email));
+            if ($email !== $oldEmail) {
+                // Send new confirmation email
+                // $this->sendConfirmationEmail($email);
+                session_unset();
+                session_destroy();
+                return $this->created();
+            }
+        }
+        return template('profile');
+    }
+
+    function myprofile()
     {
         if (isset($_SESSION['user'])) {
-            if (isset($_FILES['avatar'])) {
-                var_dump($_FILES);
-                echo "<br> UPLAOD == <br>";
-                var_dump(upload_img('avatar', '/assets/media/avatars'));
-            }
-            return '';
-            return template('profile');
+            $user = $this->usermodel->get($_SESSION['user']['email']);
+            update_session($user);
+            echo json_encode(['response' => true, 'user' => $user]);
         }
-        return template('login', ['unlogged' => true]);
     }
 
     /**
@@ -157,8 +173,7 @@ class Account extends BaseController
         $token = $this->generateToken($email);
         if (!$token) return false;
         // Send email
-        $to = $email;
-        $this->mailer->setTo($to);
+        $this->mailer->setTo($email);
         $this->mailer->setSubject('Confirm Your Account');
         $this->mailer->setMessage(view('templates/mail/confirm_account_html', ['token' => $token]));
         $this->mailer->setAltMessage(view('templates/mail/confirm_account_txt', ['token' => $token]));
@@ -181,13 +196,19 @@ class Account extends BaseController
         $token = $this->generateToken($email);
         if (!$token) return false;
         // Send email
-        $to = $email;
-        $this->mailer->setTo($to);
+        $this->mailer->setTo($email);
         $this->mailer->setSubject('Password Reset');
         $this->mailer->setMessage(view('templates/mail/reset_pwd_html', ['token' => $token]));
         $this->mailer->setAltMessage(view('templates/mail/reset_pwd_txt', ['token' => $token]));
         $this->mailer->setReplyTo(null);
         return $this->mailer->send();
+        // For debug
+        // -->
+        /*
+        if (!$this->mailer->send()) {
+            return $this->mailer->printDebugger();
+        }
+        */
     }
 
     public function confirm($token): string
@@ -244,15 +265,5 @@ class Account extends BaseController
     function created(): string
     {
         return template('tokens/email_sent', ['unlogged' => true]);
-    }
-
-    function my_profile(): void
-    {
-        if (isset($_SESSION['user'])) {
-            $user = $this->usermodel->get($_SESSION['user']['username']);
-            echo json_encode(['response' => true, 'user' => $user]);
-            return;
-        }
-        echo json_encode(['response' => false]);
     }
 }

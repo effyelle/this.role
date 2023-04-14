@@ -3,7 +3,8 @@
     <!--begin::Col-->
     <div class="mb-xl-10">
         <!--begin::List Widget 6-->
-        <form action="/account/update" method="post" enctype="multipart/form-data" class="card h-100vh">
+        <form action="/app/myprofile" method="post" enctype="multipart/form-data" autocomplete="off"
+              class="card h-100vh" id="update-profile">
             <!--begin::Header-->
             <div class="card-header align-content-center">
                 <div class="mx-auto w-100 w-xxl-800px">
@@ -28,17 +29,63 @@
             <div class="mx-auto w-100 w-xxl-800px">
                 <div class="card-body">
                     <!--begin::Col-->
-                    <div id="user-profile" class="d-flex flex-column justify-content-center gap-6 mx-auto editable">
+                    <div id="user-profile"
+                         class="d-flex flex-column justify-content-center align-items-center align-content-center gap-6 mx-auto editable">
                         <button id="userBtn" value="" class="d-none"></button>
                         <!--begin::Row-->
-                        <div class="d-flex flex-row-wrap justify-content-around align-items-center gap-12 w-100">
+                        <div class="text-info fs-6 text-center mb-5">
+                            <?php
+                            if (
+                                !isset($_SESSION['user']['confirmed'])
+                                || !isset($_SESSION['user']['fname'])
+                                || $_SESSION['user']['avatar'] === '/assets/media/avatars/blank.png'
+                            ) {
+                                echo 'Complete your profile to have all services in our web! 💡';
+                            }
+                            ?>
+                        </div>
+                        <!--end::Row-->
+                        <!--begin::Row-->
+                        <div class="d-flex flex-row-wrap justify-content-center align-items-center gap-20">
+                            <!--begin::User Data-->
+                            <div class="d-flex flex-column">
+                                <!--begin::Full Name-->
+                                <div class="mb-3 w-300px">
+                                    <label for="fname" class="form-label fs-5 mt-2">
+                                        Full Name
+                                    </label>
+                                    <input id="fname" name="fname" type="text" disabled
+                                           value="<?= $_SESSION['user']['fname'] ?? '' ?>"
+                                           class="form-control bg-transparent this-role-form-field"/>
+                                </div>
+                                <!--end::Full Name-->
+                                <!--begin::Email-->
+                                <div class="mb-3 w-300px">
+                                    <label for="email"
+                                           class="form-label fs-5 mt-2">Email</label>
+                                    <input id="email" name="email" type="email" disabled required
+                                           value="<?= $_SESSION['user']['email'] ?? '' ?>"
+                                           class="form-control bg-transparent this-role-form-field"/>
+                                    <div class="text-danger fs-7 d-none emailchange">If you change your email, you will be logged out.</div>
+                                    <?php
+                                    if (!isset($_SESSION['user']['confirmed'])) {
+                                        echo '<div class="text-danger fs-7 required">This email has not been confirmed yet</div>'
+                                            . '<a href="#" class="btn btn-warning py-1 px-3">Resend code</a>';
+                                    }
+                                    ?>
+                                </div>
+                                <!--end::Email-->
+                            </div>
+                            <!--end::User Data-->
                             <!--begin::Avatar-->
-                            <div class="mb-15 avatar-container">
+                            <div class="avatar-container">
                                 <div class="d-flex flex-column gap-6 align-items-center">
                                     <div class="symbol symbol-125px symbol-xl-175px circle position-relative">
                                         <input id="avatar" name="avatar" type="file"
                                                class="d-none this-role-form-field">
-                                        <span id="avatar-input-holder" class="symbol-label circle"></span>
+                                        <span id="avatar-input-holder" class="symbol-label circle"
+                                              style="background: url('<?= $_SESSION['user']['avatar'] ?>'); background-size: cover;">
+                                            </span>
                                     </div>
                                     <div class="d-flex flex-row flex-wrap gap-4 editable-item">
                                         <label for="avatar" class="btn p-1 text-hover-primary fs-7">
@@ -51,38 +98,10 @@
                                 </div>
                             </div>
                             <!--end::Avatar-->
-                            <div class="d-flex flex-column">
-                                <!--begin::Full Name-->
-                                <div class="mb-3 w-300px">
-                                    <label for="fname" class="ff-poiret account-option bg-brush h2 z-index-3 mt-2">
-                                        Full Name
-                                    </label>
-                                    <input id="fname" name="fname" type="text" disabled
-                                           class="form-control bg-transparent text-center this-role-form-field"/>
-                                </div>
-                                <!--end::Full Name-->
-                                <!--begin::Username-->
-                                <div class="mb-3 w-300px">
-                                    <label for="username" class="ff-poiret account-option bg-brush h2 z-index-3 mt-2">
-                                        Username
-                                    </label>
-                                    <input id="username" name="username" type="text" disabled
-                                           class="form-control bg-transparent text-center this-role-form-field"/>
-                                </div>
-                                <!--end::Username-->
-                                <!--begin::Email-->
-                                <div class="mb-3 w-300px">
-                                    <label for="email"
-                                           class="ff-poiret account-option bg-brush h2 z-index-3 mt-2">Email</label>
-                                    <input id="email" name="email" type="email" disabled
-                                           class="form-control bg-transparent text-center this-role-form-field"/>
-                                </div>
-                                <!--end::Email-->
-                            </div>
                         </div>
                         <!--end::Row-->
                         <!--begin::Row-->
-                        <div class="d-flex flex-row-wrap justify-content-around align-items-center gap-6 mt-2 w-100">
+                        <div class="d-flex flex-row-wrap justify-content-start align-content-start align-items-start gap-20 mt-2">
                             <button type="button" id="resetPwdBtn" class="btn btn-sm btn-secondary align-self-center"
                                     data-bs-toggle="modal" data-bs-target="#modal_confirmation">
                                 Reset password
@@ -94,7 +113,7 @@
                         </div>
                         <!--end::Row-->
                         <!--begin::Row-->
-                        <div class="d-flex flex-row-wrap justify-content-around align-items-center gap-6 mt-2 w-100">
+                        <div class="d-flex flex-row-wrap justify-content-around align-items-center gap-6 mt-2">
                             <p class="text-center text-danger fs-6 my-5 fw-bold reset-pwd"></p>
                         </div>
                         <!--end::Row-->
@@ -114,7 +133,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title text-center mx-auto"></h3>
+                <h3 class="modal-title text-center mx-auto">Are you sure?</h3>
             </div>
             <div class="modal-body">
                 <div class="d-flex flex-row justify-content-between">

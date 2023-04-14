@@ -23,23 +23,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     /**
-     * Open confirmation modal
-     * -----------------------
-     * Open confirmation modal, unbinds confirmation answer and binds it again according to a callback
-     *
-     * @param callback
-     */
-    function openConfirmation(callback) {
-        const confirmAnswer = $('.confirm_answer');
-        confirmAnswer.unbind('click');
-        confirmAnswer.click(function () {
-            if (this.value === "true") {
-                callback();
-            }
-        });
-    }
-
-    /**
      * Send email to reset password
      */
     function sendResetPwdMail() {
@@ -64,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function formatProfile(data) {
         if (!data['response']) return;
         let user = data['user'];
-        $('#email').val(user['user_email']);
+        emailBox.val(user['user_email']);
         $('#fname').val(user['user_fname']);
     }
 

@@ -8,6 +8,7 @@ class Account extends BaseController
 {
     protected mixed $usermodel;
     protected mixed $tokenmodel;
+    protected mixed $issuesmodel;
     protected mixed $mailer;
     protected string $now;
 
@@ -18,6 +19,7 @@ class Account extends BaseController
     {
         $this->usermodel = model('UsersModel');
         $this->tokenmodel = model('TokenModel');
+        $this->issuesmodel = model('IssuesModel');
         $this->mailer = \Config\Services::email();
         $this->now = date('Y-m-d H:i:s', time());
     }
@@ -265,5 +267,28 @@ class Account extends BaseController
     function created(): string
     {
         return template('tokens/email_sent', ['unlogged' => true]);
+    }
+
+    public function send_issue(): void
+    {
+        if (isset($_SESSION['user'])) {
+            $data = [
+                'issue_user' => $_SESSION['user']['id'],
+                'issue_title' => validate($_POST['issue_title']),
+                'issue_type' => validate($_POST['issue_type']),
+                'issue_msg' => json_encode([
+                    0 => [
+                        "time" => $this->now,
+                        "sender" => $_SESSION['user']['id'],
+                        "msg" => validate($_POST['issue_details'])
+                    ]
+                ]),
+            ];
+            if ($this->issuesmodel->new($data)) {
+                echo json_encode(['response' => true]);
+                return;
+            }
+        }
+        echo json_encode(['response' => false]);
     }
 }

@@ -123,7 +123,7 @@
                     <!--end::Indicator label-->
                     <!--begin::Indicator progress-->
                     <span class="indicator-progress">
-                        Por favor espere...
+                        Please wait...
                         <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                     </span>
                     <!--end::Indicator progress-->
@@ -150,6 +150,7 @@
         }
 
         $('#save_user_btn').click(function () {
+            toggleProgressSpinner();
             let form = getForm('#edit_user');
             $.ajax({
                 type: "post",
@@ -158,7 +159,10 @@
                 dataType: "json",
                 success: function (data) {
                     console.log(data)
-                    if (!data['response']) return;
+                    if (!data['response']) {
+                        toggleProgressSpinner(false);
+                        return;
+                    }
                     window.location.reload();
                 }
             })

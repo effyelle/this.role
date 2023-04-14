@@ -44,6 +44,8 @@ CREATE TABLE invite_url(
 CREATE TABLE issues(
   issue_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
   issue_user INT UNSIGNED,
+  issue_title VARCHAR(50),
+  issue_type ENUM('suggestion', 'congratulation', 'complaint', 'help'),
   issue_msg JSON,
   FOREIGN KEY(issue_user) REFERENCES users(user_id)
 );
@@ -51,8 +53,8 @@ CREATE TABLE issues(
 INSERT INTO users(user_fname, user_email, user_pwd, user_confirmed)
 VALUES
 	('Mario Sancho', 'mail@mail.mail', '$2y$10$AGx4O3bw8QhdhatZxETiJuuUiR.sRLBx5zwxYu9.fwj6LipePLag2', NOW()),
-	('Jose Luis El Bizco', 'com@com.com', '$2y$10$AGx4O3bw8QhdhatZxETiJuuUiR.sRLBx5zwxYu9.fwj6LipePLag2', NOW()),
-	('La Effy', 'ericapastor@gmail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
+	('JL.ak.elBizco', 'com@com.com', '$2y$10$AGx4O3bw8QhdhatZxETiJuuUiR.sRLBx5zwxYu9.fwj6LipePLag2', NOW()),
+	('La Effy', 'ericapastorgracia@gmail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
 	('Fernando Fernandez', 'ffmail@email.f', '$2y$10$AGx4O3bw8QhdhatZxETiJuuUiR.sRLBx5zwxYu9.fwj6LipePLag2', NOW());
 
 UPDATE users SET user_rol='master' WHERE user_email='ericapastorgracia@gmail.com';

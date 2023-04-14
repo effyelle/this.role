@@ -72,8 +72,7 @@
 
         function sendForm(form) {
             $('#ajax_signup-response').html('');
-            $('.indicator-label').hide();
-            $('.indicator-progress').show();
+            toggleProgressSpinner();
             $.ajax({
                 type: "POST",
                 url: "/account/signup",
@@ -85,8 +84,7 @@
                         window.location.assign('/account/created');
                         return;
                     }
-                    $('.indicator-label').show();
-                    $('.indicator-progress').hide();
+                    toggleProgressSpinner(false);
                     $('#ajax_signup-response').html(data['msg']);
                     if (data.msg.match(/email/)) $('#email').addClass('is-invalid');
                 },

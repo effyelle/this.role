@@ -44,6 +44,18 @@ function generateDatatable() {
     }
 }
 
+function toggleProgressSpinner(onprogress = true) {
+    const label = $('.indicator-label');
+    const progress = $('.indicator-progress');
+    if (onprogress) {
+        label.hide();
+        progress.show();
+        return;
+    }
+    label.show();
+    progress.hide();
+}
+
 function validateEmail(emailId) {
     let email = document.querySelector(emailId);
     if (email.value.match(/^[A-Za-z0-9_.]+@[A-Za-z0-9-]+\.[A-Za-z]+$/)) {
@@ -79,6 +91,23 @@ function getForm(parent) {
         if (key !== null) form[key] = formFields[i].value;
     }
     return form;
+}
+
+/**
+ * Open confirmation modal
+ * -----------------------
+ * Open confirmation modal, unbinds confirmation answer and binds it again according to a callback
+ *
+ * @param callback
+ */
+function openConfirmation(callback) {
+    const confirmAnswer = $('.confirm_answer');
+    confirmAnswer.unbind('click');
+    confirmAnswer.click(function () {
+        if (this.value === "true") {
+            callback();
+        }
+    });
 }
 
 function toSentenceCase(str) {

@@ -74,8 +74,7 @@
         }
 
         function sendForm(form) {
-            $('.indicator-label').hide();
-            $('.indicator-progress').show();
+            toggleProgressSpinner();
             $.ajax({
                 type: "POST",
                 url: "/account/login",
@@ -87,8 +86,7 @@
                         window.location.assign('/app/index');
                         return;
                     }
-                    $('.indicator-label').show();
-                    $('.indicator-progress').hide();
+                    toggleProgressSpinner(false);
                     $('#login_error').trigger('click');
                 }
             });

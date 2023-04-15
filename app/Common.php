@@ -8,9 +8,8 @@ use \App\Controllers\App as app;
  *---------------------------------------------------------------
  */
 
-function template(string $page = 'home', $data = null): string
+function template(string $page = 'home', $data = []): string
 {
-    $data = $data ?? [];
     if (!isset($data['title'])) $data['title'] = get_title($page);
     $data['page'] = $page;
     if (is_file(APPPATH . 'Views/pages/' . $page . '.php')) {

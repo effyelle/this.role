@@ -35,9 +35,9 @@
                     <div class="text-info fs-6 text-center mb-5">
                         <?php
                         if (
-                            !isset($_SESSION['user']['confirmed'])
-                            || !isset($_SESSION['user']['fname'])
-                            || $_SESSION['user']['avatar'] === '/assets/media/avatars/blank.png'
+                            !isset($_SESSION['user']['user_confirmed'])
+                            || !isset($_SESSION['user']['user_fname'])
+                            || $_SESSION['user']['user_avatar'] === '/assets/media/avatars/blank.png'
                         ) {
                             echo 'Complete your profile to enjoy all services in our web! 💡';
                         }
@@ -48,28 +48,37 @@
                     <div class="d-flex flex-row-wrap justify-content-center align-items-center gap-20">
                         <!--begin::User Data-->
                         <div class="d-flex flex-column">
+                            <!--begin::Username-->
+                            <div class="mb-3 w-300px">
+                                <label for="username" class="form-label fs-5 mt-2 bg-brush ff-poiret fs-2">
+                                    Username
+                                </label>
+                                <input id="username" name="username" type="text" disabled
+                                       value="<?= $_SESSION['user']['user_username'] ?? '' ?>"
+                                       class="form-control bg-transparent this-role-form-field"/>
+                            </div>
+                            <!--end::Username-->
                             <!--begin::Full Name-->
                             <div class="mb-3 w-300px">
-                                <label for="fname" class="form-label fs-5 mt-2">
+                                <label for="fname" class="form-label fs-5 mt-2 bg-brush ff-poiret fs-2">
                                     Full Name
                                 </label>
                                 <input id="fname" name="fname" type="text" disabled
-                                       value="<?= $_SESSION['user']['fname'] ?? '' ?>"
+                                       value="<?= $_SESSION['user']['user_fname'] ?? '' ?>"
                                        class="form-control bg-transparent this-role-form-field"/>
                             </div>
                             <!--end::Full Name-->
                             <!--begin::Email-->
                             <div class="mb-3 w-300px">
-                                <label for="email"
-                                       class="form-label fs-5 mt-2">Email</label>
+                                <label for="email" class="form-label fs-5 mt-2 bg-brush ff-poiret fs-2">Email</label>
                                 <input id="email" name="email" type="email" disabled required
-                                       value="<?= $_SESSION['user']['email'] ?? '' ?>"
+                                       value="<?= $_SESSION['user']['user_email'] ?? '' ?>"
                                        class="form-control bg-transparent this-role-form-field"/>
                                 <div class="text-danger fs-7 d-none emailchange">If you change your email, you will
                                     be logged out.
                                 </div>
                                 <?php
-                                if (!isset($_SESSION['user']['confirmed'])) {
+                                if (!isset($_SESSION['user']['user_confirmed'])) {
                                     echo '<div class="text-danger fs-7 required">This email has not been confirmed yet</div>'
                                         . '<a href="#" class="btn btn-warning py-1 px-3">Resend code</a>';
                                 }
@@ -85,7 +94,7 @@
                                     <input id="avatar" name="avatar" type="file"
                                            class="d-none this-role-form-field"/>
                                     <span id="avatar-input-holder" class="symbol-label circle"
-                                          style="background: url('<?= $_SESSION['user']['avatar'] ?>'); background-size: cover;">
+                                          style="background: url('<?= $_SESSION['user']['user_avatar'] ?>'); background-size: cover;">
                                             </span>
                                 </div>
                                 <div class="d-flex flex-row flex-wrap gap-4 editable-item">

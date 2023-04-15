@@ -351,6 +351,9 @@ a .hover-flip {
 }
 
 .bg-brush {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: url("/assets/media/imgs/brush-1.png") no-repeat center;
     background-size: cover;
     height: 40px;

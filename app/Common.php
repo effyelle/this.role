@@ -60,7 +60,7 @@ function check_session(): bool
 function user_exists(): void
 {
     if (isset($_SESSION['user'])) {
-        $user = (model('\App\Models\UsersModel'))->get($_SESSION['user']['email']);
+        $user = (model('\App\Models\UsersModel'))->get($_SESSION['user']['user_email']);
         if (!$user) {
             session_unset();
             session_destroy();
@@ -72,12 +72,13 @@ function user_exists(): void
 function update_session($user): void
 {
     $_SESSION['user'] = [
-        'id' => $user['user_id'],
-        'fname' => $user['user_fname'],
-        'avatar' => $user['user_avatar'],
-        'email' => $user['user_email'],
-        'rol' => $user['user_rol'],
-        'confirmed' => $user['user_confirmed']
+        'user_id' => $user['user_id'],
+        'user_username' => $user['user_username'],
+        'user_fname' => $user['user_fname'],
+        'user_avatar' => $user['user_avatar'],
+        'user_email' => $user['user_email'],
+        'user_rol' => $user['user_rol'],
+        'user_confirmed' => $user['user_confirmed']
     ];
 }
 

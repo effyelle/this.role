@@ -47,8 +47,12 @@
                      data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                     <!--begin::Name-->
                     <div class="d-none d-md-flex flex-column align-items-end justify-content-center me-2 me-md-4">
-                        <span class="text-muted fs-7 fw-bold lh-1 mb-1 nav_fname"><?= $_SESSION['user']['fname'] ?? ''; ?></span>
-                        <span class="text-white fs-8 fw-bolder lh-1"><?= $_SESSION['user']['rol'] ?? '' ?></span>
+                        <span class="text-muted fs-7 fw-bold lh-1 mb-1 nav_fname"><?= $_SESSION['user']['user_username'] ?? ''; ?></span>
+                        <span class="text-white fs-8 fw-bolder lh-1">
+                            <?php
+                            if (isset($_SESSION['user']['user_rol']) && $_SESSION['user']['user_rol'] !== 'user') echo $_SESSION['user']['user_rol'];
+                            ?>
+                        </span>
                     </div>
                     <!--end::Name-->
                     <!--begin::Symbol-->
@@ -71,8 +75,8 @@
                             <!--end::Avatar-->
                             <!--begin::Username-->
                             <div class="d-flex flex-column">
-                                <div class="fw-bolder d-flex align-items-center fs-5 nav_fname"><?= $_SESSION['user']['fname'] ?? '' ?></div>
-                                <span class="fw-bold text-muted fs-7 nav_email"><?= $_SESSION['user']['email'] ?? '' ?></span>
+                                <div class="fw-bolder d-flex align-items-center fs-5 nav_fname"><?= $_SESSION['user']['user_username'] ?? ''; ?></div>
+                                <span class="fw-bold text-muted fs-7 nav_email"><?= $_SESSION['user']['user_email'] ?? '' ?></span>
                             </div>
                             <!--end::Username-->
                         </div>

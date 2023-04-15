@@ -21,7 +21,8 @@ class IssuesModel extends Model
     {
         $builder = db::connect()
             ->table($this->table)
-            ->select('*');
+            ->select('*')
+            ->join('users', 'users.user_id=issues.issue_user');
         if (isset($issueID)) $builder->where('issue_id', $issueID);
         if ($issues = $builder->get()->getResultArray()) {
             if (count($issues) === 1) return $issues[0];

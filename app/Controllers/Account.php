@@ -73,10 +73,11 @@ class Account extends BaseController
      */
     function signup(): void
     {
-        $email = $_POST['email'] ?? false;
-        $pwd = $_POST['pwd'] ?? false;
+        $username = validate($_POST['username']) ?? false;
+        $email = validate($_POST['email']) ?? false;
+        $pwd = validate($_POST['pwd']) ?? false;
         // Check fields are not empty
-        if (!($email && $pwd)) {
+        if (!($username && $email && $pwd)) {
             echo json_encode(['response' => false, 'msg' => 'Necessary fields are empty.', 'data' => $_POST]);
             return;
         }
@@ -88,7 +89,7 @@ class Account extends BaseController
         // Send confirmation email and insert new user into Database
         //if ($this->sendConfirmationEmail($email)) {
         $pwd = password_hash($pwd, PASSWORD_DEFAULT);
-        if ($this->usermodel->new(['user_email' => $email, 'user_pwd' => $pwd])) {
+        if ($this->usermodel->new(['user_username' => $username, 'user_email' => $email, 'user_pwd' => $pwd])) {
             echo json_encode(['response' => true]);
             return;
         }
@@ -108,14 +109,19 @@ class Account extends BaseController
         echo json_encode(['reponse' => false]);
     }
 
-    function update_profile(): string
+    function updateProfile(): string
     {
         if (isset($_POST['fname'])) {
+            $username = $_POST['username'];
             $fname = $_POST['fname'];
             $email = $_POST['email'];
-            $oldEmail = $_SESSION['user']['email'];
+            $oldEmail = $_SESSION['user']['user_email'];
             if ($fname === '') $fname = null;
-            $data = ['user_fname' => $fname, 'user_email' => $email];
+            $data = [
+                'user_username' => $username,
+                'user_fname' => $fname,
+                'user_email' => $email
+            ];
             $where = ['user_email' => $oldEmail];
             if ($_FILES['avatar']['error'] === 0) {
                 $img = upload_img('avatar', 'assets/media/avatars');
@@ -137,7 +143,7 @@ class Account extends BaseController
     function myprofile()
     {
         if (isset($_SESSION['user'])) {
-            $user = $this->usermodel->get($_SESSION['user']['email']);
+            $user = $this->usermodel->get($_SESSION['user']['user_email']);
             update_session($user);
             echo json_encode(['response' => true, 'user' => $user]);
         }
@@ -273,13 +279,13 @@ class Account extends BaseController
     {
         if (isset($_SESSION['user'])) {
             $data = [
-                'issue_user' => $_SESSION['user']['id'],
+                'issue_user' => $_SESSION['user']['user_username'],
                 'issue_title' => validate($_POST['issue_title']),
                 'issue_type' => validate($_POST['issue_type']),
                 'issue_msg' => json_encode([
                     0 => [
                         "time" => $this->now,
-                        "sender" => $_SESSION['user']['id'],
+                        "sender" => $_SESSION['user']['user_username'],
                         "msg" => validate($_POST['issue_details'])
                     ]
                 ]),

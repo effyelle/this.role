@@ -7,23 +7,23 @@
             <!--begin::Header-->
             <div class="card-header">
                 <div class="card-toolbar gap-5">
-                    <h2><?= $title ?></h2>
+                    <h2><?= $title ?? '' ?></h2>
                 </div>
             </div>
             <!--end::Header-->
             <!--begin::Body-->
-            <div class="card-body mx-12">
+            <div class="card-body mx-12 tab-content">
                 <!--begin::Tabs-->
                 <ul class="nav nav-tabs nav-line-tabs mb-5 fs-6">
                     <li class="nav-item">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#users-table">Users List</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#users-table">Users List</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#users-msgs">Messages Support</a>
+                        <a class="nav-link active" data-bs-toggle="tab" href="#users-msgs">Messages Support</a>
                     </li>
                 </ul>
                 <!--end::Tabs-->
-                <div id="users-table" class="tab-pane fade show active" role="tabpanel">
+                <div id="users-table" class="tab-pane fade" role="tabpanel">
                     <?php if (isset($users_list) && is_array($users_list) && count($users_list) > 0): ?>
                         <table id="users_list"
                                class="table dataTable align-middle table-row-dashed generate-datatable show-search-dt no-footer">
@@ -58,8 +58,30 @@
                         </table>
                     <?php endif; ?>
                 </div>
-                <div id="users-msgs">
-                    <table id="msgs_list" class="tab-pane fade" role="tabpanel"></table>
+                <div id="users-msgs" class="tab-pane fade show active" role="tabpanel">
+                    <?php if (isset($issues_list) && is_array($issues_list) && count($issues_list) > 0): ?>
+                        <table id="msgs_list"
+                               class="table dataTable align-middle table-row-dashed generate-datatable show-search-dt no-footer">
+                            <thead>
+                            <tr class="fw-bold fs-6 text-gray-800">
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($issues_list as $k => $issue) {
+                                echo '<tr>'
+                                    . '   <td>' . $issue['issue_title'] . '</td>'
+                                    . '   <td class="text-end">'
+                                    . '      <span class="pe-1 text-hover-info cursor-pointer">' . $issue['user_username'] . '</span>'
+                                    . '      <i class="fa fa-greater-than fa-xs"></i>'
+                                    . '      <input class="d-none" value="' . '"/>'
+                                    . '   </td>'
+                                    . '</tr>';
+                            } ?>
+                            </tbody>
+                        </table>
+                    <?php endif; ?>
                 </div>
             </div>
             <!--end::Body-->
@@ -135,11 +157,11 @@
 <!--end::User Edit Modal-->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const usersData =<?php echo json_encode($users_list)?>;
-        const userI = document.querySelectorAll('.usernameBtn');
+        const usersData =<?php echo json_encode($users_list ?? '{}')?>;
+        const userEditBtn = document.querySelectorAll('.usernameBtn');
 
-        for (let i = 0; i < userI.length; i++) {
-            userI[i].addEventListener('click', function () {
+        for (let i = 0; i < userEditBtn.length; i++) {
+            userEditBtn[i].addEventListener('click', function () {
                 let user = usersData[this.value];
                 $('#user').val(user.user_id);
                 $('#fname').val(user.user_fname);
@@ -158,14 +180,28 @@
                 data: form,
                 dataType: "json",
                 success: function (data) {
-                    console.log(data)
-                    if (!data['response']) {
-                        toggleProgressSpinner(false);
-                        return;
+                    if (data['response']) {
+                        $('#data_sent').click();
                     }
-                    window.location.reload();
+                    toggleProgressSpinner(false);
                 }
             })
         });
+
+        $('#msgs_list thead').hide();
+
+        const messagesData =<?php echo json_encode($issues_list ?? '{}');?>;
+        const issueExpand = $('#msgs_list .text-end');
+        console.log(messagesData)
+
+        for (let i = 0; i < issueExpand.length; i++) {
+            issueExpand[i].addEventListener('click', function () {
+                let messages = JSON.parse(messagesData[i].issue_msg);
+                for (let j = 0; j < messages.length; j++) {
+                    let message = messages[j];
+                    console.log(message)
+                }
+            });
+        }
     });
 </script>

@@ -1,22 +1,17 @@
 <!--begin::Footer-->
 <!--begin::Modal-->
-<div class="modal fade" tabindex="-1" id="contact-support">
+<div class="modal fade" tabindex="-1" id="contact_support">
     <div class="modal-dialog">
         <!--begin::Form-->
-        <form class="modal-content">
+        <form class="modal-content" autocomplete="off">
             <!--begin::Header-->
             <div class="modal-header">
-                <h3 class="modal-title">Issues and suggestions Mail</h3>
-                <!--begin::Close-->
-                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
-                     aria-label="Close">
-                    <span class="svg-icon svg-icon-1"></span>
-                </div>
-                <!--end::Close-->
+                <h3 class="modal-title">Contact Support</h3>
             </div>
             <!--end::Header-->
             <!--begin::Body-->
             <div class="modal-body">
+                <div class="text-center text-danger fs-5 issues_error d-none">One or more fields are missing</div>
                 <div class="form-group mt-5">
                     <label for="issue_title">Issue</label>
                     <input id="issue_title" name="issue_title" type="text" maxlength="50"
@@ -31,10 +26,13 @@
                     <label for="issue_type">Issue type</label>
                     <select class="form-select form-select-solid this-role-form-field" id="issue_type"
                             name="issue_type">
-                        <option value="suggestion">Suggestion 💡</option>
-                        <option value="congratulation">Congratulation 🥳</option>
-                        <option value="complaint">Complaint 😩</option>
-                        <option value="help">Help 😭</option>
+                        <option value="-1" disabled selected>Select one</option>
+                        <optgroup label="" class="dropdown-divider">
+                            <option value="suggestion">Suggestion 💡</option>
+                            <option value="congratulation">Congratulation 🥳</option>
+                            <option value="complaint">Complaint 😩</option>
+                            <option value="help">Help 😭</option>
+                        </optgroup>
                     </select>
                 </div>
             </div>
@@ -42,8 +40,7 @@
             <!--begin::Footer-->
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" id="send_issue_btn" data-bs-toggle="modal" data-bs-target="#modal_confirmation"
-                        class="btn btn-primary">
+                <button type="button" id="send_issue_btn" class="btn btn-primary">
                     <!--begin::Indicator label-->
                     <span class="indicator-label">Send</span>
                     <!--end::Indicator label-->
@@ -78,24 +75,87 @@
     </div>
 </div>
 <!--end::Modal-->
+<!--begin::Modal Toggle-->
+<button class="d-none" id="toggle_error" data-bs-target="#modal_error" data-bs-toggle="modal"></button>
+<!--end::Modal Toggle-->
+<!--begin::Modal-->
+<div class="modal fade" tabindex="-1" id="modal_error">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-center mx-auto">There was an unexpected error</h3>
+            </div>
+            <div class="modal-body">
+                <div class="mb-5">
+                    <p class="text-center">We apologize for the inconveniences</p>
+                </div>
+                <div class="d-flex flex-row justify-content-center">
+                    <button class="btn btn-primary confirm_answer" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end::Modal-->
+<!--begin::Modal Toggle-->
+<button class="d-none" id="data_sent" data-bs-target="#modal_data_sent" data-bs-toggle="modal"></button>
+<!--end::Modal Toggle-->
+<!--begin::Modal-->
+<div class="modal fade" tabindex="-1" id="modal_data_sent">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-center mx-auto">Data was sent</h3>
+            </div>
+            <div class="modal-body">
+                <div class="mb-5">
+                    <p class="text-center">Please wait until our support team messages you back!</p>
+                </div>
+                <div class="d-flex flex-row justify-content-center">
+                    <button class="btn btn-primary confirm_answer" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end::Modal-->
 <!--end::Footer-->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        $('#send_issue_btn').click(function () {
-            openConfirmation(sendIssue)
+        $('#modal_alert .confirm_answer').click(function () {
+            window.location.reload();
         });
+
+        $('#send_issue_btn').click(function () {
+            const issues_error_msg = $('.issues_error');
+            if ($('#issue_title').val().length > 0 && $('#issue_details').val().length > 0
+                && $('#issue_type option:selected').val() !== '-1') {
+                issues_error_msg.addClass('d-none');
+                sendIssue();
+                return;
+            }
+            issues_error_msg.removeClass('d-none');
+        });
+
+        $('#contact_support').on('hidden.bs.modal', function () {
+            $('#contact_support .this-role-form-field').val('');
+            $('#issue_type option[value="-1"').prop('selected', true);
+        })
 
         function sendIssue() {
             toggleProgressSpinner();
-            let form = getForm('#contact-support');
+            let form = getForm('#contact_support');
             $.ajax({
                 type: "post",
                 url: "/account/send_issue",
                 data: form,
                 dataType: "json",
                 success: function (data) {
+                    console.log(data)
                     if (data['response']) {
-
+                        $('#data_sent').click();
+                    } else {
+                        $('#toggle_error').click();
                     }
                     toggleProgressSpinner(false);
                 },

@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function toggleProfileEditable(editable = false) {
         const editProfileBtn = $('#editProfile');
         $('.editable').toggleClass('show', editable);
-        $('.this-role-form-field').prop('disabled', !editable);
+        $('#update-profile .this-role-form-field').prop('disabled', !editable);
         deactivateProfile.toggleClass('d-none', editable);
         resetPwdBtn.toggleClass('d-none', editable);
         $('#updateProfile').toggleClass('d-none', !editable);

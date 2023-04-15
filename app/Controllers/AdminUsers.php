@@ -4,12 +4,14 @@ namespace App\Controllers;
 
 class AdminUsers extends BaseController
 {
-    protected mixed $model;
+    protected mixed $usermodel;
+    protected mixed $issuesmodel;
     protected string $now;
 
     public function __construct()
     {
-        $this->model = model('UsersModel');
+        $this->usermodel = model('UsersModel');
+        $this->issuesmodel = model('IssuesModel');
         $this->now = date('Y-m-d H:i:s', time());
     }
 
@@ -24,9 +26,8 @@ class AdminUsers extends BaseController
     function users(): string
     {
         $data = [];
-        if ($users = $this->model->get()) {
-            $data['users_list'] = $users;
-        }
+        if ($users = $this->usermodel->get()) $data['users_list'] = $users;
+        if ($issues = $this->issuesmodel->get()) $data['issues_list'] = $issues;
         return template('admin/users', $data);
     }
 
@@ -41,7 +42,7 @@ class AdminUsers extends BaseController
         ];
         $where = ['user_id' => $_POST['user']];
 
-        if ($this->model->updt($data, $where)) {
+        if ($this->usermodel->updt($data, $where)) {
             echo json_encode(['response' => true]);
             return;
         }

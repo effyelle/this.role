@@ -68,7 +68,7 @@
                         </a>
                     </div>
                     <!--end::Menu Item-->
-                    <?php if (isset($_SESSION['user']) && ($_SESSION['user']['rol'] === 'admin' || $_SESSION['user']['rol'] === 'master')): ?>
+                    <?php if (isset($_SESSION['user']) && ($_SESSION['user']['user_rol'] === 'admin' || $_SESSION['user']['user_rol'] === 'master')): ?>
                         <!--begin::Admin section separator-->
                         <div class="menu-item">
                             <div class="menu-content p-0">
@@ -140,12 +140,13 @@
             </div>
         </div>
         <!--end::Aside menu-->
-        <!--begin::Toggle Contact Support-->
-        <div class="aside-footer flex-column-auto pt-5 pb-7 px-5" id="kt_aside_footer">
-            <a data-bs-toggle="modal" data-bs-target="#contact-support"
-               class="btn btn-bg-light btn-color-gray-500 btn-active-color-gray-900 w-100">
-                <span class="btn-label">Contact Support</span>
-                <span class="svg-icon btn-icon svg-icon-2">
+        <?php //if (isset($_SESSION['user']) && $_SESSION['user']['user_rol'] !== 'admin'): ?>
+            <!--begin::Toggle Contact Support-->
+            <div class="aside-footer flex-column-auto pt-5 pb-7 px-5" id="kt_aside_footer">
+                <a data-bs-toggle="modal" data-bs-target="#contact_support"
+                   class="btn btn-bg-light btn-color-gray-500 btn-active-color-gray-900 w-100">
+                    <span class="btn-label">Contact Support</span>
+                    <span class="svg-icon btn-icon svg-icon-2">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill="currentColor"
                               d="M6 8.725C6 8.125 6.4 7.725 7 7.725H14L18 11.725V12.925L22 9.725L12.6 2.225C12.2 1.925 11.7 1.925 11.4 2.225L2 9.725L6 12.925V8.725Z">
@@ -155,9 +156,10 @@
                         </path>
                     </svg>
 			    </span>
-            </a>
-        </div>
-        <!--end::Toggle Contact Support-->
+                </a>
+            </div>
+            <!--end::Toggle Contact Support-->
+        <?php //endif; ?>
     </div>
     <!--end::Aside-->
     <!--begin::Container-->

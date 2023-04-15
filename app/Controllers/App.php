@@ -51,7 +51,7 @@ class App extends BaseController
 
     function myprofile(): string
     {
-        if (isset($_SESSION['user'])) return (new Account)->update_profile();
+        if (isset($_SESSION['user'])) return (new Account)->updateProfile();
         return template('login', ['unlogged' => true]);
     }
 
@@ -63,7 +63,7 @@ class App extends BaseController
 
     function admin($switch): string
     {
-        if (isset($_SESSION['user']) && $_SESSION['user']['rol'] !== 'user') {
+        if (isset($_SESSION['user']) && $_SESSION['user']['user_rol'] !== 'user') {
             return (new AdminUsers())->$switch();
         }
         return $this->index();

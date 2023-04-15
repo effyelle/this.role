@@ -29,9 +29,7 @@ class TokenModel extends Model
         if (isset($token)) {
             $builder->where('token', $token);
         }
-        if ($exp) {
-            $builder->where('token_expires >', date('Y-m-d H:i:s', time()));
-        }
+        if ($exp) $builder->where('token_expires >', date('Y-m-d H:i:s', time()));
         if ($tokens = $builder->get()->getResultArray()) {
             if (count($tokens) === 1) return $tokens[0];
             if (count($tokens) > 0) return $tokens;

@@ -8,6 +8,17 @@
     <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
         <!--begin::Form Field-->
         <div class="my-4 position-relative">
+            <label for="username" class="form-label fs-5 my-2 required">Username</label>
+            <input type="text" id="username" name="username"
+                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
+        </div>
+        <!--end::Form Field-->
+    </div>
+    <!--end::Row-->
+    <!--begin::Row-->
+    <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
+        <!--begin::Form Field-->
+        <div class="my-4 position-relative">
             <label for="email" class="form-label fs-5 my-2 required">Email</label>
             <input type="email" id="email" name="email"
                    class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
@@ -95,27 +106,42 @@
             });
         }
 
+        const username = $('#username');
+        username.keypress(function (e) {
+            if (e.originalEvent.key === ' ') e.preventDefault();
+        });
+
         function validateFields() {
+            let usernameVal = false;
             let emailVal = false;
             let pwdVal = false;
 
+            // Validate username
+            if (username.val().length > 0) {
+                usernameVal = true;
+            }
+
+            // Validate email
+            let emailResponse = $('#email-response');
+            emailResponse.html('');
             if ($('#email').val().length > 0) {
-                let emailResponse = $('#email-response');
                 emailVal = validateEmail('#email');
                 if (emailVal) emailResponse.html('');
                 else emailResponse.html('Not a valid email');
             }
+
+            // Validate passwords
             let pwd = $('#pwd');
+            let pwdResponse = $('#pwd-response');
+            pwdResponse.html('');
             if (pwd.val().length > 0) {
                 pwdVal = validPasswords();
             }
 
-            return (emailVal && pwdVal);
+            return (usernameVal && emailVal && pwdVal);
 
             function validPasswords() {
                 let pwdRepeat = $('#pwd-repeat');
-                let pwdResponse = $('#pwd-response');
-                pwdResponse.html('');
                 if (validatePwd('#pwd')) {
                     if (pwd.val() === pwdRepeat.val()) {
                         pwdRepeat.addClass('is-valid');

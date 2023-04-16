@@ -546,3 +546,15 @@ a.btn-link:hover, .btn-link:hover {
 .text-center * {
     text-align: center !important;
 }
+
+.overflow-transition {
+    display: block !important;
+    height: 0;
+    overflow: hidden;
+    transition: all 0.5s ease;
+}
+
+.overflow-transition.show {
+    overflow: visible;
+    transition: all 0.3s ease;
+}

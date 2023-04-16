@@ -18,8 +18,8 @@
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#users-table">Users List</a>
                     </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" data-bs-toggle="tab" href="#users-msgs">Messages Support</a>
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#users-msgs">Messages Support</a>
                     </li>
                 </ul>
                 <!--end::Tabs-->
@@ -63,21 +63,33 @@
                 <div id="users-msgs" class="tab-pane fade show active" role="tabpanel">
                     <?php if (isset($issues_list) && is_array($issues_list) && count($issues_list) > 0): ?>
                         <table id="msgs_list"
-                               class="table dataTable align-middle table-row-dashed generate-datatable show-search-dt no-footer">
-                            <thead>
+                               class="table align-middle table-row-dashed show-search-dt no-footer dataTable generate-datatable">
+                            <thead class="d-none">
                             <tr class="fw-bold fs-6 text-gray-800">
-                                <td></td>
                                 <td></td>
                             </tr>
                             </thead>
                             <tbody>
                             <?php foreach ($issues_list as $k => $issue) {
                                 echo '<tr>'
-                                    . '   <td>' . $issue['issue_title'] . '</td>'
-                                    . '   <td class="text-end">'
-                                    . '      <span class="pe-1 text-hover-info cursor-pointer">' . $issue['user_username'] . '</span>'
-                                    . '      <i class="fa fa-greater-than fa-xs"></i>'
-                                    . '      <input class="d-none" value="' . '"/>'
+                                    . '   <td class="menu-item menu-accordion">'
+                                    . '       <div class="text-muted text-hover-info cursor-pointer menu-link open-link">'
+                                    . '           <span class="menu-title text-uppercase fs-3">' . $issue['issue_title'] . '</span>'
+                                    . '           <span><i>Issue started by </i><b>' . $issue['user_username'] . '</b></span>'
+                                    . '           <span class="menu-arrow">'
+                                    . '               <input class="d-none issue_id" value="' . $issue['issue_id'] . '"/>'
+                                    . '           </span>'
+                                    . '       </div>'
+                                    . '       <div class="menu-sub menu-sub-accordion overflow-transition msg-display">'
+                                    . '       <div class="msg-content px-6"></div>'
+                                    . '           <div class="menu-item msg_textarea pt-5">'
+                                    . '               <span class="menu-link">'
+                                    . '                   <textarea placeholder="Your answer..." rows="3" style="resize: none"'
+                                    . '                       class="form-control form-control-solid this-role-form-field issue_answer menu-title"></textarea>'
+                                    . '               </span>'
+                                    . '               <button class="btn btn-primary ms-8 send_answer_btn">Send</button>'
+                                    . '           </div>'
+                                    . '       </div>'
                                     . '   </td>'
                                     . '</tr>';
                             } ?>
@@ -171,6 +183,8 @@
         const usersData =<?php echo json_encode($users_list ?? '{}')?>;
         const userEditBtn = document.querySelectorAll('.usernameBtn');
 
+        $('#msgs_list').ordering = false;
+
         $('#modal_data_sent .confirm_answer').click(function () {
             window.location.reload();
         });
@@ -197,7 +211,7 @@
             let form = getForm('#edit_user');
             $.ajax({
                 type: "post",
-                url: "/adminusers/update_user",
+                url: "/account/update_user",
                 data: form,
                 dataType: "json",
                 success: function (data) {
@@ -210,20 +224,52 @@
             })
         });
 
-        $('#msgs_list thead').hide();
-
         const messagesData =<?php echo json_encode($issues_list ?? '{}');?>;
-        const issueExpand = $('#msgs_list .text-end');
-        console.log(messagesData)
+        const issueExpand = $('#msgs_list .menu-accordion .menu-link.open-link');
+        const msgDisplay = $('#msgs_list .msg-display');
+        const msgContent = $('.msg-content');
+        console.log(messagesData);
 
         for (let i = 0; i < issueExpand.length; i++) {
-            issueExpand[i].addEventListener('click', function () {
-                let messages = JSON.parse(messagesData[i].issue_msg);
-                for (let j = 0; j < messages.length; j++) {
-                    let message = messages[j];
-                    console.log(message)
+            $('.send_answer_btn')[i].addEventListener('click', function () {
+                let answer = $('.issue_answer')[i].value;
+                if (answer.length > 0) {
+                    $.ajax({
+                        type: "post",
+                        url: "/account/send_issue_msg",
+                        data: {
+                            "msg": answer,
+                            "issue_id": $('.issue_id')[i].value
+                        },
+                        success: function (data) {
+                            console.log(data);
+                        }
+                    });
                 }
             });
+            issueExpand[i].addEventListener('click', function () {
+                issueExpand[i].classList.toggle('show');
+                msgDisplay[i].classList.toggle('show');
+                let totalHeight = '0';
+                let content = '';
+                if (msgDisplay[i].classList.contains('show')) {
+                    let messages = JSON.parse(messagesData[i].issue_msg);
+                    for (let j = 0; j < messages.length; j++) {
+                        content += formatMessage(messages[j]);
+                    }
+                    totalHeight = msgContent[i].offsetHeight + $('.msg_textarea')[i].offsetHeight + 20 + 'px';
+                }
+                msgContent[i].innerHTML = content;
+                msgDisplay[i].style.height = totalHeight; // calculate heights of children
+            });
+        }
+
+        function formatMessage(message) {
+            return '<div class="d-flex flex-row align-items-center gap-5">' +
+                '<span class="menu-title fw-bolder">' + message.sender + '</span>' +
+                '<span class="d-flex flex-row justify-content-between align-items-center w-100">' +
+                '<span class="">' + message.msg + '</span><i class="fs-8">' + message.time + '</i>' +
+                '</span>';
         }
     });
 </script>

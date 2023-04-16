@@ -33,13 +33,14 @@ function generateDatatable() {
             // IF TRUE, ADD SEARCH INPUT
             element.DataTable({
                 responsive: false,
+                ordering: false,
                 "dom": '<"row float-start"<"col-12"f>>rt<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>'
             });
             return;
         }
         // IF FALSE, DON'T ADD SEARCH INPUT
         element.DataTable({
-            responsive: true
+            responsive: false
         });
     }
 }

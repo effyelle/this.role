@@ -41,22 +41,6 @@
                     </div>
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
-                    <!--
-                    <div class="menu-item">
-                        <a class="menu-link <?php if ($title === 'Patch') echo 'hover'; ?>"
-                           href="/patch/notes"
-                           title="" data-bs-toggle="tooltip" data-bs-trigger="hover"
-                           data-bs-dismiss="click" data-bs-placement="right"
-                           data-bs-original-title="Search freely in the API">
-                            <span class="menu-icon">
-                                <i class="fa fa-solid fa-dragon fa-lg hover-flip"></i>
-                            </span>
-                            <span class="menu-title">Patch Notes</span>
-                        </a>
-                    </div>
-                    -->
-                    <!--end::Menu Item-->
-                    <!--begin::Menu Item-->
                     <div class="menu-item">
                         <a class="menu-link <?php if ($title === 'About') echo 'hover'; ?>" href="/app/about" title=""
                            data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
@@ -79,12 +63,12 @@
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                             <!--begin:Menu link-->
                             <span class="menu-link">
-							<span class="menu-icon">
-                                <i class="fa fa-solid fa-gear fa-lg hover-flip"></i>
-							</span>
-							<span class="menu-title">Settings</span>
-							<span class="menu-arrow"></span>
-						</span>
+                                <span class="menu-icon">
+                                    <i class="fa fa-solid fa-gear fa-lg hover-flip"></i>
+                                </span>
+                                <span class="menu-title">Settings</span>
+                                <span class="menu-arrow"></span>
+						    </span>
                             <!--end:Menu link-->
                             <!--begin:Menu sub-->
                             <div class="menu-sub menu-sub-accordion">
@@ -112,18 +96,6 @@
                                     <!--end:Menu link-->
                                 </div>
                                 <!--end:Menu item-->
-                                <!--begin:Menu item-->
-                                <!--
-                                <div class="menu-item">
-                                    <a class="menu-link" href="/app/admin/patch_notes">
-										<span class="menu-bullet">
-                                            <i class="fa fa-solid fa-dragon"></i>
-										</span>
-                                        <span class="menu-title">Patch Notes</span>
-                                    </a>
-                                </div>
-                                -->
-                                <!--end:Menu item-->
                             </div>
                             <!--end:Menu sub-->
                         </div>
@@ -141,12 +113,12 @@
         </div>
         <!--end::Aside menu-->
         <?php //if (isset($_SESSION['user']) && $_SESSION['user']['user_rol'] !== 'admin'): ?>
-            <!--begin::Toggle Contact Support-->
-            <div class="aside-footer flex-column-auto pt-5 pb-7 px-5" id="kt_aside_footer">
-                <a data-bs-toggle="modal" data-bs-target="#contact_support"
-                   class="btn btn-bg-light btn-color-gray-500 btn-active-color-gray-900 w-100">
-                    <span class="btn-label">Contact Support</span>
-                    <span class="svg-icon btn-icon svg-icon-2">
+        <!--begin::Toggle Contact Support-->
+        <div class="aside-footer flex-column-auto pt-5 pb-7 px-5" id="kt_aside_footer">
+            <a data-bs-toggle="modal" data-bs-target="#contact_support"
+               class="btn btn-bg-light btn-color-gray-500 btn-active-color-gray-900 w-100">
+                <span class="btn-label">Contact Support</span>
+                <span class="svg-icon btn-icon svg-icon-2">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill="currentColor"
                               d="M6 8.725C6 8.125 6.4 7.725 7 7.725H14L18 11.725V12.925L22 9.725L12.6 2.225C12.2 1.925 11.7 1.925 11.4 2.225L2 9.725L6 12.925V8.725Z">
@@ -156,9 +128,9 @@
                         </path>
                     </svg>
 			    </span>
-                </a>
-            </div>
-            <!--end::Toggle Contact Support-->
+            </a>
+        </div>
+        <!--end::Toggle Contact Support-->
         <?php //endif; ?>
     </div>
     <!--end::Aside-->

@@ -23,21 +23,20 @@ class UsersModel extends Model
      * Get user
      * -----------------------------------------------------------------------------------------------------------------
      * Returns all users if no parameters are given.
-     * If email is given, searches for that specific user.
+     * If email or id are given, searches for that specific user.
      * Returns false if no users are found.
      *
      * @param string|null $email
-     *
+     * @param int|null $id
      * @return array|bool
      */
-    function get(string $email = null): array|bool
+    function get(string $email = null, int $id = null): array|bool
     {
         $builder = db::connect()
             ->table($this->table)
             ->select('*');
-        if (isset($email)) {
-            $builder->where('user_email', $email);
-        }
+        if (isset($email)) $builder->where('user_email', $email);
+        if (isset($id)) $builder->where('user_id', $id);
         if ($user = $builder->get()->getResultArray()) {
             if (count($user) > 1) return $user;
             if (count($user) === 1) return $user[0];

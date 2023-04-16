@@ -18,8 +18,8 @@
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#users-table">Users List</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#users-msgs">Messages Support</a>
+                    <li class="nav-item active">
+                        <a class="nav-link" data-bs-toggle="tab" href="#users-msgs">Messages Support</a>
                     </li>
                 </ul>
                 <!--end::Tabs-->
@@ -61,7 +61,6 @@
                     <?php endif; ?>
                 </div>
                 <div id="users-msgs" class="tab-pane fade show active" role="tabpanel">
-                    <?php var_dump($issues_list ?? '') ?>
                     <?php if (isset($issues_list) && is_array($issues_list) && count($issues_list) > 0): ?>
                         <table id="msgs_list"
                                class="table dataTable align-middle table-row-dashed generate-datatable show-search-dt no-footer">
@@ -84,6 +83,10 @@
                             } ?>
                             </tbody>
                         </table>
+                    <?php else: ?>
+                        <div class="text-center">
+                            <h2>No data available</h2>
+                        </div>
                     <?php endif; ?>
                 </div>
             </div>
@@ -147,7 +150,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                <button type="button" id="save_user_btn" class="btn btn-primary">
+                <button type="button" id="save_user_btn" class="btn btn-primary" tabindex="0">
                     <!--begin::Indicator label-->
                     <span class="indicator-label">Send</span>
                     <!--end::Indicator label-->
@@ -168,6 +171,15 @@
         const usersData =<?php echo json_encode($users_list ?? '{}')?>;
         const userEditBtn = document.querySelectorAll('.usernameBtn');
 
+        $('#modal_data_sent .confirm_answer').click(function () {
+            window.location.reload();
+        });
+        $('.this-role-form-field').keypress(function (e) {
+            if (e.originalEvent.key === 'Enter') {
+                e.preventDefault();
+            }
+        });
+
         for (let i = 0; i < userEditBtn.length; i++) {
             userEditBtn[i].addEventListener('click', function () {
                 let user = usersData[this.value];
@@ -181,7 +193,7 @@
         }
 
         $('#save_user_btn').click(function () {
-            toggleProgressSpinner();
+            //toggleProgressSpinner();
             let form = getForm('#edit_user');
             $.ajax({
                 type: "post",
@@ -189,6 +201,7 @@
                 data: form,
                 dataType: "json",
                 success: function (data) {
+                    console.log(data)
                     if (data['response']) {
                         $('#data_sent').click();
                     }

@@ -60,7 +60,7 @@
                             <!--end::Username-->
                             <!--begin::Full Name-->
                             <div class="mb-3 w-300px text-center">
-                                <label for="fname" class="form-label mt-2 bg-brush ff-poiret fs-2 mx-auto">
+                                <label for="fname" class="form-label mt-2 bg-brush">
                                     Full Name
                                 </label>
                                 <input id="fname" name="fname" type="text" disabled
@@ -70,7 +70,7 @@
                             <!--end::Full Name-->
                             <!--begin::Email-->
                             <div class="mb-3 w-300px text-center">
-                                <label for="email" class="form-label mt-2 bg-brush ff-poiret fs-2 mx-auto">
+                                <label for="email" class="form-label mt-2 bg-brush">
                                     Email
                                 </label>
                                 <input id="email" name="email" type="email" disabled required

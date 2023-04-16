@@ -1,14 +1,14 @@
 <!--begin::Form-->
-<form autocomplete="off"
-      class="d-flex flex-column justify-content-center align-items-center account-options mx-auto col-10 signup">
+<form autocomplete="off" id="signup"
+      class="d-flex flex-column justify-content-center align-items-center account-options mx-auto">
     <p id="ajax_signup-response" class="text-center text-danger fw-bold fs-6"></p>
     <p id="email-response" class="text-center text-danger fw-bold fs-6"></p>
     <p id="pwd-response" class="text-center text-danger fw-bold fs-6"></p>
     <!--begin::Row-->
-    <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
+    <div class="d-flex flex-row flex-wrap gap-12 justify-content-center col-10 w-md-600px">
         <!--begin::Form Field-->
-        <div class="my-4 position-relative">
-            <label for="username" class="form-label fs-5 my-2 required">Username</label>
+        <div class="my-4 w-100">
+            <label for="username" class="form-label my-2 bg-brush">Username</label>
             <input type="text" id="username" name="username"
                    class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
         </div>
@@ -16,10 +16,10 @@
     </div>
     <!--end::Row-->
     <!--begin::Row-->
-    <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
+    <div class="d-flex flex-row flex-wrap gap-12 justify-content-center col-10 w-md-600px">
         <!--begin::Form Field-->
-        <div class="my-4 position-relative">
-            <label for="email" class="form-label fs-5 my-2 required">Email</label>
+        <div class="my-4 w-100">
+            <label for="email" class="form-label my-2 bg-brush">Email</label>
             <input type="email" id="email" name="email"
                    class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
         </div>
@@ -27,10 +27,10 @@
     </div>
     <!--end::Row-->
     <!--begin::Row-->
-    <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
+    <div class="d-flex flex-row flex-wrap gap-12 justify-content-center col-10 w-md-600px">
         <!--begin::Form Field-->
-        <div class="my-4 position-relative">
-            <label for="pwd" class="form-label fs-5 my-2 required">Password</label>
+        <div class="my-4 w-100">
+            <label for="pwd" class="form-label my-2 bg-brush">Password</label>
             <input type="password" id="pwd" name="pwd"
                    class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
         </div>
@@ -38,10 +38,10 @@
     </div>
     <!--end::Row-->
     <!--begin::Row-->
-    <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
+    <div class="d-flex flex-row flex-wrap gap-12 justify-content-center col-10 w-md-600px">
         <!--begin::Form Field-->
-        <div class="my-4 position-relative">
-            <label for="pwd-repeat" class="form-label fs-5 my-2 required">Repeat Password</label>
+        <div class="my-4 w-100">
+            <label for="pwd-repeat" class="form-label my-2 bg-brush">Repeat Password</label>
             <input type="password" id="pwd-repeat"
                    class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
         </div>
@@ -78,7 +78,7 @@
         });
 
         function attemptSignup() {
-            if (validateFields()) sendForm(getForm('.signup'));
+            if (validateFields()) sendForm(getForm('#signup'));
         }
 
         function sendForm(form) {

@@ -1,16 +1,16 @@
 <!--begin::Form-->
 <form id="login" autocomplete="off"
-      class="d-flex flex-column justify-content-center align-items-center account-options mx-auto">
+      class="d-flex flex-column justify-content-center align-items-center account-options mx-auto text-center">
     <!--begin::Form Field-->
     <div class="my-4 col-10 w-md-600px">
-        <label for="email" class="form-label required fs-5 my-2">Email</label>
+        <label for="email" class="form-label my-2 bg-brush">Email</label>
         <input type="text" id="email" name="email"
                class="form-control form-control-solid ajax-login bg-transparent this-role-form-field"/>
     </div>
     <!--end::Form Field-->
     <!--begin::Form Field-->
     <div class="my-4 col-10 w-md-600px">
-        <label for="pwd" class="form-label required fs-5 my-2">Password</label>
+        <label for="pwd" class="form-label my-2 bg-brush">Password</label>
         <input type="password" id="pwd" name="pwd"
                class="form-control form-control-solid ajax-login bg-transparent mb-6 this-role-form-field"/>
         <a href="/app/reset_pwd"

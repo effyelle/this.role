@@ -537,3 +537,6 @@ input.form-control.this-role-form-field[disabled] {
 a.btn-link:hover, .btn-link:hover {
     text-decoration: underline !important;
 }
+.text-center * {
+    text-align: center !important;
+}

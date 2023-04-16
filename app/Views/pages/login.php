@@ -1,18 +1,18 @@
 <!--begin::Form-->
 <form id="login" autocomplete="off"
-      class="d-flex flex-column justify-content-center align-items-center account-options mx-auto col-10 w-sm-400px login">
+      class="d-flex flex-column justify-content-center align-items-center account-options mx-auto">
     <!--begin::Form Field-->
-    <div class="my-4">
+    <div class="my-4 col-10 w-md-600px">
         <label for="email" class="form-label required fs-5 my-2">Email</label>
         <input type="text" id="email" name="email"
-               class="form-control form-control-solid ajax-login bg-transparent text-center this-role-form-field"/>
+               class="form-control form-control-solid ajax-login bg-transparent this-role-form-field"/>
     </div>
     <!--end::Form Field-->
     <!--begin::Form Field-->
-    <div class="my-4">
+    <div class="my-4 col-10 w-md-600px">
         <label for="pwd" class="form-label required fs-5 my-2">Password</label>
         <input type="password" id="pwd" name="pwd"
-               class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
+               class="form-control form-control-solid ajax-login bg-transparent mb-6 this-role-form-field"/>
         <a href="/app/reset_pwd"
            class="d-block fw-bolder text-info text-hover-info fs-7 mx-auto text-center">Forgot password?</a>
     </div>
@@ -64,7 +64,7 @@
         });
 
         function attemptLogin() {
-            let form = getForm('.login');
+            let form = getForm('#login');
             $('button[data-bs-dismiss=modal]').css('display', 'block');
             if (form) {
                 sendForm(form);

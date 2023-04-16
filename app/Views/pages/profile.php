@@ -49,8 +49,8 @@
                         <!--begin::User Data-->
                         <div class="d-flex flex-column">
                             <!--begin::Username-->
-                            <div class="mb-3 w-300px">
-                                <label for="username" class="form-label fs-5 mt-2 bg-brush ff-poiret fs-2">
+                            <div class="mb-3 w-300px text-center">
+                                <label for="username" class="form-label mt-2 bg-brush ff-poiret fs-2 mx-auto">
                                     Username
                                 </label>
                                 <input id="username" name="username" type="text" disabled
@@ -59,8 +59,8 @@
                             </div>
                             <!--end::Username-->
                             <!--begin::Full Name-->
-                            <div class="mb-3 w-300px">
-                                <label for="fname" class="form-label fs-5 mt-2 bg-brush ff-poiret fs-2">
+                            <div class="mb-3 w-300px text-center">
+                                <label for="fname" class="form-label mt-2 bg-brush ff-poiret fs-2 mx-auto">
                                     Full Name
                                 </label>
                                 <input id="fname" name="fname" type="text" disabled
@@ -69,8 +69,10 @@
                             </div>
                             <!--end::Full Name-->
                             <!--begin::Email-->
-                            <div class="mb-3 w-300px">
-                                <label for="email" class="form-label fs-5 mt-2 bg-brush ff-poiret fs-2">Email</label>
+                            <div class="mb-3 w-300px text-center">
+                                <label for="email" class="form-label mt-2 bg-brush ff-poiret fs-2 mx-auto">
+                                    Email
+                                </label>
                                 <input id="email" name="email" type="email" disabled required
                                        value="<?= $_SESSION['user']['user_email'] ?? '' ?>"
                                        class="form-control bg-transparent this-role-form-field"/>
@@ -90,11 +92,11 @@
                         <!--begin::Avatar-->
                         <div class="avatar-container">
                             <div class="d-flex flex-column gap-6 align-items-center">
-                                <div class="symbol symbol-125px symbol-xl-175px circle position-relative">
+                                <div class="symbol symbol-175px symbol-xl-200px circle position-relative">
                                     <input id="avatar" name="avatar" type="file"
                                            class="d-none this-role-form-field"/>
                                     <span id="avatar-input-holder" class="symbol-label circle"
-                                          style="background: url('<?= $_SESSION['user']['user_avatar'] ?>'); background-size: cover;">
+                                          style="background: url('<?= $_SESSION['user']['user_avatar'] ?? ''?>'); background-size: cover;">
                                             </span>
                                 </div>
                                 <div class="d-flex flex-row flex-wrap gap-4 editable-item">

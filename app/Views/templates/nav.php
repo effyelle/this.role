@@ -57,7 +57,7 @@
                     <!--end::Name-->
                     <!--begin::Symbol-->
                     <div class="symbol symbol-30px symbol-md-40px">
-                        <img src="/assets/media/avatars/blank.png" alt="image">
+                        <img src="<?= $_SESSION['user']['user_avatar'] ?? '' ?>" alt="image">
                     </div>
                     <!--end::Symbol-->
                 </div>
@@ -70,7 +70,7 @@
                         <div class="menu-content d-flex align-items-center px-3">
                             <!--begin::Avatar-->
                             <div class="symbol symbol-50px me-5">
-                                <img src="/assets/media/avatars/blank.png" alt="image">
+                                <img src="<?= $_SESSION['user']['user_avatar'] ?? '' ?>" alt="image">
                             </div>
                             <!--end::Avatar-->
                             <!--begin::Username-->

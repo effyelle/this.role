@@ -29,7 +29,8 @@
                                class="table dataTable align-middle table-row-dashed generate-datatable show-search-dt no-footer">
                             <thead>
                             <tr class="fw-bold fs-6 text-gray-800">
-                                <td>Avatar</td>
+                                <td></td>
+                                <td>Username</td>
                                 <td>Full Name</td>
                                 <td class="col-2">Email</td>
                                 <td>User Rol</td>
@@ -41,8 +42,9 @@
                             <?php foreach ($users_list as $k => $user) {
                                 echo '<tr>'
                                     . '   <td><img src="' . $user['user_avatar'] . '" alt="" width="35" class="circle"/></td>'
+                                    . '   <td>' . $user['user_username'] . '</td>'
                                     . '   <td>' . $user['user_fname'] . '</td>'
-                                    . '   <td>' . $user['user_email'] . '</td>'
+                                    . '   <td class="col-2">' . $user['user_email'] . '</td>'
                                     . '   <td>' . ucfirst($user['user_rol']) . '</td>'
                                     . '   <td>' . ($user['user_deleted'] ? 'Inactive' : 'Active') . '</td>'
                                     . '   <td>'
@@ -59,6 +61,7 @@
                     <?php endif; ?>
                 </div>
                 <div id="users-msgs" class="tab-pane fade show active" role="tabpanel">
+                    <?php var_dump($issues_list ?? '') ?>
                     <?php if (isset($issues_list) && is_array($issues_list) && count($issues_list) > 0): ?>
                         <table id="msgs_list"
                                class="table dataTable align-middle table-row-dashed generate-datatable show-search-dt no-footer">
@@ -107,6 +110,11 @@
 
             <div class="modal-body">
                 <form id="edit_user" name="edit_user">
+                    <div class="mt-5">
+                        <label class="form-label" for="username">Username</label>
+                        <input id="username" name="username" type="text"
+                               class="form-control form-control-solid this-role-form-field"/>
+                    </div>
                     <div class="mt-5">
                         <label class="form-label" for="fname">Full Name</label>
                         <input id="fname" name="fname" type="text"
@@ -164,6 +172,7 @@
             userEditBtn[i].addEventListener('click', function () {
                 let user = usersData[this.value];
                 $('#user').val(user.user_id);
+                $('#username').val(user.user_username);
                 $('#fname').val(user.user_fname);
                 $('#email').val(user.user_email);
                 $('#user_rol').val(user.user_rol);

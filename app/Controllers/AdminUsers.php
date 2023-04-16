@@ -35,6 +35,7 @@ class AdminUsers extends BaseController
     {
         // Still have to write -> $_POST validation
         $data = [
+            'user_username' => validate($_POST['username']),
             'user_fname' => validate($_POST['fname']),
             'user_email' => validate($_POST['email']),
             'user_rol' => validate($_POST['user_rol']),

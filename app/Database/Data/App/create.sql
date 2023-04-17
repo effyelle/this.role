@@ -53,8 +53,8 @@ CREATE TABLE issues(
 INSERT INTO users(user_username, user_fname, user_email, user_pwd, user_confirmed)
 VALUES
 	('effs', 'La Effy', 'ericapastorgracia@gmail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
-	('marioe23', 'Mario Sancho', 'mail@mail.mail', '$2y$10$AGx4O3bw8QhdhatZxETiJuuUiR.sRLBx5zwxYu9.fwj6LipePLag2', NOW()),
-	('JL.ak.elBizco', 'Jose Luis El Bizco', 'com@com.com', '$2y$10$AGx4O3bw8QhdhatZxETiJuuUiR.sRLBx5zwxYu9.fwj6LipePLag2', NOW()),
-	('FF15', 'Fernando Fernandez', 'ffmail@email.f', '$2y$10$AGx4O3bw8QhdhatZxETiJuuUiR.sRLBx5zwxYu9.fwj6LipePLag2', NOW());
+	('marioe23', 'Mario Sancho', 'mail@mail.mail', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
+	('JL.ak.elBizco', 'Jose Luis El Bizco', 'com@com.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
+	('FF15', 'Fernando Fernandez', 'ffmail@email.f', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW());
 
-UPDATE users SET user_rol='admin' WHERE user_email='ericapastorgracia@gmail.com';
+UPDATE users SET user_rol='admin' WHERE user_email='mail@mail.mail';

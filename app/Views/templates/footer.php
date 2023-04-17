@@ -87,10 +87,10 @@
             </div>
             <div class="modal-body">
                 <div class="mb-5">
-                    <p class="text-center">We apologize for the inconveniences</p>
+                    <p class="text-center modal_error_response">We apologize for the inconveniences</p>
                 </div>
                 <div class="d-flex flex-row justify-content-center">
-                    <button class="btn btn-primary confirm_answer" data-bs-dismiss="modal">OK</button>
+                    <button class="btn btn-danger confirm_answer" data-bs-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>
@@ -108,6 +108,7 @@
                 <h3 class="modal-title text-center mx-auto">Data was sent</h3>
             </div>
             <div class="modal-body">
+                <p class="text-center data_sent_response"></p>
                 <div class="d-flex flex-row justify-content-center">
                     <button class="btn btn-primary confirm_answer" data-bs-dismiss="modal">OK</button>
                 </div>

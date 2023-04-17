@@ -34,7 +34,8 @@ class UsersModel extends Model
     {
         $builder = db::connect()
             ->table($this->table)
-            ->select('*');
+            ->select('*')
+            ->where('user_deleted IS NULL', null, false);
         if (isset($email)) $builder->where('user_email', $email);
         if (isset($id)) $builder->where('user_id', $id);
         if ($user = $builder->get()->getResultArray()) {
@@ -42,6 +43,15 @@ class UsersModel extends Model
             if (count($user) === 1) return $user[0];
         }
         return false;
+    }
+
+    function getAdmins(): array|bool
+    {
+        return db::connect()
+            ->table($this->table)
+            ->select('*')
+            ->where('user_rol', 'admin')
+            ->get()->getResultArray();
     }
 
     /**

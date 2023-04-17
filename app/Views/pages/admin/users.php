@@ -146,7 +146,6 @@
                                 name="user_rol">
                             <option value="user">User</option>
                             <option value="admin">Admin</option>
-                            <option value="master">Master</option>
                         </select>
                     </div>
                     <div class="mt-5">
@@ -219,6 +218,9 @@
                     console.log(data)
                     if (data['response']) {
                         $('#data_sent').click();
+                    } else if (data['msg']) {
+                        $('#toggle_error').click();
+                        $('#modal_error .modal_error_response').html(data['msg']);
                     }
                     toggleProgressSpinner(false);
                 }

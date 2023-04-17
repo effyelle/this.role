@@ -41,7 +41,28 @@ document.addEventListener('DOMContentLoaded', function () {
      * Deactivate account and close session
      */
     function deactivateAccount() {
-        console.log("Deactivate account= ", "This is yet to write");
+        $.ajax({
+            type: "get",
+            url: "/account/deactivate",
+            dataType: "json",
+            success: function (data) {
+                if (data['response']) {
+                    $('#data_sent').click();
+                    $('#modal_data_sent .data_sent_response').html(
+                        'Your account has been deactivated<br>' +
+                        'You will be logged out'
+                    );
+                    $('#modal_data_sent').on('hidden.bs.modal', function () {
+                        window.location.reload();
+                    });
+                }
+                if (data['msg']) {
+                    $('#toggle_error').click();
+                    $('#modal_error .modal_error_response').html(data['msg']);
+                }
+                console.log(data)
+            }
+        })
     }
 
     function formatProfile(data) {

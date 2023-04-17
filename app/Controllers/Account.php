@@ -267,7 +267,10 @@ class Account extends BaseController
             )) {
                 // If fields were updated, expire token and destroy any session that could exist
                 $this->tokenmodel->updt(['token_expires' => $this->now], ['token' => $_POST['token']]);
-                if (isset($_SESSION['user'])) session_destroy();
+                if (isset($_SESSION['user'])) {
+                    session_unset();
+                    session_destroy();
+                }
                 echo json_encode(['response' => true]);
                 return;
             }
@@ -291,22 +294,52 @@ class Account extends BaseController
             'user_email' => validate($_POST['email'])
         ];
         if (isset($_POST['user_rol'])) $data['user_rol'] = validate($_POST['user_rol']);
-        if (isset($_POST['user_status'])) $data['user_deleted'] = $_POST['user_status'] === 'inactive' ? $this->now : null;
 
         $where = ['user_id' => intval($_POST['user'])];
+        $old_userdata = $this->usermodel->get(null, $where['user_id']);
+        if (isset($_POST['user_status'])) {
+            // Get admins
+            if ($old_userdata['user_rol'] === 'admin' && count($this->usermodel->getAdmins()) < 2) {
+                echo json_encode(['response' => false, 'msg' => 'This user is the last admin. Promote another user to delete it.']);
+                return;
+            }
+            $data['user_deleted'] = $_POST['user_status'] === 'inactive' ? $this->now : null;
+        }
 
         // Get old username from user
-        $old_username = $this->usermodel->get(null, $where['user_id'])['user_username'];
+        $old_username = $old_userdata['user_username'];
 
         // Update issues
         if ($this->updateIssuesMessages($old_username, $data['user_username'])) {
             // Update user
             if ($this->usermodel->updt($data, $where)) {
+                // Send new confirmation email
+                // $this->sendConfirmationEmail($email);
                 echo json_encode(['response' => true]);
                 return;
             }
         }
 
+        echo json_encode(['response' => false]);
+    }
+
+    public function deactivate(): void
+    {
+        if (isset($_SESSION['user'])) {
+            if ($_SESSION['user']['user_rol'] === 'admin' && count($this->usermodel->getAdmins()) < 2) {
+                echo json_encode(['response' => false, 'msg' => 'You are the last admin. Promote another to delete your account.']);
+                return;
+            }
+            if ($this->usermodel->updt(
+                ['user_deleted' => $this->now],
+                ['user_id' => $_SESSION['user']['user_id']]
+            )) {
+                session_unset();
+                session_destroy();
+                echo json_encode(['response' => true]);
+                return;
+            }
+        }
         echo json_encode(['response' => false]);
     }
 
@@ -316,30 +349,33 @@ class Account extends BaseController
         $all_issues = $this->issuesmodel->get();
 
         // Update all matching usernames in messages with the new username
-        foreach ($all_issues as $v) {
-            // Decode json
-            $msgs = json_decode($v['issue_msg']);
-            // Go through each message
-            foreach ($msgs as $msg) {
-                // Find the old username
-                if ($msg->sender === $old_username) {
-                    // Replace it with the new one
-                    $msg->sender = $new_username;
+        if (is_array($all_issues) && count($all_issues) > 0) {
+            foreach ($all_issues as $v) {
+                var_dump($v);
+                // Decode json
+                $msgs = json_decode($v['issue_msg']);
+                // Go through each message
+                foreach ($msgs as $msg) {
+                    // Find the old username
+                    if ($msg->sender === $old_username) {
+                        // Replace it with the new one
+                        $msg->sender = $new_username;
+                    }
                 }
+                // Encode message again
+                $new_msgs = json_encode($msgs);
+                // Update this issue msg by ID
+                if (!$this->issuesmodel->updt(
+                    ['issue_msg' => $new_msgs], // data
+                    ['issue_id' => $v['issue_id']] // where
+                )) return false;
             }
-            // Encode message again
-            $new_msgs = json_encode($msgs);
-            // Update this issue msg by ID
+            // Update username in issues messages
             if (!$this->issuesmodel->updt(
-                ['issue_msg' => $new_msgs], // data
-                ['issue_id' => $v['issue_id']] // where
+                ['issue_user' => $new_username],
+                ['issue_user' => $old_username]
             )) return false;
         }
-        // Update username in issues messages
-        if (!$this->issuesmodel->updt(
-            ['issue_user' => $new_username],
-            ['issue_user' => $old_username]
-        )) return false;
         return true;
     }
 

@@ -558,3 +558,19 @@ a.btn-link:hover, .btn-link:hover {
     overflow: visible;
     transition: all 0.3s ease;
 }
+
+@media (min-width: 750px) {
+    .d-lg-table-cell {
+        display: table-cell !important;
+    }
+}
+
+@media (max-width: 300px) {
+    .fs-xxs-8 {
+        font-size: .85rem !important
+    }
+    .px-xxs-1{
+        padding-left: 0.25rem !important;
+        padding-right: 0.25rem !important;
+    }
+}

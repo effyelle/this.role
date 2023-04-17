@@ -26,8 +26,7 @@ class IssuesModel extends Model
         if (isset($issueID)) $builder->where('issue_id', $issueID);
         if (isset($username)) $builder->where('issue_user', $username);
         if ($issues = $builder->get()->getResultArray()) {
-            if (count($issues) === 1) return $issues[0];
-            if (count($issues) > 1) return $issues;
+            if (count($issues) > 0) return $issues;
         }
         return false;
     }

@@ -436,7 +436,7 @@ class Account extends BaseController
     {
         // Get all issues
         $issue_id = intval($_POST['issue_id']);
-        $issue_msg = json_decode($this->issuesmodel->get($issue_id)['issue_msg']);
+        $issue_msg = json_decode($this->issuesmodel->get($issue_id)[0]['issue_msg']);
         $issue_msg[] = [
             "time" => $this->now,
             "sender" => $_SESSION['user']['user_username'],

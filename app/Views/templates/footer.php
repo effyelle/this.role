@@ -135,6 +135,14 @@
             issues_error_msg.removeClass('d-none');
         });
 
+        $('#modal_data_sent').on('hidden.bs.modal', function () {
+            window.location.reload();
+        });
+
+        $('#modal_error').on('hidden.bs.modal', function () {
+            window.location.reload();
+        });
+
         $('#contact_support').on('hidden.bs.modal', function () {
             $('#contact_support .this-role-form-field').val('');
             $('#issue_type option[value="-1"').prop('selected', true);

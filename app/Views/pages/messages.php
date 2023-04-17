@@ -73,21 +73,20 @@
 
         for (let i = 0; i < issueExpand.length; i++) {
             $('.send_answer_btn')[i].addEventListener('click', function () {
-                let answer = $('.issue_answer')[i].value;
-                if (answer.length > 0) {
+                let answer = $('.issue_answer')[i];
+                if (answer.value.length > 0) {
                     $.ajax({
                         type: "post",
                         url: "/account/send_issue_msg",
                         data: {
-                            "msg": answer,
+                            "msg": answer.value,
                             "issue_id": $('.issue_id')[i].value
                         },
                         dataType: "json",
                         success: function (data) {
-                            if(data['response']) {
-                                console.log('????')
+                            if (data['response']) {
                                 $('#data_sent').click();
-                                issueExpand[i].click();
+                                $('#modal_data_sent')
                             }
                         }
                     });

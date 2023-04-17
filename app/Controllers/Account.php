@@ -81,6 +81,11 @@ class Account extends BaseController
             echo json_encode(['response' => false, 'msg' => 'Necessary fields are empty.', 'data' => $_POST]);
             return;
         }
+        // Check username
+        if ($this->usermodel->get(null, null, $username)) {
+            echo json_encode(['response' => false, 'msg' => 'The username is already in use.']);
+            return;
+        }
         // Check email
         if ($this->usermodel->get($email)) {
             echo json_encode(['response' => false, 'msg' => 'The email is already in use.']);
@@ -111,18 +116,28 @@ class Account extends BaseController
 
     function updateProfile(): string
     {
+        $data = [];
         if (isset($_POST['fname'])) {
-            $username = $_POST['username'];
-            $fname = $_POST['fname'];
-            $email = $_POST['email'];
+            $username = validate($_POST['username']);
+            $fname = validate($_POST['fname']);
+            $email = validate($_POST['email']);
+            // Check if username or email are already taken
             $oldEmail = $_SESSION['user']['user_email'];
+            $oldUsername = $_SESSION['user']['user_username'];
+            if (
+                ($oldUsername !== $username && $this->usermodel->get(null, null, $username)) ||
+                ($oldEmail !== $email && $this->usermodel->get($email))
+            ) {
+                $data['error'] = 'The username or email are already in use.';
+                return template('profile', $data);
+            }
             if ($fname === '') $fname = null;
             $data = [
                 'user_username' => $username,
                 'user_fname' => $fname,
                 'user_email' => $email
             ];
-            $where = ['user_email' => $oldEmail];
+            $where = ['user_id' => $_SESSION['user']['user_id']];
             if ($_FILES['avatar']['error'] === 0) {
                 $img = upload_img('avatar', 'assets/media/avatars');
                 if ($img) $data['user_avatar'] = '/' . $img;
@@ -137,7 +152,7 @@ class Account extends BaseController
                 return $this->created();
             }
         }
-        return template('profile');
+        return template('profile', $data);
     }
 
     function myIssues(): string
@@ -296,14 +311,25 @@ class Account extends BaseController
         if (isset($_POST['user_rol'])) $data['user_rol'] = validate($_POST['user_rol']);
 
         $where = ['user_id' => intval($_POST['user'])];
+        // Save old data from user
         $old_userdata = $this->usermodel->get(null, $where['user_id']);
+
+        // Check status
         if (isset($_POST['user_status'])) {
-            // Get admins
+            // Get admins and check user is not the last one
             if ($old_userdata['user_rol'] === 'admin' && count($this->usermodel->getAdmins()) < 2) {
                 echo json_encode(['response' => false, 'msg' => 'This user is the last admin. Promote another user to delete it.']);
                 return;
             }
             $data['user_deleted'] = $_POST['user_status'] === 'inactive' ? $this->now : null;
+        }
+        // Check username or email aren't already taken
+        if (
+            ($old_userdata['user_username'] !== $data['user_username'] && $this->usermodel->get(null, null, $data['user_username'])) ||
+            ($old_userdata['user_email'] !== $data['user_email'] && $this->usermodel->get($data['user_email']))
+        ) {
+            echo json_encode(['response' => false, 'msg' => 'The username or email are already in use.']);
+            return;
         }
 
         // Get old username from user

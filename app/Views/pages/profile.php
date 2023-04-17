@@ -30,9 +30,12 @@
                 <!--begin::Col-->
                 <div id="user-profile" class="">
                     <div class="d-flex flex-column justify-content-center align-items-center align-content-center gap-6 mx-auto editable">
+                        <!--begin::Row-->
+                        <div class="text-danger fs-6 text-center"><?= $error ?? '' ?></div>
+                        <!--end::Row-->
                         <button id="userBtn" value="" class="d-none"></button>
                         <!--begin::Row-->
-                        <div class="text-info fs-6 text-center mb-5">
+                        <div class="text-info fs-6 text-center my-5">
                             <?php
                             if (
                                 !isset($_SESSION['user']['user_confirmed'])

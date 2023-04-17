@@ -96,7 +96,7 @@ function upload_img($formname, $target): string|bool
     // Limit file types
     if (!preg_match('/jpg|png|jpeg|gif/', $imageFileType)) return 'Type not allowed';
     // Check image size
-    if ($_FILES[$formname]["size"] > 500000) return 'File too large';
+    if ($_FILES[$formname]["size"] > 5000000) return 'File too large';
     // Change image name
     do {
         $new_filename = "/" . time() . "." . $imageFileType;

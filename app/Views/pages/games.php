@@ -11,9 +11,18 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
         <!--begin::List Widget 6-->
         <div class="card h-100vh">
             <!--begin::Header-->
-            <div class="card-header">
-                <div class="card-toolbar gap-5">
-                    <h2><?= $title ?></h2>
+            <div class="card-header align-content-center">
+                <div class="mx-auto w-100 w-xxl-800px">
+                    <div class="d-flex flex-row-wrap justify-content-between align-items-stretch align-content-center">
+                        <div class="card-toolbar gap-5">
+                            <h2>My Games</h2>
+                        </div>
+                        <div class="card-toolbar gap-5">
+                            <button type="button" id="createGameBtn" class="btn btn-sm btn-warning align-self-start">
+                                Create New Game
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!--end::Header-->

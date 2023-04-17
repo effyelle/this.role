@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
+use \Config\Database as db;
 
-class GamesModel extends Model
+class GamesModel extends BaseModel
 {
     protected $table = 'games';
     protected string $relatedTable = 'invite_url';
@@ -16,12 +16,4 @@ class GamesModel extends Model
     protected $useSoftDeletes = true;
 
     protected $allowedFields = ['game_id', 'game_user_creator', 'game_title', 'game_icon', 'game_is_public', 'game_deleted'];
-
-    function get($id = null): array|bool
-    {
-        if (isset($id)) {
-            return ['game' => $id];
-        }
-        return false;
-    }
 }

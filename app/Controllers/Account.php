@@ -140,6 +140,13 @@ class Account extends BaseController
         return template('profile');
     }
 
+    function myIssues(): string
+    {
+        $data = [];
+        if ($issues = $this->issuesmodel->get(null, $_SESSION['user']['user_username'])) $data['issues_list'] = $issues;
+        return template('messages', $data);
+    }
+
     function myprofile()
     {
         if (isset($_SESSION['user'])) {
@@ -362,19 +369,21 @@ class Account extends BaseController
     public function send_issue_msg(): void
     {
         // Get all issues
-        $issue_msg = json_decode($this->issuesmodel->get(intval($_POST['issue_id']))['issue_msg']);
+        $issue_id = intval($_POST['issue_id']);
+        $issue_msg = json_decode($this->issuesmodel->get($issue_id)['issue_msg']);
         $issue_msg[] = [
             "time" => $this->now,
             "sender" => $_SESSION['user']['user_username'],
             "msg" => validate($_POST['msg'])
         ];
-        /*if ($this->issuesmodel->updt([
-            ['issue_msg' => json_encode($issue_msg)],
-            ['issue_id' => intval($_POST['issue_id'])]
-        ])) {
+        $new_msg = json_encode($issue_msg);
+        if ($this->issuesmodel->updt(
+            ['issue_msg' => $new_msg],
+            ['issue_id' => $issue_id]
+        )) {
             echo json_encode(['response' => true]);
             return;
-        }*/
+        }
         echo json_encode(['response' => false]);
     }
 }

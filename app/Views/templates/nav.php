@@ -92,6 +92,18 @@
                     <!--end::Menu item-->
                     <!--begin::Menu item-->
                     <div class="menu-item px-5">
+                        <a href="/app/myissues" class="menu-link px-5">My Issues</a>
+                    </div>
+                    <!--end::Menu item-->
+                    <!--begin::Separator-->
+                    <div class="menu-item">
+                        <div class="menu-content py-3 px-0">
+                            <div class="separator mx-1"></div>
+                        </div>
+                    </div>
+                    <!--end::Separator-->
+                    <!--begin::Menu item-->
+                    <div class="menu-item px-5">
                         <a href="/app/logout" class="menu-link px-5">Logout</a>
                     </div>
                     <!--end::Menu item-->

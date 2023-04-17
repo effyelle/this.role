@@ -23,7 +23,7 @@
                     </li>
                 </ul>
                 <!--end::Tabs-->
-                <div id="users-table" class="tab-pane fade" role="tabpanel">
+                <div id="users-table" class="tab-pane fade show active" role="tabpanel">
                     <?php if (isset($users_list) && is_array($users_list) && count($users_list) > 0): ?>
                         <table id="users_list"
                                class="table dataTable align-middle table-row-dashed generate-datatable show-search-dt no-footer">
@@ -60,7 +60,7 @@
                         </table>
                     <?php endif; ?>
                 </div>
-                <div id="users-msgs" class="tab-pane fade show active" role="tabpanel">
+                <div id="users-msgs" class="tab-pane fade" role="tabpanel">
                     <?php if (isset($issues_list) && is_array($issues_list) && count($issues_list) > 0): ?>
                         <table id="msgs_list"
                                class="table align-middle table-row-dashed show-search-dt no-footer dataTable generate-datatable">
@@ -182,6 +182,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         const usersData =<?php echo json_encode($users_list ?? '{}')?>;
         const userEditBtn = document.querySelectorAll('.usernameBtn');
+        const messagesData =<?php echo json_encode($issues_list ?? '{}');?>;
 
         $('#msgs_list').ordering = false;
 
@@ -223,53 +224,55 @@
                 }
             })
         });
-
-        const messagesData =<?php echo json_encode($issues_list ?? '{}');?>;
-        const issueExpand = $('#msgs_list .menu-accordion .menu-link.open-link');
-        const msgDisplay = $('#msgs_list .msg-display');
-        const msgContent = $('.msg-content');
-        console.log(messagesData);
-
-        for (let i = 0; i < issueExpand.length; i++) {
-            $('.send_answer_btn')[i].addEventListener('click', function () {
-                let answer = $('.issue_answer')[i].value;
-                if (answer.length > 0) {
-                    $.ajax({
-                        type: "post",
-                        url: "/account/send_issue_msg",
-                        data: {
-                            "msg": answer,
-                            "issue_id": $('.issue_id')[i].value
-                        },
-                        success: function (data) {
-                            console.log(data);
-                        }
-                    });
-                }
-            });
-            issueExpand[i].addEventListener('click', function () {
-                issueExpand[i].classList.toggle('show');
-                msgDisplay[i].classList.toggle('show');
-                let totalHeight = '0';
-                let content = '';
-                if (msgDisplay[i].classList.contains('show')) {
-                    let messages = JSON.parse(messagesData[i].issue_msg);
-                    for (let j = 0; j < messages.length; j++) {
-                        content += formatMessage(messages[j]);
-                    }
-                    totalHeight = msgContent[i].offsetHeight + $('.msg_textarea')[i].offsetHeight + 20 + 'px';
-                }
-                msgContent[i].innerHTML = content;
-                msgDisplay[i].style.height = totalHeight; // calculate heights of children
-            });
-        }
-
-        function formatMessage(message) {
-            return '<div class="d-flex flex-row align-items-center gap-5">' +
-                '<span class="menu-title fw-bolder">' + message.sender + '</span>' +
-                '<span class="d-flex flex-row justify-content-between align-items-center w-100">' +
-                '<span class="">' + message.msg + '</span><i class="fs-8">' + message.time + '</i>' +
-                '</span>';
-        }
     });
+
+    const issueExpand = $('#msgs_list .menu-accordion .menu-link.open-link');
+    const msgDisplay = $('#msgs_list .msg-display');
+    const msgContent = $('.msg-content');
+
+    for (let i = 0; i < issueExpand.length; i++) {
+        $('.send_answer_btn')[i].addEventListener('click', function () {
+            let answer = $('.issue_answer')[i].value;
+            if (answer.length > 0) {
+                $.ajax({
+                    type: "post",
+                    url: "/account/send_issue_msg",
+                    data: {
+                        "msg": answer,
+                        "issue_id": $('.issue_id')[i].value
+                    },
+                    success: function (data) {
+                        console.log(data);
+                    }
+                });
+            }
+        });
+        issueExpand[i].addEventListener('click', function () {
+            issueExpand[i].classList.toggle('show');
+            msgDisplay[i].classList.toggle('show');
+            let totalHeight = '0';
+            let content = '';
+            if (msgDisplay[i].classList.contains('show')) {
+                let messages = JSON.parse(messagesData[i].issue_msg);
+                for (let j = 0; j < messages.length; j++) {
+                    content += formatMessage(messages[j]);
+                }
+                totalHeight = $('.msg_textarea')[i].offsetHeight + 20;
+            }
+            msgContent[i].innerHTML = content;
+            totalHeight += msgContent[i].offsetHeight;
+            msgDisplay[i].style.height = totalHeight + 'px'; // calculate heights of children
+        });
+    }
+
+    function formatMessage(message) {
+        return '' +
+            '<div class="d-flex flex-row align-items-center gap-5">' +
+            '   <span class="menu-title fw-bolder">' + message.sender + '</span>' +
+            '   <span class="d-flex flex-row justify-content-between align-items-center w-100">' +
+            '       <span class="">' + message.msg + '</span>' +
+            '       <i class="fs-8">' + message.time + '</i>' +
+            '   </span>' +
+            '</div>';
+    }
 </script>

@@ -55,6 +55,12 @@ class App extends BaseController
         return template('login', ['unlogged' => true]);
     }
 
+    function myissues():string
+    {
+        if (isset($_SESSION['user'])) return (new Account)->myIssues();
+        return template('login', ['unlogged' => true]);
+    }
+
     function games_list(): string
     {
         if (isset($_SESSION['user'])) return (new Games)->list();

@@ -140,7 +140,11 @@ class Account extends BaseController
             $where = ['user_id' => $_SESSION['user']['user_id']];
             if ($_FILES['avatar']['error'] === 0) {
                 $img = upload_img('avatar', 'assets/media/avatars');
-                if ($img) $data['user_avatar'] = '/' . $img;
+                if (preg_match('/[0-9]/', $img)) $data['user_avatar'] = '/' . $img;
+                else {
+                    $data['error'] = $img;
+                    return template('profile', $data);
+                }
             }
             if ($email !== $oldEmail) $data['user_confirmed'] = null;
             if ($this->usermodel->updt($data, $where)) update_session($this->usermodel->get($email));

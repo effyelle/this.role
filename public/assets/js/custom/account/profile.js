@@ -12,8 +12,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     const avatar = $('#avatar');
+    const avatar_holder = $('.avatar-input-holder');
     avatar.change(function () {
-        console.log(avatar.val());
+        let file = URL.createObjectURL(avatar[0].files[0]);
+        avatar_holder.css('background-image', 'url(' + file + ')');
+        avatar_holder.css('background-size', 'cover');
     });
 
     const emailBox = $('#email');

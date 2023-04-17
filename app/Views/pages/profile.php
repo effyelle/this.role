@@ -98,11 +98,11 @@
                                     <div class="symbol symbol-175px symbol-xl-200px circle position-relative">
                                         <input id="avatar" name="avatar" type="file"
                                                class="d-none this-role-form-field"/>
-                                        <span id="avatar-input-holder" class="symbol-label circle"
-                                              style="background: url('<?= $_SESSION['user']['user_avatar'] ?? '' ?>'); background-size: cover;">
-                                            </span>
+                                        <span class="symbol-label circle avatar-input-holder"
+                                              style="background: url(<?= $_SESSION['user']['user_avatar'] ?? '' ?>); background-size: cover;">
+                                        </span>
                                     </div>
-                                    <div class="d-flex flex-row flex-wrap gap-4 editable-item">
+                                    <div class="d-flex flex-row flex-wrap gap-4 editable-item mt-5">
                                         <label for="avatar" class="btn p-1 text-hover-primary fs-7">
                                             Change
                                         </label>

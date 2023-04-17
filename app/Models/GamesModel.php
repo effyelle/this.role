@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use \Config\Database as db;
-
 class GamesModel extends BaseModel
 {
     protected $table = 'games';

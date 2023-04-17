@@ -11,13 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
         openConfirmation(deactivateAccount);
     });
 
-    const avatar = $('#avatar');
-    const avatar_holder = $('.avatar-input-holder');
-    avatar.change(function () {
-        let file = URL.createObjectURL(avatar[0].files[0]);
-        avatar_holder.css('background-image', 'url(' + file + ')');
-        avatar_holder.css('background-size', 'cover');
-    });
+    readImageChange($('#avatar'), $('.avatar-input-holder'));
 
     const emailBox = $('#email');
     emailBox.keyup(function () {

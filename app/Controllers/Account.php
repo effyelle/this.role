@@ -248,22 +248,22 @@ class Account extends BaseController
     public function confirm($token): string
     {
         $t = $this->tokenmodel->get($token);
-        if (!$t) return template('tokens/token_expired', ['unlogged' => true]);
+        if (!$t) return template('tokens/token_expired', ['unlogged' =>'unlogged']);
         // Update data
         if (!$this->usermodel->updt([
             'user_email' => $t['token_user'],
             'user_confirmed' => $this->now
             // Return an error view if the update went wrong
-        ])) return template('tokens/confirm_problem', ['unlogged' => true]);
+        ])) return template('tokens/confirm_problem', ['unlogged' =>'unlogged']);
         // Expire token if
         $this->tokenmodel->del($token);
-        return template('tokens/account_confirmed', ['unlogged' => true]);
+        return template('tokens/account_confirmed', ['unlogged' =>'unlogged']);
     }
 
     public function resetpwd($token): string
     {
         // Declare data
-        $data = ['unlogged' => true, 'token' => $token];
+        $data = ['unlogged' =>'unlogged', 'token' => $token];
         // Exit if token has expired
         if (!$this->tokenmodel->get($token)) return template('tokens/token_pwd_expired', $data);
         return template('tokens/new_password', $data);
@@ -301,7 +301,7 @@ class Account extends BaseController
 
     function created(): string
     {
-        return template('tokens/email_sent', ['unlogged' => true]);
+        return template('tokens/email_sent', ['unlogged' =>'unlogged']);
     }
 
     public function update_user(): void
@@ -415,7 +415,7 @@ class Account extends BaseController
             $data = [
                 'issue_user' => $_SESSION['user']['user_username'],
                 'issue_title' => validate($_POST['issue_title']),
-                'issue_type' => validate($_POST['issue_type']),
+                //'issue_type' => validate($_POST['issue_type']),
                 'issue_msg' => json_encode([
                     0 => [
                         "time" => $this->now,

@@ -24,12 +24,12 @@ class BaseModel extends Model
         $builder = db::connect()
             ->table($this->table)
             ->select('*');
-        if (isset($id)) $builder->where('game_id', $id);
+        if (isset($id)) $builder->where($this->primaryKey, $id);
         if ($result = $builder->get()->getResultArray()) return $result;
         return false;
     }
 
-    function updt($data, $where): bool
+    function updt(array $data, array $where): bool
     {
         return db::connect()->table($this->table)->update($data, $where);
     }
@@ -37,5 +37,13 @@ class BaseModel extends Model
     function new($data): bool
     {
         return db::connect()->table($this->table)->insert($data);
+    }
+
+    function maxID()
+    {
+        return db::connect()
+            ->table($this->table)
+            ->select('MAX(' . $this->primaryKey . ')')
+            ->get()->getRow();
     }
 }

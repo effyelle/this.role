@@ -3,6 +3,7 @@
     <div class="container-fluid d-flex flex-stack position-relative">
         <!--begin::Brand-->
         <div class="d-flex align-items-center me-5">
+            <!--begin::Aside small screen toggle-->
             <div class="d-lg-none btn btn-icon btn-active-color-white w-30px h-30px ms-n2 me-3"
                  id="kt_aside_toggle">
                 <!--begin::Svg Icon | path: icons/duotune/abstract/abs015.svg-->
@@ -18,6 +19,7 @@
 				</span>
                 <!--end::Svg Icon-->
             </div>
+            <!--end::Aside small screen toggle-->
             <!--begin::Logo-->
             <a href="/" class="d-flex align-items-center">
                 <img class="w-40px w-lg-55px" src="/assets/media/logos/icon64x64.png" alt=""/>

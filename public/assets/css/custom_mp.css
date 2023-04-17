@@ -3,8 +3,17 @@
     --this-role-red: #F2614E;
     --this-role-green: #34a795;
     --this-role-light: #eddec6;
+    --this-role-ocher: #cbae38;
     --this-role-blue: #515ddc;
     --this-role-light-rgb: 237, 222, 198;
+}
+
+.active .text-this-role-light {
+    color: var(--this-role-ocher) !important;
+}
+
+.text-this-role-light {
+    color: var(--this-role-light) !important;
 }
 
 .toastr {
@@ -569,8 +578,136 @@ a.btn-link:hover, .btn-link:hover {
     .fs-xxs-8 {
         font-size: .85rem !important
     }
-    .px-xxs-1{
+
+    .px-xxs-1 {
         padding-left: 0.25rem !important;
         padding-right: 0.25rem !important;
     }
+}
+
+.game-header {
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-end;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%
+}
+
+.game-header > .dices-container {
+    width: calc(100vw - 265px);
+    padding: 0 1.5rem;
+}
+
+.dices-container > .dices-flex-content {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    background-color: #ffffff;
+    padding: 1rem 0;
+    border-radius: 0 0 15px 15px;
+}
+
+.dice-roll {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 50px;
+}
+
+.dice-roll > * {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.dice-roll .roll {
+    width: 50px;
+}
+
+.dice-roll button.dice {
+    box-shadow: #555555 0 0 2px 0 !important;
+    width: 40px;
+    height: 40px;
+}
+
+.dice.d4 {
+    background: url("/assets/media/games/dices/d4/d4.svg") no-repeat center center;
+    background-size: cover;
+}
+
+.dice.d6 {
+    background: url("/assets/media/games/dices/d6/perspective-dice-six.svg") no-repeat center center;
+    background-size: cover;
+}
+
+.dice.d8 {
+    background: url("/assets/media/games/dices/d8/dice-eight-faces-eight.svg") no-repeat center center;
+    background-size: cover;
+}
+
+.dice.d10 {
+    background: url("/assets/media/games/dices/d10/d10.svg") no-repeat center center;
+    background-size: cover;
+}
+
+.dice.d12 {
+    background: url("/assets/media/games/dices/d12/d12.svg") no-repeat center center;
+    background-size: cover;
+}
+
+.dice.d20 {
+    background: url("/assets/media/games/dices/d20/dice-twenty-faces-twenty.svg") no-repeat center center;
+    background-size: cover;
+}
+
+.dice.d100 {
+    background: url("/assets/media/games/dices/d100/d100.png") no-repeat center center;
+    background-size: cover;
+}
+
+@media (max-width: 991.98px) {
+
+    .game-header > .dices-container {
+        width: calc(100vw - 100px);
+    }
+}
+
+@media (min-width: 992px) {
+
+    .game-header > .dices-container {
+        width: calc(100vw - 300px);
+    }
+}
+
+body.game {
+    background-color: #F1EBE5 !important;
+}
+
+body.game .aside {
+    border-radius: unset;
+}
+
+.nav-tabs .nav-item a.nav-link i {
+    font-size: 1.3rem;
+}
+
+@media (min-width: 1080px) {
+    .nav-tabs .nav-item a.nav-link i {
+        font-size: 1.6rem;
+    }
+}
+
+.game .aside .nav-line-tabs {
+    background: #fdfcf8;
+}
+
+.game .aside .nav-line-tabs .nav-item .nav-link.active {
+    border-bottom: 1px solid var(--this-role-ocher);
 }

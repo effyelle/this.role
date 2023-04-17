@@ -22,6 +22,7 @@
                     <textarea id="issue_details" name="issue_details" rows="3" maxlength="500"
                               class="form-control form-control-solid this-role-form-field"></textarea>
                 </div>
+                <!--
                 <div class="form-group mt-5">
                     <label for="issue_type">Issue type</label>
                     <select class="form-select form-select-solid this-role-form-field" id="issue_type"
@@ -35,6 +36,7 @@
                         </optgroup>
                     </select>
                 </div>
+                -->
             </div>
             <!--end::Body-->
             <!--begin::Footer-->
@@ -126,8 +128,11 @@
 
         $('#send_issue_btn').click(function () {
             const issues_error_msg = $('.issues_error');
-            if ($('#issue_title').val().length > 0 && $('#issue_details').val().length > 0
-                && $('#issue_type option:selected').val() !== '-1') {
+            if (
+                $('#issue_title').val().length > 0 && $('#issue_details').val().length > 0
+                //&& $('#issue_type option:selected').val() !== '-1'
+            ) {
+                console.log('in ere')
                 issues_error_msg.addClass('d-none');
                 sendIssue();
                 return;

@@ -87,7 +87,7 @@ function validate(string $str): string
     return htmlspecialchars(trim($str));
 }
 
-function upload_img($formname, $target): string|bool
+function upload_img($formname, $target, $preferred_filename = null): string|bool
 {
     $target_dir = FCPATH . $target;
     $target_file = $target_dir . basename($_FILES[$formname]["name"]);
@@ -98,9 +98,12 @@ function upload_img($formname, $target): string|bool
     // Check image size
     if ($_FILES[$formname]["size"] > 5000000) return 'File too large';
     // Change image name
-    do {
-        $new_filename = "/" . time() . "." . $imageFileType;
-    } while (file_exists($target_dir . $new_filename));
+    if (isset($preferred_filename)) $new_filename = $preferred_filename . '.' . $imageFileType;
+    else {
+        do {
+            $new_filename = "/" . time() . "." . $imageFileType;
+        } while (file_exists($target_dir . $new_filename));
+    }
     if (move_uploaded_file($_FILES[$formname]["tmp_name"], $target_dir . $new_filename)) return $target . $new_filename;
     return false;
 }

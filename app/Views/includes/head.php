@@ -34,11 +34,11 @@
     <?php endif; ?>
     <!--end::CSSTemplates-->
 </head>
-<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed bg-light-opacity-25">
+<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed bg-light-opacity-25 <?= $page ?? '' ?>">
 <!--begin::Page Container-->
 <div class="d-flex flex-column flex-root">
     <!--begin::Page-->
     <div class="page d-flex flex-row flex-column-fluid">
         <!--begin::Wrapper-->
-        <div class="wrapper d-flex flex-column flex-row-fluid <?php if (isset($unlogged) && $unlogged) echo 'unlogged'; ?>"
+        <div class="wrapper d-flex flex-column flex-row-fluid <?= $unlogged ?? ''; ?>"
              id="kt_wrapper">

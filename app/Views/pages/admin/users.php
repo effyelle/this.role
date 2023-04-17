@@ -16,10 +16,10 @@
                 <!--begin::Tabs-->
                 <ul class="nav nav-tabs nav-line-tabs mb-5 fs-xxs-8 fs-6">
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#users-table">Users List</a>
+                        <a class="nav-link active" data-bs-toggle="tab" href="#users-table">Users List</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#users-msgs">Messages Support</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#users-msgs">Messages Support</a>
                     </li>
                 </ul>
                 <!--end::Tabs-->
@@ -273,11 +273,11 @@
 
         function formatMessage(message) {
             return '' +
-                '<div class="d-flex flex-row align-items-center gap-5">' +
+                '<div class="d-flex flex-row align-items-start gap-5">' +
                 '   <span class="menu-title fw-bolder">' + message.sender + '</span>' +
                 '   <span class="d-flex flex-row justify-content-between align-items-center w-100">' +
                 '       <span class="">' + message.msg + '</span>' +
-                '       <i class="fs-8">' + message.time + '</i>' +
+                '       <i class="fs-8 col-3 text-end">' + message.time + '</i>' +
                 '   </span>' +
                 '</div>';
         }

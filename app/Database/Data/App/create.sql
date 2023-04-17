@@ -26,11 +26,12 @@ CREATE TABLE tokens(
 CREATE TABLE games(
 	game_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
 	game_user_creator INT UNSIGNED,
-	FOREIGN KEY(game_user_creator) REFERENCES users(user_id),
 	game_title VARCHAR(50),
+	game_details LONGTEXT,
 	game_icon VARCHAR(200),
-	game_is_public TINYINT(1) DEFAULT 0,
-	game_deleted DATETIME DEFAULT NULL
+	game_folder VARCHAR(200),
+	game_deleted DATETIME DEFAULT NULL,
+	FOREIGN KEY(game_user_creator) REFERENCES users(user_id)
 );
 
 CREATE TABLE invite_url(

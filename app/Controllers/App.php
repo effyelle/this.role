@@ -22,49 +22,49 @@ class App extends BaseController
         if (isset($_SESSION['user'])) {
             return template();
         }
-        return template('login', ['unlogged' => true]);
+        return template('login', ['unlogged' => 'unlogged']);
     }
 
     function login(): string
     {
         if (isset($_SESSION['user'])) return template();
-        return template('login', ['unlogged' => true]);
+        return template('login', ['unlogged' => 'unlogged']);
     }
 
     function signup(): string
     {
         if (isset($_SESSION['user'])) return template();
-        return template('signup', ['unlogged' => true]);
+        return template('signup', ['unlogged' => 'unlogged']);
     }
 
     function logout(): string
     {
         if (isset($_SESSION['user'])) session_destroy();
-        return template('login', ['unlogged' => true]);
+        return template('login', ['unlogged' => 'unlogged']);
     }
 
     function about(): string
     {
         if (isset($_SESSION['user'])) return template('about');
-        return template('login', ['unlogged' => true]);
+        return template('login', ['unlogged' => 'unlogged']);
     }
 
     function myprofile(): string
     {
         if (isset($_SESSION['user'])) return (new Account)->updateProfile();
-        return template('login', ['unlogged' => true]);
+        return template('login', ['unlogged' => 'unlogged']);
     }
 
-    function myissues():string
+    function myissues(): string
     {
         if (isset($_SESSION['user'])) return (new Account)->myIssues();
-        return template('login', ['unlogged' => true]);
+        return template('login', ['unlogged' => 'unlogged']);
     }
 
-    function games_list(): string
+    function games(): string
     {
-        if (isset($_SESSION['user'])) return (new Games)->list();
-        return template('login', ['unlogged' => true]);
+        if (isset($_SESSION['user'])) return (new Games)->games();
+        return template('login', ['unlogged' => 'unlogged']);
     }
 
     function admin($switch): string
@@ -80,17 +80,17 @@ class App extends BaseController
         if (isset($_POST['email']) && $this->validate(['email' => 'required|valid_email'], ['email' => $_POST['email']])) {
             if (model('UsersModel')->get(null, $_POST['email'])) {
                 if ((new Account())->sendConfirmationEmail($_POST['email'])) {
-                    return template('tokens/email_sent', ['unlogged' => true]);
+                    return template('tokens/email_sent', ['unlogged' => 'unlogged']);
                 }
             }
-            return template('tokens/confirm_problem', ['unlogged' => true, 'problem' => 'Email given is not registered.']);
+            return template('tokens/confirm_problem', ['unlogged' => 'unlogged', 'problem' => 'Email given is not registered.']);
         }
-        return template('tokens/token_expired', ['unlogged' => true]);
+        return template('tokens/token_expired', ['unlogged' => 'unlogged']);
     }
 
     function reset_pwd(): string
     {
-        return template('tokens/reset_password_request', ['unlogged' => true]);
+        return template('tokens/reset_password_request', ['unlogged' => 'unlogged']);
     }
 
     function send_reset_pwd(): string
@@ -102,17 +102,17 @@ class App extends BaseController
             if (model('UsersModel')->get($email)) {
                 // Send reset mail
                 if ((new Account())->sendResetPasswordEmail($email)) {
-                    return template('tokens/email_sent', ['unlogged' => true]);
+                    return template('tokens/email_sent', ['unlogged' => 'unlogged']);
                 }
-                return template('tokens/confirm_problem', ['unlogged' => true, 'problem' => 'Email could not be sent']);
+                return template('tokens/confirm_problem', ['unlogged' => 'unlogged', 'problem' => 'Email could not be sent']);
             }
-            return template('tokens/confirm_problem', ['unlogged' => true, 'problem' => 'Email given is not registered.']);
+            return template('tokens/confirm_problem', ['unlogged' => 'unlogged', 'problem' => 'Email given is not registered.']);
         }
-        return template('tokens/token_expired', ['unlogged' => true]);
+        return template('tokens/token_expired', ['unlogged' => 'unlogged']);
     }
 
     function pwd_was_resetted(): string
     {
-        return template('tokens/pwd_was_resetted', ['unlogged' => true]);
+        return template('tokens/pwd_was_resetted', ['unlogged' => 'unlogged']);
     }
 }

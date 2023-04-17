@@ -71,8 +71,11 @@ document.addEventListener('DOMContentLoaded', function () {
     function formatProfile(data) {
         if (!data['response']) return;
         let user = data['user'];
-        emailBox.val(user['user_email']);
+        $('#username').val(user['user_username']);
         $('#fname').val(user['user_fname']);
+        emailBox.val(user['user_email']);
+        avatar_holder.css('background-image', 'url(' + user['user_avatar'] + ')');
+        avatar_holder.css('background-size', 'cover');
     }
 
     /**

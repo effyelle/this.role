@@ -79,7 +79,7 @@
                                     . '   <td class="menu-item menu-accordion">'
                                     . '       <div class="text-muted text-hover-info cursor-pointer menu-link open-link">'
                                     . '           <span class="menu-title text-uppercase fs-3">' . $issue['issue_title'] . '</span>'
-                                    . '           <span><i>Issue started by </i><b>' . $issue['user_username'] . '</b></span>'
+                                    . '           <span><i>Issue started by </i><b>' . $issue['issue_user'] . '</b></span>'
                                     . '           <span class="menu-arrow">'
                                     . '               <input class="d-none issue_id" value="' . $issue['issue_id'] . '"/>'
                                     . '           </span>'
@@ -128,40 +128,55 @@
             </div>
 
             <div class="modal-body">
+                <!--begin::Form-->
                 <form id="edit_user" name="edit_user">
+                    <!--begin::Username-->
                     <div class="mt-5">
                         <label class="form-label" for="username">Username</label>
                         <input id="username" name="username" type="text"
                                class="form-control form-control-solid this-role-form-field"/>
                     </div>
+                    <!--end::Username-->
+                    <!--begin::Full Name-->
                     <div class="mt-5">
                         <label class="form-label" for="fname">Full Name</label>
                         <input id="fname" name="fname" type="text"
                                class="form-control form-control-solid this-role-form-field"/>
                     </div>
+                    <!--end::Full Name-->
+                    <!--begin::Email-->
                     <div class="mt-5">
                         <label class="form-label" for="email">Email</label>
                         <input id="email" name="email" type="text"
                                class="form-control form-control-solid this-role-form-field"/>
                     </div>
-                    <div class="mt-5">
-                        <label class="form-label" for="user_rol">Rol</label>
-                        <select class="form-select form-select-solid this-role-form-field" id="user_rol"
-                                name="user_rol">
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                    </div>
-                    <div class="mt-5">
-                        <label class="form-label" for="user_status">Status</label>
-                        <select class="form-select form-select-solid this-role-form-field" id="user_status"
-                                name="user_status">
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                        </select>
-                    </div>
+                    <!--end::Email-->
+                    <?php if (isset($_SESSION['user']) && $_SESSION['user']['user_rol'] === 'masteradmin'): ?>
+                        <!--begin::Rol change-->
+                        <div class="mt-5">
+                            <label class="form-label" for="user_rol">Rol</label>
+                            <select class="form-select form-select-solid this-role-form-field" id="user_rol"
+                                    name="user_rol">
+                                <option value="user">User</option>
+                                <option value="admin">Admin</option>
+                                <option value="masteradmin">Master Admin</option>
+                            </select>
+                        </div>
+                        <!--end::Rol change-->
+                        <!--begin::Delete-->
+                        <div class="mt-5">
+                            <label class="form-label" for="user_status">Status</label>
+                            <select class="form-select form-select-solid this-role-form-field" id="user_status"
+                                    name="user_status">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <!--end::Delete-->
+                    <?php endif; ?>
                     <button id="user" name="user" class="d-none this-role-form-field"></button>
                 </form>
+                <!--end::Form-->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
@@ -187,20 +202,12 @@
         const messagesData =<?php echo json_encode($issues_list ?? '{}');?>;
         const userEditBtn = $('.usernameBtn');
 
-        $('#msgs_list').ordering = false;
-
-        $('#modal_data_sent').on('hidden.bs.modal', function () {
-            window.location.reload();
-        });
         $('.this-role-form-field').keypress(function (e) {
-            if (e.originalEvent.key === 'Enter') {
-                e.preventDefault();
-            }
+            if (e.originalEvent.key === 'Enter') e.preventDefault();
         });
 
         for (let i = 0; i < userEditBtn.length; i++) {
             userEditBtn[i].addEventListener('click', function () {
-                console.log(this.value)
                 let user = usersData[this.value];
                 $('#user').val(user.user_id);
                 $('#username').val(user.user_username);
@@ -216,15 +223,23 @@
             let form = getForm('#edit_user');
             $.ajax({
                 type: "post",
-                url: "/account/update_user",
+                url: "/admin/update_user",
                 data: form,
                 dataType: "json",
                 success: function (data) {
                     console.log(data)
                     if (data['response']) {
-                        $('#data_sent').click();
-                    } else if (data['msg']) {
-                        $('#toggle_error').click();
+                        $('#modal_success-toggle').click();
+                        if (data['msg'] && typeof data['msg'] === 'object' && data['msg'].length > 0) {
+                            const response = data['msg'];
+                            let totalResponse = '<b>The following errors where encountered:</b>';
+                            for (let i of response) {
+                                totalResponse += '<br/>' + i;
+                            }
+                            $('.modal_sucess_response').html(totalResponse);
+                        }
+                    } else {
+                        $('#modal_error-toggle').click();
                         $('#modal_error .modal_error_response').html(data['msg']);
                     }
                     toggleProgressSpinner(false);
@@ -247,8 +262,12 @@
                             "msg": answer,
                             "issue_id": $('.issue_id')[i].value
                         },
+                        dataType: "json",
                         success: function (data) {
                             console.log(data);
+                            $('#modal_success-toggle').click();
+                        }, error: function (e) {
+                            $('#modal_error-toggle').click();
                         }
                     });
                 }

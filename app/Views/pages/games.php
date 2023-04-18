@@ -12,7 +12,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
         <div class="card h-100vh">
             <!--begin::Header-->
             <div class="card-header align-content-center">
-                <div class="mx-auto w-100 w-xxl-800px">
+                <div class="mx-auto w-100">
                     <div class="d-flex flex-row-wrap justify-content-between align-items-stretch align-content-center">
                         <div class="card-toolbar gap-5">
                             <h2>My Games</h2>

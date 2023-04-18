@@ -6,7 +6,7 @@
         <div class="card h-100vh">
             <!--begin::Header-->
             <div class="card-header align-content-center">
-                <div class="mx-auto w-100 w-xxl-800px">
+                <div class="mx-auto w-100">
                     <div class="d-flex flex-row-wrap justify-content-between align-items-stretch align-content-center">
                         <div class="card-toolbar gap-5">
                             <h2>My Messages</h2>
@@ -16,7 +16,7 @@
             </div>
             <!--end::Header-->
             <!--begin::Body-->
-            <div class="mx-auto w-100 w-xxl-800px card-body">
+            <div class="mx-auto w-100 card-body">
                 <!--begin::Col-->
                 <!--begin::Col-->
                 <div id="user-msgs">
@@ -29,7 +29,7 @@
                                     . '   <td class="menu-item menu-accordion">'
                                     . '       <div class="text-muted text-hover-info cursor-pointer menu-link open-link">'
                                     . '           <span class="menu-title text-uppercase fs-3">' . $issue['issue_title'] . '</span>'
-                                    . '           <span><i>Issue started by </i><b>' . $issue['user_username'] . '</b></span>'
+                                    . '           <span><i>Issue started by </i><b>' . $issue['issue_user'] . '</b></span>'
                                     . '           <span class="menu-arrow">'
                                     . '               <input class="d-none issue_id" value="' . $issue['issue_id'] . '"/>'
                                     . '           </span>'
@@ -84,8 +84,9 @@
                         },
                         dataType: "json",
                         success: function (data) {
+                            console.log(data);
                             if (data['response']) {
-                                $('#data_sent').click();
+                                $('#modal_success-toggle').click();
                                 $('#modal_data_sent')
                             }
                         }

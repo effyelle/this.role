@@ -78,21 +78,21 @@
 </div>
 <!--end::Modal-->
 <!--begin::Modal Toggle-->
-<button class="d-none" id="toggle_error" data-bs-target="#modal_error" data-bs-toggle="modal"></button>
+<button class="d-none" id="modal_error-toggle" data-bs-target="#modal_error" data-bs-toggle="modal"></button>
 <!--end::Modal Toggle-->
 <!--begin::Modal-->
 <div class="modal fade" tabindex="-1" id="modal_error">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title text-center mx-auto">There was an unexpected error</h3>
+            <div class="modal-header py-12">
+                <div class="icon-error mx-auto"></div>
             </div>
             <div class="modal-body">
                 <div class="mb-5">
                     <p class="text-center modal_error_response">We apologize for the inconveniences</p>
                 </div>
                 <div class="d-flex flex-row justify-content-center">
-                    <button class="btn btn-danger confirm_answer" data-bs-dismiss="modal">OK</button>
+                    <button class="btn btn-danger confirm_answer" data-bs-dismiss="modal" tabindex="-1">OK</button>
                 </div>
             </div>
         </div>
@@ -100,17 +100,18 @@
 </div>
 <!--end::Modal-->
 <!--begin::Modal Toggle-->
-<button class="d-none" id="data_sent" data-bs-target="#modal_data_sent" data-bs-toggle="modal"></button>
+<button class="d-none" id="modal_success-toggle" data-bs-target="#modal_sucess" data-bs-toggle="modal"></button>
 <!--end::Modal Toggle-->
 <!--begin::Modal-->
-<div class="modal fade" tabindex="-1" id="modal_data_sent">
+<div class="modal fade" tabindex="-1" id="modal_sucess">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title text-center mx-auto">Data was sent</h3>
+            <div class="modal-header py-12">
+                <div class="icon-success mx-auto">
+                </div>
             </div>
             <div class="modal-body">
-                <p class="text-center data_sent_response"></p>
+                <p class="text-center modal_sucess_response"></p>
                 <div class="d-flex flex-row justify-content-center">
                     <button class="btn btn-primary confirm_answer" data-bs-dismiss="modal">OK</button>
                 </div>
@@ -140,11 +141,7 @@
             issues_error_msg.removeClass('d-none');
         });
 
-        $('#modal_data_sent').on('hidden.bs.modal', function () {
-            window.location.reload();
-        });
-
-        $('#modal_error').on('hidden.bs.modal', function () {
+        $('#modal_sucess').on('hidden.bs.modal', function () {
             window.location.reload();
         });
 
@@ -164,9 +161,9 @@
                 success: function (data) {
                     console.log(data)
                     if (data['response']) {
-                        $('#data_sent').click();
+                        $('#modal_success-toggle').click();
                     } else {
-                        $('#toggle_error').click();
+                        $('#modal_error-toggle').click();
                     }
                     toggleProgressSpinner(false);
                 },

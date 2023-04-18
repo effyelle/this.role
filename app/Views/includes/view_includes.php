@@ -7,7 +7,7 @@ if (isset($page)) {
         case 'home':
         case 'games':
         case 'profile':
-        case 'messages':
+        case 'issues':
         case 'about':
         case 'admin/users':
         case 'admin/games':

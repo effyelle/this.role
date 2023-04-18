@@ -11,7 +11,8 @@ document.addEventListener('DOMContentLoaded', function () {
         openConfirmation(deactivateAccount);
     });
 
-    readImageChange($('#avatar'), $('.avatar-input-holder'));
+    const avatar_holder = $('.avatar-input-holder');
+    readImageChange($('#avatar'), avatar_holder);
 
     const emailBox = $('#email');
     emailBox.keyup(function () {

@@ -46,15 +46,18 @@ class Account extends BaseController
         $email = $_POST['email'] ?? false;
         $pwd = $_POST['pwd'] ?? false;
         if ($email && $pwd) {
-            if ($user = $this->usermodel->get($email)) {
+            if ($user = $this->usermodel->get(['user_email' => $email])) {
+                $user = $user[0];
                 if (password_verify($pwd, $user['user_pwd'])) {
                     update_session($user);
                     echo json_encode(['response' => true]);
                     return;
                 }
             }
+            echo json_encode(['response' => false, 'msg' => 'There was an error logging in.']);
+            return;
         }
-        echo json_encode(['response' => false]);
+        echo json_encode(['response' => false, 'msg' => 'Some data seems to be missing.']);
     }
 
     /**
@@ -82,12 +85,12 @@ class Account extends BaseController
             return;
         }
         // Check username
-        if ($this->usermodel->get(null, null, $username)) {
+        if ($this->usermodel->get(['user_username' => $username])) {
             echo json_encode(['response' => false, 'msg' => 'The username is already in use.']);
             return;
         }
         // Check email
-        if ($this->usermodel->get($email)) {
+        if ($this->usermodel->get(['user_email' => $email])) {
             echo json_encode(['response' => false, 'msg' => 'The email is already in use.']);
             return;
         }
@@ -104,16 +107,17 @@ class Account extends BaseController
         //echo json_encode(['response' => false, 'msg' => 'Mail could not be sent']);
     }
 
-    function avatar_change()
-    {
-        if ($_FILES['avatar']['error'] === 0) {
-            $img = upload_img('avatar', 'assets/media/avatars');
-            echo json_encode(['reponse' => true, 'img' => '/' . $img]);
-            return;
+    /*
+        function avatar_change()
+        {
+            if ($_FILES['avatar']['error'] === 0) {
+                $img = upload_img('avatar', 'assets/media/avatars');
+                echo json_encode(['reponse' => true, 'img' => '/' . $img]);
+                return;
+            }
+            echo json_encode(['reponse' => false]);
         }
-        echo json_encode(['reponse' => false]);
-    }
-
+    */
     function updateProfile(): string
     {
         $data = [];
@@ -125,8 +129,8 @@ class Account extends BaseController
             $oldEmail = $_SESSION['user']['user_email'];
             $oldUsername = $_SESSION['user']['user_username'];
             if (
-                ($oldUsername !== $username && $this->usermodel->get(null, null, $username)) ||
-                ($oldEmail !== $email && $this->usermodel->get($email))
+                ($oldUsername !== $username && $this->usermodel->get(['user_username' => $username])) ||
+                ($oldEmail !== $email && $this->usermodel->get(['user_email' => $email]))
             ) {
                 $data['error'] = 'The username or email are already in use.';
                 return template('profile', $data);
@@ -147,7 +151,7 @@ class Account extends BaseController
                 }
             }
             if ($email !== $oldEmail) $data['user_confirmed'] = null;
-            if ($this->usermodel->updt($data, $where)) update_session($this->usermodel->get($email));
+            if ($this->usermodel->updt($data, $where)) update_session($this->usermodel->get(['user_email' => $email])[0]);
             if ($email !== $oldEmail) {
                 // Send new confirmation email
                 // $this->sendConfirmationEmail($email);
@@ -162,17 +166,8 @@ class Account extends BaseController
     function myIssues(): string
     {
         $data = [];
-        if ($issues = $this->issuesmodel->get(null, $_SESSION['user']['user_username'])) $data['issues_list'] = $issues;
-        return template('messages', $data);
-    }
-
-    function myprofile()
-    {
-        if (isset($_SESSION['user'])) {
-            $user = $this->usermodel->get($_SESSION['user']['user_email']);
-            update_session($user);
-            echo json_encode(['response' => true, 'user' => $user]);
-        }
+        if ($issues = $this->issuesmodel->get(['issue_user' => $_SESSION['user']['user_username']])) $data['issues_list'] = $issues;
+        return template('issues', $data);
     }
 
     /**
@@ -247,25 +242,25 @@ class Account extends BaseController
 
     public function confirm($token): string
     {
-        $t = $this->tokenmodel->get($token);
-        if (!$t) return template('tokens/token_expired', ['unlogged' =>'unlogged']);
+        $t = $this->tokenmodel->get(['token' => $token]);
+        if (!$t) return template('tokens/token_expired', ['unlogged' => 'unlogged']);
         // Update data
         if (!$this->usermodel->updt([
             'user_email' => $t['token_user'],
             'user_confirmed' => $this->now
             // Return an error view if the update went wrong
-        ])) return template('tokens/confirm_problem', ['unlogged' =>'unlogged']);
+        ])) return template('tokens/confirm_problem', ['unlogged' => 'unlogged']);
         // Expire token if
         $this->tokenmodel->del($token);
-        return template('tokens/account_confirmed', ['unlogged' =>'unlogged']);
+        return template('tokens/account_confirmed', ['unlogged' => 'unlogged']);
     }
 
     public function resetpwd($token): string
     {
         // Declare data
-        $data = ['unlogged' =>'unlogged', 'token' => $token];
+        $data = ['unlogged' => 'unlogged', 'token' => $token];
         // Exit if token has expired
-        if (!$this->tokenmodel->get($token)) return template('tokens/token_pwd_expired', $data);
+        if (!$this->tokenmodel->get(['token' => $token])) return template('tokens/token_pwd_expired', $data);
         return template('tokens/new_password', $data);
 
     }
@@ -277,7 +272,7 @@ class Account extends BaseController
             // Hash new password
             $hash = password_hash($_POST['pwd'], PASSWORD_DEFAULT);
             // Get email from token
-            $email = $this->tokenmodel->get($_POST['token'])['token_user'];
+            $email = $this->tokenmodel->get(['token' => $_POST['token']])['token_user'];
             // Update fields
             echo $this->now;
             if ($this->usermodel->updt(
@@ -301,56 +296,7 @@ class Account extends BaseController
 
     function created(): string
     {
-        return template('tokens/email_sent', ['unlogged' =>'unlogged']);
-    }
-
-    public function update_user(): void
-    {
-        // Save $_POST data
-        $data = [
-            'user_username' => validate($_POST['username']),
-            'user_fname' => validate($_POST['fname']),
-            'user_email' => validate($_POST['email'])
-        ];
-        if (isset($_POST['user_rol'])) $data['user_rol'] = validate($_POST['user_rol']);
-
-        $where = ['user_id' => intval($_POST['user'])];
-        // Save old data from user
-        $old_userdata = $this->usermodel->get(null, $where['user_id']);
-
-        // Check status
-        if (isset($_POST['user_status'])) {
-            // Get admins and check user is not the last one
-            if ($old_userdata['user_rol'] === 'admin' && count($this->usermodel->getAdmins()) < 2) {
-                echo json_encode(['response' => false, 'msg' => 'This user is the last admin. Promote another user to delete it.']);
-                return;
-            }
-            $data['user_deleted'] = $_POST['user_status'] === 'inactive' ? $this->now : null;
-        }
-        // Check username or email aren't already taken
-        if (
-            ($old_userdata['user_username'] !== $data['user_username'] && $this->usermodel->get(null, null, $data['user_username'])) ||
-            ($old_userdata['user_email'] !== $data['user_email'] && $this->usermodel->get($data['user_email']))
-        ) {
-            echo json_encode(['response' => false, 'msg' => 'The username or email are already in use.']);
-            return;
-        }
-
-        // Get old username from user
-        $old_username = $old_userdata['user_username'];
-
-        // Update issues
-        if ($this->updateIssuesMessages($old_username, $data['user_username'])) {
-            // Update user
-            if ($this->usermodel->updt($data, $where)) {
-                // Send new confirmation email
-                // $this->sendConfirmationEmail($email);
-                echo json_encode(['response' => true]);
-                return;
-            }
-        }
-
-        echo json_encode(['response' => false]);
+        return template('tokens/email_sent', ['unlogged' => 'unlogged']);
     }
 
     public function deactivate(): void
@@ -373,7 +319,7 @@ class Account extends BaseController
         echo json_encode(['response' => false]);
     }
 
-    private function updateIssuesMessages($old_username, $new_username): bool
+    function updateIssuesMessages($old_username, $new_username): bool
     {
         // Get all issues
         $all_issues = $this->issuesmodel->get();
@@ -432,23 +378,50 @@ class Account extends BaseController
         echo json_encode(['response' => false]);
     }
 
-    public function send_issue_msg(): void
+    function send_issue_msg(): void
     {
-        // Get all issues
-        $issue_id = intval($_POST['issue_id']);
-        $issue_msg = json_decode($this->issuesmodel->get($issue_id)[0]['issue_msg']);
-        $issue_msg[] = [
-            "time" => $this->now,
-            "sender" => $_SESSION['user']['user_username'],
-            "msg" => validate($_POST['msg'])
-        ];
-        $new_msg = json_encode($issue_msg);
-        if ($this->issuesmodel->updt(
-            ['issue_msg' => $new_msg],
-            ['issue_id' => $issue_id]
-        )) {
-            echo json_encode(['response' => true]);
-            return;
+        if (isset($_SESSION['user'])) {
+            // Get all issues
+            $issue_id = intval($_POST['issue_id']);
+
+            if ($issue_msg = $this->issuesmodel->get(['issue_id' => $issue_id])[0]['issue_msg']) {
+                $issue_msg = json_decode($issue_msg);
+                $issue_msg[] = [
+                    "time" => $this->now,
+                    "sender" => $_SESSION['user']['user_username'],
+                    "msg" => validate($_POST['msg'])
+                ];
+                $new_msg = json_encode($issue_msg);
+                if ($this->issuesmodel->updt(
+                    ['issue_msg' => $new_msg],
+                    ['issue_id' => $issue_id]
+                )) {
+                    echo json_encode(['response' => true]);
+                    return;
+                }
+            }
+        }
+        echo json_encode(['response' => false]);
+    }
+
+    /* *****************************************************************************************************************
+     * AJAX CALLS ******************************************************************************************************
+     ******************************************************************************************************************/
+
+    /**
+     * AJAX call to get session for debugging
+     *
+     * @return void
+     */
+    function myprofile(): void
+    {
+        if (isset($_SESSION['user'])) {
+            if ($user = $this->usermodel->get(['user_username' => $_SESSION['user']['user_username']])) {
+                $user = $user[0];
+                update_session($user);
+                echo json_encode(['response' => true, 'user' => $user]);
+                return;
+            }
         }
         echo json_encode(['response' => false]);
     }

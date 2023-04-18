@@ -52,7 +52,7 @@
                         </a>
                     </div>
                     <!--end::Menu Item-->
-                    <?php if (isset($_SESSION['user']) && ($_SESSION['user']['user_rol'] === 'admin' || $_SESSION['user']['user_rol'] === 'master')): ?>
+                    <?php if (isset($_SESSION['user']) && ($_SESSION['user']['user_rol'] === 'admin' || $_SESSION['user']['user_rol'] === 'masteradmin')): ?>
                         <!--begin::Admin section separator-->
                         <div class="menu-item">
                             <div class="menu-content p-0">

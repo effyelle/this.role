@@ -69,8 +69,9 @@ class App extends BaseController
 
     function admin($switch): string
     {
-        if (isset($_SESSION['user']) && $_SESSION['user']['user_rol'] !== 'user') {
-            return (new AdminUsers())->$switch();
+        if (isset($_SESSION['user'])) {
+            $userRol = $_SESSION['user']['user_rol'];
+            if ($userRol === 'admin' || $userRol === 'masteradmin') return (new Admin())->$switch();
         }
         return $this->index();
     }
@@ -78,7 +79,7 @@ class App extends BaseController
     function send_confirmation_email(): string
     {
         if (isset($_POST['email']) && $this->validate(['email' => 'required|valid_email'], ['email' => $_POST['email']])) {
-            if (model('UsersModel')->get(null, $_POST['email'])) {
+            if (model('UsersModel')->get(['user_email' => $_POST['email']])) {
                 if ((new Account())->sendConfirmationEmail($_POST['email'])) {
                     return template('tokens/email_sent', ['unlogged' => 'unlogged']);
                 }
@@ -99,7 +100,7 @@ class App extends BaseController
         if (isset($_POST['email'])) {
             $email = validate($_POST['email']);
             // Check email is in Database
-            if (model('UsersModel')->get($email)) {
+            if (model('UsersModel')->get(['user_email'=>$email])) {
                 // Send reset mail
                 if ((new Account())->sendResetPasswordEmail($email)) {
                     return template('tokens/email_sent', ['unlogged' => 'unlogged']);

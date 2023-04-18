@@ -6,6 +6,7 @@
     --this-role-ocher: #cbae38;
     --this-role-blue: #515ddc;
     --this-role-light-rgb: 237, 222, 198;
+    --this-role-ocher-rgb: 203, 174, 56;
 }
 
 .active .text-this-role-light {
@@ -289,12 +290,18 @@ label[for=searchRule] {
 
 @media (min-width: 992px) {
     .aside {
-        width: 265px;
+        width: 300px;
         transition: width ease;
         position: fixed;
         left: 0;
         top: 70px;
         bottom: 0;
+    }
+}
+
+@media (min-width: 1200px) {
+    .aside {
+        width: 350px;
     }
 }
 
@@ -339,7 +346,7 @@ a .hover-flip {
     color: #5134a7 !important;
 }
 
-.btn.btn-primary {
+.btn.btn-primary, .badge-primary {
     background: var(--this-role-green) !important;
 }
 
@@ -349,7 +356,7 @@ a .hover-flip {
     background: #249785 !important;
 }
 
-.btn.btn-warning {
+.btn.btn-warning, .badge-warning {
     background: var(--this-role-red);
 }
 
@@ -383,7 +390,7 @@ a .hover-flip {
     transition: all 0.4s ease;
 }
 
-input.this-role-form-field.form-control.form-control-solid {
+input.this-role-form-field.form-control.form-control-solid.this-role-form-field {
     border: 0 !important;
     border-radius: 0;
     border-bottom: 1px solid var(--bs-gray-400) !important;
@@ -462,10 +469,6 @@ input.this-role-form-field.form-control.form-control-solid {
 }
 
 @media (min-width: 1200px) {
-    .aside {
-        width: 300px;
-    }
-
     .wrapper {
         padding-left: 310px;
     }
@@ -525,20 +528,33 @@ input.form-control.this-role-form-field[disabled] {
     border-radius: 5px;
 }
 
-.icon-login_error {
+.icon-success, .icon-error {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 120px;
-    width: 120px;
-    height: 120px;
+    font-size: 80px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
+}
+
+.icon-success {
+    border: 2px solid var(--this-role-green);
+    color: var(--this-role-green);
+    box-shadow: 0 0 3px 0 #10574c
+}
+
+.icon-error {
     border: 2px solid var(--this-role-red);
     color: var(--this-role-red);
     box-shadow: 0 0 3px 0 var(--this-role-garnet);
 }
 
-.icon-login_error::after {
+.icon-success::after {
+    content: "\2713";
+}
+
+.icon-error::after {
     content: "\00D7";
 }
 
@@ -589,6 +605,8 @@ a.btn-link:hover, .btn-link:hover {
     display: flex;
     flex-flow: row;
     justify-content: flex-end;
+    align-content: center;
+    align-items: center;
     position: fixed;
     top: 0;
     left: 0;
@@ -596,19 +614,19 @@ a.btn-link:hover, .btn-link:hover {
 }
 
 .game-header > .dices-container {
-    width: calc(100vw - 265px);
-    padding: 0 1.5rem;
+    width: calc(100vw);
+    padding: 0.5rem;
 }
 
 .dices-container > .dices-flex-content {
     display: flex;
     flex-flow: row;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
-    gap: 20px;
     background-color: #ffffff;
-    padding: 1rem 0;
-    border-radius: 0 0 15px 15px;
+    padding: 0.5rem;
+    gap: 12px;
+    border-radius: 8px;
 }
 
 .dice-roll {
@@ -616,8 +634,8 @@ a.btn-link:hover, .btn-link:hover {
     flex-flow: column;
     justify-content: center;
     align-items: center;
-    gap: 10px;
-    width: 50px;
+    gap: 5px;
+    width: 25px;
 }
 
 .dice-roll > * {
@@ -628,61 +646,126 @@ a.btn-link:hover, .btn-link:hover {
 }
 
 .dice-roll .roll {
-    width: 50px;
+    width: 100%;
 }
 
-.dice-roll button.dice {
+.dice-roll .roll input {
+    padding: 0 !important;
+}
+
+.dice-roll .roll, .dice-roll .roll input {
+    font-size: .85rem !important;
+}
+
+.dice-roll button.btn.dice {
+    padding: 0 !important;
     box-shadow: #555555 0 0 2px 0 !important;
-    width: 40px;
-    height: 40px;
+    width: 25px;
+    height: 25px;
+    transition: all 0.75s ease;
+}
+
+.dice-roll button.btn.dice:hover {
+    box-shadow: #555555 0 0 2px 1px !important;
+    transition: all 1s ease;
 }
 
 .dice.d4 {
     background: url("/assets/media/games/dices/d4/d4.svg") no-repeat center center;
-    background-size: cover;
+    background-size: contain;
 }
 
 .dice.d6 {
     background: url("/assets/media/games/dices/d6/perspective-dice-six.svg") no-repeat center center;
-    background-size: cover;
+    background-size: contain;
 }
 
 .dice.d8 {
     background: url("/assets/media/games/dices/d8/dice-eight-faces-eight.svg") no-repeat center center;
-    background-size: cover;
+    background-size: contain;
 }
 
 .dice.d10 {
     background: url("/assets/media/games/dices/d10/d10.svg") no-repeat center center;
-    background-size: cover;
+    background-size: contain;
 }
 
 .dice.d12 {
     background: url("/assets/media/games/dices/d12/d12.svg") no-repeat center center;
-    background-size: cover;
+    background-size: contain;
 }
 
 .dice.d20 {
     background: url("/assets/media/games/dices/d20/dice-twenty-faces-twenty.svg") no-repeat center center;
-    background-size: cover;
+    background-size: contain;
 }
 
 .dice.d100 {
     background: url("/assets/media/games/dices/d100/d100.png") no-repeat center center;
-    background-size: cover;
+    background-size: contain;
 }
 
-@media (max-width: 991.98px) {
+@media (min-width: 349px) {
+    .dice-roll {
+        width: 30px;
+    }
 
+    .dice-roll button.btn.dice {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@media (min-width: 540px) {
+    .dices-container > .dices-flex-content {
+        padding-bottom: 1rem;
+    }
+
+    .dice-roll {
+        width: 35px;
+    }
+
+    .dice-roll button.btn.dice {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+@media (min-width: 768px) {
     .game-header > .dices-container {
-        width: calc(100vw - 100px);
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .dice-roll {
+        width: 45px;
+    }
+
+    .dice-roll button.btn.dice {
+        width: 45px;
+        height: 45px;
     }
 }
 
 @media (min-width: 992px) {
-
     .game-header > .dices-container {
         width: calc(100vw - 300px);
+        padding: 0 65px 0 25px;
+    }
+
+    .dices-container > .dices-flex-content {
+        border-radius: 0 0 10px 10px;
+        justify-content: center;
+    }
+
+    .dice-roll .roll, .dice-roll .roll input {
+        font-size: .95rem !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .game-header > .dices-container {
+        width: calc(100vw - 350px);
     }
 }
 
@@ -710,4 +793,62 @@ body.game .aside {
 
 .game .aside .nav-line-tabs .nav-item .nav-link.active {
     border-bottom: 1px solid var(--this-role-ocher);
+}
+
+.game .aside .nav-line-tabs .nav-item .nav-link:hover:not(.disabled),
+.game .aside .nav-line-tabs .nav-item.show .nav-link {
+    border-bottom: 1px solid rgba(var(--this-role-ocher-rgb), 0.6);
+}
+
+.form-control.form-control-solid.this-role-form-field {
+    background: rgba(var(--this-role-light-rgb), 0.1);
+}
+
+.dropdown.show > .form-control.form-control-solid.this-role-form-field,
+.form-control.form-control-solid.this-role-form-field.active,
+.form-control.form-control-solid.this-role-form-field.focus,
+.form-control.form-control-solid.this-role-form-field:active,
+.form-control.form-control-solid.this-role-form-field:focus {
+    background: rgba(var(--this-role-light-rgb), 0.3);
+}
+
+textarea.form-control.form-control-solid.this-role-form-field {
+    background: rgba(var(--this-role-light-rgb), 0.2);
+    border-color: rgba(var(--this-role-light-rgb), 0.4);
+    resize: none;
+}
+
+.dropdown.show > textarea.form-control.form-control-solid.this-role-form-field,
+textarea.form-control.form-control-solid.this-role-form-field.active,
+textarea.form-control.form-control-solid.this-role-form-field.focus,
+textarea.form-control.form-control-solid.this-role-form-field:active,
+textarea.form-control.form-control-solid.this-role-form-field:focus {
+    background: rgba(var(--this-role-light-rgb), 0.4);
+    border-color: rgba(var(--this-role-light-rgb), 0.5);
+}
+
+.svg-icon.svg-icon-0 svg {
+    height: 2rem !important;
+    width: 2rem !important;
+}
+
+@media (min-width: 768px) {
+    .svg-icon.svg-icon-0 svg {
+        height: 3rem !important;
+        width: 3rem !important;
+    }
+}
+
+.chat-container {
+    height: calc(100vh - 40px);
+    justify-content: space-between;
+}
+
+.chat-bubble {
+    justify-self: flex-end;
+}
+
+.this-game {
+    border-radius: 10px;
+    padding: 0.5rem;
 }

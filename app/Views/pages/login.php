@@ -38,21 +38,6 @@
         <a href="/app/signup" class="link-info text-info text-hover-info">Sign up</a>
     </p>
 </div>
-<button id="login_error" class="d-none" data-bs-toggle="modal" data-bs-target="#modal-login_error"></button>
-<div class="modal fade" id="modal-login_error">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header py-12">
-                <div class="icon-login_error mx-auto">
-                </div>
-            </div>
-            <div class="modal-body gap-5 d-flex flex-column justify-content-around">
-                <p class="text-center text-danger">There was an error logging in.</p>
-                <button class="btn btn-primary d-block mx-auto mt-5" data-bs-dismiss="modal" tabindex="-1">Okay</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -70,7 +55,8 @@
                 sendForm(form);
                 return;
             }
-            $('#login_error').trigger('click');
+            $('.modal_error_response').html('There was an error logging in.');
+            $('#modal_error-toggle').trigger('click');
         }
 
         function sendForm(form) {
@@ -87,7 +73,8 @@
                         return;
                     }
                     toggleProgressSpinner(false);
-                    $('#login_error').trigger('click');
+                    $('.modal_error_response').html('There was an error logging in.');
+                    $('#modal_error-toggle').trigger('click');
                 }
             });
         }

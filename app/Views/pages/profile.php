@@ -7,26 +7,24 @@
               class="card h-100vh" id="update-profile">
             <!--begin::Header-->
             <div class="card-header align-content-center">
-                <div class="mx-auto w-100 w-xxl-800px">
-                    <div class="d-flex flex-row-wrap justify-content-between align-items-stretch align-content-center">
-                        <div class="card-toolbar gap-5">
-                            <h2>My Profile</h2>
-                        </div>
-                        <div class="card-toolbar gap-5">
-                            <button type="submit" id="updateProfile"
-                                    class="btn btn-sm btn-primary align-self-end d-none">
-                                Save
-                            </button>
-                            <button type="button" id="editProfile" class="btn btn-sm btn-warning align-self-start">
-                                Edit Profile
-                            </button>
-                        </div>
+                <div class="d-flex flex-row-wrap justify-content-between align-items-stretch align-content-center w-100">
+                    <div class="card-toolbar gap-5">
+                        <h2>My Profile</h2>
+                    </div>
+                    <div class="card-toolbar gap-5">
+                        <button type="submit" id="updateProfile"
+                                class="btn btn-sm btn-primary align-self-end d-none">
+                            Save
+                        </button>
+                        <button type="button" id="editProfile" class="btn btn-sm btn-warning align-self-start">
+                            Edit Profile
+                        </button>
                     </div>
                 </div>
             </div>
             <!--end::Header-->
             <!--begin::Body-->
-            <div class="mx-auto w-100 w-xxl-800px card-body">
+            <div class="mx-auto card-body w-100">
                 <!--begin::Col-->
                 <div id="user-profile" class="">
                     <div class="d-flex flex-column justify-content-center align-items-center align-content-center gap-6 mx-auto editable">
@@ -48,9 +46,9 @@
                         </div>
                         <!--end::Row-->
                         <!--begin::Row-->
-                        <div class="d-flex flex-row-wrap justify-content-center align-items-center gap-20">
+                        <div class="d-flex flex-row-wrap justify-content-center justify-content-md-around align-items-center w-100">
                             <!--begin::User Data-->
-                            <div class="d-flex flex-column">
+                            <div class="d-flex flex-column align-items-center col-5">
                                 <!--begin::Username-->
                                 <div class="mb-3 w-300px text-center">
                                     <label for="username" class="form-label mt-2 bg-brush ff-poiret fs-2 mx-auto">
@@ -92,39 +90,43 @@
                                 <!--end::Email-->
                             </div>
                             <!--end::User Data-->
-                            <!--begin::Avatar-->
-                            <div class="avatar-container">
-                                <div class="d-flex flex-column gap-6 align-items-center">
-                                    <div class="symbol symbol-175px symbol-xl-200px circle position-relative">
-                                        <input id="avatar" name="avatar" type="file"
-                                               class="d-none this-role-form-field"/>
-                                        <span class="symbol-label circle avatar-input-holder"
-                                              style="background: url(<?= $_SESSION['user']['user_avatar'] ?? '' ?>); background-size: cover;">
+                            <!--begin::Row-->
+                            <div class="d-flex flex-column align-items-center col-5">
+                                <!--begin::Avatar-->
+                                <div class="avatar-container">
+                                    <div class="d-flex flex-column gap-6 align-items-center">
+                                        <div class="symbol symbol-175px symbol-xl-200px circle position-relative">
+                                            <input id="avatar" name="avatar" type="file"
+                                                   class="d-none this-role-form-field"/>
+                                            <span class="symbol-label circle avatar-input-holder"
+                                                  style="background: url(<?= $_SESSION['user']['user_avatar'] ?? '' ?>); background-size: cover;">
                                         </span>
-                                    </div>
-                                    <div class="d-flex flex-row flex-wrap gap-4 editable-item mt-5">
-                                        <label for="avatar" class="btn p-1 text-hover-primary fs-7">
-                                            Change
-                                        </label>
-                                        <button id="delAvatar" type="button" class="btn p-1 text-hover-danger fs-7">
-                                            Delete
-                                        </button>
+                                        </div>
+                                        <div class="d-flex flex-row flex-wrap gap-4 editable-item mt-5">
+                                            <label for="avatar" class="btn p-1 text-hover-primary fs-7">
+                                                Change
+                                            </label>
+                                            <button id="delAvatar" type="button" class="btn p-1 text-hover-danger fs-7">
+                                                Delete
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
+                                <!--end::Avatar-->
+                                <!--end::Buttons-->
+                                <div class="d-flex flex-column justify-content-center align-items-center gap-5 mt-2 w-100">
+                                    <button type="button" id="resetPwdBtn" class="btn btn-sm btn-secondary"
+                                            data-bs-toggle="modal" data-bs-target="#modal_confirmation">
+                                        Reset password
+                                    </button>
+                                    <button type="button" id="deactivateProfile" class="btn btn-sm btn-dark"
+                                            data-bs-toggle="modal" data-bs-target="#modal_confirmation">
+                                        Delete Profile
+                                    </button>
+                                </div>
+                                <!--end::Buttons-->
                             </div>
-                            <!--end::Avatar-->
-                        </div>
-                        <!--end::Row-->
-                        <!--begin::Row-->
-                        <div class="d-flex flex-row-wrap justify-content-start align-content-start align-items-start gap-20 mt-2">
-                            <button type="button" id="resetPwdBtn" class="btn btn-sm btn-secondary align-self-center"
-                                    data-bs-toggle="modal" data-bs-target="#modal_confirmation">
-                                Reset password
-                            </button>
-                            <button type="button" id="deactivateProfile" class="btn btn-sm btn-dark align-self-end"
-                                    data-bs-toggle="modal" data-bs-target="#modal_confirmation">
-                                Delete Profile
-                            </button>
+                            <!--end::Row-->
                         </div>
                         <!--end::Row-->
                         <!--begin::Row-->

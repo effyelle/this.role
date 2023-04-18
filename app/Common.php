@@ -1,14 +1,11 @@
 <?php
 
-use \App\Controllers\App as app;
-
-/*
- *---------------------------------------------------------------
- * TEMPLATE FOR VIEWS
- *---------------------------------------------------------------
+/**
+ * @param string $page
+ * @param array $data
+ * @return string
  */
-
-function template(string $page = 'home', $data = []): string
+function template(string $page = 'home', array $data = []): string
 {
     if (!isset($data['title'])) $data['title'] = get_title($page);
     $data['page'] = $page;
@@ -60,7 +57,7 @@ function check_session(): bool
 function user_exists(): void
 {
     if (isset($_SESSION['user'])) {
-        $user = (model('\App\Models\UsersModel'))->get($_SESSION['user']['user_email']);
+        $user = (model('UsersModel'))->get(['user_id' => $_SESSION['user']['user_id']]);
         if (!$user) {
             session_unset();
             session_destroy();

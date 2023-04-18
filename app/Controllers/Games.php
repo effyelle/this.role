@@ -53,7 +53,7 @@ class Games extends BaseController
 
     function game(int $id): string
     {
-        if ($game = $this->gamesmodel->get($id)) {
+        if ($game = $this->gamesmodel->get(['game_id' => $id])) {
             return template('game', ['game' => $game]);
         }
         return template('game_not_found');

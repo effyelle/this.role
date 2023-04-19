@@ -21,7 +21,7 @@ class Games extends BaseController
             if ($game_details === '') $game_details = null;
             // Create game from basics
             if ($this->gamesmodel->new([
-                'game_user_creator' => $_SESSION['user']['user_id'],
+                'game_creator' => $_SESSION['user']['user_id'],
                 'game_title' => $game_title,
                 'game_details' => $game_details
             ])) {

@@ -601,10 +601,14 @@ a.btn-link:hover, .btn-link:hover {
     }
 }
 
+.game .container-fluid {
+    padding: 0 10px 10px !important;
+}
+
 .game-header {
     display: flex;
     flex-flow: row;
-    justify-content: flex-end;
+    justify-content: space-evenly;
     align-content: center;
     align-items: center;
     position: fixed;
@@ -614,7 +618,7 @@ a.btn-link:hover, .btn-link:hover {
 }
 
 .game-header > .dices-container {
-    width: calc(100vw);
+    width: calc(100vw - 50px);
     padding: 0.5rem;
 }
 
@@ -625,7 +629,7 @@ a.btn-link:hover, .btn-link:hover {
     align-items: center;
     background-color: #ffffff;
     padding: 0.5rem;
-    gap: 12px;
+    gap: 7px;
     border-radius: 8px;
 }
 
@@ -635,7 +639,6 @@ a.btn-link:hover, .btn-link:hover {
     justify-content: center;
     align-items: center;
     gap: 5px;
-    width: 25px;
 }
 
 .dice-roll > * {
@@ -649,10 +652,6 @@ a.btn-link:hover, .btn-link:hover {
     width: 100%;
 }
 
-.dice-roll .roll input {
-    padding: 0 !important;
-}
-
 .dice-roll .roll, .dice-roll .roll input {
     font-size: .85rem !important;
 }
@@ -660,9 +659,15 @@ a.btn-link:hover, .btn-link:hover {
 .dice-roll button.btn.dice {
     padding: 0 !important;
     box-shadow: #555555 0 0 2px 0 !important;
-    width: 25px;
-    height: 25px;
     transition: all 0.75s ease;
+}
+
+.dice-roll, .btn.dice {
+    width: 20px;
+}
+
+.btn.dice {
+    height: 20px;
 }
 
 .dice-roll button.btn.dice:hover {
@@ -670,55 +675,63 @@ a.btn-link:hover, .btn-link:hover {
     transition: all 1s ease;
 }
 
-.dice.d4 {
-    background: url("/assets/media/games/dices/d4/d4.svg") no-repeat center center;
-    background-size: contain;
-}
+/*********************************************
+ ******************* DICES *******************
+ *********************************************/
+@media (min-width: 1px) {
+    .dice.d4 {
+        background: url("/assets/media/games/dices/d4/d4.svg") no-repeat center center;
+        background-size: contain;
+    }
 
-.dice.d6 {
-    background: url("/assets/media/games/dices/d6/perspective-dice-six.svg") no-repeat center center;
-    background-size: contain;
-}
+    .dice.d6 {
+        background: url("/assets/media/games/dices/d6/perspective-dice-six.svg") no-repeat center center;
+        background-size: contain;
+    }
 
-.dice.d8 {
-    background: url("/assets/media/games/dices/d8/dice-eight-faces-eight.svg") no-repeat center center;
-    background-size: contain;
-}
+    .dice.d8 {
+        background: url("/assets/media/games/dices/d8/dice-eight-faces-eight.svg") no-repeat center center;
+        background-size: contain;
+    }
 
-.dice.d10 {
-    background: url("/assets/media/games/dices/d10/d10.svg") no-repeat center center;
-    background-size: contain;
-}
+    .dice.d10 {
+        background: url("/assets/media/games/dices/d10/d10.svg") no-repeat center center;
+        background-size: contain;
+    }
 
-.dice.d12 {
-    background: url("/assets/media/games/dices/d12/d12.svg") no-repeat center center;
-    background-size: contain;
-}
+    .dice.d12 {
+        background: url("/assets/media/games/dices/d12/d12.svg") no-repeat center center;
+        background-size: contain;
+    }
 
-.dice.d20 {
-    background: url("/assets/media/games/dices/d20/dice-twenty-faces-twenty.svg") no-repeat center center;
-    background-size: contain;
-}
+    .dice.d20 {
+        background: url("/assets/media/games/dices/d20/dice-twenty-faces-twenty.svg") no-repeat center center;
+        background-size: contain;
+    }
 
-.dice.d100 {
-    background: url("/assets/media/games/dices/d100/d100.png") no-repeat center center;
-    background-size: contain;
+    .dice.d100 {
+        background: url("/assets/media/games/dices/d100/d100.png") no-repeat center center;
+        background-size: contain;
+    }
 }
 
 @media (min-width: 349px) {
-    .dice-roll {
+    .dice-roll, .btn.dice {
         width: 30px;
     }
 
-    .dice-roll button.btn.dice {
-        width: 30px;
+    .btn.dice {
         height: 30px;
     }
 }
 
 @media (min-width: 540px) {
     .dices-container > .dices-flex-content {
-        padding-bottom: 1rem;
+        padding-bottom: 0.75rem;
+    }
+
+    .this-table-margin {
+        margin-top: 0.5rem;
     }
 
     .dice-roll {
@@ -737,6 +750,10 @@ a.btn-link:hover, .btn-link:hover {
         padding-right: 20px;
     }
 
+    .this-table-margin {
+        margin-top: 2rem;
+    }
+
     .dice-roll {
         width: 45px;
     }
@@ -748,18 +765,31 @@ a.btn-link:hover, .btn-link:hover {
 }
 
 @media (min-width: 992px) {
+    .game-header {
+        justify-content: flex-end;
+    }
+
     .game-header > .dices-container {
         width: calc(100vw - 300px);
-        padding: 0 65px 0 25px;
+        padding: 0 20px 0 25px;
     }
 
     .dices-container > .dices-flex-content {
         border-radius: 0 0 10px 10px;
         justify-content: center;
+        gap: 20px;
     }
 
     .dice-roll .roll, .dice-roll .roll input {
         font-size: .95rem !important;
+    }
+
+    .this-table-margin {
+        margin-top: 0 !important;
+    }
+
+    .game .container-fluid {
+        padding: 0 20px 10px 65px!important;
     }
 }
 

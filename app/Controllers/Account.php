@@ -138,7 +138,6 @@ class Account extends BaseController
                     $data['error'] = 'The username or email are already in use.';
                     return template('profile', $data);
                 }
-                if ($fname === '') $fname = null;
                 $data = [
                     'user_username' => $username,
                     'user_fname' => $fname,

@@ -67,6 +67,18 @@ class App extends BaseController
         return template('login', ['unlogged' => 'unlogged']);
     }
 
+    function game(int $id): string
+    {
+        if (isset($_SESSION['user'])) return (new Games)->game($id);
+        return template('login', ['unlogged' => 'unlogged']);
+    }
+
+    function game_ajax(string $route): void
+    {
+        if (isset($_SESSION['user'])) echo (new Games)->$route();
+        echo json_encode(['response' => false, 'msg' => 'Your session has expired']);
+    }
+
     function admin($switch): string
     {
         if (isset($_SESSION['user'])) {
@@ -78,20 +90,20 @@ class App extends BaseController
 
     function send_confirmation_email(): string
     {
-        if (isset($_POST['email']) && $this->validate(['email' => 'required|valid_email'], ['email' => $_POST['email']])) {
+        if (isset($_POST['email']) && $this->validate(['email' => 'required | valid_email'], ['email' => $_POST['email']])) {
             if (model('UsersModel')->get(['user_email' => $_POST['email']])) {
                 if ((new Account())->sendConfirmationEmail($_POST['email'])) {
-                    return template('tokens/email_sent', ['unlogged' => 'unlogged']);
+                    return template('tokens / email_sent', ['unlogged' => 'unlogged']);
                 }
             }
-            return template('tokens/confirm_problem', ['unlogged' => 'unlogged', 'problem' => 'Email given is not registered.']);
+            return template('tokens / confirm_problem', ['unlogged' => 'unlogged', 'problem' => 'Email given is not registered . ']);
         }
-        return template('tokens/token_expired', ['unlogged' => 'unlogged']);
+        return template('tokens / token_expired', ['unlogged' => 'unlogged']);
     }
 
     function reset_pwd(): string
     {
-        return template('tokens/reset_password_request', ['unlogged' => 'unlogged']);
+        return template('tokens / reset_password_request', ['unlogged' => 'unlogged']);
     }
 
     function send_reset_pwd(): string
@@ -100,20 +112,20 @@ class App extends BaseController
         if (isset($_POST['email'])) {
             $email = validate($_POST['email']);
             // Check email is in Database
-            if (model('UsersModel')->get(['user_email'=>$email])) {
+            if (model('UsersModel')->get(['user_email' => $email])) {
                 // Send reset mail
                 if ((new Account())->sendResetPasswordEmail($email)) {
-                    return template('tokens/email_sent', ['unlogged' => 'unlogged']);
+                    return template('tokens / email_sent', ['unlogged' => 'unlogged']);
                 }
-                return template('tokens/confirm_problem', ['unlogged' => 'unlogged', 'problem' => 'Email could not be sent']);
+                return template('tokens / confirm_problem', ['unlogged' => 'unlogged', 'problem' => 'Email could not be sent']);
             }
-            return template('tokens/confirm_problem', ['unlogged' => 'unlogged', 'problem' => 'Email given is not registered.']);
+            return template('tokens / confirm_problem', ['unlogged' => 'unlogged', 'problem' => 'Email given is not registered . ']);
         }
-        return template('tokens/token_expired', ['unlogged' => 'unlogged']);
+        return template('tokens / token_expired', ['unlogged' => 'unlogged']);
     }
 
     function pwd_was_resetted(): string
     {
-        return template('tokens/pwd_was_resetted', ['unlogged' => 'unlogged']);
+        return template('tokens / pwd_was_resetted', ['unlogged' => 'unlogged']);
     }
 }

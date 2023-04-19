@@ -53,18 +53,6 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                                             <h6 class="game-title"><?= $game['game_title'] ?></h6>
                                         </div>
                                         <!--end::Title-->
-                                        <!--begin::Details-->
-                                        <!--
-                                    <div class="d-flex flex-column justify-content-center">
-                                        <span class="d-flex flex-row gap-4 align-items-center align-self-end">
-                                            <?php /*echo $game['id_user'] == $_SESSION['user']['id']
-                                                ? '<span class="badge badge-light flex-column fw-bolder my-2 px-2">Created by you</span>
-                                                    <button class="btn btn-link fs-7 fs-xl-5 text-end py-0 edit-btn">Edit</button>'
-                                                : '';*/ ?>
-                                        </span>
-                                    </div>
-                                    -->
-                                        <!--end::Details-->
                                     </div>
                                     <!--end::Section-->
                                 </a>
@@ -106,7 +94,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                     <textarea id="game_details" name="game_details" rows="3" maxlength="500"
                               class="form-control form-control-solid this-role-form-field"></textarea>
                 </div>
-                <div class="form-group mt-5 row">
+                <div class="form-group mt-5 d-flex flex-column flex-sm-row justify-content-center align-items-center row-cols-sm-2">
                     <div class="d-flex flex-column justify-content-center align-items-center gap-3 col-6">
                         <span>Game Icon</span>
                         <input type="file" id="game_icon" name="game_icon"
@@ -114,7 +102,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                         <label for="game_icon" class="btn btn-link fs-7">Upload</label>
                     </div>
                     <div class="col-6">
-                        <span class="symbol symbol-175px symbol-xl-200px circle">
+                        <span class="symbol symbol-125px symbol-sm-150px symbol-md-175px symbol-xl-200px circle">
                             <span class="symbol-label circle game_icon_holder"
                                   style="background: url('/assets/media/games/default_game/frame.png'); background-size: cover">
                             </span>

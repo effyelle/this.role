@@ -95,14 +95,15 @@
                         </div>
                         <!--end::Menu Item-->
                         <!--begin::Menu Item-->
-                        <div class="menu-item">
-                            <a class="menu-link" data-bs-toggle="modal" data-bs-target="#add_token-modal">
+                        <form enctype="multipart/form-data" class="menu-item" method="post">
+                            <label for="game_img" class="menu-link">
                                 <span class="menu-title">Add image</span>
                                 <span class="menu-icon bg-garnet circle h-25px w-25px p-0">
                                     <i class="fa-solid fa-plus text-white fs-6 d-block"></i>
                                 </span>
-                            </a>
-                        </div>
+                            </label>
+                            <input type="file" id="game_img" name="game_img" class="d-none this-role-form-field"/>
+                        </form>
                         <!--end::Menu Item-->
                         <!--begin::Separator-->
                         <div class="menu-item">
@@ -119,7 +120,7 @@
                                     <span class="symbol-label circle sheet_icon"></span>
                                 </div>
                                 <!--end::Symbol-->
-                                <span class="menu-title">Ficha</span>
+                                <span class="menu-title">Imagen</span>
                             </a>
                         </div>
                         <!--end::Menu Item-->

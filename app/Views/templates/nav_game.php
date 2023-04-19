@@ -26,7 +26,7 @@
                            class="form-control form-control-solid this-role-form-field p-0"/>
                     <label for="roll-d4" class="d-none d-md-block">d4</label>
                 </span>
-                <button class="btn dice border-0 shadow d4"></button>
+                <button class="btn dice border-0 shadow d4" value="d4"></button>
             </div>
             <!--end::Dice d4-->
             <!--begin::Dice d6-->
@@ -36,7 +36,7 @@
                            class="form-control form-control-solid this-role-form-field p-0"/>
                     <label for="roll-d6" class="d-none d-md-block">d6</label>
                 </span>
-                <button class="btn dice border-0 shadow d6"></button>
+                <button class="btn dice border-0 shadow d6" value="d6"></button>
             </div>
             <!--end::Dice d6-->
             <!--begin::Dice d8-->
@@ -46,7 +46,7 @@
                            class="form-control form-control-solid this-role-form-field p-0"/>
                     <label for="roll-d8" class="d-none d-md-block">d8</label>
                 </span>
-                <button class="btn dice border-0 shadow d8"></button>
+                <button class="btn dice border-0 shadow d8" value="d8"></button>
             </div>
             <!--end::Dice d8-->
             <!--begin::Dice d10-->
@@ -56,7 +56,7 @@
                            class="form-control form-control-solid this-role-form-field p-0"/>
                     <label for="roll-d10" class="d-none d-md-block">d10</label>
                 </span>
-                <button class="btn dice border-0 shadow d10"></button>
+                <button class="btn dice border-0 shadow d10" value="d10"></button>
             </div>
             <!--end::Dice d10-->
             <!--begin::Dice d12-->
@@ -66,7 +66,7 @@
                            class="form-control form-control-solid this-role-form-field p-0"/>
                     <label for="roll-d12" class="d-none d-md-block">d12</label>
                 </span>
-                <button class="btn dice border-0 shadow d12"></button>
+                <button class="btn dice border-0 shadow d12" value="d12"></button>
             </div>
             <!--end::Dice d12-->
             <!--begin::Dice d20-->
@@ -76,7 +76,7 @@
                            class="form-control form-control-solid this-role-form-field p-0"/>
                     <label for="roll-d20" class="d-none d-md-block">d20</label>
                 </span>
-                <button class="btn dice border-0 shadow d20"></button>
+                <button class="btn dice border-0 shadow d20" value="d20"></button>
             </div>
             <!--end::Dice d20-->
             <!--begin::Dice d100-->
@@ -86,7 +86,7 @@
                            class="form-control form-control-solid this-role-form-field p-0"/>
                     <label for="roll-d100" class="d-none d-md-block">d100</label>
                 </span>
-                <button class="btn dice border-0 shadow d100"></button>
+                <button class="btn dice border-0 shadow d100" value="d100"></button>
             </div>
             <!--end::Dice d100-->
         </div>

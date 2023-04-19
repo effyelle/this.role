@@ -127,40 +127,42 @@ class Account extends BaseController
             $username = validate($_POST['username']);
             $fname = validate($_POST['fname']);
             $email = validate($_POST['email']);
-            // Check if username or email are already taken
-            $oldEmail = $_SESSION['user']['user_email'];
-            $oldUsername = $_SESSION['user']['user_username'];
-            if (
-                ($oldUsername !== $username && $this->usermodel->get(['user_username' => $username])) ||
-                ($oldEmail !== $email && $this->usermodel->get(['user_email' => $email]))
-            ) {
-                $data['error'] = 'The username or email are already in use.';
-                return template('profile', $data);
-            }
-            if ($fname === '') $fname = null;
-            $data = [
-                'user_username' => $username,
-                'user_fname' => $fname,
-                'user_email' => $email
-            ];
-            $where = ['user_id' => $_SESSION['user']['user_id']];
-            if ($_FILES['avatar']['error'] === 0) {
-                $img = upload_img('avatar', 'assets/media/avatars');
-                if (preg_match('/[0-9]/', $img)) $data['user_avatar'] = '/' . $img;
-                else {
-                    $data['error'] = $img;
+            if ($username !== '' && $fname !== '' && $email !== '') {
+                // Check if username or email are already taken
+                $oldEmail = $_SESSION['user']['user_email'];
+                $oldUsername = $_SESSION['user']['user_username'];
+                if (
+                    ($oldUsername !== $username && $this->usermodel->get(['user_username' => $username])) ||
+                    ($oldEmail !== $email && $this->usermodel->get(['user_email' => $email]))
+                ) {
+                    $data['error'] = 'The username or email are already in use.';
                     return template('profile', $data);
                 }
-            }
-            if ($email !== $oldEmail) $data['user_confirmed'] = null;
-            if ($this->usermodel->updt($data, $where)) update_session($this->usermodel->get(['user_email' => $email])[0]);
-            if ($email !== $oldEmail) {
-                // Send new confirmation email
-                // $this->sendConfirmationEmail($email);
-                session_unset();
-                session_destroy();
-                return $this->created();
-            }
+                if ($fname === '') $fname = null;
+                $data = [
+                    'user_username' => $username,
+                    'user_fname' => $fname,
+                    'user_email' => $email
+                ];
+                $where = ['user_id' => $_SESSION['user']['user_id']];
+                if ($_FILES['avatar']['error'] === 0) {
+                    $img = upload_img('avatar', 'assets/media/avatars');
+                    if (preg_match('/[0-9]/', $img)) $data['user_avatar'] = '/' . $img;
+                    else {
+                        $data['error'] = $img;
+                        return template('profile', $data);
+                    }
+                }
+                if ($email !== $oldEmail) $data['user_confirmed'] = null;
+                if ($this->usermodel->updt($data, $where)) update_session($this->usermodel->get(['user_email' => $email])[0]);
+                if ($email !== $oldEmail) {
+                    // Send new confirmation email
+                    // $this->sendConfirmationEmail($email);
+                    session_unset();
+                    session_destroy();
+                    return $this->created();
+                }
+            } else $data['error'] = 'Rellena todos los campos';
         }
         return template('profile', $data);
     }

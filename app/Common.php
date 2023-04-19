@@ -57,7 +57,9 @@ function check_session(): bool
 function user_exists(): void
 {
     if (isset($_SESSION['user'])) {
-        $user = (model('UsersModel'))->get(['user_id' => $_SESSION['user']['user_id']]);
+        $user = (model('UsersModel'))->get(
+            ['user_id' => $_SESSION['user']['user_id'], 'user_deleted' => null]
+        );
         if (!$user) {
             session_unset();
             session_destroy();

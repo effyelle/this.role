@@ -135,7 +135,10 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        readImageChange($('#game_icon'), $('.game_icon_holder'));
+
+        $('#game_icon').change(function () {
+            readImageChange(this, $('.game_icon_holder'));
+        });
 
         $('#create_game_btn').click(function () {
             let btnLabel = $('.indicator-label');

@@ -11,12 +11,12 @@ document.addEventListener('DOMContentLoaded', function () {
         openConfirmation(deactivateAccount);
     });
 
-    const avatar_holder = $('.avatar-input-holder');
-    readImageChange($('#avatar'), avatar_holder);
+    $('#avatar').change(function () {
+        readImageChange(this, $('.avatar-input-holder'));
+    });
 
     const emailBox = $('#email');
     emailBox.keyup(function () {
-        console.log('here')
         $('.emailchange').removeClass('d-none');
     });
 
@@ -62,6 +62,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         })
     }
+
+    const avatar_holder = $('.avatar-input-holder');
 
     function formatProfile(data) {
         if (!data['response']) return;

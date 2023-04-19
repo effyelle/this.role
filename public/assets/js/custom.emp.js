@@ -112,11 +112,9 @@ function openConfirmation(callback) {
 }
 
 function readImageChange(img_input, img_holder) {
-    img_input.change(function () {
-        let file = URL.createObjectURL(img_input[0].files[0]);
-        img_holder.css('background-image', 'url(' + file + ')');
-        img_holder.css('background-size', 'cover');
-    });
+    let file = URL.createObjectURL(img_input.files[0]);
+    img_holder.css('background-image', 'url(' + file + ')');
+    img_holder.css('background-size', 'cover');
 }
 
 function toSentenceCase(str) {

@@ -89,6 +89,7 @@
             </div>
             <div class="modal-body">
                 <div class="mb-5">
+                    <p class="text-center modal_error_response">There was an unexpected error</p>
                     <p class="text-center modal_error_response">We apologize for the inconveniences</p>
                 </div>
                 <div class="d-flex flex-row justify-content-center">

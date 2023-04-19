@@ -14,12 +14,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#journal_container">
+                    <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#journal_container">
                         <i class="fa fa-newspaper text-this-role-light"></i>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#gallery_list_container">
+                    <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#gallery_list_container">
                         <i class="fa fa-images text-this-role-light"></i>
                     </a>
                 </li>
@@ -45,7 +45,7 @@
             <!--end::Chat-->
 
             <!--begin::Journal-->
-            <div id="journal_container" class="tab-pane fade show active">
+            <div id="journal_container" class="tab-pane">
                 <div class="aside-footer d-flex flex-column py-3 px-5">
                     <div class="menu menu-column menu-rounded fw-bold fs-7 gap-2 mt-3" data-kt-menu="true">
                         <div class="menu-item">
@@ -53,7 +53,7 @@
                         </div>
                         <!--begin::Menu Item-->
                         <div class="menu-item">
-                            <a class="menu-link" data-bs-toggle="modal" data-bs-target="#add_token-modal">
+                            <a class="menu-link" data-bs-toggle="modal" data-bs-target="#modal_add_token">
                                 <span class="menu-title">Add sheet</span>
                                 <span class="menu-icon bg-garnet circle h-25px w-25px p-0">
                                     <i class="fa-solid fa-plus text-white fs-6 d-block"></i>
@@ -86,9 +86,10 @@
             <!--end::Journal-->
 
             <!--begin::Gallery list-->
-            <div id="gallery_list_container" class="tab-pane fade">
+            <div id="gallery_list_container" class="tab-pane fade fade show active">
                 <div class="aside-footer d-flex flex-column py-3 px-5">
-                    <div class="menu menu-column menu-rounded fw-bold fs-7 gap-2 mt-3" data-kt-menu="true">
+                    <div data-kt-menu="true" id="menu_gallery"
+                         class="menu menu-column menu-rounded fw-bold fs-7 gap-2 mt-3">
                         <!--begin::Menu Item-->
                         <div class="menu-item">
                             <span class="fs-5 text-dark">Welcome to your files!</span>
@@ -112,18 +113,6 @@
                             </div>
                         </div>
                         <!--end::Separator-->
-                        <!--begin::Menu Item-->
-                        <div class="menu-item">
-                            <a class="menu-link" href="#">
-                                <!--begin::Symbol-->
-                                <div class="me-2 symbol symbol-20px symbol-md-30px">
-                                    <span class="symbol-label circle sheet_icon"></span>
-                                </div>
-                                <!--end::Symbol-->
-                                <span class="menu-title">Imagen</span>
-                            </a>
-                        </div>
-                        <!--end::Menu Item-->
                     </div>
                 </div>
             </div>

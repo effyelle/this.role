@@ -29,16 +29,12 @@
                 <div id="user-profile" class="">
                     <div class="d-flex flex-column justify-content-center align-items-center align-content-center gap-6 mx-auto editable">
                         <!--begin::Row-->
-                        <div class="text-danger fs-6 text-center"><?= $error ?? '' ?></div>
-                        <!--end::Row-->
-                        <button id="userBtn" value="" class="d-none"></button>
-                        <!--begin::Row-->
-                        <div class="text-info fs-6 text-center my-5">
+                        <div class="text-info fs-6 text-center">
                             <?php
-                            if (
-                                !isset($_SESSION['user']['user_confirmed'])
-                                || !isset($_SESSION['user']['user_fname'])
-                                || $_SESSION['user']['user_avatar'] === '/assets/media/avatars/blank.png'
+                            if (!(isset($_SESSION['user']['user_confirmed']) &&
+                                isset($_SESSION['user']['user_username']) && $_SESSION['user']['user_username'] !== '' &&
+                                isset($_SESSION['user']['user_fname']) && $_SESSION['user']['user_email'] !== '' &&
+                                $_SESSION['user']['user_avatar'] !== '/assets/media/avatars/blank.png')
                             ) {
                                 echo 'Complete your profile to enjoy all services in our web! 💡';
                             }
@@ -46,11 +42,14 @@
                         </div>
                         <!--end::Row-->
                         <!--begin::Row-->
-                        <div class="d-flex flex-row-wrap justify-content-center justify-content-md-around align-items-center w-100">
+                        <div class="text-danger fs-6 text-center"><?= $error ?? '' ?></div>
+                        <!--end::Row-->
+                        <!--begin::Row-->
+                        <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-md-around align-items-center w-100">
                             <!--begin::User Data-->
                             <div class="d-flex flex-column align-items-center col-5">
                                 <!--begin::Username-->
-                                <div class="mb-3 w-300px text-center">
+                                <div class="mb-3 w-200px w-sm-300px text-center">
                                     <label for="username" class="form-label mt-2 bg-brush ff-poiret fs-2 mx-auto">
                                         Username
                                     </label>
@@ -60,7 +59,7 @@
                                 </div>
                                 <!--end::Username-->
                                 <!--begin::Full Name-->
-                                <div class="mb-3 w-300px text-center">
+                                <div class="mb-3 w-200px w-sm-300px text-center">
                                     <label for="fname" class="form-label mt-2 bg-brush">
                                         Full Name
                                     </label>
@@ -70,7 +69,7 @@
                                 </div>
                                 <!--end::Full Name-->
                                 <!--begin::Email-->
-                                <div class="mb-3 w-300px text-center">
+                                <div class="mb-3 w-200px w-sm-300px text-center">
                                     <label for="email" class="form-label mt-2 bg-brush">
                                         Email
                                     </label>
@@ -134,6 +133,7 @@
                             <p class="text-center text-danger fs-6 my-5 fw-bold reset-pwd"></p>
                         </div>
                         <!--end::Row-->
+                        <button id="userBtn" value="" class="d-none"></button>
                     </div>
                 </div>
                 <!--end::Col-->

@@ -46,15 +46,17 @@ class Account extends BaseController
         $email = $_POST['email'] ?? false;
         $pwd = $_POST['pwd'] ?? false;
         if ($email && $pwd) {
-            if ($user = $this->usermodel->get(['user_email' => $email])) {
+            if ($user = $this->usermodel->get(['user_email' => $email, 'user_deleted' => null])) {
                 $user = $user[0];
                 if (password_verify($pwd, $user['user_pwd'])) {
                     update_session($user);
                     echo json_encode(['response' => true]);
                     return;
                 }
+                echo json_encode(['response' => false, 'pwd' => 'There was an error logging in.']);
+                return;
             }
-            echo json_encode(['response' => false, 'msg' => 'There was an error logging in.']);
+            echo json_encode(['response' => false, 'user' => 'There was an error logging in.']);
             return;
         }
         echo json_encode(['response' => false, 'msg' => 'Some data seems to be missing.']);
@@ -299,10 +301,16 @@ class Account extends BaseController
         return template('tokens/email_sent', ['unlogged' => 'unlogged']);
     }
 
+    function canDelete(string $rol = 'admin'): bool
+    {
+        return !($_SESSION['user']['user_rol'] === $rol &&
+            count($this->usermodel->get(['user_rol' => $rol, 'user_deleted' => null])) === 1);
+    }
+
     public function deactivate(): void
     {
         if (isset($_SESSION['user'])) {
-            if ($_SESSION['user']['user_rol'] === 'admin' && count($this->usermodel->getAdmins()) < 2) {
+            if (!$this->canDelete() || !$this->canDelete('masteradmin')) {
                 echo json_encode(['response' => false, 'msg' => 'You are the last admin. Promote another to delete your account.']);
                 return;
             }

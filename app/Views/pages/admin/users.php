@@ -151,7 +151,9 @@
                                class="form-control form-control-solid this-role-form-field"/>
                     </div>
                     <!--end::Email-->
-                    <?php if (isset($_SESSION['user']) && $_SESSION['user']['user_rol'] === 'masteradmin'): ?>
+                    <?php if (isset($_SESSION['user']) &&
+                        ($_SESSION['user']['user_rol'] === 'masteradmin' ||
+                            $_SESSION['user']['user_rol'] === 'admin')): ?>
                         <!--begin::Rol change-->
                         <div class="mt-5">
                             <label class="form-label" for="user_rol">Rol</label>
@@ -227,16 +229,17 @@
                 data: form,
                 dataType: "json",
                 success: function (data) {
-                    console.log(data)
+                    console.log(data);
                     if (data['response']) {
                         $('#modal_success-toggle').click();
-                        if (data['msg'] && typeof data['msg'] === 'object' && data['msg'].length > 0) {
+                        if (data.msg && typeof data.msg === 'object' && data.msg.length !== 0) {
                             const response = data['msg'];
                             let totalResponse = '<b>The following errors where encountered:</b>';
-                            for (let i of response) {
-                                totalResponse += '<br/>' + i;
+                            for (let i in response) {
+                                totalResponse += '<br/>' + response[i];
                             }
-                            $('.modal_sucess_response').html(totalResponse);
+                            console.log($('.modal_success_response'))
+                            $('.modal_success_response').html(totalResponse);
                         }
                     } else {
                         $('#modal_error-toggle').click();

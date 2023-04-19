@@ -44,9 +44,10 @@ document.addEventListener('DOMContentLoaded', function () {
             url: "/account/deactivate",
             dataType: "json",
             success: function (data) {
+                console.log(data);
                 if (data['response']) {
-                    $('#data_sent').click();
-                    $('#modal_data_sent .data_sent_response').html(
+                    $('#modal_success-toggle').click();
+                    $('.modal_success_response').html(
                         'Your account has been deactivated<br>' +
                         'You will be logged out'
                     );
@@ -55,10 +56,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 }
                 if (data['msg']) {
-                    $('#toggle_error').click();
-                    $('#modal_error .modal_error_response').html(data['msg']);
+                    $('#modal_error-toggle').click();
+                    $('.modal_error_response').html(data['msg']);
                 }
-                console.log(data)
             }
         })
     }

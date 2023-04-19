@@ -36,6 +36,18 @@ class Admin extends BaseController
         return template('admin/games');
     }
 
+    function canEditAdmin(array $target_user, array $new_data, string $rol = 'admin'): bool
+    {
+        // If user is to be deleted
+        $userToBeDeleted = $new_data['user_status'] === 'inactive';
+
+        $activeAdmins = count($this->usermodel->get(['user_rol' => $rol, 'user_deleted' => null]));
+
+        // User must not be demoted or deleted if it is last admin or the last masteradmin
+        return !($target_user['user_rol'] === $rol && $target_user['user_deleted'] === null &&
+            ($new_data['user_rol'] !== $rol || $userToBeDeleted) && $activeAdmins === 1);
+    }
+
     /* *****************************************************************************************************************
      * AJAX CALLS ******************************************************************************************************
      ******************************************************************************************************************/
@@ -53,51 +65,29 @@ class Admin extends BaseController
         // Save old data from user
         $old_userdata = $this->usermodel->get(['user_id' => $where['user_id']])[0];
 
+        if ($_SESSION['user']['user_rol'] === 'admin' && $old_userdata['user_rol'] === 'masteradmin') {
+            echo json_encode(['response' => false, 'msg' => 'You cannot edit a Master Admin.']);
+            return;
+        }
+
         $post = [];
         foreach ($_POST as $k => $v) {
             $post[$k] = validate($v);
         }
 
         // Save $_POST data only for full name
-        $data = [
+        $data = [ // Most of default data will be the old ones
             'user_username' => $old_userdata['user_username'],
             'user_fname' => $post['fname'],
             'user_email' => $old_userdata['user_email'],
-            // Do not change rol by default
             'user_rol' => $old_userdata['user_rol'],
-            // Do not delete by default
             'user_deleted' => $old_userdata['user_deleted']
         ];
 
         // Message(s) to be display if error(s)
         $msgResponse = [];
 
-        // If user is master admin, do look into rol and status
-        if ($_SESSION['user']['user_rol'] === 'masteradmin') {
-            // User must not be demoted or deleted if it's last admin or the last masteradmin
-            if (
-                $post['user_status'] === 'inactive' ||
-                ($old_userdata['user_rol'] === 'admin' && $post['user_rol'] !== 'admin') ||
-                ($old_userdata['user_rol'] === 'masteradmin' && $post['user_rol'] !== 'masteradmin')
-            ) {
-                // Check if admin
-                if (
-                    ($old_userdata['user_rol'] === 'admin' && count($this->usermodel->get(['user_rol' => 'admin'])) < 2) ||
-                    ($old_userdata['user_rol'] === 'masteradmin' && count($this->usermodel->get(['user_rol' => 'masteradmin'])) < 2)
-                ) {
-                    $msgResponse['rol_status'] = $old_userdata['user_rol'] === 'admin'
-                        ? 'This user is the last Admin.<br>Promote another user to delete it or change its role.'
-                        : 'This user is the last Master Admin.<br>Promote another user to delete it or change its role.';
-                }
-            }
-            // Set rol and status if there's no response
-            if (!isset($msgResponse['rol_status'])) {
-                $data['user_rol'] = $post['user_rol'];
-                $data['user_deleted'] = $post['user_status'] === 'inactive' ? $this->now : null;
-            }
-        }
-
-        // Check username
+        // Check username is not picked
         if ($old_userdata['user_username'] !== $post['username'] &&
             $this->usermodel->get(['user_username' => $post['username']])) {
             $msgResponse[] = 'The username is already in use.';
@@ -105,25 +95,49 @@ class Admin extends BaseController
             $data['user_username'] = $post['username'];
         }
 
-        // Check email
+        // Check email is not picked
+        $emailChanged = false;
         if ($old_userdata['user_email'] !== $post['email'] &&
             $this->usermodel->get(['user_email' => $post['email']])) {
             $msgResponse[] = 'The email is already in use.';
-        } else {
+        } elseif ($data['user_email'] !== $post['email']) {
             // Unconfirm user if email changed
             $data['user_email'] = $post['email'];
+            $emailChanged = true;
+        }
+        // Check status and rol
+        if ($_SESSION['user']['user_rol'] === 'masteradmin' || // True if session user is masteradmin
+            ( // or if session user is admin and target user is himself or a normal user
+                $_SESSION['user']['user_rol'] === 'admin' &&
+                ($old_userdata['user_rol'] === 'user' || $old_userdata['user_id'] === $_SESSION['user']['user_id'])
+            )
+        ) {
+            // Set response if failure
+            if (!$this->canEditAdmin($old_userdata, $post)) {
+                $msgResponse['rol_status'] = 'This user is the last Admin.<br>Promote another user to delete it or change its role.';
+            } elseif (!$this->canEditAdmin($old_userdata, $post, 'masteradmin')) {
+                $msgResponse['rol_status'] = 'This user is the last Master Admin.<br>Promote another user to delete it or change its role.';
+            }
+        } elseif ($_SESSION['user']['user_rol'] === 'admin') {
+            $msgResponse['rol_status'] = 'You cannot delete, promote or demote an admin or a master admin';
+        }
+
+        // Set rol and status if there was no failure response
+        if (!isset($msgResponse['rol_status'])) {
+            $data['user_rol'] = $post['user_rol'];
+            $data['user_deleted'] = $post['user_status'] === 'inactive' ? $this->now : null;
         }
 
         // Update issues
         if ((new Account())->updateIssuesMessages($old_userdata['user_username'], $data['user_username'])) {
-            // If email changes unconfirm user
-            if ($old_userdata['user_email'] !== $data['user_email']) {
-                $data['user_confirmed'] = null;
-                // Send confirmation email
-                // (new Account())->sendConfirmationEmail($data['email']);
-            }
             // Update user
             if ($this->usermodel->updt($data, $where)) {
+                // If email changes unconfirm user
+                if ($emailChanged) {
+                    $data['user_confirmed'] = null;
+                    // Send confirmation email
+                    // (new Account())->sendConfirmationEmail($data['email']);
+                }
                 echo json_encode(['response' => true, 'msg' => $msgResponse]);
                 return;
             }

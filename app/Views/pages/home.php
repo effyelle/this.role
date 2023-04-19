@@ -40,7 +40,6 @@
             <!--end::Header-->
             <!--begin::Body-->
             <div class="card-body">
-                <?php var_dump($_SESSION);?>
                 <br><br>
                 <p>Trip owner up in kitchen i want food spend six hours per day washing, but still have a crusty
                     butthole yet mew mew kitty poochy so dismember a mouse and then regurgitate parts of it on the

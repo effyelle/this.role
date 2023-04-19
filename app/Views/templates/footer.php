@@ -100,10 +100,10 @@
 </div>
 <!--end::Modal-->
 <!--begin::Modal Toggle-->
-<button class="d-none" id="modal_success-toggle" data-bs-target="#modal_sucess" data-bs-toggle="modal"></button>
+<button class="d-none" id="modal_success-toggle" data-bs-target="#modal_success" data-bs-toggle="modal"></button>
 <!--end::Modal Toggle-->
 <!--begin::Modal-->
-<div class="modal fade" tabindex="-1" id="modal_sucess">
+<div class="modal fade" tabindex="-1" id="modal_success">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header py-12">
@@ -111,7 +111,7 @@
                 </div>
             </div>
             <div class="modal-body">
-                <p class="text-center modal_sucess_response"></p>
+                <p class="text-center modal_success_response"></p>
                 <div class="d-flex flex-row justify-content-center">
                     <button class="btn btn-primary confirm_answer" data-bs-dismiss="modal">OK</button>
                 </div>
@@ -141,7 +141,7 @@
             issues_error_msg.removeClass('d-none');
         });
 
-        $('#modal_sucess').on('hidden.bs.modal', function () {
+        $('#modal_success').on('hidden.bs.modal', function () {
             window.location.reload();
         });
 

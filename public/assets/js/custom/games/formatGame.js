@@ -1,4 +1,3 @@
-
 function formatMenuItem(data = {}) {
     return '<!--begin::Menu Item-->' +
         '<div class="menu-item">' +
@@ -39,7 +38,7 @@ class Chat {
             '           <!--end::Symbol-->' +
             '           <div>' + data.sender + '</div>' +
             '       </div>' +
-            '       <i>' + formatDateTime(new Date()) + '</i>' +
+            '       <i>' + (new Date()).toLocaleDateString() + '</i>' +
             '   </div>' +
             '   <div class="d-flex flex-column justify-content-center align-items-center">' +
             '       <span class="menu-title">' + data.msg + '</span>' +
@@ -62,7 +61,7 @@ class Chat {
             '           <!--end::Symbol-->' +
             '           <div>' + data.sender + '</div>' +
             '       </div>' +
-            '       <i>' + formatDateTime(new Date()) + '</i>' +
+            '       <i>' + (new Date()).toLocaleDateString() + '</i>' +
             '   </div>' +
             '   <div class="d-flex flex-column justify-content-start align-items-center gap-3">' +
             '       <span class="menu-title"><i>Rolling ' + data.rolling + data.dice + '</i></span>' +

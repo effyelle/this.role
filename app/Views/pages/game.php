@@ -19,8 +19,6 @@
 </div>
 <!--end::Modal-->
 <script type="text/javascript" src="/assets/js/custom/games/formatGame.js"></script>
-<script type="text/javascript" src="/assets/js/custom/games/Board.js"></script>
-<script type="text/javascript" src="/assets/js/custom/games/formatGame.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const board = new Board('.btn.dice');

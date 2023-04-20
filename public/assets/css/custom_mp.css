@@ -366,6 +366,16 @@ a .hover-flip {
     background: #d35342 !important;
 }
 
+.btn.btn-garnet, .badge-garnet {
+    background: var(--this-role-garnet) !important;
+}
+
+.btn-check:active + .btn.btn-garnet, .btn-check:checked + .btn.btn-garnet, .btn.btn-garnet.active,
+.btn.btn-garnet.show, .btn.btn-garnet:active:not(.btn-active), .btn.btn-garnet:focus:not(.btn-active),
+.btn.btn-garnet:hover:not(.btn-active), .show > .btn.btn-garnet {
+    background: #3b0826 !important;
+}
+
 .bg-brush {
     display: flex;
     justify-content: center;
@@ -390,10 +400,14 @@ a .hover-flip {
     transition: all 0.4s ease;
 }
 
-input.this-role-form-field.form-control.form-control-solid.this-role-form-field {
+input.form-control.form-control-solid.this-role-form-field {
     border: 0 !important;
     border-radius: 0;
     border-bottom: 1px solid var(--bs-gray-400) !important;
+}
+
+.form-control.form-control-solid.this-role-form-field {
+    background-color: rgba(var(--this-role-light-rgb), 0.1);
 }
 
 .circle {
@@ -789,7 +803,7 @@ a.btn-link:hover, .btn-link:hover {
     }
 
     .game .container-fluid {
-        padding: 0 20px 10px 65px!important;
+        padding: 0 20px 10px 65px !important;
     }
 }
 
@@ -830,10 +844,6 @@ body.game .aside {
     border-bottom: 1px solid rgba(var(--this-role-ocher-rgb), 0.6);
 }
 
-.form-control.form-control-solid.this-role-form-field {
-    background: rgba(var(--this-role-light-rgb), 0.1);
-}
-
 .dropdown.show > .form-control.form-control-solid.this-role-form-field,
 .form-control.form-control-solid.this-role-form-field.active,
 .form-control.form-control-solid.this-role-form-field.focus,
@@ -870,7 +880,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 }
 
 .chat-container {
-    height: calc(100vh - 40px);
+    height: calc(100vh - 50px);
     justify-content: space-between;
 }
 
@@ -888,3 +898,9 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
         padding: 1rem;
     }
 }
+
+
+.chat-messages .menu-item {
+    border-bottom: 1px solid var(--bs-gray-200);
+}
+

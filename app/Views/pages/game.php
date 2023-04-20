@@ -20,35 +20,52 @@
 <!--end::Modal-->
 <script type="text/javascript" src="/assets/js/custom/games/formatGame.js"></script>
 <script type="text/javascript" src="/assets/js/custom/games/Board.js"></script>
+<script type="text/javascript" src="/assets/js/custom/games/formatGame.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        const board = new Board('.btn.dice');
+        const chat = new Chat('.chat-messages');
+        console.log(chat)
 
-        let board = new Board('.btn.dice');
-        // Roll dices
         $('.btn.dice').click(function () {
-            console.log(board.dices[this.value].roll());
-            console.log($('#game_img')[0].files);
+            chat.record.innerHTML = chat.record.innerHTML + chat.formatMessage({
+                src: "",
+                msg: board.dices[this.value].roll(),
+                sender: $('#charsheet_selected').find(':selected').text(),
+                type: "rollDice",
+                dice: this.value,
+                rolling: $('#roll-' + this.value).val()
+            });
         });
 
-        const menu_gallery = $('#menu_gallery');
-        $('#game_img').click(function () {
-            this.value = null;
-        });
-        $('#game_img').change(function () {
-            menu_gallery.html(menu_gallery.html() + formatListItem());
-            const imgHolder = $('.image_holder');
-            const imgTitle = $('.img_title')
-            if (imgHolder.length > 0) {
-                readImageChange(this, imgHolder);
-                let newImgName = Date.now() + '.' + this.files[0].type.split('/')[1];
-                imgTitle[imgTitle.length - 1].innerHTML = newImgName;
-                // Save image through AJAX
-                saveImage(this.files[0], newImgName);
-                this.value = '';
-                console.log(this.files)
-                return;
+        const chatText = document.querySelector('.chat-bubble textarea');
+
+        document.querySelector('.chat-bubble ~ div .btn').addEventListener('click', function () {
+            if (chatText.value !== '') {
+                chat.record.innerHTML = chat.record.innerHTML + chat.formatMessage({
+                    sender: $('#charsheet_selected').find(':selected').text(),
+                    src: "",
+                    msg: chatText.value,
+                    type: "chatMessage"
+                });
+                chatText.value = "";
+
             }
-            $('modal_error-toggle').click();
+        });
+
+        chatText.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (this.value !== '') {
+                    chat.record.innerHTML = chat.record.innerHTML + chat.formatMessage({
+                        sender: $('#charsheet_selected').find(':selected').text(),
+                        src: "",
+                        msg: this.value,
+                        type: "chatMessage"
+                    });
+                    this.value = "";
+                }
+            }
         });
     });
 </script>

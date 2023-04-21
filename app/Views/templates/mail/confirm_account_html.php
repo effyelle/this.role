@@ -26,22 +26,21 @@
     </style>
 </head>
 <body style="text-align:center;font-family:Poppins, Helvetica, 'sans-serif';font-size:16px;font-weight:500;
-    color:#ffffff;background:#425983;padding:120px 0;">
-<div style="margin:auto;width:200px;height:200px;position:relative;">
-    <img alt="This.Role" width="280" height="280" style="opacity: 0.5;position:absolute;top:-40px;left:-40px;"
-         src="https://i.pinimg.com/originals/e8/83/e1/e883e15044caca9e0dc4fe6073deabdc.png"/>
-    <div style="margin:auto;text-align:center;width:200px;height:200px;display:flex;justify-content:center;
-    align-items:center;flex-direction:column;position:absolute;top:0;left:0;">
-        <p style="margin:0 auto;">The Lunar Dragon welcomes you to <b style="font-size:17px;">This.Role!</b></p>
-        <p style="margin:0 auto;">
-            To confirm your account, please follow
-            <a href="http://this.role.com/account/confirm/<?= $token ?>"
-               style="transition:all 0.3s ease;{color:#1e7769;}:visited:active{color:#1e7769;}:hover{color:#2b9685;};">
-                <b>this link</b>
+    color:#ffffff;background:#425983;padding:50px 0;">
+<div style="margin:auto;">
+    <div style="margin:10px auto;">
+        <p style="margin:0 auto;">The Lunar Dragon welcomes you to
+            <b style="font-size:17px;"> This.Role!</b>
+        </p>
+        <p style="margin:0 auto;">To confirm your account, please follow
+            <a href="http://this.role.com/account/confirm/<?= $token ?>" style="color:#ffb1a0;">
+                <b> this link</b>
             </a>
         </p>
     </div>
-    <p style="margin:0 auto;font-size:14px;position:absolute;top:250px;font-weight:400">
+    <div style="background-image:url('https://i.pinimg.com/originals/e8/83/e1/e883e15044caca9e0dc4fe6073deabdc.png');
+        background-size:cover;margin:10px auto;width:280px;height:280px;"></div>
+    <p style="margin:10px auto;font-size:14px;top:250px;font-weight:400">
         <i>If you didn't initialize this process, you can ignore this email</i>
     </p>
 </div>

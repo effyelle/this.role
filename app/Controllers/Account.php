@@ -11,6 +11,7 @@ class Account extends BaseController
     protected mixed $issuesmodel;
     protected mixed $mailer;
     protected string $now;
+    protected string $defaultAvatar = '/assets/media/avatars/blank.png';
 
     /**
      * Construct of this class will always set up users model and the mailer.
@@ -111,7 +112,12 @@ class Account extends BaseController
             return;
         }
         $pwd = password_hash($pwd, PASSWORD_DEFAULT);
-        if (!$this->usermodel->new(['user_username' => $username, 'user_email' => $email, 'user_pwd' => $pwd])) {
+        if (!$this->usermodel->new([
+            'user_username' => $username,
+            'user_email' => $email,
+            'user_pwd' => $pwd,
+            'user_avatar' => $this->defaultAvatar
+        ])) {
             echo json_encode(['response' => false, 'msg' => 'User could not be added']);
             return;
         }
@@ -122,22 +128,22 @@ class Account extends BaseController
     {
         $error = '';
         if (isset($_POST['fname'])) {
-            $new_username = validate($_POST['username']);
-            $new_fname = validate($_POST['fname']);
-            $new_email = validate($_POST['email']);
+            $newUsername = validate($_POST['username']);
+            $newFullName = validate($_POST['fname']);
+            $newEmail = validate($_POST['email']);
 
             //
             // Check if username and email are taken by another user
             //
-            if ($new_username !== '' && $new_fname !== '' && $new_email !== '') {
+            if ($newUsername !== '' && $newFullName !== '' && $newEmail !== '') {
                 // Save old email and old username to variables
                 $oldEmail = $_SESSION['user']['user_email'];
                 $oldUsername = $_SESSION['user']['user_username'];
                 if ( // Check if username or email are already taken
                     // Compare old username to new username
-                    ($oldUsername !== $new_username && $this->usermodel->get(['user_username' => $new_username])) ||
+                    ($oldUsername !== $newUsername && $this->usermodel->get(['user_username' => $newUsername])) ||
                     // Compare old email to new email
-                    ($oldEmail !== $new_email && $this->usermodel->get(['user_email' => $new_email]))
+                    ($oldEmail !== $newEmail && $this->usermodel->get(['user_email' => $newEmail]))
                 ) { // If one of them match, return an error
                     return template('profile', ['error' => 'The username or email are already in use.']);
                 }
@@ -147,18 +153,28 @@ class Account extends BaseController
                 //
 
                 $data = [
-                    'user_username' => $new_username,
-                    'user_fname' => $new_fname,
-                    'user_email' => $new_email
+                    'user_username' => $newUsername,
+                    'user_fname' => $newFullName,
+                    'user_email' => $newEmail
                 ];
 
                 if ($_FILES['avatar']['error'] === 0) {
                     $img = upload_img('avatar', 'assets/media/avatars');
-                    if (preg_match('/[0-9]/', $img)) $data['user_avatar'] = '/' . $img;
-                    else return template('profile', ['error' => $img]);
+                    if (preg_match('/[0-9]/', $img)) {
+                        $data['user_avatar'] = '/' . $img;
+
+                        $oldAvatar = $_SESSION['user']['user_avatar'];
+                        // Delete old file
+                        if ($oldAvatar !== $this->defaultAvatar && is_file(FCPATH . $oldAvatar)) {
+                            if (!unlink(FCPATH . $oldAvatar)) {
+                                $error = 'No se pudo borrar el avatar amtiguo';
+                            }
+                        }
+                        // Return error if file was not uploaded
+                    } else return template('profile', ['error' => $img]);
                 }
                 // Unconfirm account if email was changed
-                if ($new_email !== $oldEmail) $data['user_confirmed'] = null;
+                if ($newEmail !== $oldEmail) $data['user_confirmed'] = null;
 
                 //
                 // Finish filling up $data=[]
@@ -169,10 +185,10 @@ class Account extends BaseController
                     $data, // data
                     ['user_id' => $_SESSION['user']['user_id']] // where
                 // If successfull, update session
-                )) update_session($this->usermodel->get(['user_email' => $new_email])[0]);
+                )) update_session($this->usermodel->get(['user_email' => $newEmail])[0]);
                 // Send confirmation account email if email was changed
-                if ($new_email !== $oldEmail) {
-                    $email_response = $this->sendConfirmationEmail($new_email, $new_username);
+                if ($newEmail !== $oldEmail) {
+                    $email_response = $this->sendConfirmationEmail($newEmail, $newUsername);
                     // Return error if email could not be sent
                     $error = ($email_response === true)
                         ? '<span class="fs-4">Your email was updated, an email has been sent for confirmation</span>'

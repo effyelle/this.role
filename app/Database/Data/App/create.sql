@@ -70,3 +70,5 @@ VALUES
 
 UPDATE users SET user_rol='masteradmin' WHERE user_email='ericapastor@gmail.com';
 UPDATE users SET user_rol='admin' WHERE user_email='nore.zgz@mail.com';
+
+SELECT * FROM tokens WHERE DATEDIFF(token_expires, NOW()) > 0;

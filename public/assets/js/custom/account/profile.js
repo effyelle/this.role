@@ -11,6 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
         openConfirmation(deactivateAccount);
     });
 
+    $('#resend-conf_email').click(function () {
+        openConfirmation(sendConfEmail);
+    });
+
     $('#avatar').change(function () {
         readImageChange(this, $('.avatar-input-holder'));
     });
@@ -71,12 +75,32 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     }
 
+    const usernameInput = $('#username');
+
+    function sendConfEmail() {
+        if (emailBox.val() !== '' && usernameInput.val() !== '') {
+            $.ajax({
+                url: "/app/resend_email_confirmation/",
+                dataType: "json",
+                success: function (data) {
+                    if (!data['response']) {
+                        $('#modal_error-toggle').click();
+                        $('.modal_error_response').html(data['msg']);
+                    } else {
+                        $('#modal_success-toggle').click();
+                        $('.modal_success_response').html(data['msg']);
+                    }
+                }
+            })
+        }
+    }
+
     const avatar_holder = $('.avatar-input-holder');
 
     function formatProfile(data) {
         if (!data['response']) return;
         let user = data['user'];
-        $('#username').val(user['user_username']);
+        usernameInput.val(user['user_username']);
         $('#fname').val(user['user_fname']);
         emailBox.val(user['user_email']);
         avatar_holder.css('background-image', 'url(' + user['user_avatar'] + ')');

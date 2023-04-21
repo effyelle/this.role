@@ -78,8 +78,11 @@
                                            class="form-control bg-transparent this-role-form-field"/>
                                     <?php
                                     if (!isset($_SESSION['user']['user_confirmed'])) {
-                                        echo '<div class="text-danger fs-7 required">This email has not been confirmed yet</div>'
-                                            . '<a href="#" class="btn btn-warning py-1 px-3">Resend code</a>';
+                                        echo '<div class="text-danger fs-7 required">This email has not been confirmed yet</div>' .
+                                            '<button type="button" id="resend-conf_email" class="btn btn-warning py-1 px-3"' .
+                                            '    data-bs-toggle="modal" data-bs-target="#modal_confirmation">' .
+                                            '      Resend code' .
+                                            '</button>';
                                     }
                                     ?>
                                 </div>

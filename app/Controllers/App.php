@@ -136,6 +136,32 @@ class App extends BaseController
         return template('tokens/token_expired', ['unlogged' => 'unlogged']);
     }
 
+    /**
+     * AJAX call to resend email confirmation link
+     *
+     * @return void
+     */
+    function resend_email_confirmation(): void
+    {
+        if (isset($_SESSION['user'])) {
+            $email_response = (new Account())->sendConfirmationEmail($_SESSION['user']['user_email'], $_SESSION['user']['user_username']);
+            if ($email_response === true) {
+                echo json_encode([
+                    'response' => true,
+                    'msg' => 'Your email was updated, an email has been sent for confirmation']);
+                return;
+            }
+            echo json_encode([
+                'response' => false,
+                'msg' => $email_response === false
+                    ? 'There was a problem adding the token'
+                    : 'There was an error sending the email'
+            ]);
+            return;
+        }
+        echo json_encode(['response' => false, 'msg' => 'It seems like you\'re not logged in']);
+    }
+
     function pwd_was_resetted(): string
     {
         return template('tokens/pwd_was_resetted', ['unlogged' => 'unlogged']);

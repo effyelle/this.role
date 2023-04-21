@@ -120,7 +120,7 @@ class Account extends BaseController
 
     function updateProfile(): string
     {
-        $data = [];
+        $error = '';
         if (isset($_POST['fname'])) {
             $new_username = validate($_POST['username']);
             $new_fname = validate($_POST['fname']);
@@ -139,8 +139,7 @@ class Account extends BaseController
                     // Compare old email to new email
                     ($oldEmail !== $new_email && $this->usermodel->get(['user_email' => $new_email]))
                 ) { // If one of them match, return an error
-                    $data['error'] = 'The username or email are already in use.';
-                    return template('profile', $data);
+                    return template('profile', ['error' => 'The username or email are already in use.']);
                 }
 
                 //
@@ -156,10 +155,7 @@ class Account extends BaseController
                 if ($_FILES['avatar']['error'] === 0) {
                     $img = upload_img('avatar', 'assets/media/avatars');
                     if (preg_match('/[0-9]/', $img)) $data['user_avatar'] = '/' . $img;
-                    else {
-                        $data['error'] = $img;
-                        return template('profile', $data);
-                    }
+                    else return template('profile', ['error' => $img]);
                 }
                 // Unconfirm account if email was changed
                 if ($new_email !== $oldEmail) $data['user_confirmed'] = null;
@@ -178,16 +174,16 @@ class Account extends BaseController
                 if ($new_email !== $oldEmail) {
                     $email_response = $this->sendConfirmationEmail($new_email, $new_username);
                     // Return error if email could not be sent
-                    if ($email_response !== true) {
-                        $data['error'] = $email_response === false
+                    $error = ($email_response === true)
+                        ? '<span class="fs-4">Your email was updated, an email has been sent for confirmation</span>'
+                        : ($email_response === false
                             ? 'There was a problem adding the token'
-                            : 'Mail could not be sent';
-                    }
+                            : 'Mail could not be sent');
                 }
             } // Fields missing
-            else $data['error'] = 'Rellena todos los campos';
+            else $error = 'Rellena todos los campos';
         }
-        return template('profile', $data);
+        return template('profile', ['error' => $error]);
     }
 
     function myIssues(): string
@@ -208,6 +204,12 @@ class Account extends BaseController
     private function generateToken(string $email): string|bool
     {
         $token = time();
+        // Expire all tokens that have the email given before adding a new one
+        $this->tokenmodel->updt(
+            ['token_expires' => $this->now], // data
+            ['token_user' => $email] // where
+        );
+        // Add a new token
         if ($this->tokenmodel->new(['token' => $token, 'token_user' => $email])) {
             return $token;
         }

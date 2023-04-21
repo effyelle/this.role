@@ -18,6 +18,8 @@
     </div>
 </div>
 <!--end::Modal-->
+<script src="assets/plugins/custom/ckeditor/ckeditor-classic.bundle"></script>
+<script src="assets/js/custom/apps/ckeditor/CKEditor.js"></script>
 <script type="text/javascript" src="/assets/js/custom/games/formatGame.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {

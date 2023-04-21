@@ -72,9 +72,7 @@
                         <div class="menu-item">
                             <a class="menu-link" data-bs-toggle="modal" data-bs-target="#modal_add_token">
                                 <span class="menu-title">Add sheet</span>
-                                <span class="menu-icon bg-garnet circle h-25px w-25px p-0">
-                                    <i class="fa-solid fa-plus text-white fs-6 d-block"></i>
-                                </span>
+                                <i class="fa-solid fa-plus text-white fs-5 d-block bg-garnet circle p-1"></i>
                             </a>
                         </div>
                         <!--end::Menu Item-->

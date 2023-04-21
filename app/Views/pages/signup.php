@@ -96,12 +96,13 @@
                         return;
                     }
                     toggleProgressSpinner(false);
-                    $('#ajax_signup-response').html(data['msg']);
-                    if (data.msg.match(/email/)) $('#email').addClass('is-invalid');
+                    console.log(data.msg)
+                    $('#ajax_signup-response').html(data.mail);
+                    if (data['msg'].match(/email/)) $('#email').addClass('is-invalid');
                 },
                 fail: function (e) {
                     $('#ajax_signup-response').html('There was an unespected error');
-                    console.log(e);
+                    console.log("Error: ", e.getError());
                 }
             });
         }

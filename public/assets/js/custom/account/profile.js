@@ -15,10 +15,11 @@ document.addEventListener('DOMContentLoaded', function () {
         readImageChange(this, $('.avatar-input-holder'));
     });
 
+    /**
+     * Email input type text
+     * @type {jQuery|HTMLElement|*}
+     */
     const emailBox = $('#email');
-    emailBox.keyup(function () {
-        $('.emailchange').removeClass('d-none');
-    });
 
     /**
      * Send email to reset password
@@ -29,7 +30,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 url: "/account/send_reset_password_email/" + emailBox.val(),
                 dataType: "json",
                 success: function (data) {
-                    $('.ajax-response').html(data['msg']);
+                    console.log(data)
+                    if (!data['response']) {
+                        $('#modal_error-toggle').click();
+                        $('.modal_error_response').html(data['msg']);
+                    } else {
+                        $('#modal_success-toggle').click();
+                        $('.modal_success_response').html(data['msg']);
+                    }
                 }
             })
         }
@@ -92,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // Change Button HTML
         if (editable) editProfileBtn.html('Cancel');
         else {
-            $('.emailchange').addClass('d-none');
             editProfileBtn.html('Edit Profile');
             updateSession(formatProfile);
         }

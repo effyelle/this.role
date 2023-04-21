@@ -6,8 +6,7 @@
         <div class="card h-xl-100 bg-transparent">
             <!--begin::Body-->
             <div class="card-body py-6 w-50 mx-auto">
-                <form autocomplete="on" id="resetpwd-form"
-                      class="m-auto my-4 text-center">
+                <form autocomplete="off" id="resetpwd-form" class="m-auto my-4 text-center">
                     <div class="text-center text-danger mb-6" id="error">
                         <?= $error ?? '' ?>
                     </div>
@@ -38,7 +37,7 @@
                     </div>
                     <!--end::Row-->
                     <!--begin::Button-->
-                    <button type="button" id="token" name="token" value="<?= $token ?>"
+                    <button type="button" id="token" name="token" value="<?= $token ?? '' ?>"
                             class="btn btn-primary this-role-form-field">Reset Password
                     </button>
                 </form>
@@ -62,11 +61,10 @@
         $('#token').click(resetPwd);
 
         function resetPwd() {
-            /*
             if (!(pwd.val()).match(/^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$/)) {
                 error.html('Minimum eight characters: one uppercase letter, one lowercase letter, one number and one special character (@#$%^&+=)');
                 return;
-            }*/
+            }
             if (!(pwd.val() === $('#pwd-repeat').val())) {
                 error.html('Passwords should match');
                 return;
@@ -78,6 +76,7 @@
                 data: form,
                 dataType: "json",
                 success: function (data) {
+                    console.log('??')
                     console.log(data);
                     if (data['response']) {
                         window.location.assign('/app/pwd_was_resetted');
@@ -86,7 +85,9 @@
                     error.html(data['msg']);
                 },
                 fail: function (e) {
-                    console.log(e);
+                    console.log("Error: ", e.getError());
+                },always:function(){
+                    console.log('??')
                 }
             });
         }

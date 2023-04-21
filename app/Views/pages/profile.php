@@ -76,9 +76,6 @@
                                     <input id="email" name="email" type="email" disabled required
                                            value="<?= $_SESSION['user']['user_email'] ?? '' ?>"
                                            class="form-control bg-transparent this-role-form-field"/>
-                                    <div class="text-danger fs-7 d-none emailchange">If you change your email, you will
-                                        be logged out.
-                                    </div>
                                     <?php
                                     if (!isset($_SESSION['user']['user_confirmed'])) {
                                         echo '<div class="text-danger fs-7 required">This email has not been confirmed yet</div>'

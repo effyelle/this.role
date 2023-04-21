@@ -88,22 +88,32 @@ class App extends BaseController
         return $this->index();
     }
 
+    function pwd_email(): string
+    {
+        return view('templates/mail/reset_pwd_html.php', ['token' => '1234566789']);
+    }
+
+    function conf_account_email(): string
+    {
+        return view('templates/mail/confirm_account_html.php', ['token' => '1234567890']);
+    }
+
     function send_confirmation_email(): string
     {
         if (isset($_POST['email']) && $this->validate(['email' => 'required | valid_email'], ['email' => $_POST['email']])) {
             if (model('UsersModel')->get(['user_email' => $_POST['email']])) {
                 if ((new Account())->sendConfirmationEmail($_POST['email'])) {
-                    return template('tokens / email_sent', ['unlogged' => 'unlogged']);
+                    return template('tokens/email_sent', ['unlogged' => 'unlogged']);
                 }
             }
-            return template('tokens / confirm_problem', ['unlogged' => 'unlogged', 'problem' => 'Email given is not registered . ']);
+            return template('tokens/confirm_problem', ['unlogged' => 'unlogged', 'problem' => 'Email given is not registered . ']);
         }
-        return template('tokens / token_expired', ['unlogged' => 'unlogged']);
+        return template('tokens/token_expired', ['unlogged' => 'unlogged']);
     }
 
     function reset_pwd(): string
     {
-        return template('tokens / reset_password_request', ['unlogged' => 'unlogged']);
+        return template('tokens/reset_password_request', ['unlogged' => 'unlogged']);
     }
 
     function send_reset_pwd(): string
@@ -112,20 +122,22 @@ class App extends BaseController
         if (isset($_POST['email'])) {
             $email = validate($_POST['email']);
             // Check email is in Database
-            if (model('UsersModel')->get(['user_email' => $email])) {
+            $user = model('UsersModel')->get(['user_email' => $email]);
+            if ($user && count($user) === 1) {
+                $username = $user[0]['user_username'];
                 // Send reset mail
-                if ((new Account())->sendResetPasswordEmail($email)) {
-                    return template('tokens / email_sent', ['unlogged' => 'unlogged']);
+                if ((new Account())->sendResetPasswordEmail($email, $username)) {
+                    return template('tokens/email_sent', ['unlogged' => 'unlogged']);
                 }
-                return template('tokens / confirm_problem', ['unlogged' => 'unlogged', 'problem' => 'Email could not be sent']);
+                return template('tokens/confirm_problem', ['unlogged' => 'unlogged', 'problem' => 'Email could not be sent']);
             }
-            return template('tokens / confirm_problem', ['unlogged' => 'unlogged', 'problem' => 'Email given is not registered . ']);
+            return template('tokens/confirm_problem', ['unlogged' => 'unlogged', 'problem' => 'Email given is not registered . ']);
         }
-        return template('tokens / token_expired', ['unlogged' => 'unlogged']);
+        return template('tokens/token_expired', ['unlogged' => 'unlogged']);
     }
 
     function pwd_was_resetted(): string
     {
-        return template('tokens / pwd_was_resetted', ['unlogged' => 'unlogged']);
+        return template('tokens/pwd_was_resetted', ['unlogged' => 'unlogged']);
     }
 }

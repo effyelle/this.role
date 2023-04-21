@@ -15,7 +15,7 @@ class Account extends BaseController
     /**
      * Construct of this class will always set up users model and the mailer.
      */
-    public function __construct()
+    function __construct()
     {
         $this->usermodel = model('UsersModel');
         $this->tokenmodel = model('TokenModel');
@@ -97,53 +97,62 @@ class Account extends BaseController
             return;
         }
         // Send confirmation email and insert new user into Database
-        //if ($this->sendConfirmationEmail($email)) {
-        $pwd = password_hash($pwd, PASSWORD_DEFAULT);
-        if ($this->usermodel->new(['user_username' => $username, 'user_email' => $email, 'user_pwd' => $pwd])) {
-            echo json_encode(['response' => true]);
+        $email_response = $this->sendConfirmationEmail($email, $username);
+        // If $email_response returns false means token could not be created.
+        // If it returns a string it is a debug message and email could not be sent.
+        if ($email_response !== true) {
+            echo json_encode([
+                'response' => false,
+                'msg' => $email_response === false
+                    ? 'There was a problem adding the token'
+                    : 'Mail could not be sent',
+                'email_response' => $email_response
+            ]);
             return;
         }
-        echo json_encode(['response' => false, 'msg' => 'User could not be added']);
-        return;
-        //}
-        //echo json_encode(['response' => false, 'msg' => 'Mail could not be sent']);
+        $pwd = password_hash($pwd, PASSWORD_DEFAULT);
+        if (!$this->usermodel->new(['user_username' => $username, 'user_email' => $email, 'user_pwd' => $pwd])) {
+            echo json_encode(['response' => false, 'msg' => 'User could not be added']);
+            return;
+        }
+        echo json_encode(['response' => true]);
     }
 
-    /*
-        function avatar_change()
-        {
-            if ($_FILES['avatar']['error'] === 0) {
-                $img = upload_img('avatar', 'assets/media/avatars');
-                echo json_encode(['reponse' => true, 'img' => '/' . $img]);
-                return;
-            }
-            echo json_encode(['reponse' => false]);
-        }
-    */
     function updateProfile(): string
     {
         $data = [];
         if (isset($_POST['fname'])) {
-            $username = validate($_POST['username']);
-            $fname = validate($_POST['fname']);
-            $email = validate($_POST['email']);
-            if ($username !== '' && $fname !== '' && $email !== '') {
-                // Check if username or email are already taken
+            $new_username = validate($_POST['username']);
+            $new_fname = validate($_POST['fname']);
+            $new_email = validate($_POST['email']);
+
+            //
+            // Check if username and email are taken by another user
+            //
+            if ($new_username !== '' && $new_fname !== '' && $new_email !== '') {
+                // Save old email and old username to variables
                 $oldEmail = $_SESSION['user']['user_email'];
                 $oldUsername = $_SESSION['user']['user_username'];
-                if (
-                    ($oldUsername !== $username && $this->usermodel->get(['user_username' => $username])) ||
-                    ($oldEmail !== $email && $this->usermodel->get(['user_email' => $email]))
-                ) {
+                if ( // Check if username or email are already taken
+                    // Compare old username to new username
+                    ($oldUsername !== $new_username && $this->usermodel->get(['user_username' => $new_username])) ||
+                    // Compare old email to new email
+                    ($oldEmail !== $new_email && $this->usermodel->get(['user_email' => $new_email]))
+                ) { // If one of them match, return an error
                     $data['error'] = 'The username or email are already in use.';
                     return template('profile', $data);
                 }
+
+                //
+                // Start filling up $data=[]
+                //
+
                 $data = [
-                    'user_username' => $username,
-                    'user_fname' => $fname,
-                    'user_email' => $email
+                    'user_username' => $new_username,
+                    'user_fname' => $new_fname,
+                    'user_email' => $new_email
                 ];
-                $where = ['user_id' => $_SESSION['user']['user_id']];
+
                 if ($_FILES['avatar']['error'] === 0) {
                     $img = upload_img('avatar', 'assets/media/avatars');
                     if (preg_match('/[0-9]/', $img)) $data['user_avatar'] = '/' . $img;
@@ -152,16 +161,31 @@ class Account extends BaseController
                         return template('profile', $data);
                     }
                 }
-                if ($email !== $oldEmail) $data['user_confirmed'] = null;
-                if ($this->usermodel->updt($data, $where)) update_session($this->usermodel->get(['user_email' => $email])[0]);
-                if ($email !== $oldEmail) {
-                    // Send new confirmation email
-                    // $this->sendConfirmationEmail($email);
-                    session_unset();
-                    session_destroy();
-                    return $this->created();
+                // Unconfirm account if email was changed
+                if ($new_email !== $oldEmail) $data['user_confirmed'] = null;
+
+                //
+                // Finish filling up $data=[]
+                //
+
+                // Update user in Database
+                if ($this->usermodel->updt(
+                    $data, // data
+                    ['user_id' => $_SESSION['user']['user_id']] // where
+                // If successfull, update session
+                )) update_session($this->usermodel->get(['user_email' => $new_email])[0]);
+                // Send confirmation account email if email was changed
+                if ($new_email !== $oldEmail) {
+                    $email_response = $this->sendConfirmationEmail($new_email, $new_username);
+                    // Return error if email could not be sent
+                    if ($email_response !== true) {
+                        $data['error'] = $email_response === false
+                            ? 'There was a problem adding the token'
+                            : 'Mail could not be sent';
+                    }
                 }
-            } else $data['error'] = 'Rellena todos los campos';
+            } // Fields missing
+            else $data['error'] = 'Rellena todos los campos';
         }
         return template('profile', $data);
     }
@@ -184,7 +208,7 @@ class Account extends BaseController
     private function generateToken(string $email): string|bool
     {
         $token = time();
-        if ($this->tokenmodel->new($token, $email)) {
+        if ($this->tokenmodel->new(['token' => $token, 'token_user' => $email])) {
             return $token;
         }
         return false;
@@ -197,75 +221,78 @@ class Account extends BaseController
      * Generates token and includes it in the email body sent to the address given.
      *
      * @param $email
-     * @return bool
+     * @param $user
+     * @return bool|string
      */
-    function sendConfirmationEmail($email): bool
+    function sendConfirmationEmail($email, $user): bool|string
     {
         // Generate token
         $token = $this->generateToken($email);
         if (!$token) return false;
         // Send email
         $this->mailer->setTo($email);
-        $this->mailer->setSubject('Confirm Your Account');
+        $this->mailer->setSubject('Welcome ' . $user . '! Please, confirm your Account.');
         $this->mailer->setMessage(view('templates/mail/confirm_account_html', ['token' => $token]));
         $this->mailer->setAltMessage(view('templates/mail/confirm_account_txt', ['token' => $token]));
         $this->mailer->setReplyTo(null);
-        return $this->mailer->send();
+        if ($this->mailer->send()) return true;
+        return $this->mailer->printDebugger();
     }
 
-    function send_reset_password_email($email): void
-    {
-        if ($this->sendResetPasswordEmail($email)) {
-            echo json_encode(['response' => true, 'msg' => 'An email has been sent to reset your password.']);
-            return;
-        }
-        echo json_encode(['response' => false, 'msg' => 'There was an error sending the email']);
-    }
-
-    function sendResetPasswordEmail($email): bool
+    /**
+     * @param $email
+     * @param $user
+     * @return bool|string
+     */
+    function sendResetPasswordEmail($email, $user): bool|string
     {
         // Generate token
         $token = $this->generateToken($email);
         if (!$token) return false;
         // Send email
         $this->mailer->setTo($email);
-        $this->mailer->setSubject('Password Reset');
+        $this->mailer->setSubject("Hello, $user! Here is your password reset");
         $this->mailer->setMessage(view('templates/mail/reset_pwd_html', ['token' => $token]));
         $this->mailer->setAltMessage(view('templates/mail/reset_pwd_txt', ['token' => $token]));
         $this->mailer->setReplyTo(null);
-        return $this->mailer->send();
-        // For debug
-        // -->
-        /*
-        if (!$this->mailer->send()) {
-            return $this->mailer->printDebugger();
-        }
-        */
+        // Return true if email was send
+        if ($this->mailer->send()) return true;
+        // Return error if it was not
+        return $this->mailer->printDebugger();
     }
 
-    public function confirm($token): string
+    function confirm($token): string
     {
-        $t = $this->tokenmodel->get(['token' => $token]);
+        $t = $this->tokenmodel->get(['token' => $token, 'token_expires>' => $this->now]);
         if (!$t) return template('tokens/token_expired', ['unlogged' => 'unlogged']);
+        if (count($t) !== 1) return template('tokens/confirm_problem', ['unlogged' => 'unlogged']);
+        $t = $t[0];
+
         // Update data
-        if (!$this->usermodel->updt([
-            'user_email' => $t['token_user'],
-            'user_confirmed' => $this->now
-            // Return an error view if the update went wrong
-        ])) return template('tokens/confirm_problem', ['unlogged' => 'unlogged']);
-        // Expire token if
-        $this->tokenmodel->del($token);
+        if (!$this->usermodel->updt(
+            ['user_email' => $t['token_user'], 'user_confirmed' => $this->now],
+            ['user_email' => $t['token_user']]
+        // Return an error view if the update is unsuccessfull
+        )) return template('tokens/confirm_problem', ['unlogged' => 'unlogged']);
+
+        // Expire token if user was correctly updated
+        $this->tokenmodel->updt(['token_expires' => $this->now], ['token' => $token]);
+
+        // Update was succesfull!!
         return template('tokens/account_confirmed', ['unlogged' => 'unlogged']);
     }
 
-    public function resetpwd($token): string
+    function resetpwd($token): string
     {
         // Declare data
         $data = ['unlogged' => 'unlogged', 'token' => $token];
-        // Exit if token has expired
-        if (!$this->tokenmodel->get(['token' => $token])) return template('tokens/token_pwd_expired', $data);
-        return template('tokens/new_password', $data);
 
+        // Exit if token has expired
+        if (!$this->tokenmodel->get(['token' => $token, 'token_expires>' => $this->now]
+        )) return template('tokens/token_pwd_expired');
+
+        // Token is valid, return recovery form
+        return template('tokens/new_password', $data);
     }
 
     function reset_password(): void
@@ -275,15 +302,17 @@ class Account extends BaseController
             // Hash new password
             $hash = password_hash($_POST['pwd'], PASSWORD_DEFAULT);
             // Get email from token
-            $email = $this->tokenmodel->get(['token' => $_POST['token']])['token_user'];
+            $email = $this->tokenmodel->get(['token' => $_POST['token']])[0]['token_user'];
             // Update fields
-            echo $this->now;
             if ($this->usermodel->updt(
-                ['user_pwd' => $hash, 'user_confirmed' => $this->now],
-                ['user_email' => $email]
+                ['user_pwd' => $hash], // data
+                ['user_email' => $email] // where
             )) {
                 // If fields were updated, expire token and destroy any session that could exist
-                $this->tokenmodel->updt(['token_expires' => $this->now], ['token' => $_POST['token']]);
+                $this->tokenmodel->updt(
+                    ['token_expires' => $this->now], // data
+                    ['token' => $_POST['token'] // where
+                    ]);
                 if (isset($_SESSION['user'])) {
                     session_unset();
                     session_destroy();
@@ -308,7 +337,7 @@ class Account extends BaseController
             count($this->usermodel->get(['user_rol' => $rol, 'user_deleted' => null])) === 1);
     }
 
-    public function deactivate(): void
+    function deactivate(): void
     {
         if (isset($_SESSION['user'])) {
             if (!$this->canDelete() || !$this->canDelete('masteradmin')) {
@@ -364,7 +393,7 @@ class Account extends BaseController
         return true;
     }
 
-    public function send_issue(): void
+    function send_issue(): void
     {
         if (isset($_SESSION['user'])) {
             $data = [
@@ -433,5 +462,33 @@ class Account extends BaseController
             }
         }
         echo json_encode(['response' => false]);
+    }
+
+    /**
+     * AJAX call to send a Password Recovery Email
+     *
+     * @param $email
+     * @return void
+     */
+    function send_reset_password_email($email): void
+    {
+        $user = $this->usermodel->get(['user_email' => $email]);
+        if ($user && count($user) === 1) $user = $user[0];
+        $email_response = $this->sendResetPasswordEmail($email, $user['user_username']);
+
+        // Return an error if mail could not be sent
+        if ($email_response !== true) {
+            echo json_encode([
+                'response' => false,
+                'msg' => $email_response === false
+                    ? 'There was a problem adding the token'
+                    : 'There was an error sending the email',
+                'email_response' => $email_response
+            ]);
+            return;
+        }
+
+        // Mail was sent successfully!!
+        echo json_encode(['response' => true, 'msg' => 'An email has been sent to reset your password.']);
     }
 }

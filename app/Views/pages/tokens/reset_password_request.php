@@ -5,7 +5,7 @@
         <!--begin::List Widget 6-->
         <div class="card h-xl-100 bg-transparent">
             <!--begin::Body-->
-            <div class="card-body py-6 w-50 mx-auto">
+            <div class="card-body py-6 w-100 w-lg-50 mx-auto">
                 <form action="/app/send_reset_pwd" method="post" autocomplete="on"
                       class="m-auto my-4 text-center">
                     <label for="email" class="form-label"></label>

@@ -478,8 +478,10 @@ class Account extends BaseController
                 echo json_encode(['response' => true, 'user' => $user]);
                 return;
             }
+            echo json_encode(['response' => false, 'session' => $_SESSION['user']]);
+            return;
         }
-        echo json_encode(['response' => false]);
+        echo json_encode(['response' => false, 'session' => $_SESSION]);
     }
 
     /**

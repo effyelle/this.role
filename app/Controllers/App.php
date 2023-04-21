@@ -11,12 +11,6 @@ class App extends BaseController
         }
     }
 
-    public function hola(): bool
-    {
-        var_dump($_SESSION);
-        return true;
-    }
-
     public function index(): string
     {
         if (isset($_SESSION['user'])) {

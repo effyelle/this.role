@@ -1,29 +1,15 @@
 $(document).ready(function () {
     generateDatatable();
 
-    updateSession(printLog);
-
     $.ajax({
         type: "get",
-        url: "/app/hola",
+        url: "/account/myprofile",
+        dataType: "json",
         success: function (data) {
             console.log(data);
         }
     });
 });
-
-function printLog(data) {
-    console.log(data);
-}
-
-function updateSession(callback) {
-    $.ajax({
-        type: "get",
-        url: "/account/myprofile",
-        dataType: "json",
-        success: callback
-    });
-}
 
 function generateDatatable() {
     let element = $('.generate-datatable');

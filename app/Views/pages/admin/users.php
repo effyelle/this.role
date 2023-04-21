@@ -152,8 +152,7 @@
                     </div>
                     <!--end::Email-->
                     <?php if (isset($_SESSION['user']) &&
-                        ($_SESSION['user']['user_rol'] === 'masteradmin' ||
-                            $_SESSION['user']['user_rol'] === 'admin')): ?>
+                        $_SESSION['user']['user_rol'] === 'masteradmin'): ?>
                         <!--begin::Rol change-->
                         <div class="mt-5">
                             <label class="form-label" for="user_rol">Rol</label>
@@ -165,17 +164,17 @@
                             </select>
                         </div>
                         <!--end::Rol change-->
-                        <!--begin::Delete-->
-                        <div class="mt-5">
-                            <label class="form-label" for="user_status">Status</label>
-                            <select class="form-select form-select-solid this-role-form-field" id="user_status"
-                                    name="user_status">
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
-                        </div>
-                        <!--end::Delete-->
                     <?php endif; ?>
+                    <!--begin::Delete-->
+                    <div class="mt-5">
+                        <label class="form-label" for="user_status">Status</label>
+                        <select class="form-select form-select-solid this-role-form-field" id="user_status"
+                                name="user_status">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <!--end::Delete-->
                     <button id="user" name="user" class="d-none this-role-form-field"></button>
                 </form>
                 <!--end::Form-->
@@ -238,7 +237,6 @@
                             for (let i in response) {
                                 totalResponse += '<br/>' + response[i];
                             }
-                            console.log($('.modal_success_response'))
                             $('.modal_success_response').html(totalResponse);
                         }
                     } else {

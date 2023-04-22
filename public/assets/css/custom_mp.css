@@ -367,6 +367,7 @@ a .hover-flip {
 }
 
 .btn.btn-garnet, .badge-garnet {
+    color: #fff;
     background: var(--this-role-garnet) !important;
 }
 
@@ -498,6 +499,10 @@ input.form-control.form-control-solid.this-role-form-field {
     margin-top: 100px;
 }
 
+.flex-column {
+    display: flex;
+}
+
 #user-profile > .flex-row > .flex-column > div {
     min-height: 160px;
 }
@@ -527,10 +532,12 @@ input.form-control.this-role-form-field[disabled] {
 }
 
 .flex-row-wrap {
+    display: flex;
     flex-flow: row wrap;
 }
 
 .flex-row-nowrap {
+    display: flex;
     flex-flow: row nowrap;
 }
 
@@ -904,3 +911,10 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     border-bottom: 1px solid var(--bs-gray-200);
 }
 
+.game .modal-backdrop.fade.show {
+    z-index: 2100;
+}
+
+.game .modal.fade.show {
+    z-index: 2101;
+}

@@ -1,15 +1,20 @@
 $(document).ready(function () {
     generateDatatable();
 
+    updateSession();
+});
+
+function updateSession(callback = null) {
     $.ajax({
         type: "get",
         url: "/account/myprofile",
         dataType: "json",
         success: function (data) {
             console.log(data);
+            if (callback) callback(data);
         }
     });
-});
+}
 
 function generateDatatable() {
     let element = $('.generate-datatable');

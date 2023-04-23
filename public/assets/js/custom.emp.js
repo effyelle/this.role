@@ -37,15 +37,13 @@ function generateDatatable() {
 }
 
 function toggleProgressSpinner(onprogress = true) {
-    const label = $('.indicator-label');
-    const progress = $('.indicator-progress');
     if (onprogress) {
-        label.hide();
-        progress.show();
+        $('.indicator-label').hide();
+        $('.indicator-progress').show();
         return;
     }
-    label.show();
-    progress.hide();
+    $('.indicator-label').show();
+    $('.indicator-progress').hide();
 }
 
 function validateEmail(emailId) {
@@ -93,12 +91,10 @@ function getForm(parent) {
  * @param callback
  */
 function openConfirmation(callback) {
-    const confirmAnswer = $('.confirm_answer');
+    const confirmAnswer = $('#modal_confirmation .confirm_answer');
     confirmAnswer.unbind('click');
     confirmAnswer.click(function () {
-        if (this.value === "true") {
-            callback();
-        }
+        callback();
     });
 }
 

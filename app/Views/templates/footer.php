@@ -69,8 +69,8 @@
             </div>
             <div class="modal-body">
                 <div class="d-flex flex-row justify-content-between">
-                    <button class="btn btn-primary confirm_answer" value="true" data-bs-dismiss="modal">Yes</button>
-                    <button class="btn btn-danger confirm_answer" value="false" data-bs-dismiss="modal">No</button>
+                    <button class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                    <button class="btn btn-primary confirm_answer" data-bs-dismiss="modal">Yes</button>
                 </div>
             </div>
         </div>

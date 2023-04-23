@@ -15,16 +15,14 @@ function formatMenuItem(data = {}) {
         '<!--end::Menu Item-->';
 }
 
-class Chat {
-    constructor(querySelector) {
-        this.record = document.querySelector(querySelector);
-        this.msgType = {
-            chatMessage: this.chatMessage,
-            rollDice: this.rollDice,
-        }
+const Chat = function (querySelector) {
+    this.record = document.querySelector(querySelector);
+    this.msgType = {
+        chatMessage: this.chatMessage,
+        rollDice: this.rollDice,
     }
 
-    chatMessage(data) {
+    this.chatMessage = function (data) {
         return '<!--begin::Menu Item-->' +
             '<div class="menu-item py-3">' +
             '   <div class="d-flex flex-row justify-content-between align-items-center gap-3">' +
@@ -47,7 +45,7 @@ class Chat {
             '<!--end::Menu Item-->';
     }
 
-    rollDice(data) {
+    this.rollDice = function (data) {
         return '<!--begin::Menu Item-->' +
             '<div class="menu-item py-3">' +
             '   <div class="d-flex flex-row justify-content-between align-items-center gap-3">' +
@@ -71,7 +69,7 @@ class Chat {
             '<!--end::Menu Item-->';
     }
 
-    formatMessage(data = {}) {
+    this.formatMessage = function (data = {}) {
         return this.msgType[data.type](data);
     }
 }
@@ -84,6 +82,55 @@ const Dice = function (sides) {
             roll = Math.ceil(Math.random() * this.sides);
         }
         return roll;
+    }
+}
+
+const Journal = function (id) {
+    this.container = document.querySelector('#' + id);
+    this.initJournal = function () {
+        this.listId = id + '_list';
+        this.itemClass = id + '_item';
+        this.container.innerHTML = ''
+            + ' <div class="aside-footer d-flex flex-column py-3 px-5" id="' + this.listId + '">'
+            + '     <div class="menu menu-column menu-rounded fw-bold fs-7 gap-2 mt-3" data-kt-menu="true">'
+            + '         <div class="menu-item">'
+            + '             <span class="fs-5 text-dark">Welcome to your journal!</span>'
+            + '         </div>'
+            + '         <!--begin::Menu Item-->'
+            + '         <div class="menu-item">'
+            + '             <a class="menu-link" id="modal_journal-toggle" data-bs-toggle="modal" data-bs-target="#modal_journal">'
+            + '                 <span class="menu-title">Add journal item</span>'
+            + '                 <i class="fa-solid fa-plus text-white fs-5 d-block bg-garnet circle p-1"></i>'
+            + '             </a>'
+            + '         </div>'
+            + '         <!--end::Menu Item-->'
+            + '         <!--begin::Separator-->'
+            + '         <div class="menu-item">'
+            + '             <div class="menu-content p-0">'
+            + '                 <div class="separator mx-1"></div>'
+            + '             </div>'
+            + '         </div>'
+            + '         <!--end::Separator-->'
+            + '     </div>'
+            + ' </div>';
+
+    }
+    this.initJournal();
+    this.formatJournalItem = function (data = {}) {
+        document.querySelector('#' + this.listId).innerHTML += '<!--begin::Menu Item-->'
+            + ' <div class="menu-item journal_item">'
+            + '     <a class="menu-link" href="#">'
+            + '         <!--begin::Symbol-->'
+            + '         <div class="me-2 symbol symbol-20px symbol-md-30px">'
+            + '             <span class="symbol-label circle sheet_icon"'
+            + '                 style="background:url(' + data.src + ')">'
+            + '             </span>'
+            + '         </div>'
+            + '         <!--end::Symbol-->'
+            + '         <span class="menu-title">' + data.title + '</span>'
+            + '     </a>'
+            + ' </div>'
+            + ' <!--end::Menu Item-->';
     }
 }
 

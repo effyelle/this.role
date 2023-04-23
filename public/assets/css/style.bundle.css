@@ -3505,22 +3505,22 @@ fieldset:disabled .btn {
 
 .btn-light {
     color: #000;
-    background-color: #f5f8fa;
-    border-color: #f5f8fa;
+    background-color: #faf4ec;
+    border-color: #faf4ec;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15), 0 1px 1px rgba(0, 0, 0, .075)
 }
 
 .btn-light:hover {
     color: #000;
-    background-color: #f7f9fb;
-    border-color: #f6f9fb
+    background-color: #eddec6;
+    border-color: #eddec6
 }
 
 .btn-check:focus+.btn-light,
 .btn-light:focus {
     color: #000;
-    background-color: #f7f9fb;
-    border-color: #f6f9fb;
+    background-color: #eddec6;
+    border-color: #faf4ec;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15), 0 1px 1px rgba(0, 0, 0, .075), 0 0 0 .25rem rgba(208, 211, 213, .5)
 }
 
@@ -3530,8 +3530,8 @@ fieldset:disabled .btn {
 .btn-light:active,
 .show>.btn-light.dropdown-toggle {
     color: #000;
-    background-color: #f7f9fb;
-    border-color: #f6f9fb
+    background-color: #faf4ec;
+    border-color: #faf4ec
 }
 
 .btn-check:active+.btn-light:focus,
@@ -3545,8 +3545,8 @@ fieldset:disabled .btn {
 .btn-light.disabled,
 .btn-light:disabled {
     color: #000;
-    background-color: #f5f8fa;
-    border-color: #f5f8fa
+    background-color: #e0dcd6;
+    border-color: #e0dcd6
 }
 
 .btn-primary {
@@ -46006,15 +46006,15 @@ code:not([class*=language-]) {
 }
 
 .form-check.form-check-success .form-check-input:checked {
-    background-color: #50cd89
+    background-color: #34a795
 }
 
 .form-check.form-check-danger .form-check-input:checked {
-    background-color: #f1416c
+    background-color: #61113e
 }
 
 .form-check.form-check-warning .form-check-input:checked {
-    background-color: #ffc700
+    background-color: #cbae38
 }
 
 .form-check.form-check-custom.form-check-sm .form-check-input {

@@ -9,12 +9,12 @@
             <!--begin::Aside Menu-->
             <ul class="nav nav-tabs nav-line-tabs pt-2 px-2 justify-content-evenly">
                 <li class="nav-item">
-                    <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#chat_container">
+                    <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#chat_container">
                         <i class="fa fa-comments f-lg text-this-role-light"></i>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#journal_container">
+                    <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#journal_container">
                         <i class="fa fa-newspaper text-this-role-light"></i>
                     </a>
                 </li>
@@ -32,7 +32,7 @@
             <!--end::Aside menu-->
 
             <!--begin::Chat-->
-            <div id="chat_container" class="tab-pane fade show active">
+            <div id="chat_container" class="tab-pane fade">
                 <div class="aside-footer d-flex flex-column py-3 px-5 chat-container mb-3 overflow-y-scroll">
                     <div class="chat-messages"></div>
                     <div class="d-flex flex-column justify-content-center">
@@ -48,10 +48,8 @@
                                         class="form-control form-select form-control-solid this-role-form-field">
                                     <option disabled selected
                                             value="-1"><?= $_SESSION['user']['user_username'] ?></option>
-                                    <option value="0">Ywo</option>
-                                    <option value="1">Ywopus</option>
-                                    <option value="2">Lywon</option>
-                                    <option value="3">Ywspider</option>
+                                    <option value="0">Sabrina</option>
+                                    <option value="1">Salem</option>
                                 </select>
                             </div>
                             <button class="btn btn-garnet text-white px-3 py-2">Send</button>
@@ -62,42 +60,7 @@
             <!--end::Chat-->
 
             <!--begin::Journal-->
-            <div id="journal_container" class="tab-pane fade">
-                <div class="aside-footer d-flex flex-column py-3 px-5">
-                    <div class="menu menu-column menu-rounded fw-bold fs-7 gap-2 mt-3" data-kt-menu="true">
-                        <div class="menu-item">
-                            <span class="fs-5 text-dark">Welcome to your journal!</span>
-                        </div>
-                        <!--begin::Menu Item-->
-                        <div class="menu-item">
-                            <a class="menu-link" data-bs-toggle="modal" data-bs-target="#modal_add_token">
-                                <span class="menu-title">Add sheet</span>
-                                <i class="fa-solid fa-plus text-white fs-5 d-block bg-garnet circle p-1"></i>
-                            </a>
-                        </div>
-                        <!--end::Menu Item-->
-                        <!--begin::Separator-->
-                        <div class="menu-item">
-                            <div class="menu-content p-0">
-                                <div class="separator mx-1"></div>
-                            </div>
-                        </div>
-                        <!--end::Separator-->
-                        <!--begin::Menu Item-->
-                        <div class="menu-item">
-                            <a class="menu-link" href="#">
-                                <!--begin::Symbol-->
-                                <div class="me-2 symbol symbol-20px symbol-md-30px">
-                                    <span class="symbol-label circle sheet_icon"></span>
-                                </div>
-                                <!--end::Symbol-->
-                                <span class="menu-title">Ficha</span>
-                            </a>
-                        </div>
-                        <!--end::Menu Item-->
-                    </div>
-                </div>
-            </div>
+            <div id="journal" class="tab-pane fade show active"></div>
             <!--end::Journal-->
 
             <!--begin::Tools-->

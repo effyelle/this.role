@@ -32,11 +32,11 @@
                     <div class="menu-item">
                         <a class="menu-link <?php if ($page === 'games/list' || $page === 'games/details') echo 'hover'; ?>"
                            href="/app/games/list" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
-                           data-bs-placement="right" data-bs-original-title="Manage your games" title="">
+                           data-bs-placement="right" data-bs-original-title="This is your games!" title="">
                             <span class="menu-icon">
                                 <i class="fa fa-solid fa-dice-d20 fa-lg hover-flip"></i>
                             </span>
-                            <span class="menu-title">Your Games</span>
+                            <span class="menu-title">My Games</span>
                         </a>
                     </div>
                     <!--end::Menu Item-->

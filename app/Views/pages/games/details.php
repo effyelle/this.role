@@ -3,7 +3,9 @@
     <!--begin::Col-->
     <div class="mb-xl-10">
         <!--begin::List Widget 6-->
-        <div class="card pb-4">
+        <form action="/app/games/details/<?= $game['game_id'] ?? '' ?>" method="post" enctype="multipart/form-data"
+              autocomplete="off"
+              class="card pb-4">
             <!--begin::Header-->
             <div class="card-header align-content-center">
                 <div class="mx-auto w-100">
@@ -18,7 +20,7 @@
                                 <?php
                                 if (isset($game) && $game['game_creator'] === $_SESSION['user']['user_id']) {
                                     echo '<div class="form-control-solid">'
-                                        . '    <input id="game_title-input" class="form-control this-role-input-field d-none"/>'
+                                        . '    <input id="game_title-input" name="game_title" class="form-control this-role-input-field d-none"/>'
                                         . '</div>';
                                 }
                                 ?>
@@ -27,8 +29,8 @@
                         <?php
                         if (isset($game) && $game['game_creator'] === $_SESSION['user']['user_id']) {
                             echo '<div class="card-toolbar gap-5">'
-                                . '   <button class="save_game btn btn-sm btn-primary d-none">Save</button>'
-                                . '   <button class="edit_game btn btn-sm btn-warning">Edit Game</button>'
+                                . '   <button type="submit" class="save_game btn btn-sm btn-primary d-none">Save</button>'
+                                . '   <button type="button" class="edit_game btn btn-sm btn-warning">Edit Game</button>'
                                 . '</div>';
                         }
                         ?>
@@ -44,7 +46,7 @@
                     </div>
                     <?php
                     if (isset($game) && $game['game_creator'] === $_SESSION['user']['user_id']) {
-                        echo '<input type="file" id="change-game_icon" class="d-none"/>'
+                        echo '<input type="file" id="change-game_icon" name="game_icon" class="d-none"/>'
                             . '<div class="flex-row-wrap justify-content-center align-items-center gap-5">'
                             . '   <label for="change-game_icon" class="btn btn-sm btn-link d-none">Change</label>'
                             . '</div>';
@@ -53,10 +55,16 @@
                 </div>
                 <h4 class="text-center">Details</h4>
                 <p class="text-justify game_details mb-5"></p>
+                <p>
+                    <?php
+                    var_dump($img ??'');
+                    ?>
+                </p>
                 <?php
                 if (isset($game) && $game['game_creator'] === $_SESSION['user']['user_id']) {
                     echo '<div class="form-control-solid mb-5">'
-                        . '    <textarea id="game_details-textarea" rows="5" class="form-control this-role-input-field d-none"></textarea>'
+                        . '    <textarea id="game_details-textarea" rows="5" name="game_details"'
+                        . '          class="form-control this-role-input-field d-none"></textarea>'
                         . '</div>';
                     echo '<div class="flex-row-wrap justify-content-end align-items-center">'
                         . '    <button type="button" class="btn btn-sm btn-garnet invite_link-btn">Get invite link</button>'
@@ -64,7 +72,7 @@
                 } ?>
             </div>
             <!--end:Body-->
-        </div>
+        </form>
     </div>
 </div>
 <script>
@@ -133,6 +141,7 @@
             gameTitle.toggleClass('d-none', editable);
             gameDetailsTextarea.toggleClass('d-none', !editable);
             gameDetails.toggleClass('d-none', editable);
+            $('.invite_link-btn').toggleClass('d-none', editable);
             if (editable) {
                 editGameBtn.html('Cancel');
                 gameTitleInput.val(game.game_title);

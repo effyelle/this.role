@@ -92,9 +92,38 @@ class Games extends BaseController
     function details(int $id): string
     {
         $game = $this->gamesmodel->get(['game_id' => $id]);
+        $data = [];
         if (count($game) === 1) {
             $game = $game[0];
-            return template('games/details', ['game' => $game]);
+            $data['game'] = $game;
+            if (isset($_POST['game_title']) && isset($_POST['game_details'])) {
+                $title = validate($_POST['game_title']);
+                $details = validate($_POST['game_details']);
+                // **************************** //
+                // * Update title and details * //
+                // **************************** //
+                $this->gamesmodel->updt(
+                    ['game_title' => $title, 'game_details' => $details],
+                    ['game_id' => $game['game_id']]
+                );
+                // ************************* //
+                // * Attempt to update img * //
+                // ************************* //
+                $folder = $game['game_folder'];
+                // Delete old one if exists
+                if (is_file($folder . 'game_icon')) {
+                    $data['img'] = true;
+                } else {
+                    $data['img'] = false;
+                }
+                /*
+                $img = upload_img('game_icon', $folder, 'game_icon');
+                if (str_contains($img, 'game_icon')) {
+                    $this->gamesmodel->updt(['game_icon' => $img], ['game_id' => $game_id]);
+                }*/
+                $data['game'] = $this->gamesmodel->get(['game_id' => $id])[0];
+            }
+            return template('games/details', $data);
         }
         return template('games/not_found');
     }

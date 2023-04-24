@@ -7,6 +7,8 @@ if (isset($page)) {
         case 'home':
         case 'games/list':
         case 'games/details':
+        case 'games/not_found':
+        case 'games/join':
         case 'profile':
         case 'issues':
         case 'about':
@@ -16,7 +18,7 @@ if (isset($page)) {
             include $templatesDir . '/nav.php';
             include $templatesDir . '/aside.php';
             break;
-        case 'games/games':
+        case 'games/game':
             include $templatesDir . '/nav_game.php';
             break;
         default:

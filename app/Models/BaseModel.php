@@ -32,7 +32,7 @@ class BaseModel extends Model
     {
         $builder = db::connect()
             ->table($this->table)
-            ->select('*');
+            ->select();
 
         if (isset($join)) {
             foreach ($join as $k => $v) {
@@ -55,7 +55,7 @@ class BaseModel extends Model
      *
      * @return bool
      */
-    function updt(array $data, array $where, $table=null): bool
+    function updt(array $data, array $where, $table = null): bool
     {
         if (!isset($table)) $table = $this->table;
         return db::connect()->table($table)->update($data, $where);

@@ -22,6 +22,18 @@ use Psr\Log\LoggerInterface;
 abstract class BaseController extends Controller
 {
     /**
+     * --------------------------------------------------------------------------
+     * Base Site URL
+     * --------------------------------------------------------------------------
+     *
+     * URL to your CodeIgniter root. Typically, this will be your base URL,
+     * WITH a trailing slash:
+     *
+     *    http://example.com/
+     */
+    public string $baseURL = 'http://this.role.com';
+
+    /**
      * Instance of the main Request object.
      *
      * @var CLIRequest|IncomingRequest
@@ -44,15 +56,17 @@ abstract class BaseController extends Controller
     // protected $session;
 
     /**
-     * Constructor.
+     * It will save the current datetime when a controller is created in MySQL Datetime format
+     * @var string
+     */
+    protected string $now;
+
+    /**
+     * Constructor
      */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
-
-        // Preload any models, libraries, etc, here.
-
-        // E.g.: $this->session = \Config\Services::session();
     }
 }

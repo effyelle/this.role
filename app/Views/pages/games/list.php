@@ -81,7 +81,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
               class="modal-content">
             <!--begin::Header-->
             <div class="modal-header">
-                <h3 class="modal-title">Contact Support</h3>
+                <h3 class="modal-title">Create New Game</h3>
             </div>
             <!--end::Header-->
             <!--begin::Body-->

@@ -281,7 +281,7 @@ class Account extends BaseController
 
     function confirm($token): string
     {
-        $t = $this->tokenmodel->get(['token' => $token, 'token_expires>' => $this->now]);
+        $t = $this->tokenmodel->get(['token' => $token, 'token_expires >' => $this->now]);
         if (!$t) return template('tokens/token_expired', ['unlogged' => 'unlogged']);
         if (count($t) !== 1) return template('tokens/confirm_problem', ['unlogged' => 'unlogged']);
         $t = $t[0];

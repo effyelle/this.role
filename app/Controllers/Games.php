@@ -5,10 +5,12 @@ namespace App\Controllers;
 class Games extends BaseController
 {
     protected mixed $gamesmodel;
+    protected string $now;
 
     function __construct()
     {
         $this->gamesmodel = model('GamesModel');
+        $this->now = date('Y-m-d H:i:s', time());
     }
 
     function list(): string
@@ -62,9 +64,9 @@ class Games extends BaseController
                     $data['games_list'][] = $game;
                 } // If session user is not creator compare him with games players
                 elseif (isset($game['game_players'])) {
-                    $gamePlayers = json_decode($game['game_players']);
-                    foreach ($gamePlayers as $gamePlayer) {
-                        if ($gamePlayer['id'] === $_SESSION['user']['user_id']) {
+                    $players = json_decode($game['game_players']);
+                    foreach ($players as $player) {
+                        if ($player->user_id === $_SESSION['user']['user_id']) {
                             $data['games_list'][] = $game;
                         }
                     }
@@ -77,12 +79,12 @@ class Games extends BaseController
         return template('games/list', $data);
     }
 
-    function game(string $page, int $id): string
+    function game(int $id): string
     {
         $game = $this->gamesmodel->get(['game_id' => $id]);
         if (count($game) === 1) {
             $game = $game[0];
-            return template('games/' . $page, ['game' => $game]);
+            return template('games/game', ['game' => $game]);
         }
         return template('games/not_found');
     }
@@ -97,21 +99,66 @@ class Games extends BaseController
         return template('games/not_found');
     }
 
-    function join()
+    function join($id): string
     {
+        $game = $this->gamesmodel->get(['url_expires > ' => $this->now, 'url' => $id], [$this->gamesmodel->relatedTable => 'game_id=id_game']);
+        if (count($game) === 1) {
+            $game = $game[0];
+            return template('games/join', ['game' => $game]);
+        }
+        return template('games/not_found');
+    }
+
+    public function ajax_join($id): void
+    {
+        $game = $this->gamesmodel->get(['game_id' => $id]);
+        if (count($game) === 1) {
+            $game = $game[0];
+            // Return if the session user was game creator
+            if ($_SESSION['user']['user_id'] == $game['game_creator']) {
+                echo json_encode(['response' => false, 'msg' => 'You already joined this game']);
+                return;
+            }
+            $players = $game['game_players'];
+            if (!isset($players)) $players = [];
+            else {
+                $players = json_decode($players);
+                foreach ($players as $player) {
+                    if ($player->user_id === $_SESSION['user']['user_id']) {
+                        echo json_encode(['response' => false, 'msg' => 'You already joined this game']);
+                        return;
+                    }
+                }
+            }
+            $players[] = [
+                'user_id' => $_SESSION['user']['user_id'],
+                'user_username' => $_SESSION['user']['user_username']
+            ];
+            $players = json_encode($players);
+            if ($this->gamesmodel->updt(
+                ['game_players' => $players],
+                ['game_id' => $game['game_id']]
+            )) {
+                echo json_encode(['response' => true]);
+                return;
+            }
+            echo json_encode(['response' => false, 'msg' => 'Could not join the game']);
+            return;
+        }
+        echo json_encode(['response' => false, 'msg' => 'Game not found']);
     }
 
     function createInviteUrl($id)
     {
         // Expire old urls
         $this->gamesmodel->updt(
-            ['url_expires' => date('Y-m-d H:i:s', time())], // data
+            ['url_expires' => $this->now], // data
             ['id_game' => $id], // where
             $this->gamesmodel->relatedTable // table
         );
-        $url = '/app/games/join/' . time();
+        $url = time();
         if ($this->gamesmodel->new(['url' => $url, 'id_game' => $id], $this->gamesmodel->relatedTable)) {
-            echo json_encode(['response' => true, 'url' => $url]);
+            echo json_encode(['response' => true, 'url' => $this->baseURL . '/app/games/join/' . $url]);
             return;
         }
         echo json_encode(['response' => false]);

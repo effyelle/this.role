@@ -82,9 +82,9 @@
         formatGameDetails(game);
 
         function formatGameDetails() {
-            if (game.game_title && game.game_details && game.game_icon) {
-                gameTitle.html(game.game_title);
-                gameDetails.html(game.game_details);
+            if (game.game_title) gameTitle.html(game.game_title);
+            if (game.game_detials) gameDetails.html(game.game_details);
+            if (game.game_icon) {
                 gameIconHolder.css('background-image', 'url("' + game.game_icon + '")');
                 gameIconHolder.css('background-size', 'cover');
             }
@@ -108,7 +108,7 @@
                         $('.modal_success_response').html(
                             'This is your new invite url!<br/>' +
                             'Remember it expires in one day<br/>' +
-                            data['url']
+                            '<b>' + data['url'] + '</b>'
                         );
                         $('#modal_success-toggle').click();
                         return;

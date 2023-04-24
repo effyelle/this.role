@@ -30,8 +30,8 @@
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
                     <div class="menu-item">
-                        <a class="menu-link <?php if ($title === 'Games') echo 'hover'; ?>" href="/app/games"
-                           data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
+                        <a class="menu-link <?php if ($page === 'games/list' || $page === 'games/details') echo 'hover'; ?>"
+                           href="/app/games/list" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
                            data-bs-placement="right" data-bs-original-title="Manage your games" title="">
                             <span class="menu-icon">
                                 <i class="fa fa-solid fa-dice-d20 fa-lg hover-flip"></i>

@@ -23,9 +23,18 @@ CREATE TABLE tokens(
 	token_expires DATETIME DEFAULT DATE_ADD(NOW(), INTERVAL 1 DAY)
 );
 
+CREATE TABLE issues(
+  issue_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  issue_user VARCHAR(20),
+  issue_title VARCHAR(50),
+  issue_type ENUM('suggestion', 'congratulation', 'complaint', 'help'),
+  issue_msg JSON
+);
+
 CREATE TABLE games(
 	game_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
 	game_creator INT UNSIGNED,
+	game_players JSON,
 	game_title VARCHAR(50),
 	game_details LONGTEXT,
 	game_icon VARCHAR(200),
@@ -36,29 +45,19 @@ CREATE TABLE games(
 	FOREIGN KEY(game_creator) REFERENCES users(user_id)
 );
 
-CREATE TABLE game_sheets(
-	sheet_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-	sheet_game_origin INT UNSIGNED,
-	sheet_details JSON,
-	sheet_colaborators JSON,
-	FOREIGN KEY(sheet_game_origin) REFERENCES games(game_id)
+CREATE TABLE game_journal_items(
+	journal_item_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	journal_item_game_id INT UNSIGNED,
+	journal_item_details JSON,
+	journal_item_editors JSON,
+	FOREIGN KEY(journal_item_game_id) REFERENCES games(game_id)
 );
 
 CREATE TABLE invite_url(
+	url VARCHAR(200) PRIMARY KEY,
 	id_game INT UNSIGNED,
-	id_user INT UNSIGNED,
-	url VARCHAR(200),
 	url_expires DATETIME DEFAULT DATE_ADD(NOW(), INTERVAL 1 DAY),
-	FOREIGN KEY(id_game) REFERENCES games(game_id),
-	FOREIGN KEY(id_user) REFERENCES users(user_id)
-);
-
-CREATE TABLE issues(
-  issue_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-  issue_user VARCHAR(20),
-  issue_title VARCHAR(50),
-  issue_type ENUM('suggestion', 'congratulation', 'complaint', 'help'),
-  issue_msg JSON
+	FOREIGN KEY(id_game) REFERENCES games(game_id)
 );
 
 INSERT INTO users(user_username, user_fname, user_email, user_pwd, user_confirmed)
@@ -71,4 +70,4 @@ VALUES
 UPDATE users SET user_rol='masteradmin' WHERE user_email='ericapastor@gmail.com';
 UPDATE users SET user_rol='admin' WHERE user_email='nore.zgz@mail.com';
 
-SELECT * FROM tokens WHERE DATEDIFF(token_expires, NOW()) > 0;
+UPDATE users SET user_confirmed=NULL WHERE user_username='effy.elle';

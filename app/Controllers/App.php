@@ -55,9 +55,11 @@ class App extends BaseController
         return template('login', ['unlogged' => 'unlogged']);
     }
 
-    function games(): string
+    function games(string $route, int $id=null): string
     {
-        if (isset($_SESSION['user'])) return (new Games)->games();
+        if (isset($_SESSION['user'])) {
+            return (new Games)->$route($id);
+        }
         return template('login', ['unlogged' => 'unlogged']);
     }
 

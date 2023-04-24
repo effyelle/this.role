@@ -12,7 +12,7 @@
             </div>
             <!--end::Header-->
             <!--begin::Body-->
-            <div class="card-boy d-flex flex-column align-items-center mb-4">
+            <div class="card-body d-flex flex-column align-items-center mb-4">
                 <img height="250" src="/assets/media/imgs/dice_bag.png" alt=""/>
                 <h1 class="my-6">Welcome to This.Role!</h1>
                 <div class="ff-poiret d-flex flex-row justify-content-center text-center gap-12">

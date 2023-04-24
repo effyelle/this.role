@@ -55,9 +55,10 @@ class BaseModel extends Model
      *
      * @return bool
      */
-    function updt(array $data, array $where): bool
+    function updt(array $data, array $where, $table=null): bool
     {
-        return db::connect()->table($this->table)->update($data, $where);
+        if (!isset($table)) $table = $this->table;
+        return db::connect()->table($table)->update($data, $where);
     }
 
     /**
@@ -65,9 +66,10 @@ class BaseModel extends Model
      *
      * @return bool
      */
-    function new($data): bool
+    function new($data, $table = null): bool
     {
-        return db::connect()->table($this->table)->insert($data);
+        if (!isset($table)) $table = $this->table;
+        return db::connect()->table($table)->insert($data);
     }
 
     function maxID()

@@ -15,7 +15,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                 <div class="mx-auto w-100">
                     <div class="d-flex flex-row-wrap justify-content-between align-items-stretch align-content-center">
                         <div class="card-toolbar gap-5">
-                            <h2>My Games</h2>
+                            <span class="btn btn-sm px-0 fs-5 fs-lg-3">My Games</span>
                         </div>
                         <div class="card-toolbar gap-5">
                             <button type="button" id="createGameBtn" class="btn btn-sm btn-warning align-self-start"
@@ -34,7 +34,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                         <?php if (isset($games_list)): ?>
                             <?php foreach ($games_list as $game): ?>
                                 <!--begin::Item-->
-                                <a href="/games/game/<?= $game['game_id'] ?>" target="_blank"
+                                <a href="/app/games/details/<?= $game['game_id'] ?>"
                                    class="px-15 py-5 mb-3 w-300px h-300px d-flex flex-column justify-content-between align-items-center box-shadow-700 border-radius-5px">
                                     <!--begin::Icon-->
                                     <div class="d-flex flex-column">
@@ -49,8 +49,11 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                                     <!--begin::Section-->
                                     <div class="d-flex flex-column align-items-center justify-content-around">
                                         <!--begin::Title-->
-                                        <div class="me-2 mt-4">
+                                        <div class="me-2 mt-4 text-center">
                                             <h6 class="game-title"><?= $game['game_title'] ?></h6>
+                                            <?php if ($game['game_id'] === $_SESSION['user']['user_id']) {
+                                                echo '<i>You created this game</i>';
+                                            } ?>
                                         </div>
                                         <!--end::Title-->
                                     </div>
@@ -74,7 +77,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
 <div class="modal fade" tabindex="-1" id="new_game_modal">
     <div class="modal-dialog">
         <!--begin::Form-->
-        <form id="create_game_form" autocomplete="off" method="post" enctype="multipart/form-data" action="/app/games"
+        <form id="create_game_form" autocomplete="off" method="post" enctype="multipart/form-data" action="/app/games/list"
               class="modal-content">
             <!--begin::Header-->
             <div class="modal-header">

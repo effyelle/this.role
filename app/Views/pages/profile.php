@@ -102,12 +102,9 @@
                                         </span>
                                         </div>
                                         <div class="d-flex flex-row flex-wrap gap-4 editable-item mt-5">
-                                            <label for="avatar" class="btn p-1 text-hover-primary fs-7">
+                                            <label for="avatar" class="btn btn-sm btn-link fs-7">
                                                 Change
                                             </label>
-                                            <button id="delAvatar" type="button" class="btn p-1 text-hover-danger fs-7">
-                                                Delete
-                                            </button>
                                         </div>
                                     </div>
                                 </div>

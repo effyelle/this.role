@@ -5,7 +5,8 @@ $templatesDir = __DIR__ . '/../templates';
 if (isset($page)) {
     switch ($page) {
         case 'home':
-        case 'games':
+        case 'games/list':
+        case 'games/details':
         case 'profile':
         case 'issues':
         case 'about':
@@ -15,8 +16,7 @@ if (isset($page)) {
             include $templatesDir . '/nav.php';
             include $templatesDir . '/aside.php';
             break;
-        case 'game':
-            include $templatesDir . '/aside_game.php';
+        case 'games/games':
             include $templatesDir . '/nav_game.php';
             break;
         default:

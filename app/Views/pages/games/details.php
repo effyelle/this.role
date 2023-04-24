@@ -5,27 +5,144 @@
         <!--begin::List Widget 6-->
         <div class="card pb-4">
             <!--begin::Header-->
-            <div class="card-header p-6">
-                <h2><?= $game['game_title'] ?? '' ?></h2>
-                <?php
-                if ($game['game_creator'] === $_SESSION['user']['user_id']) {
-                    echo '<button class="edit_game btn btn-sm btn-warning">Edit Game</button>'
-                        . '<button class="edit_game btn btn-sm btn-primary d-none">Save</button>';
-                }
-                ?>
+            <div class="card-header align-content-center">
+                <div class="mx-auto w-100">
+                    <div class="d-flex flex-row-wrap justify-content-between align-items-stretch align-content-center">
+                        <div class="card-toolbar gap-2 fs-5 fs-lg-3">
+                            <a href="/app/games/list" class="btn btn-sm btn-link fs-5 fs-lg-3">
+                                <span class="text-hover-primary">My Games</span>
+                            </a>
+                            <span> / </span>
+                            <div class="btn btn-sm px-0 cursor-default fs-5 fs-lg-3">
+                                <span class="game_title"></span>
+                                <?php
+                                if (isset($game) && $game['game_creator'] === $_SESSION['user']['user_id']) {
+                                    echo '<div class="form-control-solid">'
+                                        . '    <input id="game_title-input" class="form-control this-role-input-field d-none"/>'
+                                        . '</div>';
+                                }
+                                ?>
+                            </div>
+                        </div>
+                        <?php
+                        if (isset($game) && $game['game_creator'] === $_SESSION['user']['user_id']) {
+                            echo '<div class="card-toolbar gap-5">'
+                                . '   <button class="save_game btn btn-sm btn-primary d-none">Save</button>'
+                                . '   <button class="edit_game btn btn-sm btn-warning">Edit Game</button>'
+                                . '</div>';
+                        }
+                        ?>
+                    </div>
+                </div>
             </div>
             <!--end::Header-->
             <!--begin::Body-->
             <div class="card-body">
-                <div class="symbol symbol-200px float-left mb-5 me-10">
-                    <span class="symbol-label circle"
-                          style="background: url(<?= $game['game_icon'] ?? '' ?>) no-repeat; background-size: cover;"></span>
+                <div class="w-100 mb-5 flex-column align-items-center justify-content-center">
+                    <div class="symbol symbol-200px">
+                        <span class="symbol-label circle game_icon-holder"></span>
+                    </div>
+                    <?php
+                    if (isset($game) && $game['game_creator'] === $_SESSION['user']['user_id']) {
+                        echo '<input type="file" id="change-game_icon" class="d-none"/>'
+                            . '<div class="flex-row-wrap justify-content-center align-items-center gap-5">'
+                            . '   <label for="change-game_icon" class="btn btn-sm btn-link d-none">Change</label>'
+                            . '</div>';
+                    }
+                    ?>
                 </div>
-                <h4>Details</h4>
-                <p class="text-justify"><?= $game['game_details'] ?? '' ?></p>
+                <h4 class="text-center">Details</h4>
+                <p class="text-justify game_details mb-5"></p>
+                <?php
+                if (isset($game) && $game['game_creator'] === $_SESSION['user']['user_id']) {
+                    echo '<div class="form-control-solid mb-5">'
+                        . '    <textarea id="game_details-textarea" rows="5" class="form-control this-role-input-field d-none"></textarea>'
+                        . '</div>';
+                    echo '<div class="flex-row-wrap justify-content-end align-items-center">'
+                        . '    <button type="button" class="btn btn-sm btn-garnet invite_link-btn">Get invite link</button>'
+                        . '</div>';
+                } ?>
             </div>
             <!--end:Body-->
-            <?php var_dump($game) ?>
         </div>
     </div>
 </div>
+<script>
+    // Save game array details
+    const game =<?php echo json_encode($game ?? [])?>;
+    // On content loaded
+    document.addEventListener('DOMContentLoaded', function () {
+        const gameIconHolder = $('.game_icon-holder');
+        const gameTitle = $('.game_title');
+        const gameTitleInput = $('#game_title-input');
+        const gameDetails = $('.game_details');
+        const gameDetailsTextarea = $('#game_details-textarea');
+        const editGameBtn = $('.edit_game');
+        // Load game details into page
+        formatGameDetails(game);
+
+        function formatGameDetails() {
+            if (game.game_title && game.game_details && game.game_icon) {
+                gameTitle.html(game.game_title);
+                gameDetails.html(game.game_details);
+                gameIconHolder.css('background-image', 'url("' + game.game_icon + '")');
+                gameIconHolder.css('background-size', 'cover');
+            }
+        }
+
+        editGameBtn.click(function () {
+            if (this.innerHTML === 'Edit Game') {
+                toggleGameEdition();
+                return;
+            }
+            toggleGameEdition(false);
+        });
+
+        $('.invite_link-btn').click(function () {
+            $.ajax({
+                type: "get",
+                url: "/games/createInviteUrl/<?=$game['game_id']?>",
+                dataType: "json",
+                success: function (data) {
+                    if (data && data['response'] && data['url']) {
+                        $('.modal_success_response').html(
+                            'This is your new invite url!<br/>' +
+                            'Remember it expires in one day<br/>' +
+                            data['url']
+                        );
+                        $('#modal_success-toggle').click();
+                        return;
+                    }
+                    $('.modal_error_response').html('Something went wrong');
+                    $('#modal_error-toggle').click();
+                },
+                error: function (e) {
+                    console.log("Error: ", e.getError());
+                }
+            })
+        })
+
+        $('#change-game_icon').change(function () {
+            readImageChange(this, $('.game_icon-holder'));
+        });
+
+        function toggleGameEdition(editable = true) {
+            $('.save_game').toggleClass('d-none', !editable);
+            $('label[for=change-game_icon]').toggleClass('d-none', !editable);
+            gameTitleInput.toggleClass('d-none', !editable);
+            gameTitle.toggleClass('d-none', editable);
+            gameDetailsTextarea.toggleClass('d-none', !editable);
+            gameDetails.toggleClass('d-none', editable);
+            if (editable) {
+                editGameBtn.html('Cancel');
+                gameTitleInput.val(game.game_title);
+                gameDetailsTextarea.val(game.game_details);
+                return;
+            }
+            gameTitleInput.val('');
+            gameDetailsTextarea.val('');
+            editGameBtn.html('Edit Game');
+            formatGameDetails();
+        }
+    });
+</script>

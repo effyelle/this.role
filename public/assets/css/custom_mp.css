@@ -413,6 +413,7 @@ input.form-control.form-control-solid.this-role-form-field {
 
 .circle {
     border-radius: 50% !important;
+    shape-outside: circle();
 }
 
 @media (min-width: 992px) {
@@ -917,4 +918,8 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 
 .game .modal.fade.show {
     z-index: 2101;
+}
+
+.float-left {
+    float: left !important;
 }

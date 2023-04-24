@@ -12,6 +12,4 @@ class GamesModel extends BaseModel
 
     protected $returnType = 'array';
     protected $useSoftDeletes = true;
-
-    protected $allowedFields = ['game_id', 'game_user_creator', 'game_title', 'game_icon', 'game_is_public', 'game_deleted'];
 }

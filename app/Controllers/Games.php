@@ -115,18 +115,20 @@ class Games extends BaseController
 
             if (isset($_FILES['game_icon']) && $_FILES['game_icon']['error'] === 0) {
                 $folder = $game['game_folder'];
-                // Delete old one if exists
-                $files = scandir(FCPATH . $folder);
-                // Search if there's already an icon
-                foreach ($files as $file) {
-                    if (str_contains($file, 'game_icon')) {
-                        // Delete file if found
-                        unlink(FCPATH . $folder . $file);
+                if (is_dir($folder)) {
+                    // Delete old one if exists
+                    $files = scandir(FCPATH . $folder);
+                    // Search if there's already an icon
+                    foreach ($files as $file) {
+                        if (str_contains($file, 'game_icon')) {
+                            // Delete file if found
+                            unlink(FCPATH . $folder . $file);
+                        }
                     }
-                }
-                $img = upload_img('game_icon', $folder, 'game_icon');
-                if (str_contains($img, 'game_icon')) {
-                    $this->gamesmodel->updt(['game_icon' => $img], ['game_id' => $id]);
+                    $img = upload_img('game_icon', $folder, 'game_icon');
+                    if (str_contains($img, 'game_icon')) {
+                        $this->gamesmodel->updt(['game_icon' => $img], ['game_id' => $id]);
+                    }
                 }
             }
             /* End::Attempt to update img */

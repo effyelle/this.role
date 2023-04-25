@@ -12,9 +12,6 @@
     <!-- begin::CustomFonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link href="https://fonts.googleapis.com/css2?family=Sarina&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700"/>
     <!--end::CustomFonts-->
 
     <!--begin::Bootstrap-->
@@ -28,7 +25,7 @@
     <link href="/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css"/>
     <link href="/assets/css/style.bundle.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="/assets/css/custom_mp.css" type="text/css"/>
-    <?php if (isset($dark_theme)): ?>
+    <?php if (isset($_SESSION['user']['user_theme']) && $_SESSION['user']['user_theme'] === 'dark'): ?>
         <link rel="stylesheet" href="/assets/css/style.dark.bundle.css"/>
         <link rel="stylesheet" href="/assets/css/custom_mp.dark.css"/>
     <?php endif; ?>

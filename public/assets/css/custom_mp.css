@@ -9,6 +9,16 @@
     --this-role-ocher-rgb: 203, 174, 56;
 }
 
+@font-face {
+    font-family: "Poiret One";
+    src: url('/assets/fonts/poiret_one/PoiretOne-Regular.ttf');
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url('/assets/fonts/poppins/Poppins-Regular.ttf');
+}
+
 .active .text-this-role-light {
     color: var(--this-role-ocher) !important;
 }

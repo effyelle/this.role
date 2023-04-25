@@ -113,13 +113,13 @@ class Games extends BaseController
 
             /* Start::Attempt to update img */
 
-            if (isset($_FILES['game_icon'])) {
+            if (isset($_FILES['game_icon']) && $_FILES['game_icon']['error'] === 0) {
                 $folder = $game['game_folder'];
                 // Delete old one if exists
                 $files = scandir(FCPATH . $folder);
                 // Search if there's already an icon
                 foreach ($files as $file) {
-                    if (preg_match('/game_icon/', $file)) {
+                    if (str_contains($file, 'game_icon')) {
                         // Delete file if found
                         unlink(FCPATH . $folder . $file);
                     }

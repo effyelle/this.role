@@ -148,37 +148,34 @@ class Account extends BaseController
                     return template('profile', ['error' => 'The username or email are already in use.']);
                 }
 
-                //
-                // Start filling up $data=[]
-                //
+                /* Begin::Filling up $data=[] */
 
                 $data = [
                     'user_username' => $newUsername,
                     'user_fname' => $newFullName,
                     'user_email' => $newEmail
                 ];
+                // Unconfirm account if email was changed
+                if ($newEmail !== $oldEmail) $data['user_confirmed'] = null;
 
-                if ($_FILES['avatar']['error'] === 0) {
+                if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === 0) {
+                    /* Begin::Upload new avatar */
                     $img = upload_img('avatar', 'assets/media/avatars');
                     if (preg_match('/[0-9]/', $img)) {
                         $data['user_avatar'] = '/' . $img;
-
                         $oldAvatar = $_SESSION['user']['user_avatar'];
                         // Delete old file
                         if ($oldAvatar !== $this->defaultAvatar && is_file(FCPATH . $oldAvatar)) {
                             if (!unlink(FCPATH . $oldAvatar)) {
-                                $error = 'No se pudo borrar el avatar amtiguo';
+                                $error = 'No se pudo borrar el avatar antiguo';
                             }
                         }
                         // Return error if file was not uploaded
                     } else return template('profile', ['error' => $img]);
+                    /* End::Upload new avatar */
                 }
-                // Unconfirm account if email was changed
-                if ($newEmail !== $oldEmail) $data['user_confirmed'] = null;
 
-                //
-                // Finish filling up $data=[]
-                //
+                /* End::Filling up $data=[] */
 
                 // Update user in Database
                 if ($this->usermodel->updt(

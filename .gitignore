@@ -126,5 +126,5 @@ nb-configuration.xml
 /.phpunit.*.cache
 
 # Uploaded media through project
-/public/asets/media/games/*
 /public/assets/media/avatars/*
+/public/assets/media/games/*

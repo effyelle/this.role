@@ -112,7 +112,7 @@
         $('.invite_link-btn').click(function () {
             $.ajax({
                 type: "get",
-                url: "/games/createInviteUrl/<?=$game['game_id']?>",
+                url: "/app/games_ajax/create_invite_url/<?=$game['game_id']?>",
                 dataType: "json",
                 success: function (data) {
                     if (data && data['response'] && data['url']) {
@@ -124,7 +124,7 @@
                         $('#modal_success-toggle').click();
                         return;
                     }
-                    $('.modal_error_response').html('Something went wrong');
+                    $('.modal_error_response').html(data['msg']);
                     $('#modal_error-toggle').click();
                 },
                 error: function (e) {

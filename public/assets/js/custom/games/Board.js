@@ -26,6 +26,11 @@ class Board {
         }
     }
 
+    /**
+     *
+     * @param id
+     * @constructor
+     */
     Journal = function (id) {
         this.container = document.querySelector('#' + id);
         this.listId = id + '_list';
@@ -95,11 +100,22 @@ class Board {
         }
     }
 
+    /**
+     *
+     * @param querySelector
+     * @constructor
+     */
     Chat = function (querySelector) {
         this.record = document.querySelector(querySelector);
+        let now = new Date();
         this.formatMessage = function (data = {}) {
-            let rollDice = data.msgType === 'rollDice' ? '<span class="menu-title"><i>Rolling ' + data.rolling + data.dice + '</i></span>' : '';
-            let itemsAlign = data.msgType === 'rollDice' ? 'align-items-center' : 'align-items-start px-2 pt-5';
+            let rollDice = data.msgType === 'rollDice'
+                ? '<span class="menu-title"><i>Rolling ' + data.rolling + data.dice + '</i></span>'
+                : '';
+            let itemsAlign = data.msgType === 'rollDice'
+                ? 'align-items-center'
+                : 'align-items-start px-2 pt-5';
+            let msgColor = data.msgType === 'error' ? 'text-danger' : '';
             this.record.innerHTML += '' +
                 '<!--begin::Menu Item-->' +
                 '<div class="menu-item py-3">' +
@@ -114,9 +130,9 @@ class Board {
                 '           <!--end::Symbol-->' +
                 '           <div>' + data.sender + '</div>' +
                 '       </div>' +
-                '       <i>' + (new Date()).toLocaleDateString() + '</i>' +
+                '       <i>' + now.toLocaleDateString() + ' ' + now.toLocaleTimeString() + '</i>' +
                 '   </div>' +
-                '   <div class="d-flex flex-column justify-content-center gap-3 ' + itemsAlign + '">' + rollDice +
+                '   <div class="d-flex flex-column justify-content-center gap-3 ' + itemsAlign + ' ' + msgColor + '">' + rollDice +
                 '       <span class="menu-title">' + data.msg + '</span>' +
                 '   </div>' +
                 '</div>' +

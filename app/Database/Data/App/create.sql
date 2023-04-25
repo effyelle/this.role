@@ -39,10 +39,19 @@ CREATE TABLE games(
 	game_details LONGTEXT,
 	game_icon VARCHAR(200),
 	game_folder VARCHAR(200),
-	game_chat JSON,
 	game_gallery JSON,
 	game_deleted DATETIME DEFAULT NULL,
 	FOREIGN KEY(game_creator) REFERENCES users(user_id)
+);
+
+CREATE TABLE game_chat(
+	chat_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	chat_game_id INT UNSIGNED,
+	chat_sender VARCHAR(50),
+	chat_msg VARCHAR(500),
+	chat_msg_type VARCHAR(50),
+	chat_datetime DATETIME DEFAULT NOW(),
+	FOREIGN KEY(chat_game_id) REFERENCES games(game_id)
 );
 
 CREATE TABLE game_journal_items(
@@ -52,6 +61,8 @@ CREATE TABLE game_journal_items(
 	journal_item_editors JSON,
 	FOREIGN KEY(journal_item_game_id) REFERENCES games(game_id)
 );
+
+# INSERT INTO game_journal_items(journal_item_game_id,
 
 CREATE TABLE invite_url(
 	url VARCHAR(200) PRIMARY KEY,

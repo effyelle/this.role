@@ -3,6 +3,11 @@ function initBoard(dbGame, session) {
     const board = new Board('.btn.dice');
     // * Chat object * //
     const chat = new board.Chat('.chat-messages');
+    // * Journal intance * //
+    const journal = new board.Journal('journal');
+
+    getChat();
+
     // *********************************** //
     // * Listen to dices buttons pressed * //
     // *********************************** //
@@ -20,6 +25,7 @@ function initBoard(dbGame, session) {
     const chatText = document.querySelector('.chat-bubble textarea');
     // * Chat textarea holder * //
     let chatMessage = '';
+
     // ******************************* //
     // * Listen to chat pressed keys * //
     // ******************************* //
@@ -35,22 +41,22 @@ function initBoard(dbGame, session) {
             }
             // If Enter without Shift
             e.preventDefault(); // Prevent textarea line break
-            addChatMessage(chatMessage.trim());
+            setChat(chatMessage.trim(), $('#charsheet_selected').find(':selected').text(), "chatMessage");
         }
     });
+
     // ********************************* //
     // * Listen to send button in chat * //
     // ********************************* //
     document.querySelector('.chat-bubble ~ div .btn').addEventListener('click', function () {
-        addChatMessage(chatMessage.trim());
+        setChat(chatMessage.trim(), $('#charsheet_selected').find(':selected').text(), "chatMessage");
     });
-    // * Journal intance * //
-    const journal = new board.Journal('journal');
     // * Delete add button and modal if user is not creator * //
     if (session.user.user_id !== dbGame.game_creator) {
         $('#modal_journal-toggle').remove();
         $('#modal_journal').remove();
     }
+
     // ********************************************* //
     // * Add journal item when save button clicked * //
     // ********************************************* //
@@ -76,51 +82,95 @@ function initBoard(dbGame, session) {
         // Always stop progress spinner at the end of all actions
         toggleProgressSpinner(false);
     });
+
     // ********************************** //
     // * Empty journal modal on closure * //
     // ********************************** //
     $('#modal_journal').on('hidden.bs.modal', function () {
         $('#journal_title-input').val('');
-        $('#journal-item_type option[value=-1]').prop('selected', true);
+        $('#journal-item_type option[value="-1"]').prop('selected', true);
         $('#modal_journal input').prop('checked', false);
     });
 
     /**
-     * Add Chat Message
+     * Save chat message to Database
+     *
      * @param text
+     * @param sender
+     * @param msgType
+     *
+     * @return void
      */
-    function addChatMessage(text) {
-        // You do not check chatMessage variable here for it might have <br/> but nothing else
-        if (text !== '') { // Check textarea VALUE is not empty
-            chat.formatMessage({ // Submit message
-                sender: $('#charsheet_selected').find(':selected').text(),
-                src: "",
-                msg: chatMessage.trim(),
-                msgType: "chatMessage"
+    function setChat(text, sender, msgType) {
+        if (text !== '') {
+            $.ajax({
+                type: "post",
+                url: "/app/games_ajax/set_chat/" + dbGame.game_id,
+                data: {
+                    msg: text,
+                    sender: sender,
+                    msgType: msgType,
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (!data['response']) {
+                        sender = '';
+                        text = data['msg'];
+                    }
+                    chat.formatMessage({ // Submit message
+                        sender: sender,
+                        src: "",
+                        msg: text,
+                        msgType: msgType
+                    });
+                    chatText.value = ""; // Empty chat textarea
+                    chatMessage = ''; // Empty holder variable
+
+                },
+                error: function (e) {
+                    console.log("Error: ", e);
+                }
             });
-            this.value = ""; // Empty chat textarea
-            chatMessage = ''; // Empty holder variable
         }
+    }
+
+    /**
+     * Get chat from Database
+     *
+     * @return void
+     */
+    function getChat() {
+        $.ajax({
+            type: "get",
+            url: "/app/games_ajax/get_chat/" + dbGame.game_id,
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                let sender = '';
+                let src = '';
+                let msgText = 'There was an error loading messages for this game';
+                let msgType = 'error';
+                if (data['response'] && data['msgs'] && data['msgs'].length > 0) {
+                    for (let i in data['msgs']) {
+                        let msg = data['msgs'][i];
+                        sender = msg['chat_sender'];
+                        src = '';
+                        msgText = msg['chat_msg'];
+                        msgType = msg['chat_msg_type'];
+                    }
+                }
+                chat.formatMessage({
+                    sender: sender,
+                    src: src,
+                    msg: msgText,
+                    msgType: msgType
+                });
+            }
+        })
     }
 }
 
-/*
- * -----------------------
- * - CHAT DATABASE JSON FORMAT -
- * -----------------------
- * Need to save:
- *  - Message
- *  - Sender
- *  -
- */
-
-// Save chat to DB
-function setChat() {
-}
-
 // Load chat from DB
-function getChat() {
-}
 
 // Save journal to DB
 function setJournal() {

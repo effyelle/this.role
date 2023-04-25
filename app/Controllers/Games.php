@@ -5,14 +5,22 @@ namespace App\Controllers;
 class Games extends BaseController
 {
     protected mixed $gamesmodel;
+    protected mixed $gamechatmodel;
     protected string $now;
 
     function __construct()
     {
         $this->gamesmodel = model('GamesModel');
+        $this->gamechatmodel = model('GameChatModel');
         $this->now = date('Y-m-d H:i:s', time());
     }
 
+    /**
+     * Redirect to a game list for the logged user, showing those games in which
+     * the user participates or those who the user has created
+     *
+     * @return string
+     */
     function list(): string
     {
         $data = [];
@@ -79,6 +87,13 @@ class Games extends BaseController
         return template('games/list', $data);
     }
 
+    /**
+     * Launch game page
+     *
+     * @param int $id
+     *
+     * @return string
+     */
     function launch(int $id): string
     {
         $game = $this->gamesmodel->get(['game_id' => $id]);
@@ -89,6 +104,14 @@ class Games extends BaseController
         return template('games/not_found');
     }
 
+    /**
+     * Redirect to a detailed page for game where user (if creator) can edit
+     * game details, title and icon
+     *
+     * @param int $id
+     *
+     * @return string
+     */
     function details(int $id): string
     {
         $game = $this->gamesmodel->get(['game_id' => $id]);
@@ -139,6 +162,14 @@ class Games extends BaseController
         return template('games/not_found');
     }
 
+    /**
+     * Redirect to the join game page where an ajax call to {@link ajax_join}
+     * will attempt to include user in a game
+     *
+     * @param $id
+     *
+     * @return string
+     */
     function join($id): string
     {
         $game = $this->gamesmodel->get(['url_expires > ' => $this->now, 'url' => $id], [$this->gamesmodel->relatedTable => 'game_id=id_game']);
@@ -149,7 +180,40 @@ class Games extends BaseController
         return template('games/not_found');
     }
 
-    public function ajax_join($id): string
+    /* ********************************************************************
+     ***************************** AJAX CALLS *****************************
+     **********************************************************************/
+
+    /**
+     * Create a url to join a game
+     *
+     * @param $id
+     *
+     * @return string
+     */
+    function create_invite_url($id): string
+    {
+        // Expire old urls
+        $this->gamesmodel->updt(
+            ['url_expires' => $this->now], // data
+            ['id_game' => $id], // where
+            $this->gamesmodel->relatedTable // table
+        );
+        $url = time();
+        if ($this->gamesmodel->new(['url' => $url, 'id_game' => $id], $this->gamesmodel->relatedTable)) {
+            return json_encode(['response' => true, 'url' => $this->baseURL . '/app/games/join/' . $url]);
+        }
+        return json_encode(['response' => false, 'msg' => 'Url could not be created']);
+    }
+
+    /**
+     * Add user to a game
+     *
+     * @param $id
+     *
+     * @return string
+     */
+    function ajax_join($id): string
     {
         $game = $this->gamesmodel->get(['game_id' => $id]);
         if (count($game) === 1) {
@@ -184,19 +248,26 @@ class Games extends BaseController
         return json_encode(['response' => false, 'msg' => 'Game not found']);
     }
 
-    function createInviteUrl($id)
+    function set_chat($id): string
     {
-        // Expire old urls
-        $this->gamesmodel->updt(
-            ['url_expires' => $this->now], // data
-            ['id_game' => $id], // where
-            $this->gamesmodel->relatedTable // table
-        );
-        $url = time();
-        if ($this->gamesmodel->new(['url' => $url, 'id_game' => $id], $this->gamesmodel->relatedTable)) {
-            echo json_encode(['response' => true, 'url' => $this->baseURL . '/app/games/join/' . $url]);
-            return;
+        if (isset($_POST['msg']) && isset($_POST['sender']) && isset($_POST['msgType'])) {
+            if ($this->gamechatmodel->new([
+                'chat_game_id' => $id,
+                'chat_sender' => validate($_POST['sender']),
+                'chat_msg' => validate($_POST['msg']),
+                'chat_msg_type' => validate($_POST['msgType']),
+            ])) {
+                return json_encode(['response' => true]);
+            }
         }
-        echo json_encode(['response' => false]);
+        return json_encode(['response' => false, 'msg' => 'Message could not be sent']);
+    }
+
+    function get_chat($id): string
+    {
+        if ($gameChat = $this->gamechatmodel->get(['chat_game_id' => $id])) {
+            return json_encode(['response' => true, 'msgs' => $gameChat]);
+        }
+        return json_encode(['response' => false, 'msg' => 'Messages could not be loaded']);
     }
 }

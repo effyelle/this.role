@@ -53,17 +53,11 @@
                     }
                     ?>
                 </div>
-                <h4 class="text-center">Details</h4>
                 <p class="text-justify game_details mb-5"></p>
-                <p>
-                    <?php
-                    var_dump($img ??'');
-                    ?>
-                </p>
                 <?php
                 if (isset($game) && $game['game_creator'] === $_SESSION['user']['user_id']) {
                     echo '<div class="form-control-solid mb-5">'
-                        . '    <textarea id="game_details-textarea" rows="5" name="game_details"'
+                        . '    <textarea id="game_details-textarea" rows="5" name="game_details" placeholder="Enter your game details..."'
                         . '          class="form-control this-role-input-field d-none"></textarea>'
                         . '</div>';
                     echo '<div class="flex-row-wrap justify-content-end align-items-center">'
@@ -73,6 +67,12 @@
             </div>
             <!--end:Body-->
         </form>
+        <p>
+            <?php
+            echo "var_dump for \$_FILES['img']: <br>";
+            var_dump($img ??'');
+            ?>
+        </p>
     </div>
 </div>
 <script>
@@ -91,7 +91,7 @@
 
         function formatGameDetails() {
             if (game.game_title) gameTitle.html(game.game_title);
-            if (game.game_detials) gameDetails.html(game.game_details);
+            if (game.game_details) gameDetails.html(game.game_details);
             if (game.game_icon) {
                 gameIconHolder.css('background-image', 'url("' + game.game_icon + '")');
                 gameIconHolder.css('background-size', 'cover');

@@ -95,34 +95,43 @@ class Games extends BaseController
         $data = [];
         if (count($game) === 1) {
             $game = $game[0];
-            $data['game'] = $game;
-            if (isset($_POST['game_title']) && isset($_POST['game_details'])) {
-                $title = validate($_POST['game_title']);
-                $details = validate($_POST['game_details']);
-                // **************************** //
-                // * Update title and details * //
-                // **************************** //
+
+            /* Start::Update title and details */
+            if (isset($_POST['game_title'])) {
                 $this->gamesmodel->updt(
-                    ['game_title' => $title, 'game_details' => $details],
-                    ['game_id' => $game['game_id']]
+                    ['game_title' => validate($_POST['game_title'])],
+                    ['game_id' => $id]
                 );
-                // ************************* //
-                // * Attempt to update img * //
-                // ************************* //
+            }
+            if (isset($_POST['game_details'])) {
+                $this->gamesmodel->updt(
+                    ['game_details' => validate($_POST['game_details'])],
+                    ['game_id' => $id]
+                );
+            }
+            /* End::Update title and details */
+
+            /* Start::Attempt to update img */
+
+            if (isset($_FILES['game_icon'])) {
                 $folder = $game['game_folder'];
                 // Delete old one if exists
-                if (is_file($folder . 'game_icon')) {
-                    $data['img'] = true;
-                } else {
-                    $data['img'] = false;
+                $files = scandir(FCPATH . $folder);
+                // Search if there's already an icon
+                foreach ($files as $file) {
+                    if (preg_match('/game_icon/', $file)) {
+                        // Delete file if found
+                        unlink(FCPATH . $folder . $file);
+                    }
                 }
-                /*
                 $img = upload_img('game_icon', $folder, 'game_icon');
                 if (str_contains($img, 'game_icon')) {
-                    $this->gamesmodel->updt(['game_icon' => $img], ['game_id' => $game_id]);
-                }*/
-                $data['game'] = $this->gamesmodel->get(['game_id' => $id])[0];
+                    $this->gamesmodel->updt(['game_icon' => $img], ['game_id' => $id]);
+                }
             }
+            /* End::Attempt to update img */
+
+            $data['game'] = $this->gamesmodel->get(['game_id' => $id])[0];
             return template('games/details', $data);
         }
         return template('games/not_found');

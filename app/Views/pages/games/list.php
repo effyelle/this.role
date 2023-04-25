@@ -51,7 +51,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                                         <!--begin::Title-->
                                         <div class="me-2 mt-4 text-center">
                                             <h6 class="game-title"><?= $game['game_title'] ?></h6>
-                                            <?php if ($game['game_id'] === $_SESSION['user']['user_id']) {
+                                            <?php if ($game['game_creator'] === $_SESSION['user']['user_id']) {
                                                 echo '<i>You created this game</i>';
                                             } ?>
                                         </div>

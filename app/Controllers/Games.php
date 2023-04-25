@@ -79,7 +79,7 @@ class Games extends BaseController
         return template('games/list', $data);
     }
 
-    function game(int $id): string
+    function launch(int $id): string
     {
         $game = $this->gamesmodel->get(['game_id' => $id]);
         if (count($game) === 1) {

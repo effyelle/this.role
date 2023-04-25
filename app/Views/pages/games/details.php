@@ -54,7 +54,15 @@
                     }
                     ?>
                 </div>
-                <p class="mb-6 p-6 text-justify game_details"></p>
+                <div class="m-6 p-6 text-justify">
+                    <!--begin::Game details-->
+                    <p class="game_details"></p>
+                    <!--end::Game details-->
+                    <!--begin::Launch link-->
+                    <a href="/app/games/launch/<?= $game['game_id'] ?>" target="_blank"
+                       class="btn btn-link btn-sm">Launch game</a>
+                    <!--end::Launch link-->
+                </div>
                 <?php
                 if (isset($game) && $game['game_creator'] === $_SESSION['user']['user_id']) {
                     echo '<div class="form-control-solid mb-5">'

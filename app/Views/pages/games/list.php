@@ -34,32 +34,41 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                         <?php if (isset($games_list)): ?>
                             <?php foreach ($games_list as $game): ?>
                                 <!--begin::Item-->
-                                <a href="/app/games/details/<?= $game['game_id'] ?>" class="py-6 px-12 mb-3">
+                                <div class="py-6 px-12 mb-3">
+
                                     <div class="d-flex flex-column justify-content-between align-items-center box-shadow-700 border-radius-5px p-6">
-                                        <!--begin::Icon-->
-                                        <div class="d-flex flex-column">
-                                            <div class="symbol symbol-125px symbol-sm-150px symbol-lg-150px symbol-xl-200px circle game-img">
+                                        <!--begin::Link to details-->
+                                        <a href="/app/games/details/<?= $game['game_id'] ?>">
+                                            <!--begin::Icon-->
+                                            <div class="d-flex flex-column">
+                                                <div class="symbol symbol-125px symbol-sm-150px symbol-lg-150px symbol-xl-200px circle game-img">
                                                 <span class="symbol-label circle game-img"
                                                       style=" background: url(<?= $game['game_icon'] ?>) no-repeat;
                                                               background-size: cover;">
                                                 </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <!--end::Icon-->
-                                        <!--begin::Section-->
-                                        <div class="d-flex flex-column align-items-center justify-content-around">
-                                            <!--begin::Title-->
-                                            <div class="me-2 mt-4 text-center">
-                                                <h6 class="game-title"><?= $game['game_title'] ?></h6>
-                                                <?php if ($game['game_creator'] === $_SESSION['user']['user_id']) {
-                                                    echo '<i>You created this game</i>';
-                                                } ?>
+                                            <!--end::Icon-->
+                                            <!--begin::Title Container-->
+                                            <div class="d-flex flex-column align-items-center justify-content-around">
+                                                <!--begin::Title-->
+                                                <div class="me-2 mt-4 text-center">
+                                                    <h6 class="game-title"><?= $game['game_title'] ?></h6>
+                                                    <?php if ($game['game_creator'] === $_SESSION['user']['user_id']) {
+                                                        echo '<i>You created this game</i>';
+                                                    } ?>
+                                                </div>
+                                                <!--end::Title-->
                                             </div>
-                                            <!--end::Title-->
-                                        </div>
-                                        <!--end::Section-->
+                                            <!--end::Title Container-->
+                                        </a>
+                                        <!--end::Link to details-->
+                                        <!--begin::Launch link-->
+                                        <a href="/app/games/launch/<?= $game['game_id'] ?>" target="_blank"
+                                           class="btn btn-link btn-sm">Launch game</a>
+                                        <!--end::Launch link-->
                                     </div>
-                                </a>
+                                </div>
                                 <!--end::Item-->
                             <?php endforeach; ?>
                         <?php endif; ?>

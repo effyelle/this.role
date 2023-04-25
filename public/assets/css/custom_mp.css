@@ -839,8 +839,10 @@ body.game .aside {
     border-bottom: 1px solid var(--this-role-ocher);
 }
 
-.game .aside .nav-line-tabs .nav-item .nav-link:hover:not(.disabled),
-.game .aside .nav-line-tabs .nav-item.show .nav-link {
+.game .nav-line-tabs .nav-item .nav-link:hover:not(.disabled),
+.game .nav-line-tabs .nav-item.show .nav-link,
+.game .nav-line-tabs .nav-item .nav-link.active,
+.game .nav-line-tabs .nav-item .nav-link:hover:not(.disabled) {
     border-bottom: 1px solid rgba(var(--this-role-ocher-rgb), 0.6);
 }
 

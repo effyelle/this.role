@@ -31,7 +31,12 @@
     <?php endif; ?>
     <!--end::CSSTemplates-->
 </head>
-<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed bg-light-opacity-25 <?= $page ?? '' ?>">
+<?php
+$pageSplit = explode('/', ($page ?? ''));
+$pageClass = $pageSplit[count($pageSplit) - 1];
+?>
+<body id="kt_body"
+      class="header-fixed header-tablet-and-mobile-fixed bg-light-opacity-25 <?= $pageClass ?>">
 <!--begin::Page Container-->
 <div class="d-flex flex-column flex-root">
     <!--begin::Page-->

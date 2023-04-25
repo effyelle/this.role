@@ -80,12 +80,13 @@ class Board {
                 ' <!--end::Menu Item-->';
             let items = document.querySelectorAll('.' + this.itemClass + ' .menu-link');
             //items[items.length - 1].addEventListener('click', this.openJournalItem);
-            items[items.length - 1].addEventListener('click', function () {
-                console.log('Here')
-            })
+            items[items.length - 1].addEventListener('click', () => {
+                this.openJournalItem();
+            });
         }
         this.openJournalItem = function () {
             console.log(this.value);
+            /*
             document.body.innerHTML += '' +
                 '<div class="modal fade show d-block ' + this.itemModalClass + '">' +
                 '   <div class="modal-dialog">' +
@@ -97,6 +98,7 @@ class Board {
                 '       </div>' +
                 '   </div>' +
                 '</div>';
+             */
         }
     }
 

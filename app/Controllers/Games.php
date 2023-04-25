@@ -6,12 +6,18 @@ class Games extends BaseController
 {
     protected mixed $gamesmodel;
     protected mixed $gamechatmodel;
+    protected mixed $usermodel;
+    protected mixed $journalmodel;
+    protected mixed $gameplayermodel;
     protected string $now;
 
     function __construct()
     {
         $this->gamesmodel = model('GamesModel');
         $this->gamechatmodel = model('GameChatModel');
+        $this->usermodel = model('UsersModel');
+        $this->journalmodel = model('GameJournalModel');
+        $this->gameplayermodel = model('GamePlayerModel');
         $this->now = date('Y-m-d H:i:s', time());
     }
 
@@ -24,6 +30,8 @@ class Games extends BaseController
     function list(): string
     {
         $data = [];
+        $sessionUser = $_SESSION['user']['user_id'];
+        // * BEGIN::Submit post * //
         if (isset($_POST['game_title'])) {
             // Attempt to create new game
             $game_title = validate($_POST['game_title']);
@@ -31,7 +39,7 @@ class Games extends BaseController
             if ($game_details === '') $game_details = null;
             // Create game from basics
             if ($this->gamesmodel->new([
-                'game_creator' => $_SESSION['user']['user_id'],
+                'game_creator' => $sessionUser,
                 'game_title' => $game_title,
                 'game_details' => $game_details
             ])) {
@@ -40,6 +48,11 @@ class Games extends BaseController
                 // *********************************** //
                 // Get the new game ID
                 $game_id = intval($this->gamesmodel->maxID()->{'MAX(game_id)'});
+                // Add user to players in this game
+                $this->gameplayermodel->new([
+                    'game_player_id_user' => $sessionUser,
+                    'game_player_id_game' => $game_id
+                ]);
                 // Declare new folder for the game
                 $new_folder = '/assets/media/games/' . time() . '/';
                 // Create the folder
@@ -60,30 +73,13 @@ class Games extends BaseController
                 // ********************************* //
             }
         }
-        // ************************************ //
-        // * Begin get games for session user * //
-        // ************************************ //
+        // * END::Submit POST * //
+        // * BEGIN::Get games for session user * //
         // Database connect, get games, then load
-        if ($games = $this->gamesmodel->get()) {
-            $data['games_list'] = [];
-            foreach ($games as $game) {
-                // If session user is creator OR if it's in $games['game_players'] JSON
-                if ($game['game_creator'] === $_SESSION['user']['user_id']) {
-                    $data['games_list'][] = $game;
-                } // If session user is not creator compare him with games players
-                elseif (isset($game['game_players'])) {
-                    $players = json_decode($game['game_players']);
-                    foreach ($players as $player) {
-                        if ($player->user_id === $_SESSION['user']['user_id']) {
-                            $data['games_list'][] = $game;
-                        }
-                    }
-                }
-            }
+        if ($games = $this->gamesmodel->get(['game_player_id_user' => $sessionUser], ['game_player' => 'game_player_id_game=game_id'])) {
+            $data['games_list'] = $games;
         }
-        // ********************************** //
-        // * End get games for session user * //
-        // ********************************** //
+        // * END::Get games for session user * //
         return template('games/list', $data);
     }
 
@@ -96,10 +92,13 @@ class Games extends BaseController
      */
     function launch(int $id): string
     {
+        $data = [];
         $game = $this->gamesmodel->get(['game_id' => $id]);
         if (count($game) === 1) {
-            $game = $game[0];
-            return template('games/game', ['game' => $game]);
+            $data['game'] = $game[0];
+            $players = $this->usermodel->get(['game_player_id_game' => $id], ['game_player' => 'game_player_id_user=user_id']);
+            if (count($players) > 0) $data['players'] = $players;
+            return template('games/game', $data);
         }
         return template('games/not_found');
     }
@@ -215,32 +214,15 @@ class Games extends BaseController
      */
     function ajax_join($id): string
     {
+        $sessionUser = $_SESSION['user']['user_id'];
         $game = $this->gamesmodel->get(['game_id' => $id]);
         if (count($game) === 1) {
             $game = $game[0];
             // Return if the session user was game creator
-            if ($_SESSION['user']['user_id'] == $game['game_creator']) {
+            if (count($this->gameplayermodel->get(['game_player_id_user' => $sessionUser])) > 0) {
                 return json_encode(['response' => false, 'msg' => 'You already joined this game']);
             }
-            $players = $game['game_players'];
-            if (!isset($players)) $players = [];
-            else {
-                $players = json_decode($players);
-                foreach ($players as $player) {
-                    if ($player->user_id === $_SESSION['user']['user_id']) {
-                        return json_encode(['response' => false, 'msg' => 'You already joined this game']);
-                    }
-                }
-            }
-            $players[] = [
-                'user_id' => $_SESSION['user']['user_id'],
-                'user_username' => $_SESSION['user']['user_username']
-            ];
-            $players = json_encode($players);
-            if ($this->gamesmodel->updt(
-                ['game_players' => $players],
-                ['game_id' => $game['game_id']]
-            )) {
+            if ($this->gameplayermodel->new(['game_player_id_game' => $id, 'game_player_id_user' => $sessionUser])) {
                 return json_encode(['response' => true]);
             }
             return json_encode(['response' => false, 'msg' => 'Could not join the game']);
@@ -269,5 +251,19 @@ class Games extends BaseController
             return json_encode(['response' => true, 'msgs' => $gameChat]);
         }
         return json_encode(['response' => false, 'msg' => 'Messages could not be loaded']);
+    }
+
+    function set_journal_item($id): string
+    {
+        if (isset($_POST['title']) && isset($_POST['itemType'])) {
+            if ($this->journalmodel->new([
+                'item_title' => validate($_POST['title']),
+                'item_type' => validate($_POST['itemType']),
+            ])) {
+                return json_encode(['response' => true]);
+            }
+            return json_encode(['response' => false, 'msg' => 'Item could not be added']);
+        }
+        return json_encode(['response' => false, 'msg' => 'Missing some data']);
     }
 }

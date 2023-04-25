@@ -494,6 +494,7 @@ input.form-control.form-control-solid.this-role-form-field {
 
 .flex-column {
     display: flex;
+    flex-direction: column;
 }
 
 #user-profile > .flex-row > .flex-column > div {
@@ -914,6 +915,15 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     z-index: 2101;
 }
 
+.game .form-check-input {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
 .float-left {
     float: left !important;
+}
+
+.text-italic {
+    font-style: italic !important;
 }

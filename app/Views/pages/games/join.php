@@ -6,7 +6,7 @@
         <div class="card h-100vh" id="update-profile">
             <!--begin::Body-->
             <div class="mx-auto card-body w-100">
-                <div class="fs-1 flex-row-wrap align-items-center justify-content-center mt-20">
+                <div class="fs-1 flex-row-wrap align-items-center justify-content-center mt-20 text-center">
                     <!--begin::Indicator label-->
                     <span class="indicator-label"></span>
                     <!--end::Indicator label-->

@@ -34,7 +34,6 @@ CREATE TABLE issues(
 CREATE TABLE games(
 	game_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
 	game_creator INT UNSIGNED,
-	game_players JSON,
 	game_title VARCHAR(50),
 	game_details LONGTEXT,
 	game_icon VARCHAR(200),
@@ -42,6 +41,13 @@ CREATE TABLE games(
 	game_gallery JSON,
 	game_deleted DATETIME DEFAULT NULL,
 	FOREIGN KEY(game_creator) REFERENCES users(user_id)
+);
+
+CREATE TABLE game_player(
+	game_player_id_user INT UNSIGNED,
+	game_player_id_game INT UNSIGNED,
+	FOREIGN KEY(game_player_id_user) REFERENCES users(user_id),
+	FOREIGN KEY(game_player_id_game) REFERENCES games(game_id)
 );
 
 CREATE TABLE game_chat(
@@ -54,15 +60,17 @@ CREATE TABLE game_chat(
 	FOREIGN KEY(chat_game_id) REFERENCES games(game_id)
 );
 
-CREATE TABLE game_journal_items(
-	journal_item_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-	journal_item_game_id INT UNSIGNED,
-	journal_item_details JSON,
-	journal_item_editors JSON,
-	FOREIGN KEY(journal_item_game_id) REFERENCES games(game_id)
+CREATE TABLE game_journal(
+	item_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	item_game_id INT UNSIGNED,
+	item_icon VARCHAR(100),
+	item_title VARCHAR(50),
+	item_type VARCHAR(20),
+	item_details JSON,
+	item_viewers JSON, -- ID users
+	item_editors JSON, -- ID users
+	FOREIGN KEY(item_game_id) REFERENCES games(game_id)
 );
-
-# INSERT INTO game_journal_items(journal_item_game_id,
 
 CREATE TABLE invite_url(
 	url VARCHAR(200) PRIMARY KEY,
@@ -77,6 +85,13 @@ VALUES
 	('marioe23', 'Mario Sancho', 'nore.zgz@mail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
 	('JL.ak.elBizco', 'Jose Luis El Bizco', 'com@com.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
 	('FF15', 'Fernando Fernandez', 'ffmail@email.f', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW());
+
+INSERT INTO games(game_creator, game_title, game_folder, game_icon)
+VALUES
+	(1, 'Timeless', '/assets/media/games/1682422516/', '/assets/media/games/1682422516/game_icon.jpg');
+
+INSERT INTO game_player(game_player_id_game, game_player_id_user)
+VALUES (1,1);
 
 UPDATE users SET user_rol='masteradmin' WHERE user_email='ericapastor@gmail.com';
 UPDATE users SET user_rol='admin' WHERE user_email='nore.zgz@mail.com';

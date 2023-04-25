@@ -30,7 +30,7 @@
         toggleProgressSpinner();
         $.ajax({
             type: "get",
-            url: "/app/games/ajax_join/<?=$game['game_id'] ?? null; ?>",
+            url: "/app/games_ajax/ajax_join/<?=$game['game_id'] ?? null; ?>",
             dataType: "json",
             success: function (data) {
                 console.log(data);

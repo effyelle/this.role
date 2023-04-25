@@ -149,15 +149,14 @@ class Games extends BaseController
         return template('games/not_found');
     }
 
-    public function ajax_join($id): void
+    public function ajax_join($id): string
     {
         $game = $this->gamesmodel->get(['game_id' => $id]);
         if (count($game) === 1) {
             $game = $game[0];
             // Return if the session user was game creator
             if ($_SESSION['user']['user_id'] == $game['game_creator']) {
-                echo json_encode(['response' => false, 'msg' => 'You already joined this game']);
-                return;
+                return json_encode(['response' => false, 'msg' => 'You already joined this game']);
             }
             $players = $game['game_players'];
             if (!isset($players)) $players = [];
@@ -165,8 +164,7 @@ class Games extends BaseController
                 $players = json_decode($players);
                 foreach ($players as $player) {
                     if ($player->user_id === $_SESSION['user']['user_id']) {
-                        echo json_encode(['response' => false, 'msg' => 'You already joined this game']);
-                        return;
+                        return json_encode(['response' => false, 'msg' => 'You already joined this game']);
                     }
                 }
             }
@@ -179,13 +177,11 @@ class Games extends BaseController
                 ['game_players' => $players],
                 ['game_id' => $game['game_id']]
             )) {
-                echo json_encode(['response' => true]);
-                return;
+                return json_encode(['response' => true]);
             }
-            echo json_encode(['response' => false, 'msg' => 'Could not join the game']);
-            return;
+            return json_encode(['response' => false, 'msg' => 'Could not join the game']);
         }
-        echo json_encode(['response' => false, 'msg' => 'Game not found']);
+        return json_encode(['response' => false, 'msg' => 'Game not found']);
     }
 
     function createInviteUrl($id)

@@ -5790,7 +5790,7 @@ fieldset:disabled .btn {
 }
 
 .breadcrumb-item.active {
-    color: #009ef7
+    color: #34a795
 }
 
 .pagination {
@@ -5816,15 +5816,15 @@ fieldset:disabled .btn {
 
 .page-link:hover {
     z-index: 2;
-    color: #009ef7;
+    color: #34a795;
     text-decoration: none;
-    background-color: #f1faff;
+    background-color: #f9fffe;
     border-color: transparent
 }
 
 .page-link:focus {
     z-index: 3;
-    color: #009ef7;
+    color: #34a795;
     background-color: #f1faff;
     outline: 0;
     box-shadow: none
@@ -5837,7 +5837,7 @@ fieldset:disabled .btn {
 .page-item.active .page-link {
     z-index: 3;
     color: #fff;
-    background-color: #009ef7;
+    background-color: #34a795;
     border-color: transparent
 }
 
@@ -35023,7 +35023,7 @@ a:hover {
 }
 
 .page-item:hover .page-link i {
-    color: #009ef7
+    color: #34a795
 }
 
 .page-item:hover .page-link .svg-icon svg [fill]:not(.permanent):not(g) {

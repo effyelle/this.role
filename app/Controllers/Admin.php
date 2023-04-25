@@ -6,12 +6,14 @@ class Admin extends BaseController
 {
     protected mixed $usermodel;
     protected mixed $issuesmodel;
+    protected mixed $gamesmodel;
     protected string $now;
 
     public function __construct()
     {
         $this->usermodel = model('UsersModel');
         $this->issuesmodel = model('IssuesModel');
+        $this->gamesmodel = model('GamesModel');
         $this->now = date('Y-m-d H:i:s', time());
     }
 
@@ -33,7 +35,9 @@ class Admin extends BaseController
 
     function games(): string
     {
-        return template('admin/games');
+        $data = [];
+        if ($games = $this->gamesmodel->get(null, ['users' => 'users.user_id=games.game_creator'])) $data['games_list'] = $games;
+        return template('admin/games', $data);
     }
 
     function canEditAdmin(array $target_user, array $new_data, string $rol = 'admin'): bool

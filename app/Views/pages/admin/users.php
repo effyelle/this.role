@@ -54,7 +54,7 @@
                                     . '   <td>'
                                     . '      <button value="' . $k . '"'
                                     . '         data-bs-toggle="modal" data-bs-target="#user_edit-modal"'
-                                    . '         class="btn btn-danger ps-3 pe-2 py-1 usernameBtn">'
+                                    . '         class="btn btn-warning ps-3 pe-2 py-1 usernameBtn">'
                                     . '         <i class="fa fa-edit"></i>'
                                     . '      </button>'
                                     . '   </td>'

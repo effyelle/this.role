@@ -20,7 +20,8 @@
                                 <?php
                                 if (isset($game) && $game['game_creator'] === $_SESSION['user']['user_id']) {
                                     echo '<div class="form-control-solid">'
-                                        . '    <input id="game_title-input" name="game_title" class="form-control this-role-input-field d-none"/>'
+                                        . '    <input id="game_title-input" name="game_title" maxlength="50"'
+                                        . '         class="form-control this-role-input-field d-none"/>'
                                         . '</div>';
                                 }
                                 ?>
@@ -40,7 +41,7 @@
             <!--end::Header-->
             <!--begin::Body-->
             <div class="card-body">
-                <div class="w-100 mb-5 flex-column align-items-center justify-content-center">
+                <div class="w-100 mb-6 p-6 flex-column align-items-center justify-content-center">
                     <div class="symbol symbol-200px">
                         <span class="symbol-label circle game_icon-holder"></span>
                     </div>
@@ -53,7 +54,7 @@
                     }
                     ?>
                 </div>
-                <p class="text-justify game_details mb-5"></p>
+                <p class="mb-6 p-6 text-justify game_details"></p>
                 <?php
                 if (isset($game) && $game['game_creator'] === $_SESSION['user']['user_id']) {
                     echo '<div class="form-control-solid mb-5">'
@@ -67,12 +68,6 @@
             </div>
             <!--end:Body-->
         </form>
-        <p>
-            <?php
-            echo "var_dump for \$_FILES['img']: <br>";
-            var_dump($img ??'');
-            ?>
-        </p>
     </div>
 </div>
 <script>

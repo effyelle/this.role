@@ -30,34 +30,35 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
             <!--begin::Body-->
             <div class="card-body mx-12">
                 <div id="games-list" class="m-auto">
-                    <div class="d-flex flex-column flex-md-row flex-md-wrap gap-12 justify-content-start align-items-center align-content-center">
+                    <div class="flex-row-wrap row-cols-1 row-cols-md-2 row-cols-lg-1 row-cols-xl-2 justify-content-start align-items-stretch">
                         <?php if (isset($games_list)): ?>
                             <?php foreach ($games_list as $game): ?>
                                 <!--begin::Item-->
-                                <a href="/app/games/details/<?= $game['game_id'] ?>"
-                                   class="px-15 py-5 mb-3 w-300px h-300px d-flex flex-column justify-content-between align-items-center box-shadow-700 border-radius-5px">
-                                    <!--begin::Icon-->
-                                    <div class="d-flex flex-column">
-                                        <div class="symbol symbol-125px symbol-sm-150px symbol-lg-150px symbol-xl-200px me-5 circle game-img">
-                                        <span class="symbol-label circle game-img"
-                                              style=" background: url(<?= $game['game_icon'] ?>) no-repeat;
-                                                      background-size: cover;">
-                                        </span>
+                                <a href="/app/games/details/<?= $game['game_id'] ?>" class="py-6 px-12 mb-3">
+                                    <div class="d-flex flex-column justify-content-between align-items-center box-shadow-700 border-radius-5px p-6">
+                                        <!--begin::Icon-->
+                                        <div class="d-flex flex-column">
+                                            <div class="symbol symbol-125px symbol-sm-150px symbol-lg-150px symbol-xl-200px circle game-img">
+                                                <span class="symbol-label circle game-img"
+                                                      style=" background: url(<?= $game['game_icon'] ?>) no-repeat;
+                                                              background-size: cover;">
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <!--end::Icon-->
-                                    <!--begin::Section-->
-                                    <div class="d-flex flex-column align-items-center justify-content-around">
-                                        <!--begin::Title-->
-                                        <div class="me-2 mt-4 text-center">
-                                            <h6 class="game-title"><?= $game['game_title'] ?></h6>
-                                            <?php if ($game['game_creator'] === $_SESSION['user']['user_id']) {
-                                                echo '<i>You created this game</i>';
-                                            } ?>
+                                        <!--end::Icon-->
+                                        <!--begin::Section-->
+                                        <div class="d-flex flex-column align-items-center justify-content-around">
+                                            <!--begin::Title-->
+                                            <div class="me-2 mt-4 text-center">
+                                                <h6 class="game-title"><?= $game['game_title'] ?></h6>
+                                                <?php if ($game['game_creator'] === $_SESSION['user']['user_id']) {
+                                                    echo '<i>You created this game</i>';
+                                                } ?>
+                                            </div>
+                                            <!--end::Title-->
                                         </div>
-                                        <!--end::Title-->
+                                        <!--end::Section-->
                                     </div>
-                                    <!--end::Section-->
                                 </a>
                                 <!--end::Item-->
                             <?php endforeach; ?>
@@ -77,7 +78,8 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
 <div class="modal fade" tabindex="-1" id="new_game_modal">
     <div class="modal-dialog">
         <!--begin::Form-->
-        <form id="create_game_form" autocomplete="off" method="post" enctype="multipart/form-data" action="/app/games/list"
+        <form id="create_game_form" autocomplete="off" method="post" enctype="multipart/form-data"
+              action="/app/games/list"
               class="modal-content">
             <!--begin::Header-->
             <div class="modal-header">

@@ -46,8 +46,7 @@
                                 <label for="charsheet_selected" class="form-label d-none">You're writing as...</label>
                                 <select id="charsheet_selected"
                                         class="form-control form-select form-control-solid this-role-form-field">
-                                    <option disabled selected
-                                            value="-1"><?= $_SESSION['user']['user_username'] ?></option>
+                                    <option selected value="-1"><?= $_SESSION['user']['user_username'] ?></option>
                                     <option value="0">Sabrina</option>
                                     <option value="1">Salem</option>
                                 </select>

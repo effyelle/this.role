@@ -84,26 +84,6 @@ class Games extends BaseController
     }
 
     /**
-     * Launch game page
-     *
-     * @param int $id
-     *
-     * @return string
-     */
-    function launch(int $id): string
-    {
-        $data = [];
-        $game = $this->gamesmodel->get(['game_id' => $id]);
-        if (count($game) === 1) {
-            $data['game'] = $game[0];
-            $players = $this->usermodel->get(['game_player_id_game' => $id], ['game_player' => 'game_player_id_user=user_id']);
-            if (count($players) > 0) $data['players'] = $players;
-            return template('games/game', $data);
-        }
-        return template('games/not_found');
-    }
-
-    /**
      * Redirect to a detailed page for game where user (if creator) can edit
      * game details, title and icon
      *
@@ -137,7 +117,7 @@ class Games extends BaseController
 
             if (isset($_FILES['game_icon']) && $_FILES['game_icon']['error'] === 0) {
                 $folder = $game['game_folder'];
-                if (is_dir($folder)) {
+                if (is_dir(FCPATH . $folder)) {
                     // Delete old one if exists
                     $files = scandir(FCPATH . $folder);
                     // Search if there's already an icon
@@ -150,6 +130,8 @@ class Games extends BaseController
                     $img = upload_img('game_icon', $folder, 'game_icon');
                     if (str_contains($img, 'game_icon')) {
                         $this->gamesmodel->updt(['game_icon' => $img], ['game_id' => $id]);
+                    } else {
+                        $data['error'] = $img;
                     }
                 }
             }
@@ -157,6 +139,29 @@ class Games extends BaseController
 
             $data['game'] = $this->gamesmodel->get(['game_id' => $id])[0];
             return template('games/details', $data);
+        }
+        return template('games/not_found');
+    }
+
+    /**
+     * Launch game page
+     *
+     * @param int $id
+     *
+     * @return string
+     */
+    function launch(int $id): string
+    {
+        $data = [];
+        $game = $this->gamesmodel->get(['game_id' => $id]);
+        if (count($game) === 1) {
+            $data = [
+                'game' => $game[0],
+                'title' => $game[0]['game_title']
+            ];
+            $players = $this->usermodel->get(['game_player_id_game' => $id], ['game_player' => 'game_player_id_user=user_id']);
+            if (count($players) > 0) $data['players'] = $players;
+            return template('games/game', $data);
         }
         return template('games/not_found');
     }

@@ -73,6 +73,7 @@
                         . '    <button type="button" class="btn btn-sm btn-garnet invite_link-btn">Get invite link</button>'
                         . '</div>';
                 } ?>
+                <div class="text-danger text-center"><?= $error ?? ''; ?></div>
             </div>
             <!--end:Body-->
         </form>

@@ -116,7 +116,7 @@
         <!--begin::Toggle Contact Support-->
         <div class="aside-footer flex-column-auto pt-5 pb-7 px-5" id="kt_aside_footer">
             <a data-bs-toggle="modal" data-bs-target="#contact_support"
-               class="btn btn-bg-light btn-color-gray-500 btn-active-color-gray-900 w-100">
+               class="btn bg-gray-100 btn-color-gray-500 btn-active-color-gray-900 w-100">
                 <span class="btn-label">Contact Support</span>
                 <span class="svg-icon btn-icon svg-icon-2">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

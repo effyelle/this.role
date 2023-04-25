@@ -142,9 +142,11 @@
             issues_error_msg.removeClass('d-none');
         });
 
+        <?php if(isset($page) && $page !== 'games/details'): ?>
         $('#modal_success').on('hidden.bs.modal', function () {
             window.location.reload();
         });
+        <?php endif; ?>
 
         $('#contact_support').on('hidden.bs.modal', function () {
             $('#contact_support .this-role-form-field').val('');

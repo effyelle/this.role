@@ -16,7 +16,7 @@
                                 class="btn btn-sm btn-primary align-self-end d-none">
                             Save
                         </button>
-                        <button type="button" id="editProfile" class="btn btn-sm btn-warning align-self-start">
+                        <button type="button" id="editProfile" class="btn btn-sm btn-danger align-self-start">
                             Edit Profile
                         </button>
                     </div>

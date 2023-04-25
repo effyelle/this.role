@@ -31,7 +31,7 @@
                         if (isset($game) && $game['game_creator'] === $_SESSION['user']['user_id']) {
                             echo '<div class="card-toolbar gap-5">'
                                 . '   <button type="submit" class="save_game btn btn-sm btn-primary d-none">Save</button>'
-                                . '   <button type="button" class="edit_game btn btn-sm btn-warning">Edit Game</button>'
+                                . '   <button type="button" class="edit_game btn btn-sm btn-danger">Edit Game</button>'
                                 . '</div>';
                         }
                         ?>

@@ -820,6 +820,7 @@ body.game {
 
 body.game .aside {
     border-radius: unset;
+    z-index: 2000;
 }
 
 .nav-tabs .nav-item a.nav-link i {
@@ -926,4 +927,27 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 
 .text-italic {
     font-style: italic !important;
+}
+
+.journal_item_modal {
+    display: none;
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 1990;
+    width: 50%;
+    height: 50vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: 0;
+}
+
+.journal_item_modal.show {
+    display: block;
+}
+
+@media (min-width: 992px) {
+    .journal_item_modal {
+        z-index: 2010;
+    }
 }

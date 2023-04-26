@@ -282,13 +282,13 @@ class Games extends BaseController
 
     function set_journal_item($id): string
     {
-        if (isset($_POST['title']) && isset($_POST['itemType'])) {
+        if (isset($_POST['journal_title-input']) && isset($_POST['journal-item_type']) && $_POST['journal-item_type'] !== '-1') {
             $gameId = is_numeric(validate($id)) ? intval(validate($id)) : null;
             if (isset($gameId)) {
                 if ($this->journalmodel->new([
                     'item_game_id' => $gameId,
-                    'item_title' => validate($_POST['title']),
-                    'item_type' => validate($_POST['itemType']),
+                    'item_title' => validate($_POST['journal_title-input']),
+                    'item_type' => validate($_POST['journal-item_type']),
                 ])) {
                     return json_encode(['response' => true]);
                 }
@@ -304,6 +304,6 @@ class Games extends BaseController
         if ($journalItems = $this->journalmodel->get(['item_game_id' => $id], null, ['item_title' => 'ASC'])) {
             return json_encode(['response' => true, 'items' => $journalItems]);
         }
-        return json_encode(['response' => false, 'msg' => 'Missing some data']);
+        return json_encode(['response' => false]);
     }
 }

@@ -4,7 +4,7 @@ function initBoard(dbGame, session) {
     // * Chat object * //
     const chat = new board.Chat('.chat-messages');
     // * Journal intance * //
-    const journal = new board.Journal('journal');
+    const journal = new Journal('journal');
 
     getChat();
     getJournal();
@@ -62,30 +62,9 @@ function initBoard(dbGame, session) {
     // ********************************************* //
     $('#modal_journal .save_btn').click(function () {
 
-        let journalItemTitle = $('#journal_title-input');
-        let journalItemType = $('#journal-item_type').find(':selected').val();
-        // Boolean to check if one or more fields are empty
-        let fieldsRequired = journalItemTitle.val() !== '' && journalItemType !== "-1";
-        // Toggle spinner in save button
-        toggleProgressSpinner();
-        // Show error message if one or more fields are empty
-        $('#modal_journal .error').toggleClass('d-none', fieldsRequired);
-        // If no fields are empty
-        if (fieldsRequired) {
-            let post = {
-                title: journalItemTitle.val(),
-                itemType: journalItemType,
-                // viewers and editors
-            }
-            //let playerCanSeeOrEdit = $('.can_see-can_edit');
-            // If players in game
-            /*if (playerCanSeeOrEdit.length > 0) {
-                // Check if any of them can see or edit this item
-                for (let i = 0; i < playerCanSeeOrEdit.length; i++) {
-                    console.log(playerCanSeeOrEdit[i].children)
-                }
-            }*/
-            setJournalItem(post);
+        let form = getForm('#modal_journal');
+        if (form) {
+            setJournalItem(form);
         }
         // Always stop progress spinner at the end of all actions
         toggleProgressSpinner(false);
@@ -184,6 +163,7 @@ function initBoard(dbGame, session) {
      * @param post
      */
     function setJournalItem(post = {}) {
+        $('#modal_journal .text-danger').hide();
         $.ajax({
             type: 'post',
             url: '/app/games_ajax/set_journal_item/' + dbGame.game_id,
@@ -193,13 +173,11 @@ function initBoard(dbGame, session) {
                 console.log(data);
                 if (data['response']) {
                     // Add item to HTML
-                    journal.formatJournalItem({
-                        type: post.itemType,
-                        src: "",
-                        title: post.title,
-                    });
+                    getJournal();
                     // Dismiss journal modal
                     $('#modal_journal .dismiss_btn').click();
+                } else if (data['msg']) {
+                    $('#modal_journal .error').show();
                 }
             },
             error: function (e) {
@@ -218,14 +196,9 @@ function initBoard(dbGame, session) {
             success: (data) => {
                 if (data['response'] && data['items']) {
                     for (let i in data['items']) {
-                        let item = data.items[i];
-                        journal.formatJournalItem({
-                            type: item['item_type'],
-                            src: item['item_icon'],
-                            title: item['item_title']
-                        });
+                        journal.formatJournalItem(data.items[i]);
                     }
-                } else {
+                } else if (data['msg']) {
                     $('.modal_error_response').html(data['msg']);
                     $('#modal_error-toggle').click();
                 }

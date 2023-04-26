@@ -13,12 +13,13 @@
                 <div class="modal-body">
                     <div class="mb-10">
                         <label for="journal_title-input" class="form-label required">Enter a name or title</label>
-                        <input type="text" id="journal_title-input" autocomplete="off"
+                        <input type="text" id="journal_title-input" name="journal_title-input" autocomplete="off"
+                               value="Character or handout"
                                class="form-control this-role-form-field"/>
                     </div>
                     <div class="mb-10">
                         <label for="journal-item_type" class="form-label required">Type of item</label>
-                        <select type="text" id="journal-item_type"
+                        <select type="text" id="journal-item_type" name="journal-item_type"
                                 class="form-control this-role-form-field">
                             <option disabled selected value="-1">Select one</option>
                             <option value="character">Character</option>
@@ -34,15 +35,18 @@
                                         <div class="flex-column gap-2 can_see-can_edit">
                                             <span class="text-gray-800 text-italic fs-7"><?= $player['user_username'] ?></span>
                                             <div class="player-checkbox form-check form-check-solid">
-                                                <input type="checkbox" id="<?= $player['user_id'] ?>"
+                                                <input type="checkbox" id="<?= $player['user_id'] ?>-can_see"
+                                                       name="<?= $player['user_id'] ?>-can_see"
                                                        class="form-check-input form-check-inline player-can_see"/>
-                                                <label for="<?= $player['user_id'] ?>" class="form-check-label">
+                                                <label for="<?= $player['user_id'] ?>-can_see"
+                                                       class="form-check-label this-role-form-field">
                                                     Can see</label>
                                             </div>
                                             <div class="player-checkbox form-check form-check-solid">
-                                                <input type="checkbox" id="<?= $player['user_id'] ?>"
-                                                       class="form-check-input form-check-inline player-can_edit"/>
-                                                <label for="<?= $player['user_id'] ?>"
+                                                <input type="checkbox" id="<?= $player['user_id'] ?>-can_edit"
+                                                       name="<?= $player['user_id'] ?>-can_edit"
+                                                       class="form-check-input form-check-inline player-can_edit this-role-form-field"/>
+                                                <label for="<?= $player['user_id'] ?>-can_edit"
                                                        class="form-check-label">
                                                     Can edit</label>
                                             </div>
@@ -52,7 +56,7 @@
                             </div>
                         <?php endif; ?>
                     </div>
-                    <p class="text-center text-danger pt-8 error d-none">All fields are required</p>
+                    <p class="text-center text-danger error" style="display: none;">All fields are required</p>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-sm btn-dark dismiss_btn" data-bs-dismiss="modal"
@@ -74,11 +78,15 @@
         </div>
     </div>
     <!--end::Modal-->
+    <!--begin::Journal Items Modal Container-->
+    <div id="journal-modal_container"></div>
+    <!--end::Journal Items Modal Container-->
 <?php endif; ?>
 <script src="/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js"></script>
 <script src="/assets/js/custom/apps/ckeditor/CKEditor.js"></script>
 <script type="text/javascript" src="/assets/js/custom/games/game.js"></script>
 <script type="text/javascript" src="/assets/js/custom/games/Board.js"></script>
+<script type="text/javascript" src="/assets/js/custom/games/Journal.js"></script>
 <script>
     // * Game details from DATABASE * //
     const dbGame =<?php echo json_encode($game ?? []) ?>;

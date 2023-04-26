@@ -6,7 +6,7 @@ class GamePlayerModel extends BaseModel
 {
     protected $table = 'game_player';
     protected string $relatedTable = '';
-    protected $primaryKey = 'game_id';
+    protected $primaryKey = '(game_player_id_user, game_player_id_game)';
 
     protected $useAutoIncrement = true;
 

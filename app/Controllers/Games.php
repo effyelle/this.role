@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use function PHPUnit\Framework\isNan;
+
 class Games extends BaseController
 {
     protected mixed $gamesmodel;
@@ -281,13 +283,26 @@ class Games extends BaseController
     function set_journal_item($id): string
     {
         if (isset($_POST['title']) && isset($_POST['itemType'])) {
-            if ($this->journalmodel->new([
-                'item_title' => validate($_POST['title']),
-                'item_type' => validate($_POST['itemType']),
-            ])) {
-                return json_encode(['response' => true]);
+            $gameId = is_numeric(validate($id)) ? intval(validate($id)) : null;
+            if (isset($gameId)) {
+                if ($this->journalmodel->new([
+                    'item_game_id' => $gameId,
+                    'item_title' => validate($_POST['title']),
+                    'item_type' => validate($_POST['itemType']),
+                ])) {
+                    return json_encode(['response' => true]);
+                }
+                return json_encode(['response' => false, 'msg' => 'Item could not be added']);
             }
-            return json_encode(['response' => false, 'msg' => 'Item could not be added']);
+            return json_encode(['response' => false, 'msg' => 'Please don\'t script into Database!']);
+        }
+        return json_encode(['response' => false, 'msg' => 'Missing some data']);
+    }
+
+    function get_journal_items($id): string
+    {
+        if ($journalItems = $this->journalmodel->get(['item_game_id' => $id])) {
+            return json_encode(['response' => true, 'items' => $journalItems]);
         }
         return json_encode(['response' => false, 'msg' => 'Missing some data']);
     }

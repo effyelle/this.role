@@ -36,6 +36,72 @@ class Board {
         this.listId = id + '_list';
         this.itemClass = id + '_item';
         this.itemModalClass = id + '_item_modal';
+        this.openJournalItem = function () {
+            console.log(this.value);
+            /*
+            document.body.innerHTML += '' +
+                '<div class="modal fade show d-block ' + this.itemModalClass + '">' +
+                '   <div class="modal-dialog">' +
+                '       <div class="modal-content">' +
+                '           <div class="modal-header">' +
+                '           </div>' +
+                '           <div class="modal-body">' +
+                '           </div>' +
+                '       </div>' +
+                '   </div>' +
+                '</div>';
+             */
+        }
+        this.formatJournalItem = function (data = {}) {
+            document.querySelector('#' + this.listId).innerHTML += '' +
+                '<!--begin::Menu Item-->' +
+                ' <div class="menu-item ' + this.itemClass + '">' +
+                '     <button class="btn menu-link" value="' + data.type + '">' +
+                '         <!--begin::Symbol-->' +
+                '         <div class="me-2 symbol symbol-20px symbol-md-30px">' +
+                '             <span class="symbol-label circle sheet_icon"' +
+                '                 style="background:url(' + data.src + ')">' +
+                '             </span>' +
+                '         </div>' +
+                '         <!--end::Symbol-->' +
+                '         <span class="menu-title">' + data.title + '</span>' +
+                '     </button>' +
+                ' </div>' +
+                ' <!--end::Menu Item-->';
+            let items = document.querySelectorAll('.' + this.itemClass + ' .menu-link');
+            //items[items.length - 1].addEventListener('click', this.openJournalItem);
+            items[items.length - 1].addEventListener('click', () => {
+                this.openJournalItem();
+            });
+        }
+        this.loadItems = function () {
+            this.initJournal();
+            $.ajax({
+                type: 'get',
+                url: '/app/games_ajax/get_journal_items/' + dbGame.game_id,
+                dataType: 'json',
+                success: (data) => {
+                    console.log(data);
+                    if (data['response'] && data['items']) {
+                        for (let i in data['items']) {
+                            let item = data.items[i];
+                            console.log(item);
+                            this.formatJournalItem({
+                                type: item.item_type,
+                                src: item.item_icon,
+                                title: item.item_title
+                            });
+                        }
+                        return;
+                    }
+                    $('.modal_error_response').html(data['msg']);
+                    $('#modal_error-toggle').click();
+                },
+                error: function (e) {
+                    console.log("Error: ", e);
+                }
+            });
+        }
         this.initJournal = function () {
             this.container.innerHTML = '' +
                 ' <div class="aside-footer d-flex flex-column py-3 px-5" id="' + this.listId + '">' +
@@ -61,45 +127,7 @@ class Board {
                 '     </div>' +
                 ' </div>';
         }
-        this.initJournal();
-        this.formatJournalItem = function (itemType, data = {}) {
-            document.querySelector('#' + this.listId).innerHTML += '' +
-                '<!--begin::Menu Item-->' +
-                ' <div class="menu-item ' + this.itemClass + '">' +
-                '     <button class="btn menu-link" value="' + itemType + '">' +
-                '         <!--begin::Symbol-->' +
-                '         <div class="me-2 symbol symbol-20px symbol-md-30px">' +
-                '             <span class="symbol-label circle sheet_icon"' +
-                '                 style="background:url(' + data.src + ')">' +
-                '             </span>' +
-                '         </div>' +
-                '         <!--end::Symbol-->' +
-                '         <span class="menu-title">' + data.title + '</span>' +
-                '     </button>' +
-                ' </div>' +
-                ' <!--end::Menu Item-->';
-            let items = document.querySelectorAll('.' + this.itemClass + ' .menu-link');
-            //items[items.length - 1].addEventListener('click', this.openJournalItem);
-            items[items.length - 1].addEventListener('click', () => {
-                this.openJournalItem();
-            });
-        }
-        this.openJournalItem = function () {
-            console.log(this.value);
-            /*
-            document.body.innerHTML += '' +
-                '<div class="modal fade show d-block ' + this.itemModalClass + '">' +
-                '   <div class="modal-dialog">' +
-                '       <div class="modal-content">' +
-                '           <div class="modal-header">' +
-                '           </div>' +
-                '           <div class="modal-body">' +
-                '           </div>' +
-                '       </div>' +
-                '   </div>' +
-                '</div>';
-             */
-        }
+        this.loadItems();
     }
 
     /**
@@ -118,18 +146,20 @@ class Board {
                 ? 'align-items-center'
                 : 'align-items-start px-2 pt-5';
             let msgColor = data.msgType === 'error' ? 'text-danger' : '';
+            let avatar = data.src
+                ? '<!--begin::Symbol-->' +
+                '<div class="me-2 symbol symbol-20px symbol-md-30px">' +
+                '    <span class="symbol-label circle icon">' +
+                '    ' +// style="background: ' + data.src + '; background-size:cover;"
+                '    </span>' +
+                '</div>' +
+                '<!--end::Symbol-->'
+                : '';
             this.record.innerHTML += '' +
                 '<!--begin::Menu Item-->' +
                 '<div class="menu-item py-3">' +
                 '   <div class="d-flex flex-row justify-content-between align-items-center gap-3">' +
-                '       <div class="d-flex flex-row justify-content-start align-items-center gap-3">' +
-                '           <!--begin::Symbol-->' +
-                '           <div class="me-2 symbol symbol-20px symbol-md-30px">' +
-                '               <span class="symbol-label circle icon">' +
-                '               ' +// style="background: ' + data.src + '; background-size:cover;"
-                '               </span>' +
-                '           </div>' +
-                '           <!--end::Symbol-->' +
+                '       <div class="d-flex flex-row justify-content-start align-items-center gap-3">' + avatar +
                 '           <div>' + data.sender + '</div>' +
                 '       </div>' +
                 '       <i>' + now.toLocaleDateString() + ' ' + now.toLocaleTimeString() + '</i>' +

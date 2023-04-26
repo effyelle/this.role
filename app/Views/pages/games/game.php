@@ -13,7 +13,7 @@
                 <div class="modal-body">
                     <div class="mb-10">
                         <label for="journal_title-input" class="form-label required">Enter a name or title</label>
-                        <input type="text" id="journal_title-input"
+                        <input type="text" id="journal_title-input" autocomplete="off"
                                class="form-control this-role-form-field"/>
                     </div>
                     <div class="mb-10">
@@ -26,7 +26,7 @@
                         </select>
                     </div>
                     <div class="row gap-1">
-                        <?php if (isset($players)): ?>
+                        <?php if (isset($players) && !(count($players) === 1 && $players[0]['user_id'] === $_SESSION['user']['user_id'])): ?>
                             <span class="form-label text-gray-800 fw-bolder">Choose if players can see this item</span>
                             <div id="include_players" class="flex-row-wrap gap-12 fs-8">
                                 <?php foreach ($players as $player):

@@ -34,7 +34,9 @@
             <!--begin::Chat-->
             <div id="chat_container" class="tab-pane fade show active">
                 <div class="aside-footer d-flex flex-column py-3 px-5 chat-container mb-3 overflow-y-scroll">
-                    <div class="chat-messages"></div>
+                    <div class="chat-messages">
+                        <!--Chat messages go here-->
+                    </div>
                     <div class="d-flex flex-column justify-content-center">
                         <div class="chat-bubble">
                             <label for="chat" class="form-label mb-3">Chat</label>

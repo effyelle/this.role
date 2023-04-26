@@ -5,8 +5,8 @@ namespace App\Models;
 class GameJournalModel extends BaseModel
 {
     protected $table = 'game_journal';
-    protected string $relatedTable = 'game_player';
-    protected $primaryKey = 'game_id';
+    protected string $relatedTable = '';
+    protected $primaryKey = 'item_id';
 
     protected $useAutoIncrement = true;
 

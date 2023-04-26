@@ -184,7 +184,8 @@ function initBoard(dbGame, session) {
                 console.log(data);
                 if (data['response']) {
                     // Add item to HTML
-                    journal.formatJournalItem(post.itemType, {
+                    journal.formatJournalItem({
+                        type: post.itemType,
                         src: '',
                         title: post.title,
                     });

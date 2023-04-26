@@ -9,14 +9,9 @@ class Journal {
         this.items = {};
     }
 
-    makeDraggable(element) {
-        console.log(element);
-        element.draggable();
-    }
-
     openItem(item) {
         $('#journal-modal_container')[0].innerHTML += '' +
-            '<div id="draggable-' + item.item_id + '" class="' + this.itemModalClass + ' show">' +
+            '<div id="draggable_' + item.item_id + '" class="' + this.itemModalClass + ' show">' +
             '       <div class="modal-content">' +
             '           <div class="modal-header flex-row-wrap">' +
             '               <div class="flex-row-wrap justify-content-between align-items-stretch col-10 cursor-move">' +
@@ -35,11 +30,6 @@ class Journal {
             '           </div>' +
             '       </div>' +
             '</div>';
-        //this.makeDraggable($('#' + item.item_id));
-        new Draggable({
-            container: '#draggable-' + item.item_id,
-            pointer: '#draggable-' + item.item_id + ' .cursor-move'
-        });
     }
 
     formatJournalItem(item = {}) {
@@ -66,7 +56,24 @@ class Journal {
         let items = $('.' + this.itemClass + ' .menu-link');
         items.unbind('click');
         items.click(() => {
-            this.openItem(item);
+            let id = 'draggable_' + item.item_id;
+            //this.makeDraggable($('#' + item.item_id));
+            console.log(document.querySelectorAll('#' + id).length)
+            if (document.querySelectorAll('#' + id).length === 0) {
+                this.openItem(item);
+                // Add drag on cursor move when clicking header
+                new Draggable({
+                    container: '#' + id,
+                    pointer: '#' + id + ' .cursor-move'
+                });
+                for (let i = 0; i < document.querySelectorAll('.' + this.itemModalClass).length; i++) {
+                    console.log('here')
+                    document.querySelectorAll('.' + this.itemModalClass + ' .close_item-btn')[i]
+                        .addEventListener('click', () => {
+                            $('.' + this.itemModalClass)[i].remove();
+                        });
+                }
+            }
         });
     }
 

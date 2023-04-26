@@ -3,6 +3,7 @@
     --this-role-red: #F2614E;
     --this-role-green: #34a795;
     --this-role-light: #eddec6;
+    --this-role-lighter: #fdfcf8;
     --this-role-ocher: #cbae38;
     --this-role-blue: #515ddc;
     --this-role-light-rgb: 237, 222, 198;
@@ -834,7 +835,7 @@ body.game .aside {
 }
 
 .game .aside .nav-line-tabs {
-    background: #fdfcf8;
+    background: var(--this-role-lighter);
 }
 
 .game .aside .nav-line-tabs .nav-item .nav-link.active {
@@ -940,10 +941,16 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     overflow-x: hidden;
     overflow-y: auto;
     outline: 0;
+    border-radius: 10px;
 }
 
 .journal_item_modal.show {
     display: block;
+}
+
+.journal_item_modal .modal-content {
+    height: 100%;
+    background: var(--this-role-lighter);
 }
 
 @media (min-width: 992px) {

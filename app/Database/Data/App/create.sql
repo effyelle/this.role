@@ -97,3 +97,4 @@ UPDATE users SET user_rol='masteradmin' WHERE user_email='epastor@gmail.com';
 UPDATE users SET user_rol='admin' WHERE user_email='nore.zgz@mail.com';
 
 UPDATE users SET user_confirmed=NULL WHERE user_username='effy.elle';
+

@@ -1,5 +1,3 @@
-const gamesDir = '/assets/media/games/';
-
 $(document).ready(function () {
     generateDatatable();
 

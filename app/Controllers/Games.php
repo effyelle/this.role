@@ -60,7 +60,7 @@ class Games extends BaseController
                 $new_folder = time();
                 $newRoute = $this->mediaGames . $new_folder . '/';
                 // Create the folder
-                if (mkdir($newRoute)) {
+                if (mkdir($newRoute) && mkdir($newRoute . '/gallery')) {
                     // If folder creates, update game to save folder
                     if ($this->gamesmodel->updt(['game_folder' => $new_folder], ['game_id' => $game_id])) {
                         // * Upload game icon into the new folder * //
@@ -301,7 +301,7 @@ class Games extends BaseController
 
     function get_journal_items($id): string
     {
-        if ($journalItems = $this->journalmodel->get(['item_game_id' => $id])) {
+        if ($journalItems = $this->journalmodel->get(['item_game_id' => $id], null, ['item_title' => 'ASC'])) {
             return json_encode(['response' => true, 'items' => $journalItems]);
         }
         return json_encode(['response' => false, 'msg' => 'Missing some data']);

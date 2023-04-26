@@ -24,25 +24,32 @@ class BaseModel extends Model
      * -----------------------------------------------------------------------------------------------------------------
      *
      * @param array|null $where -must receive as keys the table column names and as values the values to set the conditions
-     * @param array|null $join -must receive as keys the tables to join and as values the condition that joins tables
+     * @param array|null $join -must receive as key(s) the table(s) to join and as value(s) the comparing condition
+     * @param array|null $orderBy -must receive as key the column to order by and as value to direction (ASC, DESC)
      *
      * @return array
      */
-    function get(array $where = null, array $join = null): array
+    function get(array $where = null, array $join = null, array $orderBy = null): array
     {
         $builder = db::connect()
             ->table($this->table)
             ->select();
-
+        // Join
         if (isset($join)) {
             foreach ($join as $k => $v) {
                 $builder->join($k, $v);
             }
         }
-
+        // Where
         if (isset($where)) {
             foreach ($where as $k => $v) {
                 $builder->where($k, $v);
+            }
+        }
+        // Oder by
+        if (isset($orderBy)) {
+            foreach ($orderBy as $k => $v) {
+                $builder->orderBy($k, $v);
             }
         }
         return $builder->get()->getResultArray();

@@ -31,18 +31,18 @@
                             <div id="include_players" class="flex-row-wrap gap-12 fs-8">
                                 <?php foreach ($players as $player):
                                     if ($player['user_id'] !== $_SESSION['user']['user_id']): ?>
-                                        <div class="flex-column gap-2">
+                                        <div class="flex-column gap-2 can_see-can_edit">
                                             <span class="text-gray-800 text-italic fs-7"><?= $player['user_username'] ?></span>
                                             <div class="player-checkbox form-check form-check-solid">
-                                                <input type="checkbox" id="<?= $player['user_id'] ?>-can_see"
-                                                       class="form-check-input form-check-inline"/>
-                                                <label for="<?= $player['user_id'] ?>-can_see" class="form-check-label">
+                                                <input type="checkbox" id="<?= $player['user_id'] ?>"
+                                                       class="form-check-input form-check-inline player-can_see"/>
+                                                <label for="<?= $player['user_id'] ?>" class="form-check-label">
                                                     Can see</label>
                                             </div>
                                             <div class="player-checkbox form-check form-check-solid">
-                                                <input type="checkbox" id="<?= $player['user_id'] ?>-can_edit"
-                                                       class="form-check-input form-check-inline"/>
-                                                <label for="<?= $player['user_id'] ?>-can_edit"
+                                                <input type="checkbox" id="<?= $player['user_id'] ?>"
+                                                       class="form-check-input form-check-inline player-can_edit"/>
+                                                <label for="<?= $player['user_id'] ?>"
                                                        class="form-check-label">
                                                     Can edit</label>
                                             </div>

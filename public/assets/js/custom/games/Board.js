@@ -7,6 +7,7 @@ class Board {
     constructor(dicesClass = '') {
         this.dicesBtns = document.querySelectorAll(dicesClass);
         this.dices = this.createDices(this.dicesBtns);
+        this.imgFolder = '/assets/media/games/' + dbGame.game_folder + '/gallery/';
     }
 
     /**
@@ -36,6 +37,7 @@ class Board {
         this.listId = id + '_list';
         this.itemClass = id + '_item';
         this.itemModalClass = id + '_item_modal';
+        this.imgFolder = '/assets/media/games/' + dbGame.game_folder + '/gallery/';
         this.openJournalItem = function () {
             console.log(this.value);
             /*
@@ -53,14 +55,16 @@ class Board {
              */
         }
         this.formatJournalItem = function (data = {}) {
+            // Control src is not null
+            let style = !data.src ? '' : ' style="background:url(' + this.imgFolder + data.src + ')"';
+            // Fill list
             document.querySelector('#' + this.listId).innerHTML += '' +
                 '<!--begin::Menu Item-->' +
                 ' <div class="menu-item ' + this.itemClass + '">' +
                 '     <button class="btn menu-link" value="' + data.type + '">' +
                 '         <!--begin::Symbol-->' +
                 '         <div class="me-2 symbol symbol-20px symbol-md-30px">' +
-                '             <span class="symbol-label circle sheet_icon"' +
-                '                 style="background:url(' + data.src + ')">' +
+                '             <span ' + style + 'class="symbol-label circle sheet_icon"> ' +
                 '             </span>' +
                 '         </div>' +
                 '         <!--end::Symbol-->' +
@@ -68,39 +72,11 @@ class Board {
                 '     </button>' +
                 ' </div>' +
                 ' <!--end::Menu Item-->';
-            let items = document.querySelectorAll('.' + this.itemClass + ' .menu-link');
+            /*let items = document.querySelectorAll('.' + this.itemClass + ' .menu-link');
             //items[items.length - 1].addEventListener('click', this.openJournalItem);
             items[items.length - 1].addEventListener('click', () => {
                 this.openJournalItem();
-            });
-        }
-        this.loadItems = function () {
-            this.initJournal();
-            $.ajax({
-                type: 'get',
-                url: '/app/games_ajax/get_journal_items/' + dbGame.game_id,
-                dataType: 'json',
-                success: (data) => {
-                    console.log(data);
-                    if (data['response'] && data['items']) {
-                        for (let i in data['items']) {
-                            let item = data.items[i];
-                            console.log(item);
-                            this.formatJournalItem({
-                                type: item.item_type,
-                                src: item.item_icon,
-                                title: item.item_title
-                            });
-                        }
-                        return;
-                    }
-                    $('.modal_error_response').html(data['msg']);
-                    $('#modal_error-toggle').click();
-                },
-                error: function (e) {
-                    console.log("Error: ", e);
-                }
-            });
+            });*/
         }
         this.initJournal = function () {
             this.container.innerHTML = '' +
@@ -127,7 +103,6 @@ class Board {
                 '     </div>' +
                 ' </div>';
         }
-        this.loadItems();
     }
 
     /**

@@ -9,12 +9,12 @@
             <!--begin::Aside Menu-->
             <ul class="nav nav-tabs nav-line-tabs pt-2 px-2 justify-content-evenly">
                 <li class="nav-item">
-                    <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#chat_container">
+                    <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#chat_container">
                         <i class="fa fa-comments f-lg text-this-role-light"></i>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#journal">
+                    <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#journal">
                         <i class="fa fa-newspaper text-this-role-light"></i>
                     </a>
                 </li>
@@ -32,7 +32,7 @@
             <!--end::Aside menu-->
 
             <!--begin::Chat-->
-            <div id="chat_container" class="tab-pane fade show active">
+            <div id="chat_container" class="tab-pane fade">
                 <div class="aside-footer d-flex flex-column py-3 px-5 chat-container mb-3 overflow-y-scroll">
                     <div class="chat-messages">
                         <!--Chat messages go here-->
@@ -61,7 +61,7 @@
             <!--end::Chat-->
 
             <!--begin::Journal-->
-            <div id="journal" class="tab-pane fade"></div>
+            <div id="journal" class="tab-pane fade active show"></div>
             <!--end::Journal-->
 
             <!--begin::Tools-->

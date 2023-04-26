@@ -7,6 +7,7 @@ function initBoard(dbGame, session) {
     const journal = new board.Journal('journal');
 
     getChat();
+    getJournal();
 
     // *********************************** //
     // * Listen to dices buttons pressed * //
@@ -76,6 +77,14 @@ function initBoard(dbGame, session) {
                 itemType: journalItemType,
                 // viewers and editors
             }
+            //let playerCanSeeOrEdit = $('.can_see-can_edit');
+            // If players in game
+            /*if (playerCanSeeOrEdit.length > 0) {
+                // Check if any of them can see or edit this item
+                for (let i = 0; i < playerCanSeeOrEdit.length; i++) {
+                    console.log(playerCanSeeOrEdit[i].children)
+                }
+            }*/
             setJournalItem(post);
         }
         // Always stop progress spinner at the end of all actions
@@ -186,7 +195,7 @@ function initBoard(dbGame, session) {
                     // Add item to HTML
                     journal.formatJournalItem({
                         type: post.itemType,
-                        src: '',
+                        src: "",
                         title: post.title,
                     });
                     // Dismiss journal modal
@@ -198,8 +207,33 @@ function initBoard(dbGame, session) {
             }
         })
     }
-}
 
 // Load journal from DB
-function getJournal() {
+    function getJournal() {
+        journal.initJournal();
+        $.ajax({
+            type: 'post',
+            url: '/app/games_ajax/get_journal_items/' + dbGame.game_id,
+            dataType: 'json',
+            success: (data) => {
+                if (data['response'] && data['items']) {
+                    for (let i in data['items']) {
+                        let item = data.items[i];
+                        console.log(item);
+                        journal.formatJournalItem({
+                            type: item['item_type'],
+                            src: item['item_icon'],
+                            title: item['item_title']
+                        });
+                    }
+                } else {
+                    $('.modal_error_response').html(data['msg']);
+                    $('#modal_error-toggle').click();
+                }
+            },
+            error: function (e) {
+                console.log("Error: ", e);
+            }
+        });
+    }
 }

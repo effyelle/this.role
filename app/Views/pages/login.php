@@ -9,14 +9,16 @@
     </div>
     <!--end::Form Field-->
     <!--begin::Form Field-->
-    <div class="my-4 col-10 w-md-600px">
+    <div class="my-4 col-10 w-md-600px fs-5">
         <label for="pwd" class="form-label my-2 bg-brush">Password</label>
         <input type="password" id="pwd" name="pwd"
                class="form-control form-control-solid ajax-login bg-transparent mb-6 this-role-form-field"/>
+    </div>
+    <!--end::Form Field-->
+    <div class="col-10 w-md-600px">
         <a href="/app/reset_pwd"
            class="d-block fw-bolder text-info text-hover-info fs-7 mx-auto text-center">Forgot password?</a>
     </div>
-    <!--end::Form Field-->
     <!--begin::Form Button-->
     <div class="my-6">
         <button type="button" id="loginBtn" class="btn btn-primary">

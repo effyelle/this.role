@@ -69,8 +69,9 @@
                         . '    <textarea id="game_details-textarea" rows="5" name="game_details" placeholder="Enter your game details..."'
                         . '          class="form-control this-role-input-field d-none"></textarea>'
                         . '</div>';
-                    echo '<div class="flex-row-wrap justify-content-end align-items-center">'
-                        . '    <button type="button" class="btn btn-sm btn-garnet invite_link-btn">Get invite link</button>'
+                    echo '<div class="flex-row-wrap justify-content-between align-items-center">'
+                        . '    <button type="button" class="btn btn-sm btn-garnet invite_link-btn">Get Invite Link</button>'
+                        . '    <button type="button" class="btn btn-sm btn-dark del_game-btn">Delete Game</button>'
                         . '</div>';
                 } ?>
                 <div class="text-danger text-center"><?= $error ?? ''; ?></div>
@@ -90,18 +91,13 @@
         const gameDetails = $('.game_details');
         const gameDetailsTextarea = $('#game_details-textarea');
         const editGameBtn = $('.edit_game');
+        const inviteLinkBtn = $('.invite_link-btn');
         // Load game details into page
         formatGameDetails(game);
-
-        function formatGameDetails() {
-            if (game.game_title) gameTitle.html(game.game_title);
-            if (game.game_details) gameDetails.html(game.game_details);
-            if (game.game_icon) {
-                gameIconHolder.css('background-image', 'url("' + game.game_icon + '")');
-                gameIconHolder.css('background-size', 'cover');
-            }
-        }
-
+        // ********************************************** //
+        // ***************** DOM events ***************** //
+        // ********************************************** //
+        // Edit game, toggle inputs and info
         editGameBtn.click(function () {
             if (this.innerHTML === 'Edit Game') {
                 toggleGameEdition();
@@ -109,8 +105,8 @@
             }
             toggleGameEdition(false);
         });
-
-        $('.invite_link-btn').click(function () {
+        // Invite link, create through AJAX
+        inviteLinkBtn.click(function () {
             $.ajax({
                 type: "get",
                 url: "/app/games_ajax/create_invite_url/<?=$game['game_id']?>",
@@ -133,10 +129,27 @@
                 }
             })
         })
-
+        // Change DOM icon on input change
         $('#change-game_icon').change(function () {
             readImageChange(this, $('.game_icon-holder'));
         });
+        // Delete game
+        $('.del_game-btn').click(function () {
+            openConfirmation(deleteGame);
+        });
+
+        // ********************************************** //
+        // ***************** DOM events ***************** //
+        // ********************************************** //
+
+        function formatGameDetails() {
+            if (game.game_title) gameTitle.html(game.game_title);
+            if (game.game_details) gameDetails.html(game.game_details);
+            if (game.game_icon) {
+                gameIconHolder.css('background-image', 'url("/assets/media/games/' + game.game_folder + '/' + game.game_icon + '")');
+                gameIconHolder.css('background-size', 'cover');
+            }
+        }
 
         function toggleGameEdition(editable = true) {
             $('.save_game').toggleClass('d-none', !editable);
@@ -145,7 +158,7 @@
             gameTitle.toggleClass('d-none', editable);
             gameDetailsTextarea.toggleClass('d-none', !editable);
             gameDetails.toggleClass('d-none', editable);
-            $('.invite_link-btn').toggleClass('d-none', editable);
+            inviteLinkBtn.toggleClass('d-none', editable);
             if (editable) {
                 editGameBtn.html('Cancel');
                 gameTitleInput.val(game.game_title);
@@ -156,6 +169,31 @@
             gameDetailsTextarea.val('');
             editGameBtn.html('Edit Game');
             formatGameDetails();
+        }
+
+        function deleteGame() {
+            $.ajax({
+                type: "get",
+                url: "/app/games/ajax_del_game/" + game.game_id,
+                dataType: "json",
+                success: function (data) {
+                    if (data['response']) {
+                        $('.modal_success_response').html('Game deleted successfully');
+                        $('#modal_success-toggle').click();
+                        setTimeout(() => {
+                            window.location.assign('/app/games/list');
+                        }, 2500);
+                        return;
+                    }
+                    $('.modal_error_response').html(data['msg']);
+                    $('#modal_error-toggle').click();
+                },
+                error: function (e) {
+                    $('.modal_error_response').html('Something went wrong<br>' + e);
+                    $('#modal_error-toggle').click();
+                    console.log("Error: ", e);
+                }
+            });
         }
     });
 </script>

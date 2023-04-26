@@ -10,6 +10,7 @@ class Games extends BaseController
     protected mixed $journalmodel;
     protected mixed $gameplayermodel;
     protected string $now;
+    protected string $mediaGames = FCPATH . 'assets/media/games/';
 
     function __construct()
     {
@@ -54,17 +55,20 @@ class Games extends BaseController
                     'game_player_id_game' => $game_id
                 ]);
                 // Declare new folder for the game
-                $new_folder = '/assets/media/games/' . time() . '/';
+                $new_folder = time();
+                $newRoute = $this->mediaGames . $new_folder . '/';
                 // Create the folder
-                if (mkdir('.' . $new_folder)) {
+                if (mkdir($newRoute)) {
                     // If folder creates, update game to save folder
                     if ($this->gamesmodel->updt(['game_folder' => $new_folder], ['game_id' => $game_id])) {
                         // * Upload game icon into the new folder * //
-                        $img = upload_img('game_icon', $new_folder, 'game_icon');
+                        $img = upload_img('game_icon', $newRoute, 'game_icon');
                         // If the file was uploaded, update game to add new icon
                         if (str_contains($img, 'game_icon')) {
+                            $newFile = explode('/', $img)[count(explode('/', $img)) - 1];
+                            $this->gamesmodel->updt(['game_icon' => $newFile], ['game_id' => $game_id]);
+                        } else {
                             $data = ['game_icon' => $img, 'game_folder' => $new_folder, 'game_id', $game_id];
-                            $this->gamesmodel->updt(['game_icon' => $img], ['game_id' => $game_id]);
                         }
                     }
                 }
@@ -76,7 +80,10 @@ class Games extends BaseController
         // * END::Submit POST * //
         // * BEGIN::Get games for session user * //
         // Database connect, get games, then load
-        if ($games = $this->gamesmodel->get(['game_player_id_user' => $sessionUser], ['game_player' => 'game_player_id_game=game_id'])) {
+        if ($games = $this->gamesmodel->get(
+            ['game_player_id_user' => $sessionUser, 'game_deleted' => null], // where
+            ['game_player' => 'game_player_id_game=game_id'] // join
+        )) {
             $data['games_list'] = $games;
         }
         // * END::Get games for session user * //
@@ -117,19 +124,21 @@ class Games extends BaseController
 
             if (isset($_FILES['game_icon']) && $_FILES['game_icon']['error'] === 0) {
                 $folder = $game['game_folder'];
-                if (is_dir(FCPATH . $folder)) {
+                if (is_dir($this->mediaGames . $folder)) {
                     // Delete old one if exists
-                    $files = scandir(FCPATH . $folder);
+                    $fullRoute = $this->mediaGames . $folder . '/';
+                    $files = scandir($fullRoute);
                     // Search if there's already an icon
                     foreach ($files as $file) {
                         if (str_contains($file, 'game_icon')) {
                             // Delete file if found
-                            unlink(FCPATH . $folder . $file);
+                            unlink($fullRoute . $file);
                         }
                     }
-                    $img = upload_img('game_icon', $folder, 'game_icon');
+                    $img = upload_img('game_icon', $fullRoute, 'game_icon');
                     if (str_contains($img, 'game_icon')) {
-                        $this->gamesmodel->updt(['game_icon' => $img], ['game_id' => $id]);
+                        $newFile = explode('/', $img)[count(explode('/', $img)) - 1];
+                        $this->gamesmodel->updt(['game_icon' => $newFile], ['game_id' => $id]);
                     } else {
                         $data['error'] = $img;
                     }
@@ -233,6 +242,17 @@ class Games extends BaseController
             return json_encode(['response' => false, 'msg' => 'Could not join the game']);
         }
         return json_encode(['response' => false, 'msg' => 'Game not found']);
+    }
+
+    function ajax_del_game($id): string
+    {
+        if ($this->gamesmodel->updt(
+            ['game_deleted' => $this->now], //data
+            ['game_id' => $id] //where
+        )) {
+            return json_encode(['response' => true]);
+        }
+        return json_encode(['response' => false, 'msg' => 'Game could not be deleted']);
     }
 
     function set_chat($id): string

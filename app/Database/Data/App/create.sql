@@ -79,16 +79,16 @@ CREATE TABLE invite_url(
 	FOREIGN KEY(id_game) REFERENCES games(game_id)
 );
 
-INSERT INTO users(user_username, user_fname, user_email, user_pwd, user_confirmed)
+INSERT INTO users(user_username, user_avatar, user_fname, user_email, user_pwd, user_confirmed)
 VALUES
-	('effs', 'La Effy', 'epastor@gmail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
-	('marioe23', 'Mario Sancho', 'nore.zgz@mail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
-	('JL.ak.elBizco', 'Jose Luis El Bizco', 'com@com.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
-	('FF15', 'Fernando Fernandez', 'ffmail@email.f', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW());
+	('effs', '/assets/media/avatars/1682490340.jpg', 'La Effy', 'epastor@gmail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
+	('marioe23', null, 'Mario Sancho', 'nore.zgz@mail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
+	('JL.ak.elBizco', null, 'Jose Luis El Bizco', 'com@com.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
+	('FF15', 'Fernando Fernandez', null, 'ffmail@email.f', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW());
 
 INSERT INTO games(game_creator, game_title, game_folder, game_icon)
 VALUES
-	(1, 'Timeless', '/assets/media/games/1682422516/', '/assets/media/games/1682422516/game_icon.jpg');
+	(1, 'Timeless', '1682422516', 'game_icon.jpg');
 
 INSERT INTO game_player(game_player_id_game, game_player_id_user)
 VALUES (1,1);

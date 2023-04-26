@@ -60,6 +60,10 @@
     </div>
 </div>
 <!--end::Modal-->
+<!--begin::Modal toggle-->
+<button type="button" id="modal_confirmation-toggle" data-bs-target="#modal_confirmation" data-bs-toggle="modal"
+        class="d-none"></button>
+<!--end::Modal toggle-->
 <!--begin::Modal-->
 <div class="modal fade" tabindex="-1" id="modal_confirmation">
     <div class="modal-dialog">

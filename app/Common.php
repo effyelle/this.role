@@ -88,8 +88,8 @@ function validate(string $str): string
 
 function upload_img($formname, $target, $preferred_filename = null): string|bool
 {
-    $target_dir = FCPATH . $target;
-    $target_file = $target_dir . basename($_FILES[$formname]["name"]);
+    if (!is_dir($target)) return 'Directory does not exist';
+    $target_file = $target . basename($_FILES[$formname]["name"]);
     // Save image file type
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     // Limit file types
@@ -101,8 +101,8 @@ function upload_img($formname, $target, $preferred_filename = null): string|bool
     else {
         do {
             $new_filename = "/" . time() . "." . $imageFileType;
-        } while (file_exists($target_dir . $new_filename));
+        } while (file_exists($target . $new_filename));
     }
-    if (move_uploaded_file($_FILES[$formname]["tmp_name"], $target_dir . $new_filename)) return $target . $new_filename;
+    if (move_uploaded_file($_FILES[$formname]["tmp_name"], $target . $new_filename)) return $target . $new_filename;
     return false;
 }

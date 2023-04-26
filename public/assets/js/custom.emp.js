@@ -1,3 +1,5 @@
+const gamesDir = '/assets/media/games/';
+
 $(document).ready(function () {
     generateDatatable();
 
@@ -96,6 +98,7 @@ function openConfirmation(callback) {
     confirmAnswer.click(function () {
         callback();
     });
+    $('#modal_confirmation-toggle').click();
 }
 
 function readImageChange(img_input, img_holder) {

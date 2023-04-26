@@ -121,3 +121,12 @@ function spanPopup(popup) {
         popup.classList.remove('show');
     }, 2000);
 }
+
+function urlExists(url) {
+    let http = $.ajax({
+        type: 'head',
+        url: url,
+        async: false
+    });
+    return http.status === 200;
+}

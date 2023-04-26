@@ -38,9 +38,27 @@ class Board {
         this.itemClass = id + '_item';
         this.itemModalClass = id + '_item_modal';
         this.imgFolder = '/assets/media/games/' + dbGame.game_folder + '/gallery/';
+        this.openItem = function () {
+            console.log(this.value);
+
+            document.body.innerHTML += '' +
+                '<div class="modal fade show d-block ' + this.itemModalClass + '">' +
+                '   <div class="modal-dialog">' +
+                '       <div class="modal-content">' +
+                '           <div class="modal-header">' +
+                '           </div>' +
+                '           <div class="modal-body">' +
+                '           </div>' +
+                '       </div>' +
+                '   </div>' +
+                '</div>';
+
+        }
         this.formatJournalItem = function (data = {}) {
-            // Control src is not null
-            let style = !data.src ? '' : ' style="background:url(' + this.imgFolder + data.src + ')"';
+            // Check image data
+            let background = urlExists(this.imgFolder + data.src)
+                ? this.imgFolder + data.src
+                : '/assets/media/avatars/blank.png';
             // Fill list
             document.querySelector('#' + this.listId).innerHTML += '' +
                 '<!--begin::Menu Item-->' +
@@ -48,7 +66,8 @@ class Board {
                 '     <button class="btn menu-link" value="' + data.type + '">' +
                 '         <!--begin::Symbol-->' +
                 '         <div class="me-2 symbol symbol-20px symbol-md-30px">' +
-                '             <span ' + style + 'class="symbol-label circle sheet_icon"> ' +
+                '             <span style="background:url(' + background + ');background-size: cover" ' +
+                '                   class="symbol-label circle sheet_icon"> ' +
                 '             </span>' +
                 '         </div>' +
                 '         <!--end::Symbol-->' +
@@ -58,22 +77,8 @@ class Board {
                 ' <!--end::Menu Item-->';
             let items = $('.' + this.itemClass + ' .menu-link');
             console.log(items[items.length - 1]);
-            items.on('click', function () {
-                console.log(this.value);
-                /*
-                document.body.innerHTML += '' +
-                    '<div class="modal fade show d-block ' + this.itemModalClass + '">' +
-                    '   <div class="modal-dialog">' +
-                    '       <div class="modal-content">' +
-                    '           <div class="modal-header">' +
-                    '           </div>' +
-                    '           <div class="modal-body">' +
-                    '           </div>' +
-                    '       </div>' +
-                    '   </div>' +
-                    '</div>';
-                 */
-            });
+            items.unbind('click');
+            items.click(this.openItem);
         }
         this.initJournal = function () {
             this.container.innerHTML = '' +

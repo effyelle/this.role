@@ -54,7 +54,7 @@
                     </div>
                     <p class="text-center text-danger pt-8 error d-none">All fields are required</p>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-sm btn-dark dismiss_btn" data-bs-dismiss="modal"
                             tabindex="0">
                         Cancel

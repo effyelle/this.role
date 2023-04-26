@@ -219,7 +219,6 @@ function initBoard(dbGame, session) {
                 if (data['response'] && data['items']) {
                     for (let i in data['items']) {
                         let item = data.items[i];
-                        console.log(item);
                         journal.formatJournalItem({
                             type: item['item_type'],
                             src: item['item_icon'],

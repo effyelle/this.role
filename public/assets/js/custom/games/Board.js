@@ -38,22 +38,6 @@ class Board {
         this.itemClass = id + '_item';
         this.itemModalClass = id + '_item_modal';
         this.imgFolder = '/assets/media/games/' + dbGame.game_folder + '/gallery/';
-        this.openJournalItem = function () {
-            console.log(this.value);
-            /*
-            document.body.innerHTML += '' +
-                '<div class="modal fade show d-block ' + this.itemModalClass + '">' +
-                '   <div class="modal-dialog">' +
-                '       <div class="modal-content">' +
-                '           <div class="modal-header">' +
-                '           </div>' +
-                '           <div class="modal-body">' +
-                '           </div>' +
-                '       </div>' +
-                '   </div>' +
-                '</div>';
-             */
-        }
         this.formatJournalItem = function (data = {}) {
             // Control src is not null
             let style = !data.src ? '' : ' style="background:url(' + this.imgFolder + data.src + ')"';
@@ -72,11 +56,24 @@ class Board {
                 '     </button>' +
                 ' </div>' +
                 ' <!--end::Menu Item-->';
-            /*let items = document.querySelectorAll('.' + this.itemClass + ' .menu-link');
-            //items[items.length - 1].addEventListener('click', this.openJournalItem);
-            items[items.length - 1].addEventListener('click', () => {
-                this.openJournalItem();
-            });*/
+            let items = $('.' + this.itemClass + ' .menu-link');
+            console.log(items[items.length - 1]);
+            items.on('click', function () {
+                console.log(this.value);
+                /*
+                document.body.innerHTML += '' +
+                    '<div class="modal fade show d-block ' + this.itemModalClass + '">' +
+                    '   <div class="modal-dialog">' +
+                    '       <div class="modal-content">' +
+                    '           <div class="modal-header">' +
+                    '           </div>' +
+                    '           <div class="modal-body">' +
+                    '           </div>' +
+                    '       </div>' +
+                    '   </div>' +
+                    '</div>';
+                 */
+            });
         }
         this.initJournal = function () {
             this.container.innerHTML = '' +
@@ -102,6 +99,8 @@ class Board {
                 '         <!--end::Separator-->' +
                 '     </div>' +
                 ' </div>';
+        }
+        this.addEventListeners = function () {
         }
     }
 

@@ -44,11 +44,14 @@ class Account extends BaseController
      */
     function login(): void
     {
-        $email = $_POST['email'] ?? false;
+        $userIdentification = $_POST['user'] ?? false;
         $pwd = $_POST['pwd'] ?? false;
-        if ($email && $pwd) {
-            if ($user = $this->usermodel->get(['user_email' => $email, 'user_deleted' => null])) {
-                $user = $user[0];
+        if ($userIdentification && $pwd) {
+            $userByUsername = $this->usermodel->get(['user_username' => $userIdentification, 'user_deleted' => null]);
+            $userByEmail = $this->usermodel->get(['user_email' => $userIdentification, 'user_deleted' => null]);
+            if (count($userByEmail) === 1) $user = $userByEmail[0];
+            if (count($userByUsername) === 1) $user = $userByUsername[0];
+            if (isset($user)) {
                 if (password_verify($pwd, $user['user_pwd'])) {
                     update_session($user);
                     echo json_encode(['response' => true]);

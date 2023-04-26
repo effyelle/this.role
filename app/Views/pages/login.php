@@ -3,8 +3,8 @@
       class="d-flex flex-column justify-content-center align-items-center account-options mx-auto text-center">
     <!--begin::Form Field-->
     <div class="my-4 col-10 w-md-600px">
-        <label for="email" class="form-label my-2 bg-brush">Email</label>
-        <input type="text" id="email" name="email"
+        <label for="user" class="form-label my-2 bg-brush">Email or Username</label>
+        <input type="text" id="user" name="user"
                class="form-control form-control-solid ajax-login bg-transparent this-role-form-field"/>
     </div>
     <!--end::Form Field-->

@@ -93,12 +93,35 @@ class Journal {
         /* Things I still need
          *  - Image holder with hidden input
          *  - Nav tabs (?)
+         *    ^ Raw ability scores container with raw 1d20 throws and ability score names
+         *    ^ Saving throws container (ability scores with prof and modifications)
+         *    ^ Skills container width proficiencies and modificators (form raw ability scores)
+         *    ^ Level
+         *    ^ Proficiency bonus calculated by level
+         *    ^ Armor Class
+         *    ^ Initiative (calculated by dex(?) dex?)
+         *    ^ Walk speed, swimming/flight speed?
+         *    ^ Hit points: maximum and current
+         *    ^ Temporary hit points
+         *    ^ Hit dice + CONS
+         *    ^ Death saves
+         *    ^ Exhaustion level
+         *    ^ Spells and attacks -> interactable items/abilities
+         *    ^ Global modifiers -> dmg, attack&spellcasting, AC
+         *    ^ Bag -> non interactable items
+         *    ^ Character traits? (Characteristics-> personality, ideals, bonds, flaws)
+         *    ^ Other resources
+         *    ^ Other abilities descriptions -> not spells and not castable or interactable just description
+         *    ^ Character description -> appearance, backstory, allies&organizations, treasure
+         *    ^ Spells
          *  - Make all editable/non_editable
+         *  - Add public/to GM option?
+         *  -
          */
         $('#journal-modal_container')[0].innerHTML += '' +
             '<div id="' + containerId + '" class="' + this.itemModalClass + ' show ' + item.item_type + ' draggable">' +
             '       <div class="modal-content bg-white">' +
-            '           <div class="modal-header flex-row-wrap justify-content-between align-items-center cursor-move">' +
+            '           <div class="modal-header border-0 flex-row-wrap justify-content-between align-items-center cursor-move">' +
             '               <label for="item_title" class="ff-poiret fs-4 fw-boldest">' + item.item_title + '</label>' +
             '               <div class="flex-row-wrap gap-5 align-items-center justify-content-end align-self-start">' +
             '                   <button type="button" class="btn p-0 edit-btn text-hover-dark">' +

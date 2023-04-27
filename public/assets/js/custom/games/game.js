@@ -4,14 +4,36 @@ function initBoard(dbGame, session) {
     // * Chat object * //
     const chat = new board.Chat('.chat-messages');
     // * Journal intance * //
-    const journal = new Journal('journal');
+    const journal = new Journal('journal', {
+        ajax: {
+            method: 'get',
+            url: '/app/games_ajax/get_journal_items/' + dbGame.game_id,
+            dataType: 'json',
+        },
+        onLoad: function (data) {
+            console.log(data);
+            /*
+            for (let i in data) {
+                if (data['response'] && data['items']) {
+                    for (let i in data['items']) {
+                        journal.formatJournalItem(data.items[i]);
+                    }
+                } else if (data['msg']) {
+                    $('.modal_error_response').html(data['msg']);
+                    $('#modal_error-toggle').click();
+                }
+            }*/
+        },
+        onError: function (e) {
+            console.log(e);
+        }
+    });
 
     getChat();
-    getJournal();
 
-    // *********************************** //
-    // * Listen to dices buttons pressed * //
-    // *********************************** //
+// *********************************** //
+// * Listen to dices buttons pressed * //
+// *********************************** //
     $('.btn.dice').click(function () {
         chat.formatMessage({
             src: "",
@@ -22,14 +44,14 @@ function initBoard(dbGame, session) {
             rolling: $('#roll-' + this.value).val()
         });
     });
-    // * Chat textarea constant * //
+// * Chat textarea constant * //
     const chatText = document.querySelector('.chat-bubble textarea');
-    // * Chat textarea holder * //
+// * Chat textarea holder * //
     let chatMessage = '';
 
-    // ******************************* //
-    // * Listen to chat pressed keys * //
-    // ******************************* //
+// ******************************* //
+// * Listen to chat pressed keys * //
+// ******************************* //
     chatText.addEventListener('keypress', function (e) {
         // Save key if not Enter
         if (e.key !== 'Enter') {
@@ -46,20 +68,20 @@ function initBoard(dbGame, session) {
         }
     });
 
-    // ********************************* //
-    // * Listen to send button in chat * //
-    // ********************************* //
+// ********************************* //
+// * Listen to send button in chat * //
+// ********************************* //
     document.querySelector('.chat-bubble ~ div .btn').addEventListener('click', function () {
         setChat(chatMessage.trim(), $('#charsheet_selected').find(':selected').text(), "chatMessage");
     });
-    // * Delete add button and modal if user is not creator * //
+// * Delete add button and modal if user is not creator * //
     if (session.user.user_id !== dbGame.game_creator) {
         $('#modal_journal-toggle').remove();
     }
 
-    // ********************************************* //
-    // * Add journal item when save button clicked * //
-    // ********************************************* //
+// ********************************************* //
+// * Add journal item when save button clicked * //
+// ********************************************* //
     $('#modal_journal .save_btn').click(function () {
 
         let form = getForm('#modal_journal');
@@ -70,9 +92,9 @@ function initBoard(dbGame, session) {
         toggleProgressSpinner(false);
     });
 
-    // ********************************** //
-    // * Empty journal modal on closure * //
-    // ********************************** //
+// ********************************** //
+// * Empty journal modal on closure * //
+// ********************************** //
     $('#modal_journal').on('hidden.bs.modal', function () {
         $('#journal_title-input').val('');
         $('#journal-item_type option[value="-1"]').prop('selected', true);
@@ -184,28 +206,5 @@ function initBoard(dbGame, session) {
                 console.log("Error: ", e);
             }
         })
-    }
-
-// Load journal from DB
-    function getJournal() {
-        journal.initJournal();
-        $.ajax({
-            type: 'post',
-            url: '/app/games_ajax/get_journal_items/' + dbGame.game_id,
-            dataType: 'json',
-            success: (data) => {
-                if (data['response'] && data['items']) {
-                    for (let i in data['items']) {
-                        journal.formatJournalItem(data.items[i]);
-                    }
-                } else if (data['msg']) {
-                    $('.modal_error_response').html(data['msg']);
-                    $('#modal_error-toggle').click();
-                }
-            },
-            error: function (e) {
-                console.log("Error: ", e);
-            }
-        });
     }
 }

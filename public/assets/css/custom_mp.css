@@ -225,6 +225,10 @@ span.popup.show, .signup span.popup.show {
     background: var(--this-role-red) !important;
 }
 
+.bg-this-role-lighter {
+    background: var(--this-role-lighter) !important;
+}
+
 body {
     background: rgba(var(--this-role-light-rgb), 0.05) !important;
     scroll-behavior: smooth;
@@ -643,7 +647,6 @@ a.btn-link:hover, .btn-link:hover {
     flex-flow: row;
     justify-content: space-evenly;
     align-items: center;
-    background-color: #ffffff;
     padding: 0.5rem;
     gap: 7px;
     border-radius: 8px;
@@ -821,7 +824,13 @@ body.game {
 
 body.game .aside {
     border-radius: unset;
-    z-index: 2000;
+    z-index: 2040;
+}
+
+@media (min-width: 992px) {
+    body.game .aside {
+        z-index: 2000;
+    }
 }
 
 .nav-tabs .nav-item a.nav-link i {
@@ -936,12 +945,14 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     top: 1.5rem;
     left: 1.5rem;
     z-index: 1990;
-    width: 50%;
+    width: 90%;
     height: 50vh;
     overflow-x: hidden;
     overflow-y: auto;
     outline: 0;
     border-radius: 10px;
+    box-shadow: var(--bs-gray-600) 0 0 5px -2px;
+    resize: both;
 }
 
 .journal_item_modal.show {
@@ -950,11 +961,20 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 
 .journal_item_modal .modal-content {
     height: 100%;
-    background: var(--this-role-lighter);
+    background: var(--bs-white);
 }
 
 @media (min-width: 992px) {
     .journal_item_modal {
         z-index: 2010;
+        width: 50%;
     }
+}
+
+.game label[for=item_title] {
+    cursor: move;
+}
+
+.game .item_title:not(.item_title:focus) {
+    border: 0;
 }

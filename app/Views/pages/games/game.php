@@ -68,9 +68,9 @@
                         <span class="indicator-label">Save</span>
                         <!--end::Indicator label-->
                         <!--begin::Indicator progress-->
-                        <span class="indicator-progress">Please wait...
-                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                    </span>
+                        <span id="wait" class="indicator-progress">Please wait...
+                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </span>
                         <!--end::Indicator progress-->
                     </button>
                 </div>
@@ -92,7 +92,6 @@
     // * Game details from DATABASE * //
     const dbGame =<?php echo json_encode($game ?? []) ?>;
     const session =<?php echo json_encode($_SESSION); ?>;
-
     document.addEventListener('DOMContentLoaded', function () {
         if (dbGame !== [] && dbGame.game_id) {
             initBoard(dbGame, session);

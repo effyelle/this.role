@@ -98,3 +98,5 @@ UPDATE users SET user_rol='admin' WHERE user_email='nore.zgz@mail.com';
 
 UPDATE users SET user_confirmed=NULL WHERE user_username='effy.elle';
 
+-- Select columns from table
+SHOW COLUMNS FROM game_journal;

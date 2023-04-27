@@ -1,42 +1,60 @@
-var blockUIGeneral = new KTBlockUI(document.querySelector("body"));
-var url_string = window.location.href
-var url = new URL(url_string);
-var c = url.searchParams.get("msg-suc");
-if (c!=null && c!='') {
-    toastr.success(c);
+const aqws = function (t) {
+    let el = document.querySelectorAll(t);
+    this.click = (callback) => {
+        for (let i = 0; i < el.length; i++) {
+            el[i].addEventListener('click', callback);
+        }
+    };
+    for (let i = 0; i < el.length; i++) {
+        el[i].click = (callback) => {
+            el[i].addEventListener('click', callback);
+        }
+    }
+    return el;
+}
+
+let blockUIGeneral = new KTBlockUI(document.querySelector("body"));
+let url_string = window.location.href
+let url = new URL(url_string);
+let searchSuccess = url.searchParams.get("msg-suc");
+if (searchSuccess !== null && searchSuccess !== '') {
+    toastr.success(searchSuccess);
     history.replaceState(null, null, location.href.replace(/[\?&]msg-suc=[^&]+/, '').replace(/^&/, '?'));
 }
-var c = url.searchParams.get("msg-war");
-if (c!=null && c!='') {
-    toastr.warning(c);
+let searchWarnings = url.searchParams.get("msg-war");
+if (searchWarnings !== null && searchWarnings !== '') {
+    toastr.warning(searchWarnings);
     history.replaceState(null, null, location.href.replace(/[\?&]msg-war=[^&]+/, '').replace(/^&/, '?'));
 }
-var c = url.searchParams.get("msg-err");
-if (c!=null && c!='') {
-    toastr.error(c);
+let searchErrors = url.searchParams.get("msg-err");
+if (searchErrors !== null && searchErrors !== '') {
+    toastr.error(searchErrors);
     history.replaceState(null, null, location.href.replace(/[\?&]msg-err=[^&]+/, '').replace(/^&/, '?'));
 }
 
-function appendURLParam(param){
-    var url = window.location.href;    
-    if (url.indexOf('?') > -1){
-        url += '&'+param;
-    }else{
-        url += '?'+param;
+function appendURLParam(param) {
+    let url = window.location.href;
+    if (url.indexOf('?') > -1) {
+        url += '&' + param;
+    } else {
+        url += '?' + param;
     }
     return url;
 }
 
-function copyClipboard(textToCopy){
-     // Copy the text inside the text field
-    navigator.clipboard.writeText(textToCopy);
+function copyClipboard(textToCopy) {
+    // Copy the text inside the text field
+    let copied = navigator.clipboard.writeText(textToCopy);
+    if (copied.status === 200) {
+        console.log('Copy!');
+    }
     // SHOW TOASTER
     toastr.success('Copiado al portapapeles');
 }
 
 // ON PRESS ENTER INSIDE INPUT searchClient
-$('#searchClient').keypress(function(e){
-    if(e.which == 13){//Enter key pressed
+$('#searchClient').keypress(function (e) {
+    if (e.which == 13) {//Enter key pressed
         // IF VALUE ENTERED IS A NUMBER BETWEEN 1 AND 99999
         if (this.value > 0 && this.value < 99999) {
             // AJAX TO app/search_no_master_contract passing the value entered as id_clientes_intranet via POST
@@ -46,10 +64,10 @@ $('#searchClient').keypress(function(e){
                 data: {id_clientes_intranet: this.value},
                 dataType: "json ",
                 success: function (response) {
-                    if(response!='NOT_FOUND'){
+                    if (response !== 'NOT_FOUND') {
                         // REDIRECT WEBPAGE TO general/contracts/detail
-                        window.location.href = '/general/contracts/detail/'+response+'/comercial';
-                    }else{
+                        window.location.href = '/general/contracts/detail/' + response + '/comercial';
+                    } else {
                         // SHOW TOASTER
                         toastr.error('ID Cliente Intranet - Incorrecto');
                         // CLEAR
@@ -57,7 +75,7 @@ $('#searchClient').keypress(function(e){
                     }
                 }
             });
-        }else{
+        } else {
             // SHOW TOASTER
             toastr.error('ID Cliente Intranet - Incorrecto');
             $('#searchClient').val('');
@@ -65,7 +83,7 @@ $('#searchClient').keypress(function(e){
     }
 });
 
-addEventListener('beforeunload',(event) => {
+addEventListener('beforeunload', (event) => {
     blockUIGeneral.block();
 });
 

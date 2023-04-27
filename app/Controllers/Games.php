@@ -302,7 +302,7 @@ class Games extends BaseController
     function get_journal_items($id): string
     {
         if ($journalItems = $this->journalmodel->get(['item_game_id' => $id], null, ['item_title' => 'ASC'])) {
-            return json_encode(['response' => true, 'items' => $journalItems]);
+            return json_encode(['response' => true, 'data' => $journalItems]);
         }
         return json_encode(['response' => false]);
     }

@@ -114,7 +114,7 @@
                 </div>
                 <!--end::Aside small screen toggle-->
                 <div class="dices-container">
-                    <div class="dices-flex-content text-center">
+                    <div class="dices-flex-content text-center bg-white">
                         <!--begin::Dice d4-->
                         <div class="dice-roll">
                             <div class="roll">

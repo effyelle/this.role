@@ -134,7 +134,7 @@ class Journal {
         $('#journal-modal_container')[0].innerHTML += '' +
             '<div id="' + containerId + '" class="' + this.itemModalClass + ' show ' + item.item_type + ' draggable">' +
             '       <div class="modal-content bg-white">' +
-            '           <div class="modal-header border-0 flex-row-wrap justify-content-between align-items-center cursor-move">' +
+            '           <div class="modal-header flex-row-wrap justify-content-between align-items-center cursor-move">' +
             '               <label for="item_title" class="ff-poiret fs-4 fw-boldest">' + item.item_title + '</label>' +
             '               <div class="flex-row-wrap gap-5 align-items-center justify-content-end align-self-start">' +
             '                   <button type="button" class="btn p-0 edit-btn text-hover-dark">' +
@@ -160,9 +160,9 @@ class Journal {
             for (let item of items) {
                 item.click(() => {
                     let itemInfo = this.journal.items[item.value];
-                    let id = 'draggable_' + itemInfo.item_id;
-                    if (q('#' + id).length === 0) {
-                        this.openItem(itemInfo, id);
+                    this.draggableContainerId = 'draggable_' + itemInfo.item_id;
+                    if (q('#' + this.draggableContainerId).length === 0) {
+                        this.openItem(itemInfo, this.draggableContainerId);
                         // * Add destroy option for this very same item * //
                         let modals = q('.' + this.itemModalClass);
                         let closeBtns = q('.' + this.itemModalClass + ' .close_item-btn');
@@ -185,7 +185,11 @@ class Journal {
                         }
                         // Add drag on cursor move when clicking header
                         // Create new character sheet
-                        this.journal.sheets[itemInfo.item_id] = new Sheet('#' + id + ' .modal-body');
+                        this.journal.sheets[itemInfo.item_id] = new Sheet({
+                            modalContainer: '#' + this.draggableContainerId,
+                            modalBody: '#' + this.draggableContainerId + ' .modal-body',
+                            item: itemInfo,
+                        });
                         this.journal.sheetsLength++;
                     }
                 });
@@ -226,6 +230,54 @@ class Journal {
     }
 }
 
-const Sheet = function (param) {
-    console.log(q(param));
+const Sheet = function (params = {}) {
+    this.modalContainer = q(params.modalContainer)[0];
+    this.modalBody = q(params.modalBody)[0];
+    this.tabs = {
+        characterId: this.modalContainer.id + '-character',
+        characterInputId: this.modalContainer.id + '-character-title_input"',
+        spellsId: this.modalContainer.id + '-spells',
+    };
+    this.char = params.item;
+    const tabs = () => {
+        return '<!--begin::Tabs-->' +
+            '<ul class="nav nav-tabs pt-2 justify-content-start fs-7">' +
+            '    <li class="nav-item">' +
+            '        <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#' + this.tabs.characterId + '">' +
+            '            <i class="fa fa-dragon f-lg text-this-role-light"></i>' +
+            '            <span>Character traits</span>' +
+            '        </a>' +
+            '    </li>' +
+            '    <li class="nav-item">' +
+            '        <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#' + this.tabs.spellsId + '">' +
+            '            <i class="fa fa-book f-lg text-this-role-light"></i>' +
+            '            <span>Spells</span>' +
+            '        </a>' +
+            '    </li>' +
+            '</ul>' +
+            '<!--end::Tabs-->';
+    }
+    const character = () => {
+        return '<!--begin::Character content-->' +
+            '<div id="' + this.tabs.characterId + '" class="p-5 tab-pane fade show active">' +
+            '   <div class="form-control-solid">' +
+            '       <input type="text" value="' + this.char.item_title + '" id="' + this.tabs.characterInputId + '"' +
+            '             class="form-control form-control-sm this-role-form-field"/>' +
+            '       <label for="' + this.tabs.characterInputId + '">' + this.char.item_title + '</label>' +
+            '   </div>' +
+            '</div>' +
+            '<!--end::Character content-->';
+    }
+    const spells = () => {
+        return '<!--begin::Character content-->' +
+            '<div id="' + this.tabs.spellsId + '" class="tab-pane fade">' +
+            '' +
+            '</div>' +
+            '<!--end::Character content-->';
+    }
+    this.modalBody.innerHTML = '<!--begin::Tabs Container-->' +
+        '<div class="aside-menu flex-column-fluid tab-content">' +
+        '   ' + tabs() + character() + spells() +
+        '</div>' +
+        '<!--end::Tabs Container-->';
 }

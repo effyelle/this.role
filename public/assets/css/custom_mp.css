@@ -843,12 +843,16 @@ body.game .aside {
     }
 }
 
-.game .aside .nav-line-tabs {
+.game .nav-line-tabs {
     background: var(--this-role-lighter);
 }
 
-.game .aside .nav-line-tabs .nav-item .nav-link.active {
+.game .nav-line-tabs .nav-item .nav-link.active {
     border-bottom: 1px solid var(--this-role-ocher);
+}
+
+.nav-link {
+    color: #a1a5b7;
 }
 
 .game .nav-line-tabs .nav-item .nav-link:hover:not(.disabled),
@@ -952,7 +956,6 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     outline: 0;
     border-radius: 10px;
     box-shadow: var(--bs-gray-600) 0 0 5px -2px;
-    resize: both;
 }
 
 .journal_item_modal.show {
@@ -975,6 +978,6 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     cursor: move;
 }
 
-.game .item_title:not(.item_title:focus) {
+.game .journal_item_modal input.this-role-form-field:not(.game .journal_item_modal input.this-role-form-field:focus) {
     border: 0;
 }

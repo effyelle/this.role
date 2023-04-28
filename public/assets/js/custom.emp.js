@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    generateDatatable();
+    generateDatatables();
 
     updateSession();
 });
@@ -16,7 +16,7 @@ function updateSession(callback = null) {
     });
 }
 
-function generateDatatable() {
+function generateDatatables() {
     let element = $('.generate-datatable');
     // CHECK IF ELEMENT HAS .show-search-dt
     if (element !== undefined) {
@@ -36,14 +36,40 @@ function generateDatatable() {
     }
 }
 
+/**
+ * Create HTML elements instances through querySelectorAll
+ *
+ * @param t
+ *
+ * @returns {NodeListOf<*>}
+ */
+const q = function (t) {
+    let el = document.querySelectorAll(t);
+    this.click = function (callback) {
+        for (let i = 0; i < el.length; i++) {
+            el[i].addEventListener('click', callback);
+        }
+    };
+    for (let i = 0; i < el.length; i++) {
+        el[i].click = (callback) => {
+            el[i].addEventListener('click', callback);
+        }
+    }
+    return el;
+}
+
 function toggleProgressSpinner(onprogress = true) {
+    let label = $('.indicator-label');
+    let progress = $('.indicator-progress');
+
     if (onprogress) {
-        $('.indicator-label').hide();
-        $('.indicator-progress').show();
+        label.hide();
+        progress.show();
         return;
     }
-    $('.indicator-label').show();
-    $('.indicator-progress').hide();
+
+    label.show();
+    progress.hide();
 }
 
 function validateEmail(emailId) {
@@ -92,10 +118,14 @@ function getForm(parent) {
  */
 function openConfirmation(callback) {
     const confirmAnswer = $('#modal_confirmation .confirm_answer');
+    // Unbind previous callbacks
     confirmAnswer.unbind('click');
     confirmAnswer.click(function () {
+        // Add click listener
+        // On confirm (YES button) call the callback function
         callback();
     });
+    // Open de confirmation modal
     $('#modal_confirmation-toggle').click();
 }
 
@@ -130,3 +160,4 @@ function urlExists(url) {
     });
     return http.status === 200;
 }
+

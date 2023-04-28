@@ -45,7 +45,7 @@ function initBoard(dbGame, session) {
         });
     });
 // * Chat textarea constant * //
-    const chatText = document.querySelector('.chat-bubble textarea');
+    const chatText = q('.chat-bubble textarea')[0];
 // * Chat textarea holder * //
     let chatMessage = '';
 
@@ -82,8 +82,7 @@ function initBoard(dbGame, session) {
 // ********************************************* //
 // * Add journal item when save button clicked * //
 // ********************************************* //
-    $('#modal_journal .save_btn').click(function () {
-
+    q('#modal_journal .save_btn')[0].click(function () {
         let form = getForm('#modal_journal');
         if (form) {
             setJournalItem(form);
@@ -195,9 +194,10 @@ function initBoard(dbGame, session) {
                 console.log(data);
                 if (data['response']) {
                     // Add item to HTML
-                    getJournal();
+                    journal.reload();
                     // Dismiss journal modal
                     $('#modal_journal .dismiss_btn').click();
+                    alert('Added successfully');
                 } else if (data['msg']) {
                     $('#modal_journal .error').show();
                 }

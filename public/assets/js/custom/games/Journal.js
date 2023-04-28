@@ -1,6 +1,6 @@
 class Journal {
     constructor(id, options = {}) {
-        this.container = document.querySelector('#' + id);
+        this.container = q('#' + id)[0];
         this.listId = id + '_list';
         this.itemClass = id + '_item';
         this.itemModalClass = id + '_item_modal';
@@ -15,10 +15,10 @@ class Journal {
         }
         this.opt = options;
         // Init journal
-        this.initJournal();
+        this.init();
     }
 
-    initJournal() {
+    init() {
         // Fill journal container
         this.container.innerHTML = this.formatJournalList();
         // If ajax, init journal item creation from url
@@ -37,6 +37,19 @@ class Journal {
                 this.load(this.opt.onLoad, data);
             });
         }
+    }
+
+    reload() {
+        this.journal = {
+            itemsLength: 0,
+            sheetsLength: 0,
+            draggablesLength: 0,
+            items: {},
+            sheets: {},
+            draggables: {},
+        }
+        // Fill journal container
+        this.init();
     }
 
     formatJournalList() {
@@ -70,7 +83,7 @@ class Journal {
             ? this.imgFolder + item.item_icon // original icon
             : '/assets/media/avatars/blank.png'; // default icon
         // * HTML format * //
-        document.querySelector('#' + this.listId).innerHTML += '' +
+        q('#' + this.listId)[0].innerHTML += '' +
             '<!--begin::Menu Item-->' +
             ' <div class="menu-item ' + this.itemClass + '">' +
             // Assign item ID to button for later accessing
@@ -141,18 +154,18 @@ class Journal {
     }
 
     makeItemsInteractable() {
-        let items = aqws('.' + this.itemClass + ' .menu-link');
+        let items = q('.' + this.itemClass + ' .menu-link');
         // Check data and items have the same length -> means they have been created accordingly
         if (items.length === this.journal.itemsLength) {
             for (let item of items) {
                 item.click(() => {
                     let itemInfo = this.journal.items[item.value];
                     let id = 'draggable_' + itemInfo.item_id;
-                    if (aqws('#' + id).length === 0) {
+                    if (q('#' + id).length === 0) {
                         this.openItem(itemInfo, id);
                         // * Add destroy option for this very same item * //
-                        let modals = aqws('.' + this.itemModalClass);
-                        let closeBtns = aqws('.' + this.itemModalClass + ' .close_item-btn');
+                        let modals = q('.' + this.itemModalClass);
+                        let closeBtns = q('.' + this.itemModalClass + ' .close_item-btn');
                         // Check there are the same amount of close buttons as there are of opened modals
                         if (closeBtns.length === modals.length) {
                             // Add a close event
@@ -162,7 +175,7 @@ class Journal {
                                 });
                             }
                         }
-                        let cursorMove = aqws('.cursor-move');
+                        let cursorMove = q('.cursor-move');
                         // Check there are the same amount of cursor-move as tehere are of opened modals
                         if (cursorMove.length === modals.length) {
                             // Add draggable
@@ -213,6 +226,6 @@ class Journal {
     }
 }
 
-const Sheet = function (q) {
-    console.log(aqws(q));
+const Sheet = function (param) {
+    console.log(q(param));
 }

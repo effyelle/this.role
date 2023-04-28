@@ -1,18 +1,3 @@
-const aqws = function (t) {
-    let el = document.querySelectorAll(t);
-    this.click = (callback) => {
-        for (let i = 0; i < el.length; i++) {
-            el[i].addEventListener('click', callback);
-        }
-    };
-    for (let i = 0; i < el.length; i++) {
-        el[i].click = (callback) => {
-            el[i].addEventListener('click', callback);
-        }
-    }
-    return el;
-}
-
 let blockUIGeneral = new KTBlockUI(document.querySelector("body"));
 let url_string = window.location.href
 let url = new URL(url_string);

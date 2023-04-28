@@ -38,22 +38,33 @@ class Draggable {
      *
      */
     buildDraggable = () => {
+        // Bring it to the front
         for (let i = 0; i < this.pointers.length; i++) {
-            this.containers[i].style.zIndex = this.zIndex;
+            // Bring element to the front on creation (without clicking it)
+            this.containers[i].style.zIndex = this.zIndex + 10;
+            // Delete mousedown
             this.pointers[i].onmousedown = null;
+            // Create mouse down for the container
+            this.containers[i].onmousedown = () => {
+                for (let j = 0; j < this.pointers.length; j++) {
+                    // Leave those that are not being clicked behind
+                    this.containers[j].style.zIndex = this.zIndex;
+                }
+                // Bring it to the front when clicking on element
+                this.containers[i].style.zIndex = this.zIndex + 10;
+            }
+            // Create mousedown for the element which you move container from
             this.pointers[i].onmousedown = (e) => {
                 // Save cursor position X
                 this.pos.cursorX = e.clientX;
                 // Save cursor position Y
                 this.pos.cursorY = e.clientY;
-                // Bring it to the front
-                this.containers[i].style.zIndex = this.zIndex + 10;
                 // Active drag on mouse down
                 this.dragMouseDown(this.containers[i], this.pointers[i]);
             }
         }
         /*
-         * RESET COORDINATES ON PAGE RESIZE *
+         * / * RESET COORDINATES ON PAGE RESIZE * / *
          *
          * This avoids container to stay half outside of outside the inner window limits.
          */

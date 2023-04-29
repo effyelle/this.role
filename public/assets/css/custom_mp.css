@@ -981,3 +981,19 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 .game .journal_item_modal input.this-role-form-field:not(.game .journal_item_modal input.this-role-form-field:focus) {
     border: 0;
 }
+
+.this-outline {
+    padding: 0.5rem;
+    border: 1px solid var(--bs-gray-900);
+    border-radius: 0.25rem;
+    outline: 1px solid var(--bs-gray-900);
+    outline-offset: 3px;
+}
+
+.this-outline label {
+    font-size: 0.85rem;
+}
+
+.this-outline .form-control {
+    padding: 0.25rem;
+}

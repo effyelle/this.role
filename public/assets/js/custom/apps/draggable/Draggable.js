@@ -38,20 +38,27 @@ class Draggable {
     buildDraggable = () => {
         // Bring it to the front
         for (let i = 0; i < this.pointers.length; i++) {
-            this.container = this.containers[i];
-            this.pointer = this.pointers[i];
             // Bring element to the front on creation (without clicking it)
-            this.container.style.zIndex = this.zIndex + 10;
+            this.containers[i].style.zIndex = this.zIndex + 10;
             // Set it resizable
-            this.container.style.resize = 'both';
-            this.container.style.overflowX = 'hidden';
-            this.container.style.overflowY = 'auto';
+            this.containers[i].style.resize = 'both';
+            this.containers[i].style.overflowX = 'hidden';
+            this.containers[i].style.overflowY = 'auto';
             // Create mouse down for the container to switch z-index with other draggable elements
-            this.container.onmousedown = this.zIndexSwitch;
-            this.container.ontouchstart = this.zIndexSwitch;
+            this.containers[i].onmousedown = (e) => {
+                this.zIndexSwitch(this.containers[i]);
+            }
+            // Create touch start for the container to switch z-index with other draggable elements
+            this.containers[i].ontouchstart = (e) => {
+                this.zIndexSwitch(this.containers[i]);
+            }
             // For the element which you move container from
-            this.pointer.onmousedown = this.dragDown;
-            this.pointer.ontouchstart = this.dragDown;
+            this.pointers[i].onmousedown = (e) => {
+                this.dragDown(this.containers[i], this.pointers[i], e);
+            }
+            this.pointers[i].ontouchstart = (e) => {
+                this.dragDown(this.containers[i], this.pointers[i], e);
+            }
         }
         /*
          * / * RESET COORDINATES ON PAGE RESIZE * / *
@@ -60,21 +67,22 @@ class Draggable {
          */
         window.onresize = () => {
             for (let i = 0; i < this.containers.length; i++) {
-                if (this.offLimits()) {
-                    this.container.style.top = '15px';
-                    this.container.style.left = '15px';
+                let c = this.containers[i];
+                if (this.offLimits(c)) {
+                    c.style.top = '15px';
+                    c.style.left = '15px';
                 }
             }
         }
     }
 
-    zIndexSwitch = () => {
+    zIndexSwitch = (c) => {
         for (let j = 0; j < this.pointers.length; j++) {
             // Leave those that are not being clicked behind
             this.containers[j].style.zIndex = this.zIndex;
         }
         // Bring it to the front when clicking on element
-        this.container.style.zIndex = this.zIndex + 10;
+        c.style.zIndex = this.zIndex + 10;
     }
 
     /**
@@ -82,22 +90,30 @@ class Draggable {
      * *** Settings to drag and drop *** *
      * ********************************* *
      */
-    dragDown = (e) => {
+    dragDown = (c, p, e) => {
         // If touch screen
-        if (e.touches) {
-            e.clientX = e.touches[0].clientX;
-            e.clientY = e.touches[0].clientY;
+        if (e.changedTouches) {
+            e.clientX = e.changedTouches[0].clientX;
+            e.clientY = e.changedTouches[0].clientY;
         }
         // Save cursor position for mouse
         this.pos.cursorX = e.clientX;
         this.pos.cursorY = e.clientY;
         // Active drag on mouse down
         // On mouse move, move the container along with the cursor
-        this.pointer.onmousemove = this.elementDrag;
-        this.pointer.ontouchmove = this.elementDrag;
+        p.onmousemove = (e) => {
+            this.elementDrag(c, p, e);
+        }
+        p.ontouchmove = (e) => {
+            this.elementDrag(c, p, e);
+        }
         // On mouse up, listeners on drag
-        this.pointer.onmouseup = this.removeListeners;
-        this.pointer.ontouchend = this.removeListeners;
+        p.onmouseup = (e) => {
+            this.removeListeners(c, p, e);
+        }
+        p.ontouchend = (e) => {
+            this.removeListeners(c, p, e);
+        }
     }
 
     /**
@@ -105,7 +121,7 @@ class Draggable {
      * *** Move element on drag *** *
      * **************************** *
      */
-    elementDrag = (e) => {
+    elementDrag = (c, p, e) => {
         e.stopImmediatePropagation();
         e.stopPropagation();
         e.preventDefault();
@@ -119,16 +135,16 @@ class Draggable {
         this.pos.y = this.pos.cursorY - e.clientY;
         this.pos.cursorX = e.clientX;
         this.pos.cursorY = e.clientY;
-        let posY = this.container.offsetTop - this.pos.y;
-        let posX = this.container.offsetLeft - this.pos.x;
+        let posY = c.offsetTop - this.pos.y;
+        let posX = c.offsetLeft - this.pos.x;
         // Move container
-        this.container.style.top = posY + "px";
-        this.container.style.left = posX + "px";
+        c.style.top = posY + "px";
+        c.style.left = posX + "px";
     }
 
-    removeListeners = () => {
-        this.pointer.onmousemove = null;
-        this.pointer.ontouchmove = null;
+    removeListeners = (c, p, e) => {
+        p.onmousemove = null;
+        p.ontouchmove = null;
     }
 
     /**
@@ -138,8 +154,8 @@ class Draggable {
      *
      * This avoids the container from going outside the window
      */
-    offLimits = () => {
-        return this.container.offsetTop - this.pos.y > window.innerHeight
-            || this.container.offsetLeft - this.pos.y > window.innerWidth;
+    offLimits = (c) => {
+        return c.offsetTop - this.pos.y > window.innerHeight
+            || c.offsetLeft - this.pos.y > window.innerWidth;
     }
 }

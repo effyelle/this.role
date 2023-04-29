@@ -131,14 +131,16 @@ class Journal {
          *  - Add public/to GM option?
          *  -
          */
-        $('#journal-modal_container')[0].innerHTML += '' +
+        q('#journal-modal_container')[0].innerHTML += '' +
             '<div id="' + containerId + '" class="' + this.itemModalClass + ' show ' + item.item_type + ' draggable">' +
             '       <div class="modal-content bg-white">' +
             '           <div class="modal-header flex-row-wrap justify-content-between align-items-center cursor-move">' +
-            '               <label for="item_title" class="ff-poiret fs-4 fw-boldest">' + item.item_title + '</label>' +
-            '               <div class="flex-row-wrap gap-5 align-items-center justify-content-end align-self-start">' +
-            '                   <button type="button" class="btn p-0 edit-btn text-hover-dark">' +
-            '                       <i class="fa-solid fa-edit fs-3"></i>' +
+            '               <div class="" data-from="' + this.draggableContainerId + '-character-title_input">' +
+            '                   <!--Autofill-->' +
+            '               </div>' +
+            '               <div class="flex-row-wrap gap-5 align-items-end justify-content-end align-self-start">' +
+            '                   <button type="button" class="btn p-0 minmax-btn text-hover-dark">' +
+            '                       <i class="fa-solid fa-minus fs-3"></i>' +
             '                   </button>' +
             '                   <button type="button" class="btn p-0 close_item-btn text-hover-dark">' +
             '                       <i class="fa-solid fa-close fs-1"></i>' +
@@ -185,7 +187,7 @@ class Journal {
                         }
                         // Add drag on cursor move when clicking header
                         // Create new character sheet
-                        this.journal.sheets[itemInfo.item_id] = new Sheet({
+                        this.journal.sheets[itemInfo.item_id] = new this.Sheet({
                             modalContainer: '#' + this.draggableContainerId,
                             modalBody: '#' + this.draggableContainerId + ' .modal-body',
                             item: itemInfo,
@@ -228,56 +230,93 @@ class Journal {
         }
         return false;
     }
-}
 
-const Sheet = function (params = {}) {
-    this.modalContainer = q(params.modalContainer)[0];
-    this.modalBody = q(params.modalBody)[0];
-    this.tabs = {
-        characterId: this.modalContainer.id + '-character',
-        characterInputId: this.modalContainer.id + '-character-title_input"',
-        spellsId: this.modalContainer.id + '-spells',
-    };
-    this.char = params.item;
-    const tabs = () => {
-        return '<!--begin::Tabs-->' +
-            '<ul class="nav nav-tabs pt-2 justify-content-start fs-7">' +
-            '    <li class="nav-item">' +
-            '        <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#' + this.tabs.characterId + '">' +
-            '            <i class="fa fa-dragon f-lg text-this-role-light"></i>' +
-            '            <span>Character traits</span>' +
-            '        </a>' +
-            '    </li>' +
-            '    <li class="nav-item">' +
-            '        <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#' + this.tabs.spellsId + '">' +
-            '            <i class="fa fa-book f-lg text-this-role-light"></i>' +
-            '            <span>Spells</span>' +
-            '        </a>' +
-            '    </li>' +
-            '</ul>' +
-            '<!--end::Tabs-->';
-    }
-    const character = () => {
-        return '<!--begin::Character content-->' +
-            '<div id="' + this.tabs.characterId + '" class="p-5 tab-pane fade show active">' +
-            '   <div class="form-control-solid">' +
-            '       <input type="text" value="' + this.char.item_title + '" id="' + this.tabs.characterInputId + '"' +
-            '             class="form-control form-control-sm this-role-form-field"/>' +
-            '       <label for="' + this.tabs.characterInputId + '">' + this.char.item_title + '</label>' +
-            '   </div>' +
+    Sheet = function (params = {}) {
+        this.modalContainer = q(params.modalContainer)[0];
+        this.modalBody = q(params.modalBody)[0];
+        this.tabs = {
+            char: {
+                containerId: this.modalContainer.id + '-character',
+                titleInputId: this.modalContainer.id + '-character-title_input',
+                classInputId: this.modalContainer.id + '-character-class_input',
+                levelInputId: this.modalContainer.id + '-character-level_input',
+            },
+            spells: {
+                containerId: this.modalContainer.id + '-spells',
+            },
+        };
+        this.char = params.item;
+        const tabs = () => {
+            return '<!--begin::Tabs-->' +
+                '<ul class="nav nav-tabs pt-2 justify-content-start fs-7">' +
+                '    <li class="nav-item">' +
+                '        <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#' + this.tabs.char.containerId + '">' +
+                '            <i class="fa fa-dragon f-lg text-this-role-light"></i>' +
+                '            <span>Character</span>' +
+                '        </a>' +
+                '    </li>' +
+                '    <li class="nav-item">' +
+                '        <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#' + this.tabs.spells.containerId + '">' +
+                '            <i class="fa fa-book f-lg text-this-role-light"></i>' +
+                '            <span>Spells</span>' +
+                '        </a>' +
+                '    </li>' +
+                '</ul>' +
+                '<!--end::Tabs-->';
+        }
+        const character = () => {
+            return '<!--begin::Character content-->' +
+                '<div id="' + this.tabs.char.containerId + '" class="py-8 px-2 tab-pane fade show active">' +
+                '   <div class="flex-row-wrap gap-5">' +
+                '       <div class="form-control-solid this-outline">' +
+                '           <div class="flex-column">' +
+                '               <label for="' + this.tabs.char.titleInputId + '">Character name</label>' +
+                '               <input type="text" value="' + this.char.item_title + '" id="' + this.tabs.char.titleInputId + '"' +
+                '                       class="form-control form-control-sm this-role-form-field ff-poiret fs-5 fw-boldest"/>' +
+                '           </div>' +
+                '       </div>' +
+                '       <div class="form-control-solid this-outline">' +
+                '           <div class="flex-row-wrap">' +
+                '               <div class="flex-row-wrap align-content-center">' +
+                '                   <label for="' + this.tabs.char.classInputId + '">Class</label>' +
+                '                   <input type="text" value="" id="' + this.tabs.char.classInputId + '"' +
+                '                           class="form-control form-control-sm this-role-form-field w-50"/>' +
+                '               </div>' +
+                '               <div class="flex-row-wrap align-content-center">' +
+                '                   <label for="' + this.tabs.char.levelInputId + '">Level</label>' +
+                '                   <input type="text" value="" id="' + this.tabs.char.levelInputId + '"' +
+                '                           class="form-control form-control-sm this-role-form-field w-50"/>' +
+                '               </div>' +
+                '           </div>' +
+                '       </div>' +
+                '   </div>' +
+                '</div>' +
+                '<!--end::Character content-->';
+        }
+        const spells = () => {
+            return '<!--begin::Character content-->' +
+                '<div id="' + this.tabs.spells.containerId + '" class="py-8 px-2 tab-pane fade">' +
+                '' +
+                '</div>' +
+                '<!--end::Character content-->';
+        }
+        this.modalBody.innerHTML = '<!--begin::Tabs Container-->' +
+            '<div class="aside-menu flex-column-fluid tab-content">' +
+            '   ' + tabs() + character() + spells() +
             '</div>' +
-            '<!--end::Character content-->';
+            '<!--end::Tabs Container-->';
+        this.loadInfo = (elem) => {
+            let info = q('*[data-from=' + elem.id + ']');
+            for (let i of info) {
+                i.innerHTML = elem.value;
+            }
+        }
+        this.inputs = q('.this-outline .this-role-form-field');
+        for (let elem of this.inputs) {
+            this.loadInfo(elem);
+            elem.onblur = () => {
+                this.loadInfo(elem);
+            }
+        }
     }
-    const spells = () => {
-        return '<!--begin::Character content-->' +
-            '<div id="' + this.tabs.spellsId + '" class="tab-pane fade">' +
-            '' +
-            '</div>' +
-            '<!--end::Character content-->';
-    }
-    this.modalBody.innerHTML = '<!--begin::Tabs Container-->' +
-        '<div class="aside-menu flex-column-fluid tab-content">' +
-        '   ' + tabs() + character() + spells() +
-        '</div>' +
-        '<!--end::Tabs Container-->';
 }

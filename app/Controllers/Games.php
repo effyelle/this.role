@@ -306,4 +306,9 @@ class Games extends BaseController
         }
         return json_encode(['response' => false]);
     }
+
+    function sheet(): string
+    {
+        return view('/pages/games/sheet');
+    }
 }

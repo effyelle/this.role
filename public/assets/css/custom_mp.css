@@ -213,8 +213,19 @@ span.popup.show, .signup span.popup.show {
 }
 
 .ff-poiret {
-    text-transform: uppercase;
     font-family: 'Poiret One', cursive;
+}
+
+.text-uppercase {
+    text-transform: uppercase;
+}
+
+.text-capitalize {
+    text-transform: capitalize;
+}
+
+.text-lowercase {
+    text-transform: lowercase;
 }
 
 .bg-garnet {
@@ -398,13 +409,13 @@ a .hover-flip {
     transition: all 0.4s ease;
 }
 
-input.form-control.form-control-solid.this-role-form-field {
+.this-role-form-field {
     border: 0 !important;
     border-radius: 0;
     border-bottom: 1px solid var(--bs-gray-400) !important;
 }
 
-.form-control.form-control-solid.this-role-form-field {
+.this-role-form-field, .this-role-form-field:focus {
     background-color: rgba(var(--this-role-light-rgb), 0.1);
 }
 
@@ -978,16 +989,58 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     cursor: move;
 }
 
-.game .journal_item_modal input.this-role-form-field:not(.game .journal_item_modal input.this-role-form-field:focus) {
-    border: 0;
+.game .journal_item_modal .this-role-form-field {
+    line-height: 17px;
+    border-bottom: 1px solid var(--bs-gray-300);
+}
+
+.game .journal_item_modal .this-role-form-field:not(.game .journal_item_modal .this-role-form-field:focus) {
+    background: transparent;
 }
 
 .this-outline {
+    border: 1px solid var(--this-role-light);
+    border-radius: 0.75rem;
+}
+
+.this-double-outline {
     padding: 0.5rem;
-    border: 1px solid var(--bs-gray-900);
+    border: 1px solid var(--this-role-light);
     border-radius: 0.25rem;
-    outline: 1px solid var(--bs-gray-900);
+    outline: 1px solid var(--this-role-light);
     outline-offset: 3px;
+}
+
+.combat-item {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    font-weight: 600;
+    padding: 0;
+}
+
+.combat-item input {
+    width: 40%;
+}
+
+.combat-item_title, .combat-item_content {
+    text-align: center;
+}
+
+.combat-item_title {
+    font-size: 8px !important;
+}
+
+.combat-item_content {
+    font-size: 16px;
+}
+
+.this-ca {
+    background: url("/assets/media/games/journal/this-ca.png") center center no-repeat;
+    background-size: cover;
 }
 
 .this-outline label {
@@ -995,5 +1048,40 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 }
 
 .this-outline .form-control {
-    padding: 0.25rem;
+    padding: 0;
 }
+
+.nav-link:focus, .nav-link:hover {
+    color: var(--this-role-garnet);
+}
+
+.symbol.icon-hover {
+    cursor: pointer;
+}
+
+.symbol.icon-hover .icon-hover-label ~ .symbol-label {
+    transition: all 0.6s ease;
+}
+
+.symbol.icon-hover .icon-hover-label {
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: all 0.6s ease;
+}
+
+.symbol.icon-hover:hover .icon-hover-label {
+    opacity: 1;
+    z-index: 2020;
+    transition: all 0.4s ease;
+}
+
+.symbol.icon-hover:hover .icon-hover-label ~ .symbol-label {
+    opacity: 0.5;
+    transition: all 0.4s ease;
+}
+
+.modal-content.bg-white > .modal-body {
+    background: white;
+}
+

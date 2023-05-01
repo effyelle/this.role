@@ -1,8 +1,16 @@
 function initBoard(dbGame, session) {
+
+    document.onclick=(e)=>{
+        console.log(e.target)
+    }
+
     // * Board intance * //
     const board = new Board('.btn.dice');
+
     // * Chat object * //
     const chat = new board.Chat('.chat-messages');
+    getChat();
+
     // * Journal intance * //
     const journal = new Journal('journal', {
         ajax: {
@@ -11,29 +19,105 @@ function initBoard(dbGame, session) {
             dataType: 'json',
         },
         onLoad: function (data) {
-            console.log(data);
-            /*
-            for (let i in data) {
-                if (data['response'] && data['items']) {
-                    for (let i in data['items']) {
-                        journal.formatJournalItem(data.items[i]);
-                    }
-                } else if (data['msg']) {
-                    $('.modal_error_response').html(data['msg']);
-                    $('#modal_error-toggle').click();
-                }
-            }*/
+            makeItemsInteractable(data);
         },
         onError: function (e) {
             console.log(e);
         }
     });
 
-    getChat();
+    function makeItemsInteractable(data) {
+        let items = q('.' + journal.itemClass + ' .menu-link');
+        // Check data and items have the same length -> means they have been created accordingly
+        if (items.length === journal.journal.itemsLength) {
+            // Iterate items
+            for (let item of items) {
+                // Add a click listener to each item to create a new modal
+                item.click(() => {
+                    // Save item to journal
+                    let itemInfo = journal.journal.items[item.value];
+                    // Save id to from container
+                    journal.draggableContainerId = 'draggable_' + itemInfo.item_id;
+                    // If container does not exist, create it
+                    if (q('#' + journal.draggableContainerId).length === 0) {
+                        journal.itemModalsContainerId = 'journal-modal_container';
+                        journal.itemModalClass = journal.container.id + '_item_modal';
+                        openItem(itemInfo);
+                        let modals = q('.' + journal.itemModalClass);
+                        let closeBtns = q('.' + journal.itemModalClass + ' .close_item-btn');
+                        let cursorMove = q('.cursor-move');
+                        // * Check there are the same amount of cursor-move as * //
+                        // * there are of opened modals and close buttons      * //
+                        if (cursorMove.length === modals.length && closeBtns.length === modals.length) {
+                            // Add draggable
+                            for (let i = 0; i < cursorMove.length; i++) {
+                                new Draggable('.draggable', '.cursor-move');
+                            }
+                            // Add a close event
+                            for (let i = 0; i < closeBtns.length; i++) {
+                                closeBtns[i].click(() => {
+                                    modals[i].remove();
+                                });
+                            }
+                            // Fill item
+                            openSheet(itemInfo);
+                        }
+                    }
+                });
+            }
+        }
+    }
 
-// *********************************** //
-// * Listen to dices buttons pressed * //
-// *********************************** //
+    function openItem(item) {
+        q('#' + journal.itemModalsContainerId)[0].innerHTML += '' +
+            '<div id="' + journal.draggableContainerId + '" class="' + journal.itemModalClass + ' show ' + item.item_type + ' draggable">' +
+            '       <div class="modal-content bg-white">' +
+            '           <div class="modal-header flex-row-wrap justify-content-between align-items-center cursor-move">' +
+            '               <div class="" data-from="' + journal.draggableContainerId + '-character-title_input">' +
+            '                   <!--Autofill-->Character name' +
+            '               </div>' +
+            '               <div class="flex-row-wrap gap-5 align-items-end justify-content-end align-self-start">' +
+            '                   <button type="button" class="btn p-0 minmax-btn text-hover-dark">' +
+            '                       <i class="fa-solid fa-minus fs-3"></i>' +
+            '                   </button>' +
+            '                   <button type="button" class="btn p-0 close_item-btn text-hover-dark">' +
+            '                       <i class="fa-solid fa-close fs-1"></i>' +
+            '                   </button>' +
+            '               </div>' +
+            '           </div>' +
+            '           <div class="modal-body">' +
+            '               <div class="flex-column align-content-center align-items-center justify-content-center">' +
+            '               </div>' +
+            '           </div>' +
+            '       </div>' +
+            '</div>';
+    }
+
+    function openSheet(item) {
+        // Create new character sheet
+        $.ajax({
+            type: "post",
+            url: "/app/games_ajax/sheet/" + item.item_id,
+            success: (data) => {
+                q('#' + journal.draggableContainerId + ' .modal-body')[0].innerHTML = data;
+            }, error: (e) => {
+                console.log(e);
+            }
+        });
+        /*journal.journal.sheets[itemInfo.item_id] = new journal.Sheet({
+            ajax:{},
+            icon: journal.journal.icons[itemInfo.item_id],
+            modalContainer: '#' + journal.draggableContainerId,
+            modalBody: '#' + journal.draggableContainerId + ' .modal-body',
+            item: itemInfo,
+        });*/
+
+        journal.journal.sheetsLength++;
+    }
+
+    // *********************************** //
+    // * Listen to dices buttons pressed * //
+    // *********************************** //
     $('.btn.dice').click(function () {
         chat.formatMessage({
             src: "",
@@ -44,14 +128,14 @@ function initBoard(dbGame, session) {
             rolling: $('#roll-' + this.value).val()
         });
     });
-// * Chat textarea constant * //
+    // * Chat textarea constant * //
     const chatText = q('.chat-bubble textarea')[0];
-// * Chat textarea holder * //
+    // * Chat textarea holder * //
     let chatMessage = '';
 
-// ******************************* //
-// * Listen to chat pressed keys * //
-// ******************************* //
+    // ******************************* //
+    // * Listen to chat pressed keys * //
+    // ******************************* //
     chatText.addEventListener('keypress', function (e) {
         // Save key if not Enter
         if (e.key !== 'Enter') {
@@ -68,20 +152,20 @@ function initBoard(dbGame, session) {
         }
     });
 
-// ********************************* //
-// * Listen to send button in chat * //
-// ********************************* //
+    // ********************************* //
+    // * Listen to send button in chat * //
+    // ********************************* //
     document.querySelector('.chat-bubble ~ div .btn').addEventListener('click', function () {
         setChat(chatMessage.trim(), $('#charsheet_selected').find(':selected').text(), "chatMessage");
     });
-// * Delete add button and modal if user is not creator * //
+    // * Delete add button and modal if user is not creator * //
     if (session.user.user_id !== dbGame.game_creator) {
         $('#modal_journal-toggle').remove();
     }
 
-// ********************************************* //
-// * Add journal item when save button clicked * //
-// ********************************************* //
+    // ********************************************* //
+    // * Add journal item when save button clicked * //
+    // ********************************************* //
     q('#modal_journal .save_btn')[0].click(function () {
         let form = getForm('#modal_journal');
         if (form) {
@@ -91,9 +175,9 @@ function initBoard(dbGame, session) {
         toggleProgressSpinner(false);
     });
 
-// ********************************** //
-// * Empty journal modal on closure * //
-// ********************************** //
+    // ********************************** //
+    // * Empty journal modal on closure * //
+    // ********************************** //
     $('#modal_journal').on('hidden.bs.modal', function () {
         $('#journal_title-input').val('');
         $('#journal-item_type option[value="-1"]').prop('selected', true);

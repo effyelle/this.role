@@ -60,21 +60,7 @@
 }
 
 input[type=time].form-control[disabled] {
-    color: #aaacb9;
-}
-
-textarea.form-control::-webkit-scrollbar {
-    width: 0.75rem;
-}
-
-textarea.form-control::-webkit-scrollbar-track {
-    background: #f5f8fa;
-}
-
-textarea.form-control::-webkit-scrollbar-thumb {
-    background-color: #0095e8 !important;
-    border-radius: 5px;
-    border: none;
+    color: #7c7773;
 }
 
 .fc-daygrid-day-events {
@@ -254,18 +240,20 @@ body {
 }
 
 /* Track */
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
+::-webkit-scrollbar-track, textarea::-webkit-scrollbar-track {
+    background: var(--this-role-lighter);
+    cursor: pointer;
 }
 
 /* Handle */
-::-webkit-scrollbar-thumb {
-    background: #888;
+::-webkit-scrollbar-thumb, textarea::-webkit-scrollbar-thumb {
+    background: var(--this-role-garnet);
+    cursor: pointer;
 }
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
+::-webkit-scrollbar-thumb:hover, textarea::-webkit-scrollbar-thumb:hover {
+    background: #9d1f66;
 }
 
 .header {
@@ -409,7 +397,7 @@ a .hover-flip {
     transition: all 0.4s ease;
 }
 
-.this-role-form-field:not([type=checkbox]) {
+.this-role-form-field:not([type=checkbox]):not(textarea) {
     border: 0 !important;
     border-radius: 0;
     border-bottom: 1px solid var(--bs-gray-400) !important;
@@ -960,8 +948,8 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     top: 1.5rem;
     left: 1.5rem;
     z-index: 1990;
-    width: 90%;
-    height: 50vh;
+    width: 866px;
+    height: 1050px;
     overflow-x: hidden;
     overflow-y: auto;
     outline: 0;
@@ -978,11 +966,9 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     background: var(--bs-white);
 }
 
-@media (min-width: 992px) {
-    .journal_item_modal {
-        z-index: 2010;
-        width: 50%;
-    }
+.journal_item_modal .modal-body {
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .game label[for=item_title] {
@@ -1136,7 +1122,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     display: flex;
     flex-flow: column;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     text-align: center;
     width: 160px;
     height: 70px;

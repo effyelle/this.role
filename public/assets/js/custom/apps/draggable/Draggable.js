@@ -42,8 +42,6 @@ class Draggable {
             this.containers[i].style.zIndex = this.zIndex + 10;
             // Set it resizable
             this.containers[i].style.resize = 'both';
-            this.containers[i].style.overflowX = 'hidden';
-            this.containers[i].style.overflowY = 'auto';
             // Create mouse down for the container to switch z-index with other draggable elements
             this.containers[i].onmousedown = (e) => {
                 this.zIndexSwitch(this.containers[i]);

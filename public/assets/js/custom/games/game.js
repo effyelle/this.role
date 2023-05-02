@@ -2,6 +2,7 @@ function initBoard(dbGame, session) {
 
     // * Board intance * //
     const board = new Board('.btn.dice');
+    board.mapLayers=new Map({});
 
     // * Chat object * //
     const chat = new board.Chat('.chat-messages');
@@ -36,8 +37,6 @@ function initBoard(dbGame, session) {
                     journal.draggableContainerId = 'draggable_' + itemInfo.item_id;
                     // If container does not exist, create it
                     if (q('#' + journal.draggableContainerId).length === 0) {
-                        journal.itemModalsContainerId = 'journal-modal_container';
-                        journal.itemModalClass = journal.container.id + '_item_modal';
                         openItem(itemInfo);
                         let modals = q('.' + journal.itemModalClass);
                         let closeBtns = q('.' + journal.itemModalClass + ' .close_item-btn');
@@ -65,6 +64,8 @@ function initBoard(dbGame, session) {
     }
 
     function openItem(item) {
+        journal.itemModalsContainerId = 'journal-modal_container';
+        journal.itemModalClass = journal.container.id + '_item_modal';
         q('#' + journal.itemModalsContainerId)[0].innerHTML += '' +
             '<div id="' + journal.draggableContainerId + '" class="' + journal.itemModalClass + ' show ' + item.item_type + ' draggable">' +
             '       <div class="modal-content bg-white">' +

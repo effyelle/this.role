@@ -55,14 +55,16 @@ class Journal {
             '         <div class="menu-item">' +
             '             <span class="fs-5 text-dark">Welcome to your journal!</span>' +
             '         </div>' +
-            '         <!--begin::Menu Item-->' +
+            '         <!--begin:Menu item-->' +
             '         <div class="menu-item">' +
-            '             <a class="menu-link" id="modal_journal-toggle" data-bs-toggle="modal" data-bs-target="#modal_journal">' +
+            '             <!--begin:Menu link-->' +
+            '             <a class="menu-link gap-3" id="modal_journal-toggle" data-bs-toggle="modal" data-bs-target="#modal_journal">' +
+            '                 <i class="fa fa-solid fa-journal-whills fa-xl"></i>' +
             '                 <span class="menu-title">Add journal item</span>' +
-            '                 <i class="fa-solid fa-plus text-white fs-5 d-block bg-garnet circle p-1"></i>' +
             '             </a>' +
+            '             <!--end:Menu link-->' +
             '         </div>' +
-            '         <!--end::Menu Item-->' +
+            '         <!--end:Menu item-->' +
             '         <!--begin::Separator-->' +
             '         <div class="menu-item">' +
             '             <div class="menu-content p-0">' +

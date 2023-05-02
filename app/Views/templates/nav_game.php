@@ -3,93 +3,149 @@
     <!--begin::Aside-->
     <div id="kt_aside" class="aside card top-0" data-kt-drawer="true"
          data-kt-drawer-name="aside" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true"
-         data-kt-drawer-width="{default:'250px', '350px': '350px'}" data-kt-drawer-direction="start"
+         data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="start"
          data-kt-drawer-toggle="#kt_aside_toggle">
-        <div class="aside-menu flex-column-fluid tab-content">
+        <!--begin::Aside menu-->
+        <div class="aside-menu flex-column-fluid">
             <!--begin::Aside Menu-->
-            <ul class="nav nav-tabs nav-line-tabs pt-2 px-2 justify-content-evenly">
-                <li class="nav-item">
-                    <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#chat_container">
-                        <i class="fa fa-comments f-lg text-this-role-light"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#journal">
-                        <i class="fa fa-newspaper text-this-role-light"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#tools_list">
-                        <i class="fa fa-tools text-this-role-light"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#settings_container">
-                        <i class="fa fa-solid fa-gear text-this-role-light"></i>
-                    </a>
-                </li>
-            </ul>
-            <!--end::Aside menu-->
+            <div class="hover-scroll-overlay-y" id="kt_aside_menu_wrapper" data-kt-scroll="true"
+                 data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-height="auto"
+                 data-kt-scroll-dependencies="#kt_header, #kt_aside_footer"
+                 data-kt-scroll-wrappers="#kt_aside, #kt_aside_menu" data-kt-scroll-offset="{lg: '75px'}" style="">
+                <!--begin::Menu-->
+                <div class="menu menu-column menu-rounded fw-bold gap-6 tab-content" id="#kt_aside_menu"
+                     data-kt-menu="true">
+                    <!--begin::Aside Menu-->
+                    <ul class="nav nav-tabs nav-line-tabs pt-2 px-2 justify-content-evenly">
+                        <li class="nav-item">
+                            <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#chat_container">
+                                <i class="fa fa-comments f-lg text-this-role-light"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#journal">
+                                <i class="fa fa-newspaper text-this-role-light"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item d-none">
+                            <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#tools_list">
+                                <i class="fa fa-tools text-this-role-light"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#settings_container">
+                                <i class="fa fa-solid fa-gear text-this-role-light"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!--end::Aside menu-->
 
-            <!--begin::Chat-->
-            <div id="chat_container" class="tab-pane fade">
-                <div class="aside-footer d-flex flex-column py-3 px-5 chat-container mb-3 overflow-y-scroll">
-                    <div class="chat-messages">
-                        <!--Chat messages go here-->
-                    </div>
-                    <div class="d-flex flex-column justify-content-center">
-                        <div class="chat-bubble">
-                            <label for="chat" class="form-label mb-3">Chat</label>
-                            <textarea id="chat" rows="3"
-                                      class="form-control form-control-solid this-role-form-field"></textarea>
-                        </div>
-                        <div class="d-flex flex-row justify-content-between align-items-center mt-5">
-                            <div class="select-charsheets">
-                                <label for="charsheet_selected" class="form-label d-none">You're writing as...</label>
-                                <select id="charsheet_selected"
-                                        class="form-control form-select form-control-solid this-role-form-field">
-                                    <option selected value="-1"><?= $_SESSION['user']['user_username'] ?></option>
-                                    <option value="0">Sabrina</option>
-                                    <option value="1">Salem</option>
-                                </select>
+                    <!--begin::Chat-->
+                    <div id="chat_container" class="tab-pane fade">
+                        <div class="aside-footer d-flex flex-column py-3 px-5 chat-container mb-3 overflow-y-scroll">
+                            <div class="chat-messages">
+                                <!--Chat messages go here-->
                             </div>
-                            <button class="btn btn-garnet text-white px-3 py-2">Send</button>
+                            <div class="d-flex flex-column justify-content-center">
+                                <div class="chat-bubble">
+                                    <label for="chat" class="form-label mb-3">Chat</label>
+                                    <textarea id="chat" rows="3"
+                                              class="form-control form-control-solid this-role-form-field"></textarea>
+                                </div>
+                                <div class="d-flex flex-row justify-content-between align-items-center mt-5">
+                                    <div class="select-charsheets">
+                                        <label for="charsheet_selected" class="form-label d-none">You're writing
+                                            as...</label>
+                                        <select id="charsheet_selected"
+                                                class="form-control form-select form-control-solid this-role-form-field">
+                                            <option selected
+                                                    value="-1"><?= $_SESSION['user']['user_username'] ?></option>
+                                            <option value="0">Sabrina</option>
+                                            <option value="1">Salem</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn btn-garnet text-white px-3 py-2">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::Chat-->
+
+                    <!--begin::Journal-->
+                    <div id="journal" class="tab-pane fade active show"></div>
+                    <!--end::Journal-->
+
+                    <!--begin::Tools-->
+                    <div id="tools_list" class="tab-pane fade">
+                        <div class="aside-footer d-flex flex-column py-3 px-5">
+                            <div data-kt-menu="true" id="menu_gallery"
+                                 class="menu menu-column menu-rounded fw-bold fs-7 gap-2 mt-3">
+                                <!--begin::Title-->
+                                <div class="menu-item">
+                                    <span class="fs-5 text-dark">Tools</span>
+                                </div>
+                                <!--end::Title-->
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::Tools-->
+                    <div id="settings_container" class="tab-pane fade">
+                        <div class="aside-footer d-flex flex-column py-3 px-5">
+                            <!--begin::Title-->
+                            <div class="menu-item mb-5">
+                                <span class="fs-5 text-dark">Settings</span>
+                            </div>
+                            <?php if (isset($game) && $_SESSION['user']['user_id'] === $game['game_creator']): ?>
+                                <!--begin::Menu Accordion-->
+                                <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                                    <!--begin:Menu link-->
+                                    <span class="menu-link">
+                                    <span class="menu-icon">
+                                        <i class="fa fa-solid fa-gear fa-lg hover-flip"></i>
+                                    </span>
+                                    <span class="menu-title">Admin</span>
+                                    <span class="menu-arrow"></span>
+                                </span>
+                                    <!--end:Menu link-->
+                                    <!--begin:Menu sub-->
+                                    <div class="menu-sub menu-sub-accordion">
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <label for="add_map" class="menu-link">
+                                            <span class="menu-bullet">
+                                                <i class="fa fa-solid fa-map"></i>
+                                            </span>
+                                                <span class="menu-title">Add Map</span>
+                                                <input type="file" accept="image/*" id="add_map" name="add_map"
+                                                       class="d-none">
+                                            </label>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
+                                            <a class="menu-link">
+                                        <span class="menu-bullet">
+                                            <i class="fa fa-solid fa-layer-group"></i>
+                                        </span>
+                                                <span class="menu-title">Change Layer</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                    </div>
+                                    <!--end:Menu sub-->
+                                </div>
+                                <!--end::Menu Accordion-->
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
             </div>
-            <!--end::Chat-->
-
-            <!--begin::Journal-->
-            <div id="journal" class="tab-pane fade active show"></div>
-            <!--end::Journal-->
-
-            <!--begin::Tools-->
-            <div id="tools_list" class="tab-pane fade">
-                <div class="aside-footer d-flex flex-column py-3 px-5">
-                    <div data-kt-menu="true" id="menu_gallery"
-                         class="menu menu-column menu-rounded fw-bold fs-7 gap-2 mt-3">
-                        <!--begin::Menu Item-->
-                        <div class="menu-item">
-                            <span class="fs-5 text-dark">Welcome to out tools!</span>
-                        </div>
-                        <!--end::Menu Item-->
-                    </div>
-                </div>
-            </div>
-            <!--end::Tools-->
-
-            <!--begin::Settings-->
-            <div id="settings_container" class="tab-pane fade">
-                <div class="aside-footer d-flex flex-column py-3 px-5">
-                    Settingssssssss
-                </div>
-            </div>
-            <!--end::Settings-->
-
         </div>
     </div>
-    <!--end::Aside-->
     <!--begin::Container-->
     <div class="d-flex flex-column flex-column-fluid container-fluid this-table-margin">
         <!--begin::Content-->

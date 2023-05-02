@@ -87,6 +87,19 @@ CREATE TABLE game_journal(
 	FOREIGN KEY(item_game_id) REFERENCES games(game_id)
 );
 
+CREATE TABLE game_layers(
+	layer_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	layer_bg BLOB,
+	layer_bc_route TEXT
+);
+
+CREATE TABLE layer_token(
+	token_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	token_id_layer INT UNSIGNED,
+	token_coords JSON,
+	FOREIGN KEY (token_id_layer) REFERENCES game_layers(layer_id)
+);
+
 CREATE TABLE invite_url(
 	url VARCHAR(200) PRIMARY KEY,
 	id_game INT UNSIGNED,

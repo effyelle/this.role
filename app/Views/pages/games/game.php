@@ -1,4 +1,4 @@
-<div class="this-game w-100 h-100 bg-white">
+<div id="this-game" class="this-game w-100 h-100 bg-white">
     <?php var_dump($game ?? '');
     ?>
 </div>
@@ -40,7 +40,8 @@
                                                        class="form-check-input form-check-inline player-can_see"/>
                                                 <label for="<?= $player['user_id'] ?>-can_see"
                                                        class="form-check-label this-role-form-field">
-                                                    Can see</label>
+                                                    Can see
+                                                </label>
                                             </div>
                                             <div class="player-checkbox form-check form-check-solid">
                                                 <input type="checkbox" id="<?= $player['user_id'] ?>-can_edit"
@@ -48,7 +49,8 @@
                                                        class="form-check-input form-check-inline player-can_edit this-role-form-field"/>
                                                 <label for="<?= $player['user_id'] ?>-can_edit"
                                                        class="form-check-label">
-                                                    Can edit</label>
+                                                    Can edit
+                                                </label>
                                             </div>
                                         </div>
                                     <?php endif;
@@ -85,6 +87,7 @@
 <script src="/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js"></script>
 <script src="/assets/js/custom/apps/ckeditor/CKEditor.js"></script>
 <script type="text/javascript" src="/assets/js/custom/games/game.js"></script>
+<script type="text/javascript" src="/assets/js/custom/games/Map.js"></script>
 <script type="text/javascript" src="/assets/js/custom/games/Board.js"></script>
 <script type="text/javascript" src="/assets/js/custom/games/Journal.js"></script>
 <script type="text/javascript" src="/assets/js/custom/apps/draggable/Draggable.js"></script>

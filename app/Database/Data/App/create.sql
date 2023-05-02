@@ -93,7 +93,7 @@ CREATE TABLE game_layers(
 	layer_bc_route TEXT
 );
 
-CREATE TABLE layer_token(
+CREATE TABLE game_token(
 	token_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
 	token_id_layer INT UNSIGNED,
 	token_coords JSON,

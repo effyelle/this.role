@@ -110,18 +110,19 @@
                                     <!--begin:Menu sub-->
                                     <div class="menu-sub menu-sub-accordion">
                                         <!--begin:Menu item-->
-                                        <div class="menu-item">
+                                        <form method="post" enctype="multipart/form-data" id="add_map" action="/daigual"
+                                              class="menu-item">
                                             <!--begin:Menu link-->
-                                            <label for="add_map" class="menu-link">
+                                            <label for="add_map-input" class="menu-link">
                                             <span class="menu-bullet">
                                                 <i class="fa fa-solid fa-map"></i>
                                             </span>
                                                 <span class="menu-title">Add Map</span>
-                                                <input type="file" accept="image/*" id="add_map" name="add_map"
+                                                <input type="file" accept="image/*" id="add_map-input" name="add_map-input"
                                                        class="d-none">
                                             </label>
                                             <!--end:Menu link-->
-                                        </div>
+                                        </form>
                                         <!--end:Menu item-->
                                         <!--begin:Menu item-->
                                         <div class="menu-item">

@@ -1,5 +1,6 @@
-DROP DATABASE if EXISTS this_roll;
-CREATE DATABASE this_roll; USE this_roll;
+DROP DATABASE if EXISTS this_role;
+CREATE DATABASE this_role;
+USE this_role;
 
 # ################### #
 # Non heritage tables #
@@ -461,3 +462,20 @@ values
   (53,11), (54,11), (54,40),
   (55,11), (56,11), (56,68),
   (57,11), (57,31), (58,11);
+  
+  
+insert into class(name, hit_dice)
+values
+	('artificer', '1d8'),
+	('barbarian', '1d12'),
+	('bard', '1d8'),
+	('cleric', '1d8'),
+	('druid', '1d8'),
+	('fighter', '1d10'),
+	('monk', '1d8'),
+	('paladin', '1d10'),
+	('ranger', '1d10'),
+	('rogue', '1d8'),
+	('sorcerer', '1d6'),
+	('warlock', '1d8'),
+	('wizard', '1d6');

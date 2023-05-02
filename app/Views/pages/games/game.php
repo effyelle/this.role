@@ -1,7 +1,4 @@
-<div id="this-game" class="this-game w-100 h-100 bg-white">
-    <?php var_dump($game ?? '');
-    ?>
-</div>
+<div id="this-game" class="this-game w-100 h-100 bg-white position-relative"></div>
 <?php if (isset($game) && $_SESSION['user']['user_id'] === $game['game_creator']): ?>
     <!--begin::Modal-->
     <div class="modal fade" tabindex="-1" id="modal_journal">
@@ -87,7 +84,7 @@
 <script src="/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js"></script>
 <script src="/assets/js/custom/apps/ckeditor/CKEditor.js"></script>
 <script type="text/javascript" src="/assets/js/custom/games/game.js"></script>
-<script type="text/javascript" src="/assets/js/custom/games/Map.js"></script>
+<script type="text/javascript" src="/assets/js/custom/games/GameMap.js"></script>
 <script type="text/javascript" src="/assets/js/custom/games/Board.js"></script>
 <script type="text/javascript" src="/assets/js/custom/games/Journal.js"></script>
 <script type="text/javascript" src="/assets/js/custom/apps/draggable/Draggable.js"></script>

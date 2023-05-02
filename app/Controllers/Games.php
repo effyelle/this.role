@@ -60,7 +60,7 @@ class Games extends BaseController
                 $new_folder = time();
                 $newRoute = $this->mediaGames . $new_folder . '/';
                 // Create the folder
-                if (mkdir($newRoute) && mkdir($newRoute . '/gallery')) {
+                if (mkdir($newRoute) && mkdir($newRoute . '/layers') && mkdir($newRoute . '/players')) {
                     // If folder creates, update game to save folder
                     if ($this->gamesmodel->updt(['game_folder' => $new_folder], ['game_id' => $game_id])) {
                         // * Upload game icon into the new folder * //
@@ -310,5 +310,24 @@ class Games extends BaseController
     function sheet(): string
     {
         return view('/pages/games/sheet');
+    }
+
+    function add_map($id): string
+    {
+        $game = $this->gamesmodel->get(['game_id' => $id])[0];
+        $newName = time();
+        $newRoute = $this->mediaGames . $game['game_folder'] . '/layers/';
+        // * Upload game icon into the new folder * //
+        $data['FILEs'] = $_FILES['layer_img'];
+        $img = upload_img('layer_img', $newRoute, $newName);
+        $data['img'] = $img;
+        $data['newroute'] = $newRoute;
+        // If the file was uploaded, update game to add new icon
+        /*if (str_contains($img, $newName)) {
+            $data['contains'] = true;
+            $newFile = explode('/', $img)[count(explode('/', $img)) - 1];
+            $this->gamesmodel->updt(['game_icon' => $newFile], ['game_id' => $game_id]);
+        }*/
+        return json_encode(['data' => $data]);
     }
 }

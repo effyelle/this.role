@@ -89,6 +89,13 @@ function validate(string $str): string
 function upload_img($formname, $target, $preferred_filename = null): string|bool
 {
     if (!is_dir($target)) return 'Directory does not exist';
+    if (is_array($_FILES[$formname]["name"])) {
+        foreach ($_FILES[$formname] as $key => $val) {
+            if (is_array($val)) {
+                $_FILES[$formname][$key] = $val[0];
+            }
+        }
+    }
     $target_file = $target . basename($_FILES[$formname]["name"]);
     // Save image file type
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));

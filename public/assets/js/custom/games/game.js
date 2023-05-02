@@ -2,11 +2,14 @@ function initBoard(dbGame, session) {
 
     // * Board intance * //
     const board = new Board('.btn.dice');
-    board.mapLayers=new Map({});
+    board.mapLayers = new GameMap('#this-game', {});
+    listenToNewMaps();
+
 
     // * Chat object * //
     const chat = new board.Chat('.chat-messages');
     getChat();
+    setInterval(getChat, 3000);
 
     // * Journal intance * //
     const journal = new Journal('journal', {
@@ -112,6 +115,40 @@ function initBoard(dbGame, session) {
         journal.journal.sheetsLength++;
     }
 
+    function listenToNewMaps() {
+        console.log(window.FormData)
+        let addMapForm = q('#add_map')
+        let addMapBtn = q('#add_map-input');
+        if (!(addMapForm.length === 1 && addMapBtn.length === 1)) return false;
+        addMapForm = addMapForm[0];
+        addMapBtn = addMapBtn[0];
+        addMapBtn.onchange = function (e) {
+            let form = new FormData();
+            if (this.files.length > 0) {
+                let file = this.files[0];
+                form.append('layer_img[]', file);
+                if (window.FileReader) {
+                    let reader = new FileReader();
+                    reader.readAsDataURL(file);
+                }
+            }
+            if (form) {
+                $.ajax({
+                    type: "post",
+                    url: "/app/games_ajax/add_map/" + dbGame.game_id,
+                    data: form,
+                    processData: false,
+                    contentType: false,
+                    success: (data) => {
+                        console.log(data)
+                    }, error: (e) => {
+                        console.log(e)
+                    }
+                })
+            }
+        }
+    }
+
     // *********************************** //
     // * Listen to dices buttons pressed * //
     // *********************************** //
@@ -205,13 +242,13 @@ function initBoard(dbGame, session) {
                     if (!data['response']) {
                         sender = '';
                         text = data['msg'];
+                        chat.formatMessage({ // Submit message
+                            sender: sender,
+                            src: "",
+                            msg: text,
+                            msgType: msgType
+                        });
                     }
-                    chat.formatMessage({ // Submit message
-                        sender: sender,
-                        src: "",
-                        msg: text,
-                        msgType: msgType
-                    });
                     chatText.value = ""; // Empty chat textarea
                     chatMessage = ''; // Empty holder variable
 
@@ -234,7 +271,7 @@ function initBoard(dbGame, session) {
             url: "/app/games_ajax/get_chat/" + dbGame.game_id,
             dataType: "json",
             success: function (data) {
-                console.log(data)
+                chat.record.innerHTML = '';
                 let sender = '';
                 let src = '';
                 let msgText = 'There are no messages yet, be the first to comment!';
@@ -246,7 +283,14 @@ function initBoard(dbGame, session) {
                         src = '';
                         msgText = msg['chat_msg'];
                         msgType = msg['chat_msg_type'];
+                        chat.formatMessage({
+                            sender: sender,
+                            src: src,
+                            msg: msgText,
+                            msgType: msgType
+                        });
                     }
+                    return;
                 }
                 chat.formatMessage({
                     sender: sender,
@@ -272,7 +316,6 @@ function initBoard(dbGame, session) {
             data: post,
             dataType: 'json',
             success: function (data) {
-                console.log(data);
                 if (data['response']) {
                     // Add item to HTML
                     journal.reload();

@@ -77,7 +77,6 @@ class Journal {
     }
 
     formatJournalItem(item = {}) {
-        console.log(item)
         // Check image data, if it does not exist, put a default one
         let icon = urlExists(this.imgFolder + item.item_icon)
             ? this.imgFolder + item.item_icon // original icon

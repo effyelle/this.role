@@ -2,7 +2,10 @@ function initBoard(dbGame, session) {
 
     // * Board intance * //
     const board = new Board('.btn.dice');
-    board.mapLayers = new GameMap('#this-game', {});
+    board.map = new GameMap('#this-game', {
+        folder: '/assets/media/games/' + dbGame.game_folder + '/layers/',
+        ajax: '/app/games_ajax/get_layers/' + dbGame.game_id
+    });
     listenToNewMaps();
 
 
@@ -123,16 +126,10 @@ function initBoard(dbGame, session) {
         addMapForm = addMapForm[0];
         addMapBtn = addMapBtn[0];
         addMapBtn.onchange = function (e) {
-            let form = new FormData();
             if (this.files.length > 0) {
+                let form = new FormData();
                 let file = this.files[0];
                 form.append('layer_img[]', file);
-                if (window.FileReader) {
-                    let reader = new FileReader();
-                    reader.readAsDataURL(file);
-                }
-            }
-            if (form) {
                 $.ajax({
                     type: "post",
                     url: "/app/games_ajax/add_map/" + dbGame.game_id,
@@ -140,11 +137,22 @@ function initBoard(dbGame, session) {
                     processData: false,
                     contentType: false,
                     success: (data) => {
-                        console.log(data)
+                        data = (JSON.parse(data)).data;
+                        let img = data.img;
+                        if (data.response) {
+                            for (let layer of data.layers) {
+                                board.map.Layers = layer;
+                                board.map.reload();
+                            }
+                            return;
+                        }
+                        console.log(img)
+                        $('.modal_error_response').html(img);
+                        $('#modal_error-toggle').click();
                     }, error: (e) => {
                         console.log(e)
                     }
-                })
+                });
             }
         }
     }

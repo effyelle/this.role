@@ -89,8 +89,9 @@ CREATE TABLE game_journal(
 
 CREATE TABLE game_layers(
 	layer_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-	layer_bg BLOB,
-	layer_bc_route TEXT
+	layer_id_game INT UNSIGNED,
+	layer_bg TEXT,
+	FOREIGN KEY (layer_id_game) REFERENCES games(game_id)
 );
 
 CREATE TABLE game_token(

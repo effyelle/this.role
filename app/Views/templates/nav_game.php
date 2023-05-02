@@ -8,12 +8,12 @@
         <!--begin::Aside menu-->
         <div class="aside-menu flex-column-fluid">
             <!--begin::Aside Menu-->
-            <div class="hover-scroll-overlay-y" id="kt_aside_menu_wrapper" data-kt-scroll="true"
+            <div class="hover-scroll-overlay-y h-100" id="kt_aside_menu_wrapper" data-kt-scroll="true"
                  data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-height="auto"
                  data-kt-scroll-dependencies="#kt_header, #kt_aside_footer"
                  data-kt-scroll-wrappers="#kt_aside, #kt_aside_menu" data-kt-scroll-offset="{lg: '75px'}" style="">
                 <!--begin::Menu-->
-                <div class="menu menu-column menu-rounded fw-bold gap-6 tab-content" id="#kt_aside_menu"
+                <div class="menu menu-column menu-rounded fw-bold tab-content" id="#kt_aside_menu"
                      data-kt-menu="true">
                     <!--begin::Aside Menu-->
                     <ul class="nav nav-tabs nav-line-tabs pt-2 px-2 justify-content-evenly">

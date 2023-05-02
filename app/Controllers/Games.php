@@ -10,7 +10,8 @@ class Games extends BaseController
     protected mixed $gamechatmodel;
     protected mixed $usermodel;
     protected mixed $journalmodel;
-    protected mixed $gameplayermodel;
+    protected mixed $playermodel;
+    protected mixed $layermodel;
     protected string $now;
     protected string $mediaGames = FCPATH . 'assets/media/games/';
 
@@ -20,7 +21,8 @@ class Games extends BaseController
         $this->gamechatmodel = model('GameChatModel');
         $this->usermodel = model('UsersModel');
         $this->journalmodel = model('GameJournalModel');
-        $this->gameplayermodel = model('GamePlayerModel');
+        $this->playermodel = model('GamePlayerModel');
+        $this->layermodel = model('GameLayersModel');
         $this->now = date('Y-m-d H:i:s', time());
     }
 
@@ -52,7 +54,7 @@ class Games extends BaseController
                 // Get the new game ID
                 $game_id = intval($this->gamesmodel->maxID()->{'MAX(game_id)'});
                 // Add user to players in this game
-                $this->gameplayermodel->new([
+                $this->playermodel->new([
                     'game_player_id_user' => $sessionUser,
                     'game_player_id_game' => $game_id
                 ]);
@@ -235,10 +237,10 @@ class Games extends BaseController
         if (count($game) === 1) {
             $game = $game[0];
             // Return if the session user was game creator
-            if (count($this->gameplayermodel->get(['game_player_id_user' => $sessionUser])) > 0) {
+            if (count($this->playermodel->get(['game_player_id_user' => $sessionUser])) > 0) {
                 return json_encode(['response' => false, 'msg' => 'You already joined this game']);
             }
-            if ($this->gameplayermodel->new(['game_player_id_game' => $id, 'game_player_id_user' => $sessionUser])) {
+            if ($this->playermodel->new(['game_player_id_game' => $id, 'game_player_id_user' => $sessionUser])) {
                 return json_encode(['response' => true]);
             }
             return json_encode(['response' => false, 'msg' => 'Could not join the game']);
@@ -318,16 +320,27 @@ class Games extends BaseController
         $newName = time();
         $newRoute = $this->mediaGames . $game['game_folder'] . '/layers/';
         // * Upload game icon into the new folder * //
-        $data['FILEs'] = $_FILES['layer_img'];
         $img = upload_img('layer_img', $newRoute, $newName);
-        $data['img'] = $img;
-        $data['newroute'] = $newRoute;
+        $data = [
+            'img' => $img,
+            'response' => false
+        ];
         // If the file was uploaded, update game to add new icon
-        /*if (str_contains($img, $newName)) {
-            $data['contains'] = true;
+        if (str_contains($img, $newName)) {
             $newFile = explode('/', $img)[count(explode('/', $img)) - 1];
-            $this->gamesmodel->updt(['game_icon' => $newFile], ['game_id' => $game_id]);
-        }*/
+            if ($this->layermodel->new(['layer_bg' => $newFile, 'layer_id_game' => $id])) {
+                $data = [
+                    'img' => $newFile,
+                    'response' => true,
+                    'layers' => $this->layermodel->get(['layer_id_game' => $id]),
+                ];
+            }
+        }
         return json_encode(['data' => $data]);
+    }
+
+    function get_layers($id): string
+    {
+        return json_encode(['response' => true, 'layers' => $this->layermodel->get(['layer_id_game' => $id])]);
     }
 }

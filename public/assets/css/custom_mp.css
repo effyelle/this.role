@@ -409,13 +409,13 @@ a .hover-flip {
     transition: all 0.4s ease;
 }
 
-.this-role-form-field {
+.this-role-form-field:not([type=checkbox]) {
     border: 0 !important;
     border-radius: 0;
     border-bottom: 1px solid var(--bs-gray-400) !important;
 }
 
-.this-role-form-field, .this-role-form-field:focus {
+.this-role-form-field, .this-role-form-field:focus:not([type=checkbox]) {
     background-color: rgba(var(--this-role-light-rgb), 0.1);
 }
 
@@ -546,7 +546,7 @@ input.form-control.this-role-form-field[disabled] {
     flex-flow: row wrap;
 }
 
-.flex-row-nowrap {
+.flex-row, .flex-row-nowrap {
     display: flex;
     flex-flow: row nowrap;
 }
@@ -994,7 +994,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     border-bottom: 1px solid var(--bs-gray-300);
 }
 
-.game .journal_item_modal .this-role-form-field:not(.game .journal_item_modal .this-role-form-field:focus) {
+.game .journal_item_modal .this-role-form-field:not(.game .journal_item_modal .this-role-form-field:focus):not([type=checkbox]) {
     background: transparent;
 }
 
@@ -1022,8 +1022,18 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     padding: 0;
 }
 
+.combat-item-sm {
+    width: 25px;
+    height: 25px;
+}
+
 .combat-item input {
     width: 40%;
+}
+
+.combat-item input.this-score {
+    width: 18px;
+    border: none;
 }
 
 .combat-item_title, .combat-item_content {
@@ -1085,3 +1095,69 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     background: white;
 }
 
+.top-15px {
+    top: 15px;
+}
+
+.top-65px {
+    top: 65px;
+}
+
+.top-100px {
+    top: 100px;
+}
+
+.top-110px {
+    top: 110px;
+}
+
+.top-120px {
+    top: 120px;
+}
+
+.top-130px {
+    top: 130px;
+}
+
+.top-140px {
+    top: 140px;
+}
+
+.score-prof, .skill-prof {
+    height: 15px !important;
+    width: 15px !important;
+}
+
+.w-120px {
+    width: 120px !important;
+}
+
+.hit_points {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 160px;
+    height: 70px;
+    padding: 0.5rem;
+    border-radius: 2rem;
+}
+
+.hit_points.hit_points-sm {
+    position: absolute;
+    top: 65px;
+    width: 80px;
+    height: 50px;
+    padding: 0.25rem;
+    background: #fff;
+    border-radius: 2.75rem;
+}
+
+.hit_points.hit_points-sm label {
+    font-size: 0.65rem !important;
+}
+
+.w-180px {
+    width: 180px;
+}

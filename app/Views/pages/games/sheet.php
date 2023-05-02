@@ -2,8 +2,8 @@
 <div id="draggable_1-character" class="py-8 px-2 tab-pane fade show active">
     <button value="10" name="item_id" id="item_id" class="d-none"></button>
     <div class="flex-row-wrap gap-5 justify-content-center align-items-center">
-        <div class="column">
-            <div class="flex-row-wrap this-outline justify-content-center mt-5 p-4 gap-5">
+        <div class="column this-outline">
+            <div class="flex-row-wrap justify-content-center mt-5 p-4 gap-5">
                 <!--begin::Col-->
                 <div class="flex-column justify-content-center gap-5">
                     <!--begin::Character name-->
@@ -38,7 +38,7 @@
                             </div>
                             <!--end::Col-->
                             <!--begin::Col-->
-                            <div class="flex-row-nowrap gap-12">
+                            <div class="flex-row-nowrap gap-12 justify-content-end">
                                 <!--begin::Inspiration-->
                                 <div class="this-double-outline combat-item cursor-pointer circle">
                                     <div class="flex-column justify-content-center align-items-center gap-2">
@@ -52,21 +52,12 @@
                                     </div>
                                 </div>
                                 <!--end::Inspiration-->
-                                <!--begin::Proficiency bonus-->
-                                <div class="this-outline combat-item circle">
-                                    <div class="flex-column justify-content-center align-items-center gap-2">
-                                        <input type="text" id="this-profbonus" name="this-profbonus" value="0"
-                                               class="combat-item_content form-control this-role-form-field"/>
-                                        <label for="this-profbonus" class="combat-item_title">PROFICIENCY</label>
-                                    </div>
-                                </div>
-                                <!--end::Proficiency bonus-->
                             </div>
                             <!--end::Col-->
                         </div>
                         <!--end::Col-->
                         <!--begin::Col-->
-                        <div class="flex-column gap-12 justify-content-between max-w-500px">
+                        <div class="flex-column gap-12 justify-content-between">
                             <!--begin::Row-->
                             <div class="flex-column gap-3">
                                 <!--begin::Character origin details (class, race, etc.)-->
@@ -161,15 +152,15 @@
                                         </div>
                                     </div>
                                     <!--end::Speed-->
-                                    <!--begin::Hit dice-->
+                                    <!--begin::Proficiency bonus-->
                                     <div class="this-outline combat-item">
                                         <div class="flex-column justify-content-center align-items-center gap-2">
-                                            <input type="text" id="this-hitdice" name="this-hitdice" value="0"
+                                            <input type="text" id="this-profbonus" name="this-profbonus" value="0"
                                                    class="combat-item_content form-control this-role-form-field"/>
-                                            <label for="this-hitdice" class="combat-item_title">HIT DICE</label>
+                                            <label for="this-profbonus" class="combat-item_title">PROFICIENCY</label>
                                         </div>
                                     </div>
-                                    <!--end::Hit dice-->
+                                    <!--end::Proficiency bonus-->
                                 </div>
                                 <!--end::Row - Combat (general)-->
                             </div>
@@ -181,15 +172,488 @@
                 </div>
                 <!--end::Col-->
             </div>
-            <div class="flex-row-wrap this-outline justify-content-center mt-5 p-4 gap-5">asdasdasd
+        </div>
+        <!--begin::Ability scores-->
+        <div class="column this-outline">
+            <div class="fs-3 m-5">Ability Scores & Saving Throws</div>
+            <div class="flex-row-wrap justify-content-center mt-5 p-4 gap-5">
+                <!--begin::Strength-->
+                <div class="flex-column align-items-center justify-content-start position-relative w-70px h-100px">
+                    <!--begin::Row-->
+                    <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
+                        <button type="button" class="btn p-0 combat-item_title text-hover-primary">STRENGTH</button>
+                        <label for="this-score-str" class="fs-3">+0</label>
+                    </div>
+                    <!--end::Row-->
+                    <!--begin::Row-->
+                    <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
+                        <input type="text" id="this-score-str" name="this-score-str" value="10"
+                               class="combat-item_content this-score this-role-form-field"/>
+                    </div>
+                    <!--end::Row-->
+                    <!--begin::Row-->
+                    <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
+                        <label for="this-score-str-is-prof">0</label>
+                        <input type="checkbox" id="this-score-str-is-prof" name="this-score-str-is-prof"
+                               class="form-control form-check-input position-absolute ms-9 score-prof"/>
+                    </div>
+                    <!--end::Row-->
+                </div>
+                <!--end::Strength-->
+                <!--begin::Dexterity-->
+                <div class="flex-column align-items-center justify-content-start position-relative w-70px h-100px">
+                    <!--begin::Row-->
+                    <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
+                        <button type="button" class="btn p-0 combat-item_title text-hover-primary">DEXTERITY
+                        </button>
+                        <label for="this-score-dex" class="fs-3">+0</label>
+                    </div>
+                    <!--end::Row-->
+                    <!--begin::Row-->
+                    <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
+                        <input type="text" id="this-score-dex" name="this-score-dex" value="10"
+                               class="combat-item_content this-score this-role-form-field"/>
+                    </div>
+                    <!--end::Row-->
+                    <!--begin::Row-->
+                    <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
+                        <label for="this-score-dex-is-prof">0</label>
+                        <input type="checkbox" id="this-score-dex-is-prof" name="this-score-dex-is-prof"
+                               class="form-control form-check-input position-absolute ms-9 score-prof"/>
+                    </div>
+                    <!--end::Row-->
+                </div>
+                <!--end::Dexterity-->
+                <!--begin::Constitution-->
+                <div class="flex-column align-items-center justify-content-start position-relative w-70px h-100px">
+                    <!--begin::Row-->
+                    <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
+                        <button type="button" class="btn p-0 combat-item_title text-hover-primary">CONSTITUTION
+                        </button>
+                        <label for="this-score-con" class="fs-3">+0</label>
+                    </div>
+                    <!--end::Row-->
+                    <!--begin::Row-->
+                    <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
+                        <input type="text" id="this-score-con" name="this-score-con" value="10"
+                               class="combat-item_content this-score this-role-form-field"/>
+                    </div>
+                    <!--end::Row-->
+                    <!--begin::Row-->
+                    <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
+                        <label for="this-score-con-is-prof">0</label>
+                        <input type="checkbox" id="this-score-con-is-prof" name="this-score-con-is-prof"
+                               class="form-control form-check-input position-absolute ms-9 score-prof"/>
+                    </div>
+                    <!--end::Row-->
+                </div>
+                <!--end::Constitution-->
+                <!--begin::Intelligence-->
+                <div class="flex-column align-items-center justify-content-start position-relative w-70px h-100px">
+                    <!--begin::Row-->
+                    <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
+                        <button type="button" class="btn p-0 combat-item_title text-hover-primary">INTELLIGENCE
+                        </button>
+                        <label for="this-score-int" class="fs-3">+0</label>
+                    </div>
+                    <!--end::Row-->
+                    <!--begin::Row-->
+                    <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
+                        <input type="text" id="this-score-int" name="this-score-int" value="10"
+                               class="combat-item_content this-score this-role-form-field"/>
+                    </div>
+                    <!--end::Row-->
+                    <!--begin::Row-->
+                    <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
+                        <label for="this-score-int-is-prof">0</label>
+                        <input type="checkbox" id="this-score-int-is-prof" name="this-score-int-is-prof"
+                               class="form-control form-check-input position-absolute ms-9 score-prof"/>
+                    </div>
+                    <!--end::Row-->
+                </div>
+                <!--end::Intelligence-->
+                <!--begin::Wisdom-->
+                <div class="flex-column align-items-center justify-content-start position-relative w-70px h-100px">
+                    <!--begin::Row-->
+                    <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
+                        <button type="button" class="btn p-0 combat-item_title text-hover-primary">WISDOM</button>
+                        <label for="this-score-wis" class="fs-3">+0</label>
+                    </div>
+                    <!--end::Row-->
+                    <!--begin::Row-->
+                    <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
+                        <input type="text" id="this-score-wis" name="this-score-wis" value="10"
+                               class="combat-item_content this-score this-role-form-field"/>
+                    </div>
+                    <!--end::Row-->
+                    <!--begin::Row-->
+                    <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
+                        <label for="this-score-wis-is-prof">0</label>
+                        <input type="checkbox" id="this-score-wis-is-prof" name="this-score-wis-is-prof"
+                               class="form-control form-check-input position-absolute ms-9 score-prof"/>
+                    </div>
+                    <!--end::Row-->
+                </div>
+                <!--end::Wisdom-->
+                <!--begin::Charisma-->
+                <div class="flex-column align-items-center justify-content-start position-relative w-70px h-100px">
+                    <!--begin::Row-->
+                    <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
+                        <button type="button" class="btn p-0 combat-item_title text-hover-primary">CHARISMA</button>
+                        <label for="this-score-char" class="fs-3">+0</label>
+                    </div>
+                    <!--end::Row-->
+                    <!--begin::Row-->
+                    <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
+                        <input type="text" id="this-score-char" name="this-score-char" value="10"
+                               class="combat-item_content this-score this-role-form-field"/>
+                    </div>
+                    <!--end::Row-->
+                    <!--begin::Row-->
+                    <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
+                        <label for="this-score-char-is-prof">0</label>
+                        <input type="checkbox" id="this-score-char-is-prof" name="this-score-char-is-prof"
+                               class="form-control form-check-input position-absolute ms-9 score-prof"/>
+                    </div>
+                    <!--end::Row-->
+                </div>
+                <!--end::Charisma-->
             </div>
         </div>
-        <div class="column">
-            <div class="flex-row-wrap this-outline justify-content-center mt-5 p-4 gap-5">asdasdasd
-            </div>
-            <div class="flex-row-wrap this-outline justify-content-center mt-5 p-4 gap-5">asdasdasd
+        <!--end::Ability scores-->
+        <!--begin::Skills-->
+        <div class="column this-outline">
+            <div class="fs-3 m-5">Skill Proficiencies</div>
+            <div class="flex-column justify-content-start align-items-start p-3">
+                <!--begin::Arcana-->
+                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                    <input type="checkbox" id="arcana" name="arcana"
+                           class="form-control form-check-input skill-prof this-role-form-field"/>
+                    <label for="arcana" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                        Arcana
+                    </label>
+                </div>
+                <!--end::Arcana-->
+                <!--begin::Acrobatics-->
+                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                    <input type="checkbox" id="acrobatics" name="acrobatics"
+                           class="form-control form-check-input skill-prof this-role-form-field"/>
+                    <label for="acrobatics" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                        Acrobatics
+                    </label>
+                </div>
+                <!--end::Acrobatics-->
+                <!--begin::Athletics-->
+                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                    <input type="checkbox" id="athletics" name="athletics"
+                           class="form-control form-check-input skill-prof this-role-form-field"/>
+                    <label for="athletics" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                        Athletics
+                    </label>
+                </div>
+                <!--end::Athletics-->
+                <!--begin::Deception-->
+                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                    <input type="checkbox" id="deception" name="deception"
+                           class="form-control form-check-input skill-prof this-role-form-field"/>
+                    <label for="deception" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                        Deception
+                    </label>
+                </div>
+                <!--end::Deception-->
+                <!--begin::Insight-->
+                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                    <input type="checkbox" id="insight" name="insight"
+                           class="form-control form-check-input skill-prof this-role-form-field"/>
+                    <label for="insight" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                        Insight
+                    </label>
+                </div>
+                <!--end::Insight-->
+                <!--begin::Intimidation-->
+                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                    <input type="checkbox" id="intimidation" name="intimidation"
+                           class="form-control form-check-input skill-prof this-role-form-field"/>
+                    <label for="intimidation" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                        Intimidation
+                    </label>
+                </div>
+                <!--end::Intimidation-->
+                <!--begin::Investigation-->
+                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                    <input type="checkbox" id="investigation" name="investigation"
+                           class="form-control form-check-input skill-prof this-role-form-field"/>
+                    <label for="investigation" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                        Investigation
+                    </label>
+                </div>
+                <!--end::Investigation-->
+                <!--begin::History-->
+                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                    <input type="checkbox" id="history" name="history"
+                           class="form-control form-check-input skill-prof this-role-form-field"/>
+                    <label for="history" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                        History
+                    </label>
+                </div>
+                <!--end::History-->
+                <!--begin::Medicine-->
+                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                    <input type="checkbox" id="medicine" name="medicine"
+                           class="form-control form-check-input skill-prof this-role-form-field"/>
+                    <label for="medicine" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                        Medicine
+                    </label>
+                </div>
+                <!--end::Medicine-->
+                <!--begin::Nature-->
+                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                    <input type="checkbox" id="nature" name="nature"
+                           class="form-control form-check-input skill-prof this-role-form-field"/>
+                    <label for="nature" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                        Nature
+                    </label>
+                </div>
+                <!--end::Nature-->
+                <!--begin::Perception-->
+                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                    <input type="checkbox" id="perception" name="perception"
+                           class="form-control form-check-input skill-prof this-role-form-field"/>
+                    <label for="perception" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                        Perception
+                    </label>
+                </div>
+                <!--end::Perception-->
+                <!--begin::Performance-->
+                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                    <input type="checkbox" id="performance" name="performance"
+                           class="form-control form-check-input skill-prof this-role-form-field"/>
+                    <label for="performance" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                        Performance
+                    </label>
+                </div>
+                <!--end::Performance-->
+                <!--begin::Persuasion-->
+                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                    <input type="checkbox" id="persuasion" name="persuasion"
+                           class="form-control form-check-input skill-prof this-role-form-field"/>
+                    <label for="persuasion" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                        Persuasion
+                    </label>
+                </div>
+                <!--end::Persuasion-->
+                <!--begin::Religion-->
+                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                    <input type="checkbox" id="religion" name="religion"
+                           class="form-control form-check-input skill-prof this-role-form-field"/>
+                    <label for="religion" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                        Religion
+                    </label>
+                </div>
+                <!--end::Religion-->
+                <!--begin::Sleight of Hand-->
+                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                    <input type="checkbox" id="sleight_of_hand" name="sleight_of_hand"
+                           class="form-control form-check-input skill-prof this-role-form-field"/>
+                    <label for="sleight_of_hand" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                        Sleight of Hand
+                    </label>
+                </div>
+                <!--end::Sleight of Hand-->
+                <!--begin::Stealth-->
+                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                    <input type="checkbox" id="stealth" name="stealth"
+                           class="form-control form-check-input skill-prof this-role-form-field"/>
+                    <label for="stealth" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                        Stealth
+                    </label>
+                </div>
+                <!--end::Stealth-->
+                <!--begin::Survival-->
+                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                    <input type="checkbox" id="survival" name="survival"
+                           class="form-control form-check-input skill-prof this-role-form-field"/>
+                    <label for="survival" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                        Survival
+                    </label>
+                </div>
+                <!--end::Survival-->
             </div>
         </div>
     </div>
+    <!--end::Skills-->
+    <!--begin::Health & Conditions-->
+    <div class="column this-outline w-250px">
+        <div class="flex-column w-250px p-3 justify-content-center align-items-center">
+            <div class="fs-3 m-5">Health</div>
+            <!--begin::Hit Points-->
+            <div class="position-relative w-180px h-125px px-3">
+                <div class="hit_points this-outline">
+                    <input type="text" id="cur_hp" name="cur_hp" value="50"
+                           class="combat-item_content this-score this-role-form-field w-50 fs-1"/>
+                    <label for="cur_hp" class="fs-8">CURRENT HIT POINTS</label>
+                </div>
+                <div class="hit_points hit_points-sm this-outline start-0">
+                    <input type="text" id="total_hp" name="total_hp" value="50"
+                           class="combat-item_content this-score this-role-form-field w-75 fs-6"/>
+                    <label for="total_hp">TOTAL HIT POINTS</label>
+                </div>
+                <div class="hit_points hit_points-sm this-outline end-0">
+                    <input type="text" id="temp_hp" name="temp_hp" value="50"
+                           class="combat-item_content this-score this-role-form-field w-75 fs-6"/>
+                    <label for="temp_hp">TEMPORARY HIT POINTS</label>
+                </div>
+            </div>
+            <!--end::Hit Points-->
+            <!--begin::Exhaustion-->
+            <div class="flex-row row-cols-3 w-180px">
+                <div class="flex-row row-cols-3">
+                    <div class="form-check p-0">
+                        <input type="checkbox" id="" name="" value=""
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                    </div>
+                    <div class="form-check p-0">
+                        <input type="checkbox" id="" name="" value=""
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                    </div>
+                    <div class="form-check p-0">
+                        <input type="checkbox" id="" name="" value=""
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                    </div>
+                </div>
+                <div class="fs-8 fw-bolder">EXHAUSTION</div>
+                <div class="flex-row row-cols-3">
+                    <div class="form-check p-0">
+                        <input type="checkbox" id="" name="" value=""
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                    </div>
+                    <div class="form-check p-0">
+                        <input type="checkbox" id="" name="" value=""
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                    </div>
+                    <div class="form-check p-0">
+                        <input type="checkbox" id="" name="" value=""
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                    </div>
+                </div>
+            </div>
+            <!--end::Exhaustion-->
+            <!--begin::Death Saves-->
+            <div class="flex-row row-cols-3 w-180px">
+                <div class="flex-row row-cols-3">
+                    <div class="form-check p-0">
+                        <input type="checkbox" id="" name="" value=""
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                    </div>
+                    <div class="form-check p-0">
+                        <input type="checkbox" id="" name="" value=""
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                    </div>
+                    <div class="form-check p-0">
+                        <input type="checkbox" id="" name="" value=""
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                    </div>
+                </div>
+                <div class="fs-8 fw-bolder">DEATH SAVES</div>
+                <div class="flex-row row-cols-3">
+                    <div class="form-check p-0">
+                        <input type="checkbox" id="" name="" value=""
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                    </div>
+                    <div class="form-check p-0">
+                        <input type="checkbox" id="" name="" value=""
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                    </div>
+                    <div class="form-check p-0">
+                        <input type="checkbox" id="" name="" value=""
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                    </div>
+                </div>
+            </div>
+            <!--end::Death Saves-->
+            <div class="fs-3 m-5">Conditions</div>
+            <!--begin::Conditions-->
+            <div class="flex-row row-cols-2 w-180px">
+                <div class="column">
+                    <!--begin::Blinded-->
+                    <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                        <input type="checkbox" id="blinded" name="blinded"
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                        <label for="blinded" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                            Blinded
+                        </label>
+                    </div>
+                    <!--end::Blinded-->
+                    <!--begin::Blinded-->
+                    <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                        <input type="checkbox" id="blinded" name="blinded"
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                        <label for="blinded" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                            Blinded
+                        </label>
+                    </div>
+                    <!--end::Blinded-->
+                    <!--begin::Blinded-->
+                    <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                        <input type="checkbox" id="blinded" name="blinded"
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                        <label for="blinded" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                            Blinded
+                        </label>
+                    </div>
+                    <!--end::Blinded-->
+                    <!--begin::Blinded-->
+                    <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                        <input type="checkbox" id="blinded" name="blinded"
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                        <label for="blinded" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                            Blinded
+                        </label>
+                    </div>
+                    <!--end::Blinded-->
+                </div>
+                <div class="column">
+                    <!--begin::Blinded-->
+                    <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                        <input type="checkbox" id="blinded" name="blinded"
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                        <label for="blinded" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                            Blinded
+                        </label>
+                    </div>
+                    <!--end::Blinded-->
+                    <!--begin::Blinded-->
+                    <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                        <input type="checkbox" id="blinded" name="blinded"
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                        <label for="blinded" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                            Blinded
+                        </label>
+                    </div>
+                    <!--end::Blinded-->
+                    <!--begin::Blinded-->
+                    <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                        <input type="checkbox" id="blinded" name="blinded"
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                        <label for="blinded" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                            Blinded
+                        </label>
+                    </div>
+                    <!--end::Blinded-->
+                    <!--begin::Blinded-->
+                    <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                        <input type="checkbox" id="blinded" name="blinded"
+                               class="form-control form-check-input skill-prof this-role-form-field"/>
+                        <label for="blinded" type="button" class="btn p-0 text-hover-primary fs-8 skill">
+                            Blinded
+                        </label>
+                    </div>
+                    <!--end::Blinded-->
+                </div>
+            </div>
+            <!--end::Conditions-->
+        </div>
+    </div>
+    <!--begin::Health & Conditions-->
 </div>
 <!--end::Character content-->

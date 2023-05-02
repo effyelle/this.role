@@ -22,7 +22,7 @@ CREATE TABLE class(
  hit_points_heigher_levels VARCHAR(40),
  starting_equipment TEXT,
  skills_profs_allowed TINYINT DEFAULT 0,
- classtable LONGTEXT,
+ classtable JSON,
  features LONGTEXT
 );
 CREATE TABLE multiclass(

@@ -66,9 +66,24 @@ CREATE TABLE game_journal(
 	item_icon VARCHAR(100),
 	item_title VARCHAR(50),
 	item_type VARCHAR(20),
-	item_details JSON,
 	item_viewers JSON, -- ID users
 	item_editors JSON, -- ID users
+	class VARCHAR(20),
+	subclass VARCHAR(50),
+	race VARCHAR(25),
+	background VARCHAR(50),
+	xp INT,
+	abilitiy_scores JSON, -- proficiencies 0 or 1
+	skills JSON, -- proficiencies 0 OR 1
+	speed INT,
+	hit_points JSON,
+	death_saves INT,
+	exhaustion_level INT,
+	attacks_spells JSON,
+	global_modifiers JSON,
+	bag JSON,
+	other_resources JSON,
+	spells_learned JSON,
 	FOREIGN KEY(item_game_id) REFERENCES games(game_id)
 );
 
@@ -81,7 +96,7 @@ CREATE TABLE invite_url(
 
 INSERT INTO users(user_username, user_avatar, user_fname, user_email, user_pwd, user_confirmed)
 VALUES
-	('effs', '/assets/media/avatars/1682490340.jpg', 'La Effy', 'epastor@gmail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
+	('effs', '/assets/media/avatars/1682699614.png', 'La Effy', 'epastor@gmail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
 	('marioe23', null, 'Mario Sancho', 'nore.zgz@mail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
 	('JL.ak.elBizco', null, 'Jose Luis El Bizco', 'com@com.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
 	('FF15', 'Fernando Fernandez', null, 'ffmail@email.f', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW());
@@ -98,5 +113,28 @@ UPDATE users SET user_rol='admin' WHERE user_email='nore.zgz@mail.com';
 
 UPDATE users SET user_confirmed=NULL WHERE user_username='effy.elle';
 
--- Select columns from table
-SHOW COLUMNS FROM game_journal;
+
+/* Things I still need
+ *  - Image holder with hidden input
+ *    ^ Raw ability scores container with raw 1d20 throws and ability score names
+ *    ^ Saving throws container (ability scores with prof and modifications)
+ *    ^ Skills container width proficiencies and modificators (form raw ability scores)
+ *    ^ Level
+ *    ^ Proficiency bonus calculated by level
+ *    ^ Armor Class
+ *    ^ Initiative (calculated by dex(?) dex?)
+ *    ^ Walk speed
+ *    ^ Hit points: maximum and current
+ *    ^ Temporary hit points
+ *    ^ Hit dice + CONS
+ *    ^ Death saves
+ *    ^ Exhaustion level
+ *    ^ Spells and attacks -> interactable items/abilities
+ *    ^ Global modifiers -> dmg, attack&spellcasting, AC
+ *    ^ Bag -> non interactable items
+ *    ^ Character traits? (Characteristics-> personality, ideals, bonds, flaws)
+ *    ^ Other resources
+ *    ^ Other abilities descriptions -> not spells and not castable or interactable just description
+ *    ^ Character description -> appearance, backstory, allies&organizations, treasure
+ *    ^ Spells
+ */

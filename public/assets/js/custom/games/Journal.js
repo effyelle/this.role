@@ -75,11 +75,11 @@ class Journal {
     }
 
     formatJournalItem(item = {}) {
+        console.log(item)
         // Check image data, if it does not exist, put a default one
-        this.journal.icons[item.item_id] = urlExists(this.imgFolder + item.item_icon)
+        let icon = urlExists(this.imgFolder + item.item_icon)
             ? this.imgFolder + item.item_icon // original icon
             : '/assets/media/avatars/blank.png'; // default icon
-        this.journal.iconsLength++;
         // * HTML format * //
         q('#' + this.listId)[0].innerHTML += '' +
             '<!--begin::Menu Item-->' +
@@ -89,7 +89,7 @@ class Journal {
             '         <!--begin::Symbol-->' +
             '         <div class="me-2 symbol symbol-20px symbol-md-30px">' +
             '             <span class="symbol-label circle sheet_icon" ' +
-            '                  style="background:url(' + this.journal.icons[item.item_id] + ');' +
+            '                  style="background:url(' + icon + ');' +
             '                      background-size: cover">' +
             '             </span>' +
             '         </div>' +
@@ -212,32 +212,3 @@ class Journal {
         }
     }
 }
-
-/* Things I still need
- *  - Image holder with hidden input
- *  - Nav tabs (?)
- *    ^ Raw ability scores container with raw 1d20 throws and ability score names
- *    ^ Saving throws container (ability scores with prof and modifications)
- *    ^ Skills container width proficiencies and modificators (form raw ability scores)
- *    ^ Level
- *    ^ Proficiency bonus calculated by level
- *    ^ Armor Class
- *    ^ Initiative (calculated by dex(?) dex?)
- *    ^ Walk speed, swimming/flight speed?
- *    ^ Hit points: maximum and current
- *    ^ Temporary hit points
- *    ^ Hit dice + CONS
- *    ^ Death saves
- *    ^ Exhaustion level
- *    ^ Spells and attacks -> interactable items/abilities
- *    ^ Global modifiers -> dmg, attack&spellcasting, AC
- *    ^ Bag -> non interactable items
- *    ^ Character traits? (Characteristics-> personality, ideals, bonds, flaws)
- *    ^ Other resources
- *    ^ Other abilities descriptions -> not spells and not castable or interactable just description
- *    ^ Character description -> appearance, backstory, allies&organizations, treasure
- *    ^ Spells
- *  - Make all editable/non_editable
- *  - Add public/to GM option?
- *  -
- */

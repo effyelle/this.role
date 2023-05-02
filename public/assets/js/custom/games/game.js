@@ -1,9 +1,5 @@
 function initBoard(dbGame, session) {
 
-    document.onclick=(e)=>{
-        console.log(e.target)
-    }
-
     // * Board intance * //
     const board = new Board('.btn.dice');
 

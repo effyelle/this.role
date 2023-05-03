@@ -37,6 +37,7 @@ CREATE TABLE games(
 	game_title VARCHAR(50),
 	game_details LONGTEXT,
 	game_icon VARCHAR(200),
+	game_layer_selected INT UNSIGNED,
 	game_folder VARCHAR(200),
 	game_gallery JSON,
 	game_deleted DATETIME DEFAULT NULL,
@@ -62,7 +63,7 @@ CREATE TABLE game_chat(
 
 CREATE TABLE game_journal(
 	item_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-	item_game_id INT UNSIGNED,
+	item_id_game INT UNSIGNED,
 	item_icon VARCHAR(100),
 	item_title VARCHAR(50),
 	item_type VARCHAR(20),
@@ -83,12 +84,12 @@ CREATE TABLE game_journal(
 	global_modifiers JSON,
 	bag JSON,
 	other_resources JSON,
-	spells_learned JSON,
-	FOREIGN KEY(item_game_id) REFERENCES games(game_id)
+	spells_learned JSON
 );
 
 CREATE TABLE game_layers(
 	layer_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	layer_name VARCHAR(50),
 	layer_id_game INT UNSIGNED,
 	layer_bg TEXT,
 	FOREIGN KEY (layer_id_game) REFERENCES games(game_id)
@@ -110,7 +111,7 @@ CREATE TABLE invite_url(
 
 INSERT INTO users(user_username, user_avatar, user_fname, user_email, user_pwd, user_confirmed)
 VALUES
-	('effs', '/assets/media/avatars/1682699614.png', 'La Effy', 'epastor@gmail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
+	('effs', '/assets/media/avatars/1682490340.png', 'La Effy', 'epastor@gmail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
 	('marioe23', null, 'Mario Sancho', 'nore.zgz@mail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
 	('JL.ak.elBizco', null, 'Jose Luis El Bizco', 'com@com.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
 	('FF15', 'Fernando Fernandez', null, 'ffmail@email.f', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW());

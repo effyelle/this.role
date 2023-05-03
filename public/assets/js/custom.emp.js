@@ -10,7 +10,7 @@ function updateSession(callback = null) {
         url: "/account/myprofile",
         dataType: "json",
         success: function (data) {
-            console.log(data);
+            console.log("User logged: ", data);
             if (callback) callback(data);
         }
     });
@@ -45,14 +45,40 @@ function generateDatatables() {
  */
 const q = function (t) {
     let el = document.querySelectorAll(t);
-    this.click = function (callback) {
+    el.click = function (callback) {
         for (let i = 0; i < el.length; i++) {
             el[i].addEventListener('click', callback);
         }
     };
+    el.blur = function (callback) {
+        for (let i = 0; i < el.length; i++) {
+            el[i].addEventListener('blur', callback);
+        }
+    };
+    el.toggleClass = function (classname) {
+        for (let i = 0; i < el.length; i++) {
+            el[i].classList.toggle(classname);
+        }
+    }
+    el.addClass = function (classname) {
+        for (let i = 0; i < el.length; i++) {
+            el[i].classList.add(classname);
+        }
+    }
+    el.removeClass = function (classname) {
+        for (let i = 0; i < el.length; i++) {
+            el[i].classList.remove(classname);
+        }
+    }
     for (let i = 0; i < el.length; i++) {
         el[i].click = (callback) => {
             el[i].addEventListener('click', callback);
+        }
+        el[i].toggleClass = function (classname) {
+            this.classList.toggle(classname);
+        }
+        el[i].removeClass = function (classname) {
+            this.classList.remove(classname);
         }
     }
     return el;

@@ -397,7 +397,7 @@ a .hover-flip {
     transition: all 0.4s ease;
 }
 
-.this-role-form-field:not([type=checkbox]):not(textarea) {
+.this-role-form-field:not([type=checkbox]):not(textarea):not(select) {
     border: 0 !important;
     border-radius: 0;
     border-bottom: 1px solid var(--bs-gray-400) !important;
@@ -866,7 +866,8 @@ body.game .aside {
 .form-control.form-control-solid.this-role-form-field.focus,
 .form-control.form-control-solid.this-role-form-field:active,
 .form-control.form-control-solid.this-role-form-field:focus {
-    background: rgba(var(--this-role-light-rgb), 0.3);
+    background: #f5f0ed;
+    color: var(--bs-dark);
 }
 
 textarea.form-control.form-control-solid.this-role-form-field {
@@ -907,7 +908,6 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 
 .this-game {
     border-radius: 10px;
-    padding: 0.5rem;
 }
 
 @media (max-width: 400px) {
@@ -949,7 +949,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     left: 1.5rem;
     z-index: 1990;
     width: 866px;
-    height: 1050px;
+    height: 90vh;
     overflow-x: hidden;
     overflow-y: auto;
     outline: 0;

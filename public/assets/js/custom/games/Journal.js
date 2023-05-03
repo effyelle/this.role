@@ -3,16 +3,10 @@ class Journal {
         this.container = q('#' + id)[0];
         this.listId = id + '_list';
         this.itemClass = id + '_item';
-        this.imgFolder = '/assets/media/games/' + dbGame.game_folder + '/gallery/';
-        this.journal = {
-            itemsLength: 0,
-            sheetsLength: 0,
-            draggablesLength: 0,
-            iconsLength: 0,
-            items: {},
-            sheets: {},
-            draggables: {},
-            icons: {},
+        this.folder = options.folder;
+        this.items = {
+            list: {},
+            length: 0,
         }
         this.opt = options;
         // Init journal
@@ -25,28 +19,38 @@ class Journal {
         // If ajax, init journal item creation from url
         if (this.opt.ajax) {
             if (!this.opt.ajax.method) this.opt.ajax.method = "get";
-            $.ajax({
-                type: this.opt.ajax.method,
-                url: this.opt.ajax.url,
-                dataType: 'json', // Comment this line for debugging,
-                async: true,
-                success: (data) => {
-                    if (data['data'] && typeof data['data'] === 'object' && data['data'].length > 0) {
-                        for (let item of data['data']) {
-                            this.journal.items[item.item_id] = item;
-                            this.journal.itemsLength++;
-                            this.formatJournalItem(item);
-                        }
-                    } else {
-                        this.error(this.opt.onError, "No data was received.");
+            this.getJournalAjax().done((data) => {
+                if (data['data'] && typeof data['data'] === 'object' && data['data'].length > 0) {
+                    for (let item of data['data']) {
+                        this.items.list[item.item_id] = new this.Sheet({
+                            modalContainer: '#' + this.draggableContainerId,
+                            modalBody: '#' + this.draggableContainerId + ' .modal-body',
+                            itemInfo: item
+                        });
+                        this.items.length++;
+                        this.formatJournalItem(item);
                     }
-                    this.load(this.opt.onLoad, data);
-                },
-                error: (e) => {
-                    return this.error(this.opt.onError, e);
+                } else {
+                    this.error(this.opt.onError, "No data was received.");
                 }
+                this.load(this.opt.onLoad, data);
             });
         }
+    }
+
+    getJournalAjax() {
+        return $.ajax({
+            type: this.opt.ajax.method,
+            url: this.opt.ajax.url,
+            dataType: 'json', // Comment this line for debugging,
+            async: true,
+            success: (data) => {
+                return data;
+            },
+            error: (e) => {
+                return this.error(this.opt.onError, e);
+            }
+        });
     }
 
     formatJournalList() {
@@ -78,8 +82,8 @@ class Journal {
 
     formatJournalItem(item = {}) {
         // Check image data, if it does not exist, put a default one
-        let icon = urlExists(this.imgFolder + item.item_icon)
-            ? this.imgFolder + item.item_icon // original icon
+        let icon = urlExists(this.folder + item.item_icon)
+            ? this.folder + item.item_icon // original icon
             : '/assets/media/avatars/blank.png'; // default icon
         // * HTML format * //
         q('#' + this.listId)[0].innerHTML += '' +
@@ -103,13 +107,11 @@ class Journal {
 
 
     reload() {
-        this.journal = {
+        this.items = {
             itemsLength: 0,
             sheetsLength: 0,
-            draggablesLength: 0,
             items: {},
             sheets: {},
-            draggables: {},
         }
         // Fill journal container
         this.init();
@@ -131,78 +133,16 @@ class Journal {
     }
 
     Sheet = function (params = {}) {
+        this.info = params.itemInfo;
         this.modalContainer = q(params.modalContainer)[0];
         this.modalBody = q(params.modalBody)[0];
-        this.tabs = {
-            char: {
-                containerId: this.modalContainer.id + '-character',
-                titleInputId: this.modalContainer.id + '-character-title_input',
-                classInputId: this.modalContainer.id + '-character-class_input',
-                levelInputId: this.modalContainer.id + '-character-level_input',
-            },
-            spells: {
-                containerId: this.modalContainer.id + '-spells',
-            },
-        };
-        this.icon = params.icon ? params.icon : '';
-        this.char = params.item;
-        const tabs = () => {
-            return '<!--begin::Tabs-->' +
-                '<ul class="nav nav-tabs pt-2 justify-content-start fs-7">' +
-                '    <li class="nav-item">' +
-                '        <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#' + this.tabs.char.containerId + '">' +
-                '            <i class="fa fa-dragon f-lg text-this-role-light"></i>' +
-                '            <span>Character</span>' +
-                '        </a>' +
-                '    </li>' +
-                '    <li class="nav-item">' +
-                '        <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#' + this.tabs.spells.containerId + '">' +
-                '            <i class="fa fa-book f-lg text-this-role-light"></i>' +
-                '            <span>Spells</span>' +
-                '        </a>' +
-                '    </li>' +
-                '</ul>' +
-                '<!--end::Tabs-->';
-        }
-        const character = () => {
-            charDetails().done((data) => {
-
-            });
-        };
-        const charDetails = () => {
-            return $.ajax({
-                type: "get",
-                url: "/app/games_ajax/sheet/",
-                success: (data) => {
-                    return data;
-                }
-            });
-        }
-
-        const spells = () => {
-            return '<!--begin::Character content-->' +
-                '<div id="' + this.tabs.spells.containerId + '" class="py-8 px-2 tab-pane fade">' +
-                '' +
-                '</div>' +
-                '<!--end::Character content-->';
-        }
+        this.icon = this.info.item_icon ? this.info.item_icon : '';
+        this.type = this.info.item_type;
         // Fill data from
-        q('div[data-from=' + this.tabs.char.titleInputId + ']')[0].innerHTML = this.char.item_title;
-        this.modalBody.innerHTML = '<!--begin::Tabs Container-->' +
-            '<div class="aside-menu flex-column-fluid tab-content">' +
-            '   ' + tabs() + character() + spells() +
-            '</div>' +
-            '<!--end::Tabs Container-->';
+        /*console.log(q('div[data-from]'));
         this.loadInfo = (elem) => {
-            //  console.log(info)
-            /*
-            for (let i of info) {
-                i.innerHTML = elem.value;
-            }*/
         }
         this.inputs = q('.journal_item_modal .this-role-form-field');
-
-        let info = q('div[data-from=' + elem.id + ']');
 
         for (let elem of this.inputs) {
             if (elem.id) console.log(elem.id)
@@ -210,6 +150,6 @@ class Journal {
             elem.onblur = () => {
                 this.loadInfo(elem);
             }
-        }
+        }*/
     }
 }

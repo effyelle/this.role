@@ -1,5 +1,66 @@
-<div id="this-game" class="this-game w-100 h-100 bg-white position-relative"></div>
-<?php if (isset($game) && $_SESSION['user']['user_id'] === $game['game_creator']): ?>
+<div class="this-game w-100 h-100 bg-white position-relative">
+    <div id="this-game" class="position-absolute h-100 w-100 top-0 start-0 this-game-layer"></div>
+    <span class="this-game-transition w-100 h-100 flex-row justify-content-center align-items-center bg-gray-200">
+        <span class="empty-layers d-none fs-4 text-center text-primary"></span>
+        <span class="spinner-border align-middle ms-2"></span>
+    </span>
+</div>
+<?php if (isset($game) && isset($_SESSION['user']) && $_SESSION['user']['user_id'] === $game['game_creator']): ?>
+
+    <!--begin::Modal-->
+    <div class="modal fade" tabindex="-1" id="add_layer-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Add Layer</h4>
+                </div>
+                <div class="modal-body">
+                    <!--begin:Menu item-->
+                    <form method="post" enctype="multipart/form-data" id="add_map" action="/daigual" class="menu-item">
+                        <div class="form-control-solid mb-5">
+                            <label for="layer_name" class="menu-link required">Layer Name</label>
+                            <input type="text" id="layer_name" name="layer_name"
+                                   class="form-control this-role-form-field"/>
+                        </div>
+                        <div class="form-control-solid mb-5">
+                            <label for="add_map-input" class="menu-link">
+                                <i class="me-3 fa fa-solid fa-map"></i>
+                                <span class="menu-title required">Add Map</span>
+                            </label>
+                            <input type="file" accept="image/*" id="add_map-input" name="add_map-input"
+                                   class="form-control"/>
+                        </div>
+                        <div class="mb-5 flex-row justify-content-center">
+                            <div class="symbol symbol-125px mx-auto">
+                                <span class="symbol-label" id="add_layer-preview"></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="add_layer-error" class="fs-4 text-danger text-center w-100 d-none">
+                        Please fill all data.
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-sm btn-dark dismiss_btn" data-bs-dismiss="modal"
+                            tabindex="0">
+                        Cancel
+                    </button>
+                    <button type="button" id="add_layer-btn" class="btn btn-sm btn btn-primary" tabindex="-1">
+                        <!--begin::Indicator label-->
+                        <span class="indicator-label">Save</span>
+                        <!--end::Indicator label-->
+                        <!--begin::Indicator progress-->
+                        <span class="indicator-progress">Please wait...
+                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </span>
+                        <!--end::Indicator progress-->
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end::Modal-->
+
     <!--begin::Modal-->
     <div class="modal fade" tabindex="-1" id="modal_journal">
         <div class="modal-dialog">

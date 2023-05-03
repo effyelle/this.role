@@ -15,12 +15,11 @@ function template(string $page = 'home', array $data = []): string
             . view('pages/' . $page)
             . view('templates/footer')
             . view('includes/foot');
-    } else {
-        return view('includes/head', $data)
-            . view('includes/view_includes')
-            . view('pages/view_not_found')
-            . view('includes/foot');
     }
+    return view('includes/head', $data)
+        . view('includes/view_includes')
+        . view('pages/view_not_found')
+        . view('includes/foot');
 }
 
 function get_title($str): string
@@ -28,7 +27,10 @@ function get_title($str): string
     $split = explode('/', $str);
     $title = '';
     foreach ($split as $v) {
-        $title .= ucfirst($v) . " ";
+        $split2 = explode('_', $v);
+        foreach ($split2 as $v2) {
+            $title .= ucfirst($v2) . " ";
+        }
     }
     return trim($title);
 }

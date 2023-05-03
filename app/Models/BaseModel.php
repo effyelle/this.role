@@ -79,11 +79,16 @@ class BaseModel extends Model
         return db::connect()->table($table)->insert($data);
     }
 
+    function del($where): bool
+    {
+        return db::connect()->table($this->table)->delete($where);
+    }
+
     function maxID()
     {
         return db::connect()
             ->table($this->table)
-            ->select('MAX(' . $this->primaryKey . ')')
+            ->selectMax($this->primaryKey)
             ->get()->getRow();
     }
 }

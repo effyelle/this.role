@@ -23,7 +23,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#journal">
+                            <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#journal">
                                 <i class="fa fa-newspaper text-this-role-light"></i>
                             </a>
                         </li>
@@ -33,7 +33,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#settings_container">
+                            <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#settings_container">
                                 <i class="fa fa-solid fa-gear text-this-role-light"></i>
                             </a>
                         </li>
@@ -72,7 +72,7 @@
                     <!--end::Chat-->
 
                     <!--begin::Journal-->
-                    <div id="journal" class="tab-pane fade active show"></div>
+                    <div id="journal" class="tab-pane fade"></div>
                     <!--end::Journal-->
 
                     <!--begin::Tools-->
@@ -89,12 +89,19 @@
                         </div>
                     </div>
                     <!--end::Tools-->
-                    <div id="settings_container" class="tab-pane fade">
+                    <div id="settings_container" class="tab-pane fade active show">
                         <div class="aside-footer d-flex flex-column py-3 px-5">
                             <!--begin::Title-->
                             <div class="menu-item mb-5">
                                 <span class="fs-5 text-dark">Settings</span>
                             </div>
+                            <!--begin::Sparator-->
+                            <div class="menu-item">
+                                <div class="menu-content p-0">
+                                    <div class="separator mx-1"></div>
+                                </div>
+                            </div>
+                            <!--end::Separator-->
                             <?php if (isset($game) && $_SESSION['user']['user_id'] === $game['game_creator']): ?>
                                 <!--begin::Menu Accordion-->
                                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
@@ -110,29 +117,40 @@
                                     <!--begin:Menu sub-->
                                     <div class="menu-sub menu-sub-accordion">
                                         <!--begin:Menu item-->
-                                        <form method="post" enctype="multipart/form-data" id="add_map" action="/daigual"
-                                              class="menu-item">
+                                        <div class="menu-item">
                                             <!--begin:Menu link-->
-                                            <label for="add_map-input" class="menu-link">
-                                            <span class="menu-bullet">
-                                                <i class="fa fa-solid fa-map"></i>
-                                            </span>
-                                                <span class="menu-title">Add Map</span>
-                                                <input type="file" accept="image/*" id="add_map-input" name="add_map-input"
-                                                       class="d-none">
-                                            </label>
+                                            <a class="menu-link" data-bs-toggle="modal"
+                                               data-bs-target="#add_layer-modal">
+                                                <div class="menu-bullet">
+                                                    <i class="fa fa-solid fa-map"></i>
+                                                </div>
+                                                <div class="menu-title">Add Map</div>
+                                            </a>
                                             <!--end:Menu link-->
-                                        </form>
+                                        </div>
                                         <!--end:Menu item-->
                                         <!--begin:Menu item-->
                                         <div class="menu-item">
                                             <!--begin:Menu link-->
-                                            <a class="menu-link">
-                                        <span class="menu-bullet">
-                                            <i class="fa fa-solid fa-layer-group"></i>
-                                        </span>
-                                                <span class="menu-title">Change Layer</span>
-                                            </a>
+                                            <label for="change_layer" class="menu-link">
+                                                <span class="menu-bullet">
+                                                    <i class="fa fa-solid fa-layer-group"></i>
+                                                </span>
+                                                <span class="menu-title ">Select Layer</span>
+                                            </label>
+                                            <div class="form-control-solid col-10 mb-4 mx-auto">
+                                                <select id="change_layer" name="change_layer"
+                                                        class="form-control form-control-sm form-select form-select-sm
+                                                         this-role-form-field">
+                                                    <option value="-1" disabled selected>Select one</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-control-solid mb-4 flex-row align-items-start justify-content-end">
+                                                <button type="button" id="delete_layer-btn"
+                                                        class="btn btn-sm py-1 px-2 btn-danger">
+                                                    Delete Layer
+                                                </button>
+                                            </div>
                                             <!--end:Menu link-->
                                         </div>
                                         <!--end:Menu item-->
@@ -140,6 +158,13 @@
                                     <!--end:Menu sub-->
                                 </div>
                                 <!--end::Menu Accordion-->
+                                <!--begin::Sparator-->
+                                <div class="menu-item">
+                                    <div class="menu-content p-0">
+                                        <div class="separator mx-1"></div>
+                                    </div>
+                                </div>
+                                <!--end::Separator-->
                             <?php endif; ?>
                         </div>
                     </div>

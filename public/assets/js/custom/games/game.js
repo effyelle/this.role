@@ -4,15 +4,22 @@ function initBoard(dbGame, session) {
     const board = new Board('.btn.dice');
     board.map = new GameMap('#this-game', {
         folder: '/assets/media/games/' + dbGame.game_folder + '/layers/',
-        ajax: '/app/games_ajax/get_layers/' + dbGame.game_id
+        ajax: '/app/games_ajax/get_layers/' + dbGame.game_id,
+        select: '#change_layer',
+        game: dbGame
     });
     listenToNewMaps();
-
 
     // * Chat object * //
     const chat = new board.Chat('.chat-messages');
     getChat();
-    setInterval(getChat, 3000);
+
+    setInterval(thisShouldBeAWebSocket, 3000);
+
+    function thisShouldBeAWebSocket() {
+        getChat();
+        board.map.loadLayers();
+    }
 
     // * Journal intance * //
     const journal = new Journal('journal', {
@@ -21,6 +28,7 @@ function initBoard(dbGame, session) {
             url: '/app/games_ajax/get_journal_items/' + dbGame.game_id,
             dataType: 'json',
         },
+        folder: '/assets/media/games/' + dbGame.game_folder + '/players/',
         onLoad: function (data) {
             makeItemsInteractable(data);
         },
@@ -32,13 +40,13 @@ function initBoard(dbGame, session) {
     function makeItemsInteractable(data) {
         let items = q('.' + journal.itemClass + ' .menu-link');
         // Check data and items have the same length -> means they have been created accordingly
-        if (items.length === journal.journal.itemsLength) {
+        if (items.length === journal.items.length) {
             // Iterate items
             for (let item of items) {
                 // Add a click listener to each item to create a new modal
                 item.click(() => {
                     // Save item to journal
-                    let itemInfo = journal.journal.items[item.value];
+                    let itemInfo = journal.items.list[item.value];
                     // Save id to from container
                     journal.draggableContainerId = 'draggable_' + itemInfo.item_id;
                     // If container does not exist, create it
@@ -57,16 +65,47 @@ function initBoard(dbGame, session) {
                             // Add a close event
                             for (let i = 0; i < closeBtns.length; i++) {
                                 closeBtns[i].click(() => {
+                                    console.log(journal.items);
+                                    // Save item ID from hidden button
+                                    let itemID = q('#' + modals[i].id + ' button.this-item-id')[0].id;
+                                    // Delete sheet from journal
+                                    journal.items.sheets[itemID] = null;
+                                    journal.items.sheetsLength--;
+                                    // Remove item from HTML
                                     modals[i].remove();
+                                    console.log(journal.items);
                                 });
                             }
                             // Fill item
-                            openSheet(itemInfo);
+                            openSheet(itemInfo).done((data) => {
+                                let modals = q('.' + journal.itemModalClass);
+                                let this_fields = q('#' + journal.draggableContainerId + ' .this-role-form-field');
+                                this_fields.blur(function () {
+                                    saveField(this);
+                                });
+                            });
                         }
                     }
                 });
             }
         }
+    }
+
+    function saveField(object) {
+        let data = {};
+        data [object.getAttribute('name')] = object.value;
+        console.log(data)
+        $.ajax({
+            type: "post",
+            url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
+            data: {char_sheet: data},
+            dataType: "json",
+            success: (data) => {
+                console.log(data);
+            }, error: (e) => {
+                console.log("Error: ", e);
+            }
+        })
     }
 
     function openItem(item) {
@@ -76,8 +115,8 @@ function initBoard(dbGame, session) {
             '<div id="' + journal.draggableContainerId + '" class="' + journal.itemModalClass + ' show ' + item.item_type + ' draggable">' +
             '       <div class="modal-content bg-white">' +
             '           <div class="modal-header flex-row-wrap justify-content-between align-items-center cursor-move">' +
-            '               <div class="" data-from="' + journal.draggableContainerId + '-character-title_input">' +
-            '                   <!--Autofill-->Character name' +
+            '               <div class="" data-from="item_title">' +
+            '                   <!--Autofill-->' +
             '               </div>' +
             '               <div class="flex-row-wrap gap-5 align-items-end justify-content-end align-self-start">' +
             '                   <button type="button" class="btn p-0 minmax-btn text-hover-dark">' +
@@ -98,7 +137,7 @@ function initBoard(dbGame, session) {
 
     function openSheet(item) {
         // Create new character sheet
-        $.ajax({
+        return $.ajax({
             type: "post",
             url: "/app/games_ajax/sheet/" + item.item_id,
             success: (data) => {
@@ -107,29 +146,31 @@ function initBoard(dbGame, session) {
                 console.log(e);
             }
         });
-        /*journal.journal.sheets[itemInfo.item_id] = new journal.Sheet({
-            ajax:{},
-            icon: journal.journal.icons[itemInfo.item_id],
-            modalContainer: '#' + journal.draggableContainerId,
-            modalBody: '#' + journal.draggableContainerId + ' .modal-body',
-            item: itemInfo,
-        });*/
-
-        journal.journal.sheetsLength++;
     }
 
     function listenToNewMaps() {
-        console.log(window.FormData)
-        let addMapForm = q('#add_map')
-        let addMapBtn = q('#add_map-input');
-        if (!(addMapForm.length === 1 && addMapBtn.length === 1)) return false;
-        addMapForm = addMapForm[0];
-        addMapBtn = addMapBtn[0];
-        addMapBtn.onchange = function (e) {
-            if (this.files.length > 0) {
+        this.lName = q('#layer_name')[0];
+        this.lImg = q('#add_map-input')[0];
+        this.lImgPreview = $('#add_layer-preview');
+        this.btn = q('#add_layer-btn');
+
+        // Empty fields when modal closes
+        $('#add_layer-modal').on('hidden.bs.modal', () => {
+            this.lName.value = '';
+            this.lImg.value = '';
+            this.lImgPreview.css('background-image', 'none');
+        });
+
+        this.lImg.onchange = () => {
+            // Change bg from holder
+            readImageChange(this.lImg, this.lImgPreview);
+        }
+        this.btn.click(() => {
+            if (this.lName.value !== '' && this.lImg.files.length > 0) {
+                q('#add_layer-error').addClass('d-none');
                 let form = new FormData();
-                let file = this.files[0];
-                form.append('layer_img[]', file);
+                form.append('layer_img[]', this.lImg.files[0]);
+                form.append('layer_name', this.lName.value);
                 $.ajax({
                     type: "post",
                     url: "/app/games_ajax/add_map/" + dbGame.game_id,
@@ -140,21 +181,57 @@ function initBoard(dbGame, session) {
                         data = (JSON.parse(data)).data;
                         let img = data.img;
                         if (data.response) {
-                            for (let layer of data.layers) {
-                                board.map.Layers = layer;
-                                board.map.reload();
-                            }
+                            // Reload map layers
+                            $('.modal_success_response').html('Image added correctly');
+                            $('#modal_success-toggle').click();
+                            board.map.loadLayers();
                             return;
                         }
-                        console.log(img)
                         $('.modal_error_response').html(img);
                         $('#modal_error-toggle').click();
                     }, error: (e) => {
-                        console.log(e)
+                        console.log("Error: ", e);
                     }
                 });
+                return;
             }
-        }
+            q('#add_layer-error').removeClass('d-none');
+        });
+
+    }
+
+    q('#change_layer')[0].onchange = function (e) {
+        // Update selected image in Database
+        $.ajax({
+            type: "get",
+            url: "/app/games_ajax/set_selected_layer/" + dbGame.game_id + "?layer_id=" + this.value,
+            dataType: "json",
+            success: (data) => {
+                dbGame.game_layer_selected = this.value;
+            }, error: (e) => {
+                console.log("Error: ", e);
+            }
+        });
+        // Change image in HTML
+        board.map.showLayer(board.map.layersFolder + board.map.layers[this.value].layer_bg);
+    }
+
+    q('#delete_layer-btn').click(function (e) {
+        // Delete layer
+        $.ajax({
+            type: "get",
+            url: "/app/games_ajax/delete_layer/" + q('#change_layer')[0].value,
+            dataType: "json",
+            success: (data) => {
+                board.map.loadLayers();
+            }, error: (e) => {
+                console.log("Error: ", e);
+            }
+        });
+        console.log(e);
+    });
+
+    function changeLayer() {
     }
 
     // *********************************** //
@@ -279,33 +356,36 @@ function initBoard(dbGame, session) {
             url: "/app/games_ajax/get_chat/" + dbGame.game_id,
             dataType: "json",
             success: function (data) {
-                chat.record.innerHTML = '';
-                let sender = '';
-                let src = '';
-                let msgText = 'There are no messages yet, be the first to comment!';
-                let msgType = 'error';
-                if (data['response'] && data['msgs'] && data['msgs'].length > 0) {
-                    for (let i in data['msgs']) {
-                        let msg = data['msgs'][i];
-                        sender = msg['chat_sender'];
-                        src = '';
-                        msgText = msg['chat_msg'];
-                        msgType = msg['chat_msg_type'];
-                        chat.formatMessage({
-                            sender: sender,
-                            src: src,
-                            msg: msgText,
-                            msgType: msgType
-                        });
+                // Check if there are any new messages before updating chat
+                if (data.msgs && $('.chat-messages .menu-item').length !== data.msgs.length) {
+                    chat.record.innerHTML = '';
+                    let sender = '';
+                    let src = '';
+                    let msgText = 'There are no messages yet, be the first to comment!';
+                    let msgType = 'error';
+                    if (data.response && data.msgs.length > 0) {
+                        for (let i in data['msgs']) {
+                            let msg = data['msgs'][i];
+                            sender = msg['chat_sender'];
+                            src = '';
+                            msgText = msg['chat_msg'];
+                            msgType = msg['chat_msg_type'];
+                            chat.formatMessage({
+                                sender: sender,
+                                src: src,
+                                msg: msgText,
+                                msgType: msgType
+                            });
+                        }
+                        return;
                     }
-                    return;
+                    chat.formatMessage({
+                        sender: sender,
+                        src: src,
+                        msg: msgText,
+                        msgType: msgType
+                    });
                 }
-                chat.formatMessage({
-                    sender: sender,
-                    src: src,
-                    msg: msgText,
-                    msgType: msgType
-                });
             }
         })
     }
@@ -324,15 +404,17 @@ function initBoard(dbGame, session) {
             data: post,
             dataType: 'json',
             success: function (data) {
+                toggleProgressSpinner();
                 if (data['response']) {
                     // Add item to HTML
                     journal.reload();
                     // Dismiss journal modal
-                    $('#modal_journal .dismiss_btn').click();
-                    alert('Added successfully');
+                    $('.modal_success_response').html('Added successfully');
+                    $('#modal_success-toggle').click();
                 } else if (data['msg']) {
                     $('#modal_journal .error').show();
                 }
+                toggleProgressSpinner(false);
             },
             error: function (e) {
                 console.log("Error: ", e);

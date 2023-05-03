@@ -146,7 +146,7 @@
             issues_error_msg.removeClass('d-none');
         });
 
-        <?php if(isset($page) && $page !== 'games/details'): ?>
+        <?php if(isset($page) && $page !== 'games/details' && $page !== 'games/game'): ?>
         $('#modal_success').on('hidden.bs.modal', function () {
             window.location.reload();
         });
@@ -155,7 +155,7 @@
         $('#contact_support').on('hidden.bs.modal', function () {
             $('#contact_support .this-role-form-field').val('');
             $('#issue_type option[value="-1"').prop('selected', true);
-        })
+        });
 
         function sendIssue() {
             toggleProgressSpinner();

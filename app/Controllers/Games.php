@@ -284,56 +284,90 @@ class Games extends BaseController
 
     function set_journal_item($id): string
     {
+        $data['response'] = false;
+        $data['msg'] = 'Missing some data';
         if (isset($_POST['journal_title-input']) && isset($_POST['journal-item_type']) && $_POST['journal-item_type'] !== '-1') {
             $gameId = is_numeric(validate($id)) ? intval(validate($id)) : null;
             if (isset($gameId)) {
                 if ($this->journalmodel->new([
-                    'item_game_id' => $gameId,
+                    'item_id_game' => $gameId,
                     'item_title' => validate($_POST['journal_title-input']),
                     'item_type' => validate($_POST['journal-item_type']),
                 ])) {
-                    return json_encode(['response' => true]);
+                    $data = ['response' => true, 'msg' => null];
+                } else {
+                    $data['msg'] = 'Item could not be added';
                 }
-                return json_encode(['response' => false, 'msg' => 'Item could not be added']);
+            } else {
+                $data['msg'] = 'Please don\'t script into Database!';
             }
-            return json_encode(['response' => false, 'msg' => 'Please don\'t script into Database!']);
         }
-        return json_encode(['response' => false, 'msg' => 'Missing some data']);
+        return json_encode($data);
     }
 
     function get_journal_items($id): string
     {
-        if ($journalItems = $this->journalmodel->get(['item_game_id' => $id], null, ['item_title' => 'ASC'])) {
+        if ($journalItems = $this->journalmodel->get(['item_id_game' => $id], null, ['item_title' => 'ASC'])) {
             return json_encode(['response' => true, 'data' => $journalItems]);
         }
         return json_encode(['response' => false]);
     }
 
-    function sheet(): string
+    function sheet($id): string
     {
-        return view('/pages/games/sheet');
+        return view('/pages/games/sheet', ['sheet' => $this->journalmodel->get(['item_id' => $id])[0]]);
+    }
+
+    function save_sheet($id): string
+    {
+        $data['response'] = false;
+        $data['post'] = $_POST;
+        if (isset($_POST['char_sheet'])) {
+            $params = [];
+            foreach ($_POST['char_sheet'] as $key => $val) {
+                $params[$key] = validate($val);
+            }
+            if ($this->journalmodel->updt($params, ['item_id_game' => $id])) {
+                $data['response'] = true;
+            }
+            $data['params'] = $params;
+        }
+        return json_encode($data);
     }
 
     function add_map($id): string
     {
-        $game = $this->gamesmodel->get(['game_id' => $id])[0];
-        $newName = time();
-        $newRoute = $this->mediaGames . $game['game_folder'] . '/layers/';
-        // * Upload game icon into the new folder * //
-        $img = upload_img('layer_img', $newRoute, $newName);
         $data = [
-            'img' => $img,
-            'response' => false
+            'img' => 'No data was found',
+            'resposne' => false
         ];
-        // If the file was uploaded, update game to add new icon
-        if (str_contains($img, $newName)) {
-            $newFile = explode('/', $img)[count(explode('/', $img)) - 1];
-            if ($this->layermodel->new(['layer_bg' => $newFile, 'layer_id_game' => $id])) {
-                $data = [
-                    'img' => $newFile,
-                    'response' => true,
-                    'layers' => $this->layermodel->get(['layer_id_game' => $id]),
-                ];
+        if (isset($_POST['layer_name']) && isset($_FILES['layer_img'])) {
+            // Add layer by name
+            if ($this->layermodel->new([
+                'layer_name' => validate($_POST['layer_name']),
+                'layer_id_game' => $id
+            ])) {
+                // Get folder for game
+                $game = $this->gamesmodel->get(['game_id' => $id])[0];
+                $newName = time();
+                $newRoute = $this->mediaGames . $game['game_folder'] . '/layers/';
+                // * Upload game icon into the new folder * //
+                $img = upload_img('layer_img', $newRoute, $newName);
+                $data ['img'] = $img;
+                // If the file was uploaded, update layer
+                if (str_contains($img, $newName)) {
+                    $newFile = explode('/', $img)[count(explode('/', $img)) - 1];
+                    if ($this->layermodel->updt(
+                        ['layer_bg' => $newFile],
+                        ['layer_id' => $this->layermodel->maxID()->layer_id]
+                    )) {
+                        $data = [
+                            'img' => $newFile,
+                            'response' => true,
+                            'layers' => $this->layermodel->get(['layer_id_game' => $id])
+                        ];
+                    }
+                }
             }
         }
         return json_encode(['data' => $data]);
@@ -341,6 +375,33 @@ class Games extends BaseController
 
     function get_layers($id): string
     {
-        return json_encode(['response' => true, 'layers' => $this->layermodel->get(['layer_id_game' => $id])]);
+        $data ['response'] = false;
+        if ($data['layers'] = $this->layermodel->get(['layer_id_game' => $id])) {
+            $data['response'] = true;
+        }
+        return json_encode($data);
+    }
+
+    function set_selected_layer($id): string
+    {
+        $data = ['response' => false];
+        if (isset($_GET['layer_id'])) {
+            if ($this->gamesmodel->updt(
+                ['game_layer_selected' => $_GET['layer_id']],
+                ['game_id' => $id]
+            )) {
+                $data['response'] = true;
+            }
+        }
+        return json_encode($data);
+    }
+
+    function delete_layer($id): string
+    {
+        $data['response'] = false;
+        if ($this->layermodel->del(['layer_id' => $id])) {
+            $data['response'] = true;
+        }
+        return json_encode($data);
     }
 }

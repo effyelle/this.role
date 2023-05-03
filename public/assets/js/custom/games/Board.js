@@ -3,17 +3,13 @@ class Board {
      * Board constructor
      * -----------------------------------------------------------------------------------------------------------------
      * @param dicesClass
+     * @param options
      */
     constructor(dicesClass, options = {}) {
         this.dicesBtns = document.querySelectorAll(dicesClass);
         this.dices = this.createDices(this.dicesBtns);
         this.imgFolder = '/assets/media/games/' + dbGame.game_folder + '/gallery/';
         this.mapLayers = [];
-        if (options.ajax) {
-            if (options.ajax.mapLayers) {
-                this.loadMapLayers(options.ajax.mapLayers);
-            }
-        }
     }
 
     /**
@@ -95,18 +91,5 @@ class Board {
             dicesObjects[i] = new this.Dice(dicesSides[i]);
         }
         return dicesObjects;
-    }
-
-    loadMapLayers(ajax) {
-        $.ajax({
-            type: "get",
-            url: ajax.url,
-            dataType: "json",
-            success: (data) => {
-                console.log(data);
-            }, error: (e) => {
-                console.log(e);
-            }
-        })
     }
 }

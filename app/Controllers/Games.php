@@ -325,7 +325,7 @@ class Games extends BaseController
         if (isset($_POST['char_sheet'])) {
             $params = [];
             foreach ($_POST['char_sheet'] as $key => $val) {
-                $params[$key] = validate($val);
+                    $params[$key] = validate($val);
             }
             $key = array_keys($params)[0];
             if ($key === 'item_icon') {
@@ -333,7 +333,7 @@ class Games extends BaseController
             }
             $data['keys'] = $key;
 
-            if ($this->journalmodel->updt($params, ['item_id_game' => $id])) {
+            if ($this->journalmodel->updt($params, ['item_id' => $_POST['item_id']])) {
                 $data['response'] = true;
             }
             $data['params'] = $params;
@@ -387,7 +387,7 @@ class Games extends BaseController
         if ($this->layermodel->uptd(['layer_name' => $layerName], ['layer_id' => $layerID])) {
             if (isset($_FILES['layer_img'])) {
                 $game = $this->gamesmodel->get(['game_id' => $id])[0];
-                $newMap=
+                $newMap =
                 $layer = $this->layermodel->get(['layer_id' => $layerID])[0];
                 $oldMap = $game['game_folder'] . '/layers/' . $layer['layer_bg'];
                 // If old map img exists delete it

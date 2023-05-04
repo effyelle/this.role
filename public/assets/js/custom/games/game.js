@@ -92,7 +92,7 @@ function initGame(dbGame, session) {
 
         // * Add listener to html form fields * //
         this_fields.blur(function () {
-            saveField(this).done((data) => {
+            saveField(this, item.info.item_id).done((data) => {
                 console.log(data);
                 if (data.response) {
                     // Refill fields dataf-from
@@ -153,13 +153,13 @@ function initGame(dbGame, session) {
         }
     }
 
-    function saveField(object) {
+    function saveField(object, id) {
         let data = {};
         data [object.getAttribute('name')] = object.value;
         return $.ajax({
             type: "post",
             url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
-            data: {char_sheet: data},
+            data: {char_sheet: data, item_id: id},
             dataType: "json",
             success: (data) => {
                 return data;

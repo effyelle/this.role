@@ -76,9 +76,11 @@
                         <div class="aside-footer d-flex flex-column py-3 px-5">
                             <div id="journal" data-kt-menu="true"
                                  class="menu menu-column menu-rounded fw-bold fs-7 gap-2 mt-3">
+                                <!--begin::Title-->
                                 <div class="menu-item">
                                     <span class="fs-5 text-dark">Welcome to your journal!</span>
                                 </div>
+                                <!--end::Title-->
                                 <?php if (isset($game) && isset($_SESSION['user']) &&
                                     $game['game_creator'] === $_SESSION['user']['user_id']) { ?>
                                     <!--begin:Menu item-->
@@ -119,6 +121,7 @@
                         </div>
                     </div>
                     <!--end::Tools-->
+                    <!--begin::Setting-->
                     <div id="settings_container" class="tab-pane fade">
                         <div class="aside-footer d-flex flex-column py-3 px-5">
                             <!--begin::Title-->
@@ -175,7 +178,11 @@
                                                     <option value="-1" disabled selected>Select one</option>
                                                 </select>
                                             </div>
-                                            <div class="form-control-solid mb-4 flex-row align-items-start justify-content-end">
+                                            <div class="form-control-solid mb-4 flex-row align-items-start justify-content-between">
+                                                <button type="button" id="edit_layer-btn"
+                                                        class="btn btn-sm py-1 px-2 btn-danger">
+                                                    Edit Layer
+                                                </button>
                                                 <button type="button" id="delete_layer-btn"
                                                         class="btn btn-sm py-1 px-2 btn-danger">
                                                     Delete Layer
@@ -198,6 +205,7 @@
                             <?php endif; ?>
                         </div>
                     </div>
+                    <!--end::Setting-->
                 </div>
             </div>
         </div>

@@ -19,7 +19,7 @@ function initGame(dbGame) {
             },
             folder: '/assets/media/games/' + dbGame.game_folder + '/players/',
             onLoad: function (data) {
-                customSheets(data);
+                //customSheets(data);
             },
             onError: function (e) {
                 console.log(e);
@@ -181,14 +181,12 @@ function initGame(dbGame) {
                 // * Add journal item when save button clicked * //
                 q('#modal_journal .save_btn').click(function () {
                     console.log('11111111111111')
-                    toggleProgressSpinner(true);
                     let form = getForm('#modal_journal');
                     if (form) {
                         console.log(form)
                         saveJournalItem(form);
                     }
                     // Always stop progress spinner at the end of all actions
-                    toggleProgressSpinner(false);
                 });
             }*/
 
@@ -220,11 +218,11 @@ function initGame(dbGame) {
         // ********************************** //
         // * Empty journal modal on closure * //
         // ********************************** //
-        $('#modal_journal').on('hidden.bs.modal', function () {
+        /*$('#modal_journal').on('hidden.bs.modal', function () {
             $('#journal_title-input').val('');
             $('#journal-item_type option[value="-1"]').prop('selected', true);
             $('#modal_journal input').prop('checked', false);
-        });
+        });*/
     }
 
     // **************************** //
@@ -235,104 +233,101 @@ function initGame(dbGame) {
     // ******* begin::Board ******* //
     // **************************** //
 
-    const initBoard = () => {
+    // * Board intance * //
+    const board = new Board('.btn.dice');
+    board.map = new GameMap('#this-game', {
+        folder: '/assets/media/games/' + dbGame.game_folder + '/layers/',
+        ajax: '/app/games_ajax/get_layers/' + dbGame.game_id,
+        select: '#change_layer',
+        game: dbGame
+    });
 
-        // * Board intance * //
-        const board = new Board('.btn.dice');
-        board.map = new GameMap('#this-game', {
-            folder: '/assets/media/games/' + dbGame.game_folder + '/layers/',
-            ajax: '/app/games_ajax/get_layers/' + dbGame.game_id,
-            select: '#change_layer',
-            game: dbGame
+    listenToNewMaps();
+
+    function listenToNewMaps() {
+        this.lName = q('#layer_name')[0];
+        this.lImg = q('#add_map-input')[0];
+        this.lImgPreview = $('#add_layer-preview');
+        this.btn = q('#add_layer-btn');
+
+        // Empty fields when modal closes
+        $('#add_layer-modal').on('hidden.bs.modal', () => {
+            this.lName.value = '';
+            this.lImg.value = '';
+            this.lImgPreview.css('background-image', 'none');
         });
 
-        //listenToNewMaps();
-
-        function listenToNewMaps() {
-            this.lName = q('#layer_name')[0];
-            this.lImg = q('#add_map-input')[0];
-            this.lImgPreview = $('#add_layer-preview');
-            this.btn = q('#add_layer-btn');
-
-            // Empty fields when modal closes
-            $('#add_layer-modal').on('hidden.bs.modal', () => {
-                this.lName.value = '';
-                this.lImg.value = '';
-                this.lImgPreview.css('background-image', 'none');
-            });
-
-            this.lImg.onchange = () => {
-                // Change bg from holder
-                readImageChange(this.lImg, this.lImgPreview);
-            }
-            this.btn.click(() => {
-                if (this.lName.value !== '' && this.lImg.files.length > 0) {
-                    q('#add_layer-error').addClass('d-none');
-                    let form = new FormData();
-                    form.append('layer_img[]', this.lImg.files[0]);
-                    form.append('layer_name', this.lName.value);
-                    $.ajax({
-                        type: "post",
-                        url: "/app/games_ajax/add_map/" + dbGame.game_id,
-                        data: form,
-                        processData: false,
-                        contentType: false,
-                        success: (data) => {
-                            data = (JSON.parse(data)).data;
-                            let img = data.img;
-                            if (data.response) {
-                                // Reload map layers
-                                $('.modal_success_response').html('Image added correctly');
-                                $('#modal_success-toggle').click();
-                                board.map.loadLayers();
-                                return;
-                            }
-                            $('.modal_error_response').html(img);
-                            $('#modal_error-toggle').click();
-                        },
-                        error: (e) => {
-                            console.log("Error: ", e);
-                        }
-                    });
-                    return;
-                }
-                q('#add_layer-error').removeClass('d-none');
-            });
-
-            q('#change_layer')[0].onchange = function (e) {
-                // Update selected image in Database
-                $.ajax({
-                    type: "get",
-                    url: "/app/games_ajax/set_selected_layer/" + dbGame.game_id + "?layer_id=" + this.value,
-                    dataType: "json",
-                    success: (data) => {
-                        dbGame.game_layer_selected = this.value;
-                    },
-                    error: (e) => {
-                        console.log("Error: ", e);
-                    }
-                });
-                // Change image in HTML
-                board.map.showLayer(board.map.layersFolder + board.map.layers[this.value].layer_bg);
-            }
-
-            q('#delete_layer-btn').click(function (e) {
-                // Delete layer
-                $.ajax({
-                    type: "get",
-                    url: "/app/games_ajax/delete_layer/" + q('#change_layer')[0].value,
-                    dataType: "json",
-                    success: (data) => {
-                        board.map.loadLayers();
-                    },
-                    error: (e) => {
-                        console.log("Error: ", e);
-                    }
-                });
-                console.log(e);
-            });
-
+        this.lImg.onchange = () => {
+            // Change bg from holder
+            readImageChange(this.lImg, this.lImgPreview);
         }
+        this.btn.click(() => {
+            if (this.lName.value !== '' && this.lImg.files.length > 0) {
+                q('#add_layer-error').addClass('d-none');
+                let form = new FormData();
+                form.append('layer_img[]', this.lImg.files[0]);
+                form.append('layer_name', this.lName.value);
+                $.ajax({
+                    type: "post",
+                    url: "/app/games_ajax/add_map/" + dbGame.game_id,
+                    data: form,
+                    processData: false,
+                    contentType: false,
+                    success: (data) => {
+                        data = (JSON.parse(data)).data;
+                        let img = data.img;
+                        if (data.response) {
+                            // Reload map layers
+                            $('.modal_success_response').html('Image added correctly');
+                            $('#modal_success-toggle').click();
+                            board.map.loadLayers();
+                            return;
+                        }
+                        $('.modal_error_response').html(img);
+                        $('#modal_error-toggle').click();
+                    },
+                    error: (e) => {
+                        console.log("Error: ", e);
+                    }
+                });
+                return;
+            }
+            q('#add_layer-error').removeClass('d-none');
+        });
+
+        q('#change_layer')[0].onchange = function (e) {
+            // Update selected image in Database
+            $.ajax({
+                type: "get",
+                url: "/app/games_ajax/set_selected_layer/" + dbGame.game_id + "?layer_id=" + this.value,
+                dataType: "json",
+                success: (data) => {
+                    dbGame.game_layer_selected = this.value;
+                },
+                error: (e) => {
+                    console.log("Error: ", e);
+                }
+            });
+            // Change image in HTML
+            board.map.showLayer(board.map.layersFolder + board.map.layers[this.value].layer_bg);
+        }
+
+        q('#delete_layer-btn').click(function (e) {
+            // Delete layer
+            $.ajax({
+                type: "get",
+                url: "/app/games_ajax/delete_layer/" + q('#change_layer')[0].value,
+                dataType: "json",
+                success: (data) => {
+                    board.map.loadLayers();
+                },
+                error: (e) => {
+                    console.log("Error: ", e);
+                }
+            });
+            console.log(e);
+        });
+
     }
 
     // **************************** //
@@ -342,115 +337,114 @@ function initGame(dbGame) {
     // **************************** //
     // ******* begin::Chat ******** //
     // **************************** //
-    /*
-        const initChat = () => {
-            // * Chat object * //
-            const chat = new board.Chat('.chat-messages');
-            getChat();
 
-            // * Listen to dices buttons pressed * //
-            $('.btn.dice').click(function () {
-                chat.formatMessage({
-                    src: "",
-                    msg: board.dices[this.value].roll(),
-                    sender: $('#charsheet_selected').find(':selected').text(),
-                    msgType: "rollDice",
-                    dice: this.value,
-                    rolling: $('#roll-' + this.value).val()
-                });
-            });
-            // * Chat textarea constant * //
-            const chatText = q('.chat-bubble textarea')[0];
-            // * Chat textarea holder * //
-            let chatMessage = '';
+    // * Chat object * //
+    const chat = new board.Chat('.chat-messages');
+    getChat();
 
-            // * Listen to chat pressed keys * //
-            chatText.addEventListener('keypress', function (e) {
-                // Save key if not Enter
-                if (e.key !== 'Enter') {
-                    chatMessage += e.key;
-                }
-                if (e.key === 'Enter') { // If Enter key
-                    if (e.shiftKey) { // If Shift+Enter
-                        chatMessage += '<br/>'; // Add line break
-                        return; // Return
-                    }
-                    // If Enter without Shift
-                    e.preventDefault(); // Prevent textarea line break
-                    setChat(chatMessage.trim(), $('#charsheet_selected').find(':selected').text(), "chatMessage");
-                }
-            });
+    // * Listen to dices buttons pressed * //
+    $('.btn.dice').click(function () {
+        chat.formatMessage({
+            src: "",
+            msg: board.dices[this.value].roll(),
+            sender: $('#charsheet_selected').find(':selected').text(),
+            msgType: "rollDice",
+            dice: this.value,
+            rolling: $('#roll-' + this.value).val()
+        });
+    });
+    // * Chat textarea constant * //
+    const chatText = q('.chat-bubble textarea')[0];
+    // * Chat textarea holder * //
+    let chatMessage = '';
 
-            // * Listen to send button in chat * //
-            document.querySelector('.chat-bubble ~ div .btn').addEventListener('click', function () {
-                setChat(chatMessage.trim(), $('#charsheet_selected').find(':selected').text(), "chatMessage");
-            });
-
-            function setChat(text, sender, msgType) {
-                if (text !== '') {
-                    $.ajax({
-                        type: "post", url: "/app/games_ajax/set_chat/" + dbGame.game_id, data: {
-                            msg: text, sender: sender, msgType: msgType,
-                        }, dataType: "json", success: function (data) {
-                            if (!data['response']) {
-                                sender = '';
-                                text = data['msg'];
-                                chat.formatMessage({ // Submit message
-                                    sender: sender, src: "", msg: text, msgType: msgType
-                                });
-                            }
-                            chatText.value = ""; // Empty chat textarea
-                            chatMessage = ''; // Empty holder variable
-
-                        }, error: function (e) {
-                            console.log("Error: ", e);
-                        }
-                    });
-                }
+    // * Listen to chat pressed keys * //
+    chatText.addEventListener('keypress', function (e) {
+        // Save key if not Enter
+        if (e.key !== 'Enter') {
+            chatMessage += e.key;
+        }
+        if (e.key === 'Enter') { // If Enter key
+            if (e.shiftKey) { // If Shift+Enter
+                chatMessage += '<br/>'; // Add line break
+                return; // Return
             }
+            // If Enter without Shift
+            e.preventDefault(); // Prevent textarea line break
+            setChat(chatMessage.trim(), $('#charsheet_selected').find(':selected').text(), "chatMessage");
+        }
+    });
 
-            function getChat() {
-                $.ajax({
-                    type: "get",
-                    url: "/app/games_ajax/get_chat/" + dbGame.game_id,
-                    dataType: "json",
-                    success: function (data) {
-                        // Check if there are any new messages before updating chat
-                        if (data.msgs && $('.chat-messages .menu-item').length !== data.msgs.length) {
-                            chat.record.innerHTML = '';
-                            let sender = '';
-                            let src = '';
-                            let msgText = 'There are no messages yet, be the first to comment!';
-                            let msgType = 'error';
-                            if (data.response && data.msgs.length > 0) {
-                                for (let i in data['msgs']) {
-                                    let msg = data['msgs'][i];
-                                    sender = msg['chat_sender'];
-                                    src = '';
-                                    msgText = msg['chat_msg'];
-                                    msgType = msg['chat_msg_type'];
-                                    chat.formatMessage({
-                                        sender: sender, src: src, msg: msgText, msgType: msgType
-                                    });
-                                }
-                                return;
-                            }
+    // * Listen to send button in chat * //
+    document.querySelector('.chat-bubble ~ div .btn').addEventListener('click', function () {
+        setChat(chatMessage.trim(), $('#charsheet_selected').find(':selected').text(), "chatMessage");
+    });
+
+    function setChat(text, sender, msgType) {
+        if (text !== '') {
+            $.ajax({
+                type: "post", url: "/app/games_ajax/set_chat/" + dbGame.game_id, data: {
+                    msg: text, sender: sender, msgType: msgType,
+                }, dataType: "json", success: function (data) {
+                    if (!data['response']) {
+                        sender = '';
+                        text = data['msg'];
+                        chat.formatMessage({ // Submit message
+                            sender: sender, src: "", msg: text, msgType: msgType
+                        });
+                    }
+                    chatText.value = ""; // Empty chat textarea
+                    chatMessage = ''; // Empty holder variable
+
+                }, error: function (e) {
+                    console.log("Error: ", e);
+                }
+            });
+        }
+    }
+
+    function getChat() {
+        $.ajax({
+            type: "get",
+            url: "/app/games_ajax/get_chat/" + dbGame.game_id,
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                // Check if there are any new messages before updating chat
+                if (data.msg || (data.msgs && $('.chat-messages .menu-item').length !== data.msgs.length)) {
+                    chat.record.innerHTML = '';
+                    let sender = '';
+                    let src = '';
+                    let msgText = 'There are no messages yet, be the first to comment!';
+                    let msgType = 'error';
+                    if (data.response && data.msgs.length > 0) {
+                        for (let i in data['msgs']) {
+                            let msg = data['msgs'][i];
+                            sender = msg['chat_sender'];
+                            src = '';
+                            msgText = msg['chat_msg'];
+                            msgType = msg['chat_msg_type'];
                             chat.formatMessage({
                                 sender: sender, src: src, msg: msgText, msgType: msgType
                             });
                         }
+                        return;
                     }
-                })
+                    console.log(chat)
+                    chat.formatMessage({
+                        sender: sender, src: src, msg: msgText, msgType: msgType
+                    });
+                }
             }
-        }
-    */
+        });
+    }
+
+
     // **************************** //
     // ******** end::Chat ********* //
     // **************************** //
 
     initJournal();
-    initBoard();
-    //initChat();
 
 
     //setInterval(thisShouldBeAWebSocket, 3000);

@@ -20,6 +20,8 @@ class Journal {
         this.getJournalAjax().done((data) => {
             // Checck data is not null
             if (data.results && typeof data.results === 'object' && data.results.length > 0) {
+                console.log(data.results);
+                /*
                 // Iterate results
                 for (let item of data.results) {
                     // Save id to for modal container container
@@ -32,6 +34,7 @@ class Journal {
                 // Show list
                 this.formatJournalItems(this.items.list);
                 this.load(this.opt.onLoad, data);
+                */
             } else {
                 this.error(this.opt.onError, "No data was received.");
             }
@@ -149,7 +152,6 @@ class Journal {
         }
         this.getClassArmor = () => {
             // Base armor starts in 10
-            console.log(this.info)
             let this_ac = 10;
             // Check character sheet is correctly filled
             if (this.info.ability_scores && typeof this.info.ability_scores === 'object' &&
@@ -171,6 +173,8 @@ class Journal {
                             this_ac += cons;
                             break;
                         }
+                        this_ac += armor + shield;
+                        break;
                     default:
                         this_ac += armor + shield;
                 }

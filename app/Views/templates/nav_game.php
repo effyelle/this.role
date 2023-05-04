@@ -104,6 +104,7 @@
                                 <!--end::Separator-->
                             </div>
                         </div>
+                        <div id="draggable-modals_container"></div>
                     </div>
                     <!--end::Journal-->
 

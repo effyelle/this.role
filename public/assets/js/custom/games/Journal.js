@@ -3,6 +3,7 @@ class Journal {
         this.opt = options;
         this.container = id;
         this.itemClass = id + '_item';
+        this.sheetsContainer = options.sheetsContainer;
         // Folder to draw the images from
         this.folder = this.opt.folder;
         this.items = {
@@ -21,16 +22,15 @@ class Journal {
             // Checck data is not null
             if (data.results && typeof data.results === 'object' && data.results.length > 0) {
                 console.log(data.results);
-                /*
                 // Iterate results
                 for (let item of data.results) {
                     // Save id to for modal container container
                     // Save a DND sheet for each item
-                    this.items.list[item.item_id] = new this.SheetDnD({
+                    this.items.list[item.item_id] = new this.SheetDnD(this.sheetsContainer, {
                         itemInfo: item
                     });
                     this.items.length++;
-                }
+                }/*
                 // Show list
                 this.formatJournalItems(this.items.list);
                 this.load(this.opt.onLoad, data);
@@ -109,11 +109,10 @@ class Journal {
         return false;
     }
 
-    SheetDnD = function (params = {}) {
+    SheetDnD = function (id, params = {}) {
         this.info = params.itemInfo;
         // Add container for saving future modals
-        document.body.innerHTML += '<div id="draggable-modals_container"></div>'
-        this.modalsContainer = 'draggable-modals_container';
+        this.modalsContainer = id;
         this.draggableContainerId = 'draggable_' + this.info.item_id;
         this.draggableContainerClass = 'journal_item_modal';
         this.icon = this.info.item_icon ? this.info.item_icon : '';

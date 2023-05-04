@@ -17,6 +17,7 @@ function initGame(dbGame) {
                 url: '/app/games_ajax/get_journal_items/' + dbGame.game_id,
                 dataType: 'json',
             },
+            sheetsContainer: 'draggable-modals_container',
             folder: '/assets/media/games/' + dbGame.game_folder + '/players/',
             onLoad: function (data) {
                 //customSheets(data);

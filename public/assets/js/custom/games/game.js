@@ -1,230 +1,220 @@
 function initGame(dbGame) {
 
-    document.getElementById('save_journal_item-btn').addEventListener(
-        'click',
-        function () {
-            console.log('123435678');
-        });
-
     // **************************** //
     // ****** begin::Journal ****** //
     // **************************** //
 
-    const initJournal = () => {
-        // * Journal intance * //
-        const journal = new Journal('journal', {
-            ajax: {
-                url: '/app/games_ajax/get_journal_items/' + dbGame.game_id,
-                dataType: 'json',
-            },
-            sheetsContainer: 'draggable-modals_container',
-            folder: '/assets/media/games/' + dbGame.game_folder + '/players/',
-            onLoad: function (data) {
-                //customSheets(data);
-            },
-            onError: function (e) {
-                console.log(e);
+    // * Journal intance * //
+    const journal = new Journal('journal', {
+        ajax: {
+            url: '/app/games_ajax/get_journal_items/' + dbGame.game_id,
+            dataType: 'json',
+        },
+        sheetsContainer: 'draggable-modals_container',
+        folder: '/assets/media/games/' + dbGame.game_folder + '/players/',
+        onLoad: function (data) {
+            customSheets(data);
+        },
+        onError: function (e) {
+            console.log(e);
+        }
+    });
+
+    function customSheets(data) {
+        // Data received is all items for this game,
+        // which is what we asked for through AJAX
+        // Save button items from DOM
+        let itemsDOM = q('.' + journal.itemClass + ' button.menu-link');
+        // Check data and items have the same length -> means they have been created accordingly
+        if (itemsDOM.length === journal.items.length) {
+            // Iterate items
+            for (let itemDOM of itemsDOM) {
+                // Add a click listener to each item to create a new modal
+                itemDOM.click(function () {
+                    // Get item info from Journal
+                    let item = journal.items.list[this.value];
+                    // Check if container doesn't exist already
+                    if (q('#' + item.draggableContainerId).length === 0) {
+                        // If not, create it
+                        getSheetHTML().done((htmlText) => {
+                            item.openItem(htmlText);
+                            // Check it was created correctly
+                            if (q('#' + item.draggableContainerId).length !== 1) {
+                                // Return message error if length is not 1
+                                $('.modal_error_response').html('Item could not be opened');
+                                $('#modal_error-toggle').click();
+                                return;
+                            }
+                            // Set item events
+                            makeInteractable(item)
+                        });
+                    }
+                });
+
+            }
+        }
+    }
+
+    function getSheetHTML() {
+        return $.ajax({
+            type: "get", url: '/app/games_ajax/sheet/' + dbGame.game_id, dataType: "text", success: (data) => {
+                return data;
+            }, error: (e) => {
+                console.log("Error", e);
             }
         });
-
-        function customSheets(data) {
-            // Data received is all items for this game,
-            // which is what we asked for through AJAX
-            // Save button items from DOM
-            let itemsDOM = q('.' + journal.itemClass + ' button.menu-link');
-            // Check data and items have the same length -> means they have been created accordingly
-            if (itemsDOM.length === journal.items.length) {
-                // Iterate items
-                for (let itemDOM of itemsDOM) {
-                    // Add a click listener to each item to create a new modal
-                    itemDOM.click(function () {
-                        // Get item info from Journal
-                        let item = journal.items.list[this.value];
-                        // Check if container doesn't exist already
-                        if (q('#' + item.draggableContainerId).length === 0) {
-                            // If not, create it
-                            getSheetHTML().done((htmlText) => {
-                                item.openItem(htmlText);
-                                // Check it was created correctly
-                                if (q('#' + item.draggableContainerId).length !== 1) {
-                                    // Return message error if length is not 1
-                                    $('.modal_error_response').html('Item could not be opened');
-                                    $('#modal_error-toggle').click();
-                                    return;
-                                }
-                                // Set item events
-                                makeInteractable(item)
-                            });
-                        }
-                    });
-
-                }
-            }
-        }
-
-        function getSheetHTML() {
-            return $.ajax({
-                type: "get", url: '/app/games_ajax/sheet/' + dbGame.game_id, dataType: "text", success: (data) => {
-                    return data;
-                }, error: (e) => {
-                    console.log("Error", e);
-                }
-            });
-        }
-
-        function makeInteractable(item) {
-            // Save the necessary html objects to make sheet interactable
-            let modalBody = q('#' + item.draggableContainerId + ' .modal-body');
-            let modals = q('.' + item.draggableContainerClass);
-            let closeBtns = q('.' + item.draggableContainerClass + ' .close_item-btn');
-            let cursorMove = q('.cursor-move');
-            // * Check they have the correct lengths * //
-            if (!(modalBody.length === 1 && modals.length === closeBtns.length && closeBtns.length === cursorMove.length)) {
-                return;
-            }
-            // * Make items dragagble * //
-            new Draggable('.' + item.draggableContainerClass, '.cursor-move');
-
-            // * Iterate through modals and buttons * //
-            for (let i = 0; i < closeBtns.length; i++) {
-                // * Add a close event * //
-                closeBtns[i].click(() => {
-                    modals[i].remove();
-                });
-            }
-
-            let this_fields = q('#' + item.draggableContainerId + ' .this-role-form-field');
-            // Get data from fields
-            getDataFromFields(this_fields, item);
-
-            // * Add listener to html form fields * //
-            this_fields.blur(function () {
-                saveField(this).done((data) => {
-                    console.log(data);
-                    if (data.response) {
-                        // Refill fields dataf-from
-                        getDataFromFields(this_fields, item);
-                        // Change name in '.aside' journal list
-                        q('#' + journal.container + ' button[value="' + item.info.item_id + '"] .menu-title')[0].innerHTML = q('#' + item.draggableContainerId + ' input[name=item_title]')[0].value;
-                    }
-                });
-            });
-        }
-
-        function getDataFromFields(inputs, item) {
-            for (let i of inputs) {
-                let divName = i.getAttribute('name');
-                if (divName !== '') {
-                    if (i.classList.contains('this-score')) {
-                        // Load scores
-                        getScores(divName, i.value, item);
-                    } else {
-                        let data_from = q('[data-from=' + divName + ']');
-                        for (let el of data_from) {
-                            el.innerHTML = getGenericFields(divName, i.value, item);
-                        }
-                    }
-                }
-            }
-        }
-
-        function getGenericFields(n, v, i) {
-            switch (n) {
-                case 'xp':
-                    return i.getLevel(v);
-                case 'this-ac':
-                    return i.getClassArmor();
-                case 'this-init':
-                    return i.getInitTierBreaker();
-                case 'this-prof':
-                    return i.getProficiency(v);
-                default:
-                    return v;
-            }
-        }
-
-        function getScores(n, v, i) {
-            switch (n) {
-                case 'this-score-str':
-                    break;
-                case 'this-score-dex':
-                    break;
-                case 'this-score-con':
-                    break;
-                case 'this-score-int':
-                    break;
-                case 'this-score-wis':
-                    break;
-                case 'this-score-cha':
-                    break;
-            }
-        }
-
-        function saveField(object) {
-            let data = {};
-            data [object.getAttribute('name')] = object.value;
-            return $.ajax({
-                type: "post",
-                url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
-                data: {char_sheet: data},
-                dataType: "json",
-                success: (data) => {
-                    return data;
-                },
-                error: (e) => {
-                    console.log("Error: ", e);
-                }
-            });
-        }
-
-        /*
-            if (q('#modal_journal-toggle').length > 0) {
-                // * Add journal item when save button clicked * //
-                q('#modal_journal .save_btn').click(function () {
-                    console.log('11111111111111')
-                    let form = getForm('#modal_journal');
-                    if (form) {
-                        console.log(form)
-                        saveJournalItem(form);
-                    }
-                    // Always stop progress spinner at the end of all actions
-                });
-            }*/
-
-        function saveJournalItem(post = {}) {
-            $('#modal_journal .text-danger').hide();
-            $.ajax({
-                type: 'post',
-                url: '/app/games_ajax/set_journal_item/' + dbGame.game_id,
-                data: post,
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data);
-                    if (data['response']) {
-                        // Add item to HTML
-                        journal.reload();
-                        // Dismiss journal modal
-                        $('.modal_success_response').html('Added successfully');
-                        $('#modal_success-toggle').click();
-                    } else if (data['msg']) {
-                        $('#modal_journal .error').show();
-                    }
-                },
-                error: function (e) {
-                    console.log("Error: ", e);
-                }
-            })
-        }
-
-        // ********************************** //
-        // * Empty journal modal on closure * //
-        // ********************************** //
-        /*$('#modal_journal').on('hidden.bs.modal', function () {
-            $('#journal_title-input').val('');
-            $('#journal-item_type option[value="-1"]').prop('selected', true);
-            $('#modal_journal input').prop('checked', false);
-        });*/
     }
+
+    function makeInteractable(item) {
+        // Save the necessary html objects to make sheet interactable
+        let modalBody = q('#' + item.draggableContainerId + ' .modal-body');
+        let modals = q('.' + item.draggableContainerClass);
+        let closeBtns = q('.' + item.draggableContainerClass + ' .close_item-btn');
+        let cursorMove = q('.cursor-move');
+        // * Check they have the correct lengths * //
+        if (!(modalBody.length === 1 && modals.length === closeBtns.length && closeBtns.length === cursorMove.length)) {
+            return;
+        }
+        // * Make items dragagble * //
+        new Draggable('.' + item.draggableContainerClass, '.cursor-move');
+
+        // * Iterate through modals and buttons * //
+        for (let i = 0; i < closeBtns.length; i++) {
+            // * Add a close event * //
+            closeBtns[i].click(() => {
+                modals[i].remove();
+            });
+        }
+
+        let this_fields = q('#' + item.draggableContainerId + ' .this-role-form-field');
+        // Get data from fields
+        getDataFromFields(this_fields, item);
+
+        // * Add listener to html form fields * //
+        this_fields.blur(function () {
+            saveField(this).done((data) => {
+                console.log(data);
+                if (data.response) {
+                    // Refill fields dataf-from
+                    getDataFromFields(this_fields, item);
+                    // Change name in '.aside' journal list
+                    q('#' + journal.container + ' button[value="' + item.info.item_id + '"] .menu-title')[0].innerHTML = q('#' + item.draggableContainerId + ' input[name=item_title]')[0].value;
+                }
+            });
+        });
+    }
+
+    function getDataFromFields(inputs, item) {
+        for (let i of inputs) {
+            let divName = i.getAttribute('name');
+            if (divName !== '') {
+                if (i.classList.contains('this-score')) {
+                    // Load scores
+                    getScores(divName, i.value, item);
+                } else {
+                    let data_from = q('[data-from=' + divName + ']');
+                    for (let el of data_from) {
+                        el.innerHTML = getGenericFields(divName, i.value, item);
+                    }
+                }
+            }
+        }
+    }
+
+    function getGenericFields(n, v, i) {
+        switch (n) {
+            case 'xp':
+                return i.getLevel(v);
+            case 'this-ac':
+                return i.getClassArmor();
+            case 'this-init':
+                return i.getInitTierBreaker();
+            case 'this-prof':
+                return i.getProficiency(v);
+            default:
+                return v;
+        }
+    }
+
+    function getScores(n, v, i) {
+        switch (n) {
+            case 'this-score-str':
+                break;
+            case 'this-score-dex':
+                break;
+            case 'this-score-con':
+                break;
+            case 'this-score-int':
+                break;
+            case 'this-score-wis':
+                break;
+            case 'this-score-cha':
+                break;
+        }
+    }
+
+    function saveField(object) {
+        let data = {};
+        data [object.getAttribute('name')] = object.value;
+        return $.ajax({
+            type: "post",
+            url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
+            data: {char_sheet: data},
+            dataType: "json",
+            success: (data) => {
+                return data;
+            },
+            error: (e) => {
+                console.log("Error: ", e);
+            }
+        });
+    }
+
+    if (q('#modal_journal-toggle').length > 0) {
+        // * Add journal item when save button clicked * //
+        q('#save_journal_item-btn').click(function () {
+            toggleProgressSpinner(true);
+            let form = getForm('#modal_journal');
+            if (form) {
+                saveJournalItem(form);
+            }
+            toggleProgressSpinner(false);
+        });
+    }
+
+    function saveJournalItem(post = {}) {
+        $('#modal_journal .text-danger').hide();
+        $.ajax({
+            type: 'post',
+            url: '/app/games_ajax/set_journal_item/' + dbGame.game_id,
+            data: post,
+            dataType: 'json',
+            success: async function (data) {
+                console.log(data);
+                if (data['response']) {
+                    // Add item to HTML
+                    await journal.reload();
+                    // Dismiss journal modal
+                    $('.modal_success_response').html('Added successfully');
+                    $('#modal_success-toggle').click();
+                } else if (data['msg']) {
+                    $('#modal_journal .error').show();
+                }
+            },
+            error: function (e) {
+                console.log("Error: ", e);
+            }
+        })
+    }
+
+    // ********************************** //
+    // * Empty journal modal on closure * //
+    // ********************************** //
+    $('#modal_journal').on('hidden.bs.modal', function () {
+        $('#journal_title-input').val('');
+        $('#journal-item_type option[value="-1"]').prop('selected', true);
+        $('#modal_journal input').prop('checked', false);
+    });
 
     // **************************** //
     // ******* end::Journal ******* //
@@ -445,14 +435,11 @@ function initGame(dbGame) {
     // ******** end::Chat ********* //
     // **************************** //
 
-    initJournal();
-
 
     //setInterval(thisShouldBeAWebSocket, 3000);
-    /*
-        function thisShouldBeAWebSocket() {
-            getChat();
-            board.map.loadLayers();
-        }
-    */
+
+    function thisShouldBeAWebSocket() {
+        getChat();
+        board.map.loadLayers();
+    }
 }

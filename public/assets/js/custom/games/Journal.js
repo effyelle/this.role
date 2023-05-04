@@ -30,11 +30,11 @@ class Journal {
                         itemInfo: item
                     });
                     this.items.length++;
-                }/*
+                }
                 // Show list
                 this.formatJournalItems(this.items.list);
                 this.load(this.opt.onLoad, data);
-                */
+
             } else {
                 this.error(this.opt.onError, "No data was received.");
             }
@@ -85,7 +85,8 @@ class Journal {
     }
 
 
-    reload() {
+    async reload() {
+        q('#' + this.container)[0].innerHTML = '';
         this.items = {
             list: {},
             length: 0,

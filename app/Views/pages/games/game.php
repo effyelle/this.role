@@ -60,7 +60,6 @@
         </div>
     </div>
     <!--end::Modal-->
-
     <!--begin::Modal-->
     <div class="modal fade" tabindex="-1" id="modal_journal">
         <div class="modal-dialog">
@@ -138,9 +137,9 @@
         </div>
     </div>
     <!--end::Modal-->
-    <!--begin::Journal Items Modal Container-->
-    <div id="journal-modal_container"></div>
-    <!--end::Journal Items Modal Container-->
+    <!--begin::Draggable Modals-->
+    <div id="draggable-modals_container"></div>
+    <!--emd::Draggable Modals-->
 <?php endif; ?>
 <script src="/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js"></script>
 <script src="/assets/js/custom/apps/ckeditor/CKEditor.js"></script>

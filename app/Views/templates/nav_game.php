@@ -104,7 +104,6 @@
                                 <!--end::Separator-->
                             </div>
                         </div>
-                        <div id="draggable-modals_container"></div>
                     </div>
                     <!--end::Journal-->
 
@@ -170,7 +169,7 @@
                                                 <span class="menu-bullet">
                                                     <i class="fa fa-solid fa-layer-group"></i>
                                                 </span>
-                                                <span class="menu-title ">Select Layer</span>
+                                                <span class="menu-title ">Select Map</span>
                                             </label>
                                             <div class="form-control-solid col-10 mb-4 mx-auto">
                                                 <select id="change_layer" name="change_layer"
@@ -181,12 +180,12 @@
                                             </div>
                                             <div class="form-control-solid mb-4 flex-row align-items-start justify-content-between">
                                                 <button type="button" id="edit_layer-btn"
-                                                        class="btn btn-sm py-1 px-2 btn-danger">
-                                                    Edit Layer
+                                                        class="btn btn-sm py-1 px-2 btn-warning">
+                                                    Edit Map
                                                 </button>
                                                 <button type="button" id="delete_layer-btn"
                                                         class="btn btn-sm py-1 px-2 btn-danger">
-                                                    Delete Layer
+                                                    Delete Map
                                                 </button>
                                             </div>
                                             <!--end:Menu link-->

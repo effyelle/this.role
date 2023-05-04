@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use CodeIgniter\Database\ConnectionInterface;
-use CodeIgniter\Validation\ValidationInterface;
-
 class GameLayersModel extends BaseModel
 {
     protected $table = 'game_layers';

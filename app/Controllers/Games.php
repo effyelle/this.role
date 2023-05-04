@@ -325,7 +325,7 @@ class Games extends BaseController
         if (isset($_POST['char_sheet'])) {
             $params = [];
             foreach ($_POST['char_sheet'] as $key => $val) {
-                    $params[$key] = validate($val);
+                $params[$key] = validate($val);
             }
             $key = array_keys($params)[0];
             if ($key === 'item_icon') {
@@ -379,25 +379,6 @@ class Games extends BaseController
         return json_encode(['data' => $data]);
     }
 
-    function edit_map($id): string
-    {
-        $data['response'] = false;
-        $layerName = validate($_POST['layer_name']);
-        $layerID = $_POST['layer_id'];
-        if ($this->layermodel->uptd(['layer_name' => $layerName], ['layer_id' => $layerID])) {
-            if (isset($_FILES['layer_img'])) {
-                $game = $this->gamesmodel->get(['game_id' => $id])[0];
-                $newMap =
-                $layer = $this->layermodel->get(['layer_id' => $layerID])[0];
-                $oldMap = $game['game_folder'] . '/layers/' . $layer['layer_bg'];
-                // If old map img exists delete it
-                if (is_file($oldMap)) unlink($oldMap);
-
-            }
-        }
-        return json_encode(['data' => $data]);
-    }
-
     function get_layers($id): string
     {
         $data ['response'] = false;
@@ -405,6 +386,32 @@ class Games extends BaseController
             $data['response'] = true;
         }
         return json_encode($data);
+    }
+
+    function edit_map($id): string
+    {
+        $data['response'] = false;
+        $layerName = validate($_POST['layer_name']);
+        $layerID = $_POST['layer_id'];
+        $post = ['layer_name' => $layerName];
+        if (isset($_FILES['layer_img'])) {
+            $game = $this->gamesmodel->get(['game_id' => $id])[0];
+            $newName = time();
+            $layerFolder = $game['game_folder'] . '/layers/';
+            $img = upload_img('layer_bg', $layerFolder, $newName);
+            $data ['img'] = $img;
+            // Check if file was uploaded
+            if (str_contains($img, $newName)) {
+                $post['layer_bg'] = $img;
+                // If old map img exists delete it
+                $layer = $this->layermodel->get(['layer_id' => $layerID])[0];
+                $oldMap = $layerFolder . $layer['layer_bg'];
+                if (is_file($oldMap)) unlink($oldMap);
+            }
+            // set data
+            $this->layermodel->uptd($post, ['layer_id' => $layerID]);
+        }
+        return json_encode(['data' => $data]);
     }
 
     function set_selected_layer($id): string

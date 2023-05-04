@@ -308,7 +308,7 @@ class Games extends BaseController
     function get_journal_items($id): string
     {
         if ($journalItems = $this->journalmodel->get(['item_id_game' => $id], null, ['item_title' => 'ASC'])) {
-            return json_encode(['response' => true, 'data' => $journalItems]);
+            return json_encode(['response' => true, 'results' => $journalItems]);
         }
         return json_encode(['response' => false]);
     }
@@ -327,6 +327,12 @@ class Games extends BaseController
             foreach ($_POST['char_sheet'] as $key => $val) {
                 $params[$key] = validate($val);
             }
+            $key = array_keys($params)[0];
+            if ($key === 'item_icon') {
+                // Upload image, delete old image (?)
+            }
+            $data['keys'] = $key;
+
             if ($this->journalmodel->updt($params, ['item_id_game' => $id])) {
                 $data['response'] = true;
             }

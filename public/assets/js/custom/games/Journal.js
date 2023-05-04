@@ -1,41 +1,41 @@
 class Journal {
     constructor(id, options = {}) {
-        this.container = q('#' + id)[0];
-        this.listId = id + '_list';
+        this.opt = options;
+        this.container = id;
         this.itemClass = id + '_item';
-        this.folder = options.folder;
+        // Folder to draw the images from
+        this.folder = this.opt.folder;
         this.items = {
             list: {},
             length: 0,
         }
-        this.opt = options;
         // Init journal
         this.init();
     }
 
     init() {
-        // Fill journal container
-        this.container.innerHTML = this.formatJournalList();
         // If ajax, init journal item creation from url
-        if (this.opt.ajax) {
-            if (!this.opt.ajax.method) this.opt.ajax.method = "get";
-            this.getJournalAjax().done((data) => {
-                if (data['data'] && typeof data['data'] === 'object' && data['data'].length > 0) {
-                    for (let item of data['data']) {
-                        this.items.list[item.item_id] = new this.Sheet({
-                            modalContainer: '#' + this.draggableContainerId,
-                            modalBody: '#' + this.draggableContainerId + ' .modal-body',
-                            itemInfo: item
-                        });
-                        this.items.length++;
-                        this.formatJournalItem(item);
-                    }
-                } else {
-                    this.error(this.opt.onError, "No data was received.");
+        if (!this.opt.ajax.method) this.opt.ajax.method = "get";
+        // Get data through ajax
+        this.getJournalAjax().done((data) => {
+            // Checck data is not null
+            if (data.results && typeof data.results === 'object' && data.results.length > 0) {
+                // Iterate results
+                for (let item of data.results) {
+                    // Save id to for modal container container
+                    // Save a DND sheet for each item
+                    this.items.list[item.item_id] = new this.SheetDnD({
+                        itemInfo: item
+                    });
+                    this.items.length++;
                 }
+                // Show list
+                this.formatJournalItems(this.items.list);
                 this.load(this.opt.onLoad, data);
-            });
-        }
+            } else {
+                this.error(this.opt.onError, "No data was received.");
+            }
+        });
     }
 
     getJournalAjax() {
@@ -53,67 +53,41 @@ class Journal {
         });
     }
 
-    formatJournalList() {
-        return ' <div class="aside-footer d-flex flex-column py-3 px-5" id="' + this.listId + '">' +
-            '     <div class="menu menu-column menu-rounded fw-bold fs-7 gap-2 mt-3" data-kt-menu="true">' +
-            '         <div class="menu-item">' +
-            '             <span class="fs-5 text-dark">Welcome to your journal!</span>' +
-            '         </div>' +
-            '         <!--begin:Menu item-->' +
-            '         <div class="menu-item">' +
-            '             <!--begin:Menu link-->' +
-            '             <a class="menu-link gap-3" id="modal_journal-toggle" data-bs-toggle="modal" data-bs-target="#modal_journal">' +
-            '                 <i class="fa fa-solid fa-journal-whills fa-xl"></i>' +
-            '                 <span class="menu-title">Add journal item</span>' +
-            '             </a>' +
-            '             <!--end:Menu link-->' +
-            '         </div>' +
-            '         <!--end:Menu item-->' +
-            '         <!--begin::Separator-->' +
-            '         <div class="menu-item">' +
-            '             <div class="menu-content p-0">' +
-            '                 <div class="separator mx-1"></div>' +
-            '             </div>' +
-            '         </div>' +
-            '         <!--end::Separator-->' +
-            '     </div>' +
-            ' </div>';
-    }
-
-    formatJournalItem(item = {}) {
-        // Check image data, if it does not exist, put a default one
-        let icon = urlExists(this.folder + item.item_icon)
-            ? this.folder + item.item_icon // original icon
-            : '/assets/media/avatars/blank.png'; // default icon
-        // * HTML format * //
-        q('#' + this.listId)[0].innerHTML += '' +
-            '<!--begin::Menu Item-->' +
-            ' <div class="menu-item ' + this.itemClass + '">' +
-            // Assign item ID to button for later accessing
-            '     <button type="button" class="btn menu-link col-12" value="' + item.item_id + '">' +
-            '         <!--begin::Symbol-->' +
-            '         <div class="me-2 symbol symbol-20px symbol-md-30px">' +
-            '             <span class="symbol-label circle sheet_icon" ' +
-            '                  style="background:url(' + icon + ');' +
-            '                      background-size: cover">' +
-            '             </span>' +
-            '         </div>' +
-            '         <!--end::Symbol-->' +
-            '         <span class="menu-title fw-bolder fs-7 text-gray-600 text-hover-dark">' + item.item_title + '</span>' +
-            '     </button>' +
-            ' </div>' +
-            ' <!--end::Menu Item-->';
+    formatJournalItems(items) {
+        for (let i in items) {
+            let item = items[i].info;
+            // Check image data, if it does not exist, put a default one
+            let icon = urlExists(this.folder + item.item_icon)
+                ? this.folder + item.item_icon // original icon
+                : '/assets/media/avatars/blank.png'; // default icon
+            // * HTML format * //
+            q('#' + this.container)[0].innerHTML += '' +
+                '<!--begin::Menu Item-->' +
+                ' <div class="menu-item ' + this.itemClass + '">' +
+                // Assign item ID to button for later accessing
+                '     <button type="button" class="btn menu-link col-12" value="' + item.item_id + '">' +
+                '         <!--begin::Symbol-->' +
+                '         <div class="me-2 symbol symbol-20px symbol-md-30px">' +
+                '             <span class="symbol-label circle sheet_icon" ' +
+                '                  style="background:url(' + icon + ');' +
+                '                      background-size: cover">' +
+                '             </span>' +
+                '         </div>' +
+                '         <!--end::Symbol-->' +
+                '         <span class="menu-title fw-bolder fs-7 text-gray-600 text-hover-dark">' + item.item_title + '</span>' +
+                '     </button>' +
+                ' </div>' +
+                ' <!--end::Menu Item-->';
+        }
     }
 
 
     reload() {
         this.items = {
-            itemsLength: 0,
-            sheetsLength: 0,
-            items: {},
-            sheets: {},
+            list: {},
+            length: 0,
         }
-        // Fill journal container
+        // Begin again
         this.init();
     }
 
@@ -132,24 +106,92 @@ class Journal {
         return false;
     }
 
-    Sheet = function (params = {}) {
+    SheetDnD = function (params = {}) {
         this.info = params.itemInfo;
-        this.modalContainer = q(params.modalContainer)[0];
-        this.modalBody = q(params.modalBody)[0];
+        // Add container for saving future modals
+        document.body.innerHTML += '<div id="draggable-modals_container"></div>'
+        this.modalsContainer = 'draggable-modals_container';
+        this.draggableContainerId = 'draggable_' + this.info.item_id;
+        this.draggableContainerClass = 'journal_item_modal';
         this.icon = this.info.item_icon ? this.info.item_icon : '';
         this.type = this.info.item_type;
-        // Fill data from
-        /*console.log(q('div[data-from]'));
-        this.loadInfo = (elem) => {
+        this.openItem = async (htmlText) => {
+            q('#' + this.modalsContainer)[0].innerHTML += '' +
+                '<div id="' + this.draggableContainerId + '" class="' + this.draggableContainerClass + ' show">' +
+                '    <div class="modal-content bg-white">' +
+                '       ' + htmlText +
+                '    </div>' +
+                '</div>';
         }
-        this.inputs = q('.journal_item_modal .this-role-form-field');
+        this.getLevel = (xp) => {
+            // This is like super dirty code
+            // but bro I didn't find any formulas
+            if (xp >= 0 && xp < 300) return 1;
+            if (xp >= 300 && xp < 900) return 2;
+            if (xp >= 900 && xp < 2700) return 3;
+            if (xp >= 2700 && xp < 6500) return 4;
+            if (xp >= 6500 && xp < 14000) return 5;
+            if (xp >= 14000 && xp < 23000) return 6;
+            if (xp >= 23000 && xp < 34000) return 7;
+            if (xp >= 34000 && xp < 48000) return 8;
+            if (xp >= 48000 && xp < 64000) return 9;
+            if (xp >= 64000 && xp < 85000) return 10;
+            if (xp >= 85000 && xp < 100000) return 11;
+            if (xp >= 10000 && xp < 120000) return 12;
+            if (xp >= 120000 && xp < 140000) return 13;
+            if (xp >= 140000 && xp < 165000) return 14;
+            if (xp >= 165000 && xp < 195000) return 15;
+            if (xp >= 195000 && xp < 225000) return 16;
+            if (xp >= 225000 && xp < 265000) return 17;
+            if (xp >= 265000 && xp < 305000) return 18;
+            if (xp >= 305000 && xp < 355000) return 19;
+            if (xp >= 355000) return 20;
+        }
+        this.getClassArmor = () => {
+            // Base armor starts in 10
+            console.log(this.info)
+            let this_ac = 10;
+            // Check character sheet is correctly filled
+            if (this.info.ability_scores && typeof this.info.ability_scores === 'object' &&
+                this.info.class && this.info.bag && this.info.bag === 'object') {
+                let dex = this.info.ability_scores.dex;
+                let cons = this.info.ability_scores.cons;
+                let armor = this.info.bag.armor && this.info.bag.armor.on ? this.info.bag.armor.val : 0;
+                let shield = this.info.bag.shield && this.info.bag.shield.on ? this.info.bag.shield.val : 0;
+                let custom_mods = this.info.global_modifiers && this.info.global.modifiers.ca ? this.info.global.modifiers.ca : 0;
+                // Then you add: DEX modifier, armor modifier, shield
+                // Always add DEX and custom modifiers
+                this_ac += dex + custom_mods;
+                switch (this.info.class) {
+                    case 'barbarian':
+                    case 'monk':
+                        // Ultimately add CONS if barbarian or monk
+                        // while wearing no armor or shield
+                        if (!armor && !shield) {
+                            this_ac += cons;
+                            break;
+                        }
+                    default:
+                        this_ac += armor + shield;
+                }
 
-        for (let elem of this.inputs) {
-            if (elem.id) console.log(elem.id)
-            this.loadInfo(elem);
-            elem.onblur = () => {
-                this.loadInfo(elem);
             }
-        }*/
+            return this_ac;
+        }
+        this.getInitTierBreaker = () => {
+            // Add init modifiers (?)
+            const tb = 1.045;
+            let dex = 4;
+            if (this.info.ability_scores && typeof this.info.ability_scores === 'object' && this.info.ability_scores.dex) {
+                dex = this.info.ability_scores.dex;
+            }
+            return dex * tb;
+        }
+        this.getProficiency = (xp) => {
+            // Starts in +2 and adds +1 for every 4 levels until level 20
+            let level = this.getLevel(xp);
+            //if (level !== 1) level--;
+            return Math.ceil(this.getLevel(xp) / 4) + 1;
+        }
     }
 }

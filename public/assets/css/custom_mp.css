@@ -403,7 +403,7 @@ a .hover-flip {
     border-bottom: 1px solid var(--bs-gray-400) !important;
 }
 
-.this-role-form-field, .this-role-form-field:focus:not([type=checkbox]) {
+.this-role-form-field:not([type=checkbox]), .this-role-form-field:focus:not([type=checkbox]) {
     background-color: rgba(var(--this-role-light-rgb), 0.1);
 }
 

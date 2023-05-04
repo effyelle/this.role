@@ -123,7 +123,7 @@
                             tabindex="0">
                         Cancel
                     </button>
-                    <button type="button" class="btn btn-sm btn btn-primary save_btn" tabindex="-1">
+                    <button type="button" id="save_journal_item-btn" class="btn btn-sm btn btn-primary" tabindex="-1">
                         <!--begin::Indicator label-->
                         <span class="indicator-label">Save</span>
                         <!--end::Indicator label-->
@@ -150,12 +150,12 @@
 <script type="text/javascript" src="/assets/js/custom/games/Journal.js"></script>
 <script type="text/javascript" src="/assets/js/custom/apps/draggable/Draggable.js"></script>
 <script>
-    // * Game details from DATABASE * //
+    // * Game details * //
     const dbGame =<?php echo json_encode($game ?? []) ?>;
-    const session =<?php echo json_encode($_SESSION); ?>;
     document.addEventListener('DOMContentLoaded', function () {
         if (dbGame !== [] && dbGame.game_id) {
-            initBoard(dbGame, session);
+            // Pass game details to set board, chat and journal
+            initGame(dbGame);
         }
     });
 </script>

@@ -23,7 +23,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#journal">
+                            <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#journal_container">
                                 <i class="fa fa-newspaper text-this-role-light"></i>
                             </a>
                         </li>
@@ -33,7 +33,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#settings_container">
+                            <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#settings_container">
                                 <i class="fa fa-solid fa-gear text-this-role-light"></i>
                             </a>
                         </li>
@@ -54,8 +54,8 @@
                                 </div>
                                 <div class="d-flex flex-row justify-content-between align-items-center mt-5">
                                     <div class="select-charsheets">
-                                        <label for="charsheet_selected" class="form-label d-none">You're writing
-                                            as...</label>
+                                        <label for="charsheet_selected" class="form-label d-none">
+                                            You're writing as...</label>
                                         <select id="charsheet_selected"
                                                 class="form-control form-select form-control-solid this-role-form-field">
                                             <option selected
@@ -72,7 +72,37 @@
                     <!--end::Chat-->
 
                     <!--begin::Journal-->
-                    <div id="journal" class="tab-pane fade"></div>
+                    <div id="journal_container" class="tab-pane fade active show">
+                        <div class="aside-footer d-flex flex-column py-3 px-5">
+                            <div id="journal" data-kt-menu="true"
+                                 class="menu menu-column menu-rounded fw-bold fs-7 gap-2 mt-3">
+                                <div class="menu-item">
+                                    <span class="fs-5 text-dark">Welcome to your journal!</span>
+                                </div>
+                                <?php if (isset($game) && isset($_SESSION['user']) &&
+                                    $game['game_creator'] === $_SESSION['user']['user_id']) { ?>
+                                    <!--begin:Menu item-->
+                                    <div class="menu-item">
+                                        <!--begin:Menu link-->
+                                        <a id="modal_journal-toggle" class="menu-link gap-3"
+                                           data-bs-toggle="modal" data-bs-target="#modal_journal">
+                                            <i class="fa fa-solid fa-journal-whills fa-xl"></i>
+                                            <span class="menu-title">Add journal item</span>
+                                        </a>
+                                        <!--end:Menu link-->
+                                    </div>
+                                    <!--end:Menu item-->
+                                <?php } ?>
+                                <!--begin::Separator-->
+                                <div class="menu-item">
+                                    <div class="menu-content p-0">
+                                        <div class="separator mx-1"></div>
+                                    </div>
+                                </div>
+                                <!--end::Separator-->
+                            </div>
+                        </div>
+                    </div>
                     <!--end::Journal-->
 
                     <!--begin::Tools-->
@@ -89,7 +119,7 @@
                         </div>
                     </div>
                     <!--end::Tools-->
-                    <div id="settings_container" class="tab-pane fade active show">
+                    <div id="settings_container" class="tab-pane fade">
                         <div class="aside-footer d-flex flex-column py-3 px-5">
                             <!--begin::Title-->
                             <div class="menu-item mb-5">

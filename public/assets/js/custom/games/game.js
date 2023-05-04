@@ -1,4 +1,4 @@
-function initGame(dbGame) {
+function initGame(dbGame, session) {
 
     // **************************** //
     // ****** begin::Journal ****** //
@@ -233,28 +233,23 @@ function initGame(dbGame) {
         game: dbGame
     });
 
-    listenToNewMaps();
+    if (dbGame.game_creator === session.user_id) {
+        listenToNewMaps();
+    }
 
     function listenToNewMaps() {
         this.lName = q('#layer_name')[0];
         this.lImg = q('#add_map-input')[0];
         this.lImgPreview = $('#add_layer-preview');
-        this.btn = q('#add_layer-btn');
-
-        // Empty fields when modal closes
-        $('#add_layer-modal').on('hidden.bs.modal', () => {
-            this.lName.value = '';
-            this.lImg.value = '';
-            this.lImgPreview.css('background-image', 'none');
-        });
+        this.btn = q('#add_layer-btn')[0];
 
         this.lImg.onchange = () => {
             // Change bg from holder
             readImageChange(this.lImg, this.lImgPreview);
         }
-        this.btn.click(() => {
+
+        const newMap = () => {
             if (this.lName.value !== '' && this.lImg.files.length > 0) {
-                q('#add_layer-error').addClass('d-none');
                 let form = new FormData();
                 form.append('layer_img[]', this.lImg.files[0]);
                 form.append('layer_name', this.lName.value);
@@ -269,7 +264,7 @@ function initGame(dbGame) {
                         let img = data.img;
                         if (data.response) {
                             // Reload map layers
-                            $('.modal_success_response').html('Image added correctly');
+                            $('.modal_success_response').html('Map added correctly');
                             $('#modal_success-toggle').click();
                             board.map.loadLayers();
                             return;
@@ -284,7 +279,44 @@ function initGame(dbGame) {
                 return;
             }
             q('#add_layer-error').removeClass('d-none');
-        });
+        }
+
+        const editMap = () => {
+            if (this.lName.value !== '') {
+                let form = new FormData();
+                if (this.lImg.files.length > 0) form.append('layer_img[]', this.lImg.files[0]);
+                form.append('layer_name', this.lName.value);
+                form.append('layer_id', q('#change_layer')[0].value);
+                $.ajax({
+                    type: "post",
+                    url: "/app/games_ajax/edit_map/" + dbGame.game_id,
+                    data: form,
+                    processData: false,
+                    contentType: false,
+                    success: (data) => {
+                        data = (JSON.parse(data)).data;
+                        console.log(data);
+                        let img = data.img;
+                        if (data.response) {
+                            // Reload map layers
+                            $('.modal_success_response').html('Map updated');
+                            $('#modal_success-toggle').click();
+                            board.map.loadLayers();
+                            return;
+                        }
+                        $('.modal_error_response').html(img);
+                        $('#modal_error-toggle').click();
+                    },
+                    error: (e) => {
+                        console.log("Error: ", e);
+                    }
+                });
+                return;
+            }
+            q('#add_layer-error').removeClass('d-none');
+        }
+
+        this.btn.click(newMap);
 
         q('#change_layer')[0].onchange = function (e) {
             // Update selected image in Database
@@ -317,6 +349,25 @@ function initGame(dbGame) {
                 }
             });
             console.log(e);
+        });
+
+        // Fill add modal onclick
+        q('#edit_layer-btn').click((e) => {
+            q('#layer_name')[0].value = $('#change_layer').find(':selected').text();
+            this.btn.removeEventListener('click', newMap);
+            this.btn.click(editMap);
+        });
+
+        // On modal closure
+        $('#add_layer-modal').on('hidden.bs.modal', () => {
+            // Reset fields and divs
+            this.lName.value = '';
+            this.lImg.value = '';
+            this.lImgPreview.css('background-image', 'none');
+            q('#add_layer-error').addClass('d-none');
+            // Reset listeners
+            this.btn.removeEventListener('click', editMap);
+            this.btn.click(newMap);
         });
 
     }
@@ -436,7 +487,7 @@ function initGame(dbGame) {
     // **************************** //
 
 
-    //setInterval(thisShouldBeAWebSocket, 3000);
+    setInterval(thisShouldBeAWebSocket, 3000);
 
     function thisShouldBeAWebSocket() {
         getChat();

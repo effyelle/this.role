@@ -379,6 +379,25 @@ class Games extends BaseController
         return json_encode(['data' => $data]);
     }
 
+    function edit_map($id): string
+    {
+        $data['response'] = false;
+        $layerName = validate($_POST['layer_name']);
+        $layerID = $_POST['layer_id'];
+        if ($this->layermodel->uptd(['layer_name' => $layerName], ['layer_id' => $layerID])) {
+            if (isset($_FILES['layer_img'])) {
+                $game = $this->gamesmodel->get(['game_id' => $id])[0];
+                $newMap=
+                $layer = $this->layermodel->get(['layer_id' => $layerID])[0];
+                $oldMap = $game['game_folder'] . '/layers/' . $layer['layer_bg'];
+                // If old map img exists delete it
+                if (is_file($oldMap)) unlink($oldMap);
+
+            }
+        }
+        return json_encode(['data' => $data]);
+    }
+
     function get_layers($id): string
     {
         $data ['response'] = false;

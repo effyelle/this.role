@@ -42,8 +42,8 @@
 
                     <!--begin::Chat-->
                     <div id="chat_container" class="tab-pane fade">
-                        <div class="aside-footer d-flex flex-column py-3 px-5 chat-container mb-3 overflow-y-scroll">
-                            <div class="chat-messages">
+                        <div class="aside-footer d-flex flex-column py-3 px-5 chat-container mb-3">
+                            <div class="chat-messages overflow-y-scroll">
                                 <!--Chat messages go here-->
                             </div>
                             <div class="d-flex flex-column justify-content-center">
@@ -180,6 +180,7 @@
                                             </div>
                                             <div class="form-control-solid mb-4 flex-row align-items-start justify-content-between">
                                                 <button type="button" id="edit_layer-btn"
+                                                        data-bs-toggle="modal" data-bs-target="#add_layer-modal"
                                                         class="btn btn-sm py-1 px-2 btn-warning">
                                                     Edit Map
                                                 </button>

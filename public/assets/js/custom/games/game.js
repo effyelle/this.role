@@ -32,32 +32,37 @@ function initGame(dbGame, session) {
                 // Add a click listener to each item to create a new modal
                 itemDOM.click(function () {
                     // Get item info from Journal
-                    let item = journal.items.list[this.value];
-                    // Check if container doesn't exist already
-                    if (q('#' + item.draggableContainerId).length === 0) {
-                        // If not, create it
-                        getSheetHTML().done((htmlText) => {
-                            item.openItem(htmlText);
-                            // Check it was created correctly
-                            if (q('#' + item.draggableContainerId).length !== 1) {
-                                // Return message error if length is not 1
-                                $('.modal_error_response').html('Item could not be opened');
-                                $('#modal_error-toggle').click();
-                                return;
-                            }
-                            // Set item events
-                            makeInteractable(item)
-                        });
+                    let item = false;
+                    for (let i in journal.items.list) {
+                        if (journal.items.list[i].info.item_id === this.value)
+                            item = journal.items.list[i];
+                    }
+                    if (item) {
+                        // Check if container doesn't exist already
+                        if (q('#' + item.draggableContainerId).length === 0) {
+                            // If not, create it
+                            getSheetHTML(item.info).done((htmlText) => {
+                                item.openItem(htmlText);
+                                // Check it was created correctly
+                                if (q('#' + item.draggableContainerId).length !== 1) {
+                                    // Return message error if length is not 1
+                                    $('.modal_error_response').html('Item could not be opened');
+                                    $('#modal_error-toggle').click();
+                                    return;
+                                }
+                                // Set item events
+                                makeInteractable(item)
+                            });
+                        }
                     }
                 });
-
             }
         }
     }
 
-    function getSheetHTML() {
+    function getSheetHTML(info) {
         return $.ajax({
-            type: "get", url: '/app/games_ajax/sheet/' + dbGame.game_id, dataType: "text", success: (data) => {
+            type: "get", url: '/app/games_ajax/sheet/' + info.item_id, dataType: "text", success: (data) => {
                 return data;
             }, error: (e) => {
                 console.log("Error", e);
@@ -86,6 +91,18 @@ function initGame(dbGame, session) {
             });
         }
 
+        // Set all selects that shall have aria-selected to load the attribute
+        let selects = q('select');
+        for (let select of selects) {
+            let s = select.getAttribute('aria-selected');
+            if (s) {
+                select.value = s;
+                select.onchange = function () {
+                    select.setAttribute('aria-selected', this.value);
+                }
+            }
+        }
+
         let this_fields = q('#' + item.draggableContainerId + ' .this-role-form-field');
         // Get data from fields
         getDataFromFields(this_fields, item);
@@ -108,7 +125,9 @@ function initGame(dbGame, session) {
         for (let i of inputs) {
             let divName = i.getAttribute('name');
             if (divName !== '') {
-                if (i.classList.contains('this-score')) {
+                if (i.nodeName === 'SELECT') {
+                    i.value = (i.getAttribute('aria-selected'));
+                } else if (i.classList.contains('this-score')) {
                     // Load scores
                     getScores(divName, i.value, item);
                 } else {
@@ -189,11 +208,11 @@ function initGame(dbGame, session) {
             url: '/app/games_ajax/set_journal_item/' + dbGame.game_id,
             data: post,
             dataType: 'json',
-            success: async function (data) {
+            success: function (data) {
                 console.log(data);
                 if (data['response']) {
                     // Add item to HTML
-                    await journal.reload();
+                    journal.reload();
                     // Dismiss journal modal
                     $('.modal_success_response').html('Added successfully');
                     $('#modal_success-toggle').click();
@@ -264,9 +283,9 @@ function initGame(dbGame, session) {
                         let img = data.img;
                         if (data.response) {
                             // Reload map layers
+                            board.map.loadLayers();
                             $('.modal_success_response').html('Map added correctly');
                             $('#modal_success-toggle').click();
-                            board.map.loadLayers();
                             return;
                         }
                         $('.modal_error_response').html(img);
@@ -281,6 +300,25 @@ function initGame(dbGame, session) {
             q('#add_layer-error').removeClass('d-none');
         }
 
+        const selectMap = () => {
+            // Save selected map
+            let selectedMap = q('#change_layer')[0].value;
+            // Update selected map
+            $.ajax({
+                type: "get",
+                url: "/app/games_ajax/set_selected_layer/" + dbGame.game_id + "?layer_id=" + selectedMap,
+                dataType: "json",
+                success: (data) => {
+                    dbGame.game_layer_selected = selectedMap;
+                },
+                error: (e) => {
+                    console.log("Error: ", e);
+                }
+            });
+            // Change image in HTML
+            board.map.showLayer(board.map.layersFolder + board.map.layers[selectedMap].layer_bg);
+        }
+
         const editMap = () => {
             if (this.lName.value !== '') {
                 let form = new FormData();
@@ -289,7 +327,7 @@ function initGame(dbGame, session) {
                 form.append('layer_id', q('#change_layer')[0].value);
                 $.ajax({
                     type: "post",
-                    url: "/app/games_ajax/edit_map/" + dbGame.game_id,
+                    url: "/app/games_ajax/edit_layer/" + dbGame.game_id,
                     data: form,
                     processData: false,
                     contentType: false,
@@ -301,6 +339,7 @@ function initGame(dbGame, session) {
                             // Reload map layers
                             $('.modal_success_response').html('Map updated');
                             $('#modal_success-toggle').click();
+                            board.map.layers = {};
                             board.map.loadLayers();
                             return;
                         }
@@ -316,40 +355,29 @@ function initGame(dbGame, session) {
             q('#add_layer-error').removeClass('d-none');
         }
 
-        this.btn.click(newMap);
-
-        q('#change_layer')[0].onchange = function (e) {
-            // Update selected image in Database
-            $.ajax({
-                type: "get",
-                url: "/app/games_ajax/set_selected_layer/" + dbGame.game_id + "?layer_id=" + this.value,
-                dataType: "json",
-                success: (data) => {
-                    dbGame.game_layer_selected = this.value;
-                },
-                error: (e) => {
-                    console.log("Error: ", e);
-                }
-            });
-            // Change image in HTML
-            board.map.showLayer(board.map.layersFolder + board.map.layers[this.value].layer_bg);
-        }
-
-        q('#delete_layer-btn').click(function (e) {
-            // Delete layer
+        const deleteMap = () => {
             $.ajax({
                 type: "get",
                 url: "/app/games_ajax/delete_layer/" + q('#change_layer')[0].value,
                 dataType: "json",
                 success: (data) => {
+                    console.log(data);
                     board.map.loadLayers();
-                },
-                error: (e) => {
+                }, error: (e) => {
                     console.log("Error: ", e);
                 }
             });
             console.log(e);
-        });
+        }
+
+        this.btn.click(newMap);
+
+        q('#select_layer-btn').click(selectMap);
+
+        q('#select_layer-btn').click(selectMap);
+
+        // Delete layer onclick
+        q('#delete_layer-btn').click(deleteMap);
 
         // Fill add modal onclick
         q('#edit_layer-btn').click((e) => {
@@ -401,11 +429,12 @@ function initGame(dbGame, session) {
     let chatMessage = '';
 
     // * Listen to chat pressed keys * //
-    chatText.addEventListener('keypress', function (e) {
-        // Save key if not Enter
-        if (e.key !== 'Enter') {
-            chatMessage += e.key;
+    chatText.addEventListener('keydown', function (e) {
+        if (e.key === 'Backspace') {
+            chatMessage = chatMessage.substring(0, chatMessage.length - 1);
         }
+    });
+    chatText.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') { // If Enter key
             if (e.shiftKey) { // If Shift+Enter
                 chatMessage += '<br/>'; // Add line break
@@ -414,7 +443,10 @@ function initGame(dbGame, session) {
             // If Enter without Shift
             e.preventDefault(); // Prevent textarea line break
             setChat(chatMessage.trim(), $('#charsheet_selected').find(':selected').text(), "chatMessage");
+            return;
         }
+        // Save key if not the previous ones
+        chatMessage += e.key;
     });
 
     // * Listen to send button in chat * //
@@ -451,7 +483,6 @@ function initGame(dbGame, session) {
             url: "/app/games_ajax/get_chat/" + dbGame.game_id,
             dataType: "json",
             success: function (data) {
-                console.log(data)
                 // Check if there are any new messages before updating chat
                 if (data.msg || (data.msgs && $('.chat-messages .menu-item').length !== data.msgs.length)) {
                     chat.record.innerHTML = '';
@@ -472,7 +503,6 @@ function initGame(dbGame, session) {
                         }
                         return;
                     }
-                    console.log(chat)
                     chat.formatMessage({
                         sender: sender, src: src, msg: msgText, msgType: msgType
                     });
@@ -487,7 +517,7 @@ function initGame(dbGame, session) {
     // **************************** //
 
 
-    setInterval(thisShouldBeAWebSocket, 3000);
+    setInterval(thisShouldBeAWebSocket, 2500);
 
     function thisShouldBeAWebSocket() {
         getChat();

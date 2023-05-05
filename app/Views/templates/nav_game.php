@@ -8,7 +8,7 @@
         <!--begin::Aside menu-->
         <div class="aside-menu flex-column-fluid">
             <!--begin::Aside Menu-->
-            <div class="hover-scroll-overlay-y h-100" id="kt_aside_menu_wrapper" data-kt-scroll="true"
+            <div class="h-100" id="kt_aside_menu_wrapper" data-kt-scroll="true"
                  data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-height="auto"
                  data-kt-scroll-dependencies="#kt_header, #kt_aside_footer"
                  data-kt-scroll-wrappers="#kt_aside, #kt_aside_menu" data-kt-scroll-offset="{lg: '75px'}" style="">
@@ -18,12 +18,12 @@
                     <!--begin::Aside Menu-->
                     <ul class="nav nav-tabs nav-line-tabs pt-2 px-2 justify-content-evenly">
                         <li class="nav-item">
-                            <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#chat_container">
+                            <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#chat_container">
                                 <i class="fa fa-comments f-lg text-this-role-light"></i>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#journal_container">
+                            <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#journal_container">
                                 <i class="fa fa-newspaper text-this-role-light"></i>
                             </a>
                         </li>
@@ -41,12 +41,14 @@
                     <!--end::Aside menu-->
 
                     <!--begin::Chat-->
-                    <div id="chat_container" class="tab-pane fade">
-                        <div class="aside-footer d-flex flex-column py-3 px-5 chat-container mb-3">
-                            <div class="chat-messages overflow-y-scroll">
-                                <!--Chat messages go here-->
+                    <div id="chat_container" class="tab-pane fade show active">
+                        <div class="aside-footer d-flex flex-column py-3 chat-container mb-3">
+                            <div class=hover-scroll-overlay-y">
+                                <!--begin::Chat messages-->
+                                <div class="chat-messages px-5"></div>
+                                <!--end::Chat messages-->
                             </div>
-                            <div class="d-flex flex-column justify-content-center">
+                            <div class="d-flex flex-column justify-content-center px-5 h-175px">
                                 <div class="chat-bubble">
                                     <label for="chat" class="form-label mb-3">Chat</label>
                                     <textarea id="chat" rows="3"
@@ -58,8 +60,9 @@
                                             You're writing as...</label>
                                         <select id="charsheet_selected"
                                                 class="form-control form-select form-control-solid this-role-form-field">
-                                            <option selected
-                                                    value="-1"><?= $_SESSION['user']['user_username'] ?></option>
+                                            <option selected value="-1">
+                                                <?= $_SESSION['user']['user_username'] ?>
+                                            </option>
                                             <option value="0">Sabrina</option>
                                             <option value="1">Salem</option>
                                         </select>
@@ -72,7 +75,7 @@
                     <!--end::Chat-->
 
                     <!--begin::Journal-->
-                    <div id="journal_container" class="tab-pane fade active show">
+                    <div id="journal_container" class="tab-pane fade">
                         <div class="aside-footer d-flex flex-column py-3 px-5">
                             <div id="journal" data-kt-menu="true"
                                  class="menu menu-column menu-rounded fw-bold fs-7 gap-2 mt-3">
@@ -81,20 +84,6 @@
                                     <span class="fs-5 text-dark">Welcome to your journal!</span>
                                 </div>
                                 <!--end::Title-->
-                                <?php if (isset($game) && isset($_SESSION['user']) &&
-                                    $game['game_creator'] === $_SESSION['user']['user_id']) { ?>
-                                    <!--begin:Menu item-->
-                                    <div class="menu-item">
-                                        <!--begin:Menu link-->
-                                        <a id="modal_journal-toggle" class="menu-link gap-3"
-                                           data-bs-toggle="modal" data-bs-target="#modal_journal">
-                                            <i class="fa fa-solid fa-journal-whills fa-xl"></i>
-                                            <span class="menu-title">Add journal item</span>
-                                        </a>
-                                        <!--end:Menu link-->
-                                    </div>
-                                    <!--end:Menu item-->
-                                <?php } ?>
                                 <!--begin::Separator-->
                                 <div class="menu-item">
                                     <div class="menu-content p-0">
@@ -135,7 +124,8 @@
                                 </div>
                             </div>
                             <!--end::Separator-->
-                            <?php if (isset($game) && $_SESSION['user']['user_id'] === $game['game_creator']): ?>
+                            <?php if (isset($game) && isset($_SESSION['user']) &&
+                                $game['game_creator'] === $_SESSION['user']['user_id']) { ?>
                                 <!--begin::Menu Accordion-->
                                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                                     <!--begin:Menu link-->
@@ -152,6 +142,44 @@
                                         <!--begin:Menu item-->
                                         <div class="menu-item">
                                             <!--begin:Menu link-->
+                                            <a id="modal_journal-toggle" class="menu-link gap-3"
+                                               data-bs-toggle="modal" data-bs-target="#modal_journal">
+                                                <i class="fa fa-solid fa-journal-whills"></i>
+                                                <span class="menu-title">Add journal item</span>
+                                            </a>
+                                            <!--end:Menu link-->
+                                            <!--begin:Menu link-->
+                                            <label for="" class="menu-link d-none">
+                                                <span class="menu-bullet">
+                                                    <i class="fa fa-solid fa-layer-group"></i>
+                                                </span>
+                                                <span class="menu-title ">Available Journal Items</span>
+                                            </label>
+                                            <div class="form-control-solid col-10 mb-4 mx-auto d-none">
+                                                <select id="change_layer" name="change_layer"
+                                                        class="form-control form-control-sm form-select form-select-sm this-role-form-field mb-4">
+                                                    <option value="-1" disabled selected>Select one</option>
+                                                </select>
+                                                <div class="form-control-solid mb-4 flex-row align-items-start justify-content-end">
+                                                    <button type="button" id="delete_layer-btn"
+                                                            class="btn btn-sm py-1 px-2 btn-danger">
+                                                        Delete Item
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <!--end:Menu link-->
+                                        </div>
+                                        <!--end:Menu item-->
+                                        <!--begin::Sparator-->
+                                        <div class="menu-item">
+                                            <div class="menu-content p-0">
+                                                <div class="separator mx-1"></div>
+                                            </div>
+                                        </div>
+                                        <!--end::Separator-->
+                                        <!--begin:Menu item-->
+                                        <div class="menu-item">
+                                            <!--begin:Menu link-->
                                             <a class="menu-link" data-bs-toggle="modal"
                                                data-bs-target="#add_layer-modal">
                                                 <div class="menu-bullet">
@@ -160,34 +188,33 @@
                                                 <div class="menu-title">Add Map</div>
                                             </a>
                                             <!--end:Menu link-->
-                                        </div>
-                                        <!--end:Menu item-->
-                                        <!--begin:Menu item-->
-                                        <div class="menu-item">
                                             <!--begin:Menu link-->
                                             <label for="change_layer" class="menu-link">
                                                 <span class="menu-bullet">
                                                     <i class="fa fa-solid fa-layer-group"></i>
                                                 </span>
-                                                <span class="menu-title ">Select Map</span>
+                                                <span class="menu-title ">Available Maps</span>
                                             </label>
                                             <div class="form-control-solid col-10 mb-4 mx-auto">
                                                 <select id="change_layer" name="change_layer"
-                                                        class="form-control form-control-sm form-select form-select-sm
-                                                         this-role-form-field">
+                                                        class="form-control form-control-sm form-select form-select-sm this-role-form-field mb-4">
                                                     <option value="-1" disabled selected>Select one</option>
                                                 </select>
-                                            </div>
-                                            <div class="form-control-solid mb-4 flex-row align-items-start justify-content-between">
-                                                <button type="button" id="edit_layer-btn"
-                                                        data-bs-toggle="modal" data-bs-target="#add_layer-modal"
-                                                        class="btn btn-sm py-1 px-2 btn-warning">
-                                                    Edit Map
-                                                </button>
-                                                <button type="button" id="delete_layer-btn"
-                                                        class="btn btn-sm py-1 px-2 btn-danger">
-                                                    Delete Map
-                                                </button>
+                                                <div class="form-control-solid mb-4 flex-row align-items-start justify-content-between">
+                                                    <button type="button" id="edit_layer-btn"
+                                                            data-bs-toggle="modal" data-bs-target="#add_layer-modal"
+                                                            class="btn btn-sm py-1 px-2 btn-warning">
+                                                        Edit Map
+                                                    </button>
+                                                    <button type="button" id="select_layer-btn"
+                                                            class="btn btn-sm py-1 px-2 btn-primary">
+                                                        Select Map
+                                                    </button>
+                                                    <button type="button" id="delete_layer-btn"
+                                                            class="btn btn-sm py-1 px-2 btn-danger">
+                                                        Delete Map
+                                                    </button>
+                                                </div>
                                             </div>
                                             <!--end:Menu link-->
                                         </div>
@@ -203,7 +230,7 @@
                                     </div>
                                 </div>
                                 <!--end::Separator-->
-                            <?php endif; ?>
+                            <?php } ?>
                         </div>
                     </div>
                     <!--end::Setting-->

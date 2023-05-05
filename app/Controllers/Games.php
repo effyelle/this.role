@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use function PHPUnit\Framework\isFalse;
 use function PHPUnit\Framework\isNan;
 
 class Games extends BaseController
@@ -388,29 +389,50 @@ class Games extends BaseController
         return json_encode($data);
     }
 
-    function edit_map($id): string
+    function edit_layer($id): string
     {
+        // Declare response on false
         $data['response'] = false;
-        $layerName = validate($_POST['layer_name']);
-        $layerID = $_POST['layer_id'];
-        $post = ['layer_name' => $layerName];
-        if (isset($_FILES['layer_img'])) {
-            $game = $this->gamesmodel->get(['game_id' => $id])[0];
-            $newName = time();
-            $layerFolder = $game['game_folder'] . '/layers/';
-            $img = upload_img('layer_bg', $layerFolder, $newName);
-            $data ['img'] = $img;
-            // Check if file was uploaded
-            if (str_contains($img, $newName)) {
-                $post['layer_bg'] = $img;
-                // If old map img exists delete it
-                $layer = $this->layermodel->get(['layer_id' => $layerID])[0];
-                $oldMap = $layerFolder . $layer['layer_bg'];
-                if (is_file($oldMap)) unlink($oldMap);
+        // Declare update variable
+        $updateData = [];
+        // Check layer exist
+        if ($layer = $this->layermodel->get(
+            ['layer_id' => $_POST['layer_id']], // where
+            ['games' => 'layer_id_game=game_id'] // join
+        )) {
+            $layer = $layer[0];
+            // Validate name
+            $layerName = validate($_POST['layer_name']);
+            // Save name to data to update
+            $updateData ['layer_name'] = $layerName;
+            // Check if and image was selected
+            if (isset($_FILES['layer_img'])) {
+                // Set new name for image file
+                $newName = time();
+                // Set layer folder according to game folder
+                $layerFolder = $this->mediaGames . $layer['game_folder'] . '/layers/';
+                // Attempt to upload image
+                $img = upload_img('layer_img', $layerFolder, $newName);
+                // Check if file was uploaded
+                if (str_contains($img, $newName)) {
+                    // If uploaded, save new image name along with extension
+                    $updateData['layer_bg'] = explode('/', $img)[count(explode('/', $img)) - 1];
+                    // If old map img exists delete it
+                    $oldMap = $layerFolder . $layer['layer_bg'];
+                    if (is_file($oldMap)) unlink($oldMap);
+                    $data['oldMap'] = $oldMap;
+                }
+
+                $data ['img'] = $img;
+                $data['gameFolder'] = $layerFolder;
+
             }
-            // set data
-            $this->layermodel->uptd($post, ['layer_id' => $layerID]);
+            // Update layer
+            if ($this->layermodel->updt($updateData, ['layer_id' => $layer['layer_id']])) {
+                $data['response'] = true;
+            }
         }
+        $data['post'] = $updateData;
         return json_encode(['data' => $data]);
     }
 
@@ -431,7 +453,13 @@ class Games extends BaseController
     function delete_layer($id): string
     {
         $data['response'] = false;
+        $game = $this->gamesmodel->get(['layer_id' => $id], ['game_layers' => 'layer_id_game=game_id'])[0];
         if ($this->layermodel->del(['layer_id' => $id])) {
+            $oldBg = $this->mediaGames . $game['game_folder'] . '/layers/' . $game['layer_bg'];
+            $data['file'] = $oldBg;
+            if (is_file($oldBg)) {
+                (unlink($oldBg));
+            }
             $data['response'] = true;
         }
         return json_encode($data);

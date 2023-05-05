@@ -1147,3 +1147,11 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 .w-180px {
     width: 180px;
 }
+
+.justify-self-end {
+    justify-self: flex-end;
+}
+
+.overflow-y-scroll {
+    overflow-y: scroll;
+}

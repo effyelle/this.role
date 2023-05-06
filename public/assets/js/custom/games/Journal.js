@@ -51,11 +51,11 @@ class Journal {
                 }
                 // Show list
                 this.formatJournalItems(this.items.list);
-                this.load(this.opt.onLoad, data);
 
             } else {
                 this.error(this.opt.onError, "No data was received.");
             }
+            this.load(this.opt.onLoad, data);
         });
     }
 

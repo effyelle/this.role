@@ -374,22 +374,48 @@ class Games extends BaseController
     function save_sheet($id): string
     {
         $data['response'] = false;
-        $data['post'] = $_POST;
-        if (isset($_POST['char_sheet'])) {
+        if (isset($_POST['sheet'])) {
             $params = [];
-            foreach ($_POST['char_sheet'] as $key => $val) {
+            foreach ($_POST['sheet'] as $key => $val) {
                 $params[$key] = validate($val);
             }
             $key = array_keys($params)[0];
-            if ($key === 'item_icon') {
-                // Upload image, delete old image (?)
-            }
             $data['keys'] = $key;
 
             if ($this->journalmodel->updt($params, ['item_id' => $_POST['item_id']])) {
                 $data['response'] = true;
             }
             $data['params'] = $params;
+        } elseif (isset($_FILES['item_icon'])) {
+            // Search for old file
+            $item = $this->journalmodel->get(
+                ['item_id' => $_POST['item_id']], // where
+                ['games' => 'game_id=item_id_game'] // join
+            )[0];
+            $targetFolder = $this->mediaGames . $item['game_folder'] . '/players/';
+            // Delete old file
+            if (is_file($targetFolder . $item['item_icon'])) unlink($targetFolder . $item['item_icon']);
+            // * Upload new file * //
+            // Save new name
+            $newName = time();
+            // Save user folder
+            $userFolder = $_SESSION['user']['user_id'] . '/';
+            // If folder for user does not exist, create it
+            if (!is_dir($userFolder)) mkdir($userFolder);
+            // Attempt to upload image
+            $img = upload_img('item_icon', $targetFolder . $userFolder, $newName);
+            $data['img'] = $img;
+            // Check image uploaded
+            if (str_contains($img, $newName)) {
+                $newFile = explode('/', $img)[count(explode('/', $img)) - 1];
+                // If image uploaded, update database
+                if ($this->journalmodel->updt(
+                    ['item_icon' => $userFolder . $newFile], // data
+                    ['item_id' => $_POST['item_id']]) // where
+                ) {
+                    $data['response'] = true;
+                }
+            }
         }
         return json_encode($data);
     }

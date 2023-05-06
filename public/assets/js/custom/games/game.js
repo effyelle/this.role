@@ -22,7 +22,7 @@ function initGame(dbGame, session) {
 
         },
         onError: function (e) {
-            console.log(e);
+            console.log("Error: ", e);
         }
     });
 
@@ -76,12 +76,12 @@ function initGame(dbGame, session) {
             switchIncludePlayers();
             q('#journal-item_type')[0].onchange = switchIncludePlayers;
         }
-        // * Add or edit journal item when save button clicked * //
-        q('#save_journal_item-btn')[0].click(saveJournalItem);
         // * Empty modal when add new journal item button is clicked * //
         q('#modal_journal-toggle').click(emptyJournalModal);
         // * Use modal to edit an item when clicked * //
         q('#edit_item-btn')[0].click(fillJournalModal);
+        // * Add or edit journal item when save button clicked * //
+        q('#save_journal_item-btn')[0].click(saveJournalItem);
         // * Delete item * //
         q('#delete_item-btn').click(function () {
             openConfirmation(deleteJournalItem);
@@ -90,12 +90,16 @@ function initGame(dbGame, session) {
 
     function loadAdminItems() {
         // Fill select
-        q('#change_item')[0].innerHTML = '';
-        for (let i in journal.items.list) {
-            let item = journal.items.list[i].info;
-            q('#change_item')[0].innerHTML += '<option value="' + item.item_id + '">' + item.item_title + '</option>';
+        let changeItem = q('#change_item')[0];
+        if (journal.items.length > 0) {
+            changeItem.innerHTML = '';
+            for (let i in journal.items.list) {
+                let item = journal.items.list[i].info;
+                q('#change_item')[0].innerHTML += '<option value="' + item.item_id + '">' + item.item_title + '</option>';
+            }
+            return;
         }
-        // Listen to delete button
+        changeItem.innerHTML = '<option value="-1" disabled selected>No journal items available</option>';
     }
 
     function switchIncludePlayers() {
@@ -169,6 +173,24 @@ function initGame(dbGame, session) {
         // Get data from fields
         getDataFromFields(this_fields, item);
 
+        let itemIconInputs = q('.journal_item_modal .this-role-form-field[name=item_icon]');
+        for (let i = 0; i < itemIconInputs.length; i++) {
+            itemIconInputs[i].change(function () {
+
+                // * This does not work properly with several opened sheets * //
+
+                // Change holder in sheet
+                readImageChange(this, q('.item_icon-holder')[i]);
+                // Change holder in list
+                readImageChange(this, q('.sheet_icon')[i]);
+
+                // * This does not work properly with several opened sheets * //
+
+                // Save image
+                saveItemIcon(this, item.info.item_id).done((data) => {
+                });
+            });
+        }
         // * Add listener to html form fields * //
         this_fields.blur(function () {
             saveField(this, item.info.item_id).done((data) => {
@@ -176,7 +198,8 @@ function initGame(dbGame, session) {
                     // Refill fields dataf-from
                     getDataFromFields(this_fields, item);
                     // Change name in '.aside' journal list
-                    q('#' + journal.container + ' button[value="' + item.info.item_id + '"] .menu-title')[0].innerHTML = q('#' + item.draggableContainerId + ' input[name=item_title]')[0].value;
+                    q('#' + journal.container + ' button[value="' + item.info.item_id + '"] .menu-title')[0]
+                        .innerHTML = q('#' + item.draggableContainerId + ' input[name=item_title]')[0].value;
                 }
             });
         });
@@ -233,13 +256,33 @@ function initGame(dbGame, session) {
         }
     }
 
+    function saveItemIcon(object, id) {
+        let form = new FormData();
+        form.append('item_icon[]', object.files[0]);
+        form.append('item_id', id);
+        return $.ajax({
+            type: "post",
+            url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
+            data: form,
+            processData: false,
+            contentType: false,
+            success: (data) => {
+                data = JSON.parse(data);
+                console.log(data);
+                return data;
+            }, error: (e) => {
+                console.log("Error: ", e);
+            }
+        });
+    }
+
     function saveField(object, id) {
         let data = {};
         data [object.getAttribute('name')] = object.value;
         return $.ajax({
             type: "post",
             url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
-            data: {char_sheet: data, item_id: id},
+            data: {sheet: data, item_id: id},
             dataType: "json",
             success: (data) => {
                 return data;
@@ -274,7 +317,6 @@ function initGame(dbGame, session) {
     }
 
     function deleteJournalItem() {
-        console.log(q('#change_item')[0].value);
         $.ajax({
             type: 'post',
             url: '/app/games_ajax/delete_journal_item/' + q('#change_item')[0].value,
@@ -307,7 +349,6 @@ function initGame(dbGame, session) {
             data: getJournalModalForm(),
             dataType: 'json',
             success: function (data) {
-                console.log(data)
                 if (data.response) {
                     // Reload journal
                     journal.reload();
@@ -326,6 +367,7 @@ function initGame(dbGame, session) {
     }
 
     function emptyJournalModal() {
+        $('#modal_journal .modal-header h4').html('Add Journal Item');
         q('#save_journal_item-btn')[0].value = "";
         $('#journal_title-input').val('');
         $('#journal-item_type option[value="character"]').prop('selected', true);
@@ -333,6 +375,7 @@ function initGame(dbGame, session) {
     }
 
     function fillJournalModal() {
+        $('#modal_journal .modal-header h4').html('Edit Journal Item');
         let item = {};
         for (let i in journal.items.list) {
             let itemHolder = journal.items.list[i].info;
@@ -397,7 +440,7 @@ function initGame(dbGame, session) {
     function listenToNewMaps() {
         this.lName = q('#layer_name')[0];
         this.lImg = q('#add_map-input')[0];
-        this.lImgPreview = $('#add_layer-preview');
+        this.lImgPreview = q('#add_layer-preview')[0];
         this.btn = q('#add_layer-btn')[0];
 
         this.lImg.onchange = () => {
@@ -410,6 +453,7 @@ function initGame(dbGame, session) {
                 let form = new FormData();
                 form.append('layer_img[]', this.lImg.files[0]);
                 form.append('layer_name', this.lName.value);
+                console.log(form)
                 $.ajax({
                     type: "post",
                     url: "/app/games_ajax/add_map/" + dbGame.game_id,
@@ -517,6 +561,7 @@ function initGame(dbGame, session) {
 
         // Fill add modal on click
         q('#edit_layer-btn').click((e) => {
+            q('#add_layer-modal .modal-header h4')[0].innerHTML = 'Edit Layer';
             q('#layer_name')[0].value = $('#change_layer').find(':selected').text();
             this.btn.removeEventListener('click', newMap);
             this.btn.click(editMap);
@@ -524,10 +569,11 @@ function initGame(dbGame, session) {
 
         // On modal closure
         $('#add_layer-modal').on('hidden.bs.modal', () => {
+            q('#add_layer-modal .modal-header h4')[0].innerHTML = 'Add Layer';
             // Reset fields and divs
             this.lName.value = '';
             this.lImg.value = '';
-            this.lImgPreview.css('background-image', 'none');
+            this.lImgPreview.style.backgroundImage = 'none';
             q('#add_layer-error').addClass('d-none');
             // Reset listeners
             this.btn.removeEventListener('click', editMap);

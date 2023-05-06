@@ -55,6 +55,11 @@ const q = function (t) {
             el[i].addEventListener('blur', callback);
         }
     };
+    el.change = function (callback) {
+        for (let i = 0; i < el.length; i++) {
+            el[i].addEventListener('change', callback);
+        }
+    }
     el.toggleClass = function (classname) {
         for (let i = 0; i < el.length; i++) {
             el[i].classList.toggle(classname);
@@ -74,8 +79,17 @@ const q = function (t) {
         el[i].click = (callback) => {
             el[i].addEventListener('click', callback);
         }
+        el[i].blur = (callback) => {
+            el[i].addEventListener('blur', callback);
+        }
+        el[i].change = (callback) => {
+            el[i].addEventListener('change', callback);
+        }
         el[i].toggleClass = function (classname) {
             this.classList.toggle(classname);
+        }
+        el[i].addClass = function (classname) {
+            this.classList.add(classname);
         }
         el[i].removeClass = function (classname) {
             this.classList.remove(classname);
@@ -157,8 +171,8 @@ function openConfirmation(callback) {
 
 function readImageChange(img_input, img_holder) {
     let file = URL.createObjectURL(img_input.files[0]);
-    img_holder.css('background-image', 'url(' + file + ')');
-    img_holder.css('background-size', 'cover');
+    img_holder.style.backgroundImage = 'url(' + file + ')';
+    img_holder.style.backgroundSize = 'cover';
 }
 
 function toSentenceCase(str) {

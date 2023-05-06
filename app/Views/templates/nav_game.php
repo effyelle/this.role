@@ -163,7 +163,7 @@
                                                 <div class="form-control-solid mb-4 flex-row align-items-start justify-content-between">
                                                     <button type="button" id="edit_item-btn"
                                                             data-bs-toggle="modal" data-bs-target="#modal_journal"
-                                                            class="btn btn-sm py-1 px-2 btn-warning">
+                                                            class="btn btn-sm py-1 px-2 btn-primary">
                                                         Edit Item
                                                     </button>
                                                     <button type="button" id="delete_item-btn"
@@ -212,7 +212,7 @@
                                                 <div class="form-control-solid mb-4 flex-row align-items-start justify-content-between">
                                                     <button type="button" id="edit_layer-btn"
                                                             data-bs-toggle="modal" data-bs-target="#add_layer-modal"
-                                                            class="btn btn-sm py-1 px-2 btn-warning">
+                                                            class="btn btn-sm py-1 px-2 btn-primary">
                                                         Edit Map
                                                     </button>
                                                     <button type="button" id="delete_layer-btn"

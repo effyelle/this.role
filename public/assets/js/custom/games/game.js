@@ -103,12 +103,14 @@ function initGame(dbGame, session) {
         let can_edit = $('.can_see-can_edit .can_edit');
         switch (q('#journal-item_type')[0].value) {
             case 'character':
+                $('.player-can_see').prop('checked', false);
                 can_see.hide();
                 can_edit.show();
                 break;
             case 'handout':
-                can_see.show();
+                $('.player-can_edit').prop('checked', false);
                 can_edit.hide();
+                can_see.show();
                 break;
             default:
                 can_see.hide();
@@ -305,6 +307,7 @@ function initGame(dbGame, session) {
             data: getJournalModalForm(),
             dataType: 'json',
             success: function (data) {
+                console.log(data)
                 if (data.response) {
                     // Reload journal
                     journal.reload();

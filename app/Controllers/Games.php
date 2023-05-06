@@ -304,9 +304,9 @@ class Games extends BaseController
                 'item_type' => validate($_POST['journal-item_type'])
             ];
             // Save players can see or edit if it was set
+            $item_viewers = [];
+            $item_editors = [];
             if (isset($_POST['players'])) {
-                $item_viewers = [];
-                $item_editors = [];
                 foreach ($_POST['players'] as $k => $v) {
                     if ($v === 'can_see') {
                         $item_viewers[] = substr($k, 0, 1);
@@ -315,9 +315,10 @@ class Games extends BaseController
                         $item_editors[] = substr($k, 0, 1);
                     }
                 }
-                if ($item_viewers) $post['item_viewers'] = json_encode($item_viewers);
-                if ($item_editors) $post['item_editors'] = json_encode($item_editors);
             }
+            $post['item_viewers'] = json_encode($item_viewers);
+            $post['item_editors'] = json_encode($item_editors);
+            $data['see_edit'] = [$item_viewers, $item_editors];
             // If item id is set would mean an update
             if (!isset($_POST['item_id'])) {
                 if ($this->journalmodel->new($post)) {

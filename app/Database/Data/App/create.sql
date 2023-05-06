@@ -67,8 +67,8 @@ CREATE TABLE game_journal(
 	item_icon VARCHAR(100),
 	item_title VARCHAR(50),
 	item_type VARCHAR(20),
-	item_viewers JSON, -- ID users
-	item_editors JSON, -- ID users
+	item_viewers JSON DEFAULT '[]', -- ID users
+	item_editors JSON DEFAULT '[]', -- ID users
 	class VARCHAR(20),
 	subclass VARCHAR(50),
 	race VARCHAR(25),

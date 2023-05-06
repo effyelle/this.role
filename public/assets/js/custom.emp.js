@@ -146,8 +146,8 @@ function openConfirmation(callback) {
     const confirmAnswer = $('#modal_confirmation .confirm_answer');
     // Unbind previous callbacks
     confirmAnswer.unbind('click');
+    // Add click listener
     confirmAnswer.click(function () {
-        // Add click listener
         // On confirm (YES button) call the callback function
         callback();
     });

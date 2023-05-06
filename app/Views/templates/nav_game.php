@@ -18,7 +18,7 @@
                     <!--begin::Aside Menu-->
                     <ul class="nav nav-tabs nav-line-tabs pt-2 px-2 justify-content-evenly">
                         <li class="nav-item">
-                            <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#chat_container">
+                            <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#chat_container">
                                 <i class="fa fa-comments f-lg text-this-role-light"></i>
                             </a>
                         </li>
@@ -33,7 +33,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#settings_container">
+                            <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#settings_container">
                                 <i class="fa fa-solid fa-gear text-this-role-light"></i>
                             </a>
                         </li>
@@ -41,7 +41,7 @@
                     <!--end::Aside menu-->
 
                     <!--begin::Chat-->
-                    <div id="chat_container" class="tab-pane fade show active">
+                    <div id="chat_container" class="tab-pane fade">
                         <div class="aside-footer d-flex flex-column py-3 chat-container mb-3 gap-5">
                             <!--begin::Chat messages-->
                             <div class="chat-messages overflow-y-scroll px-5"></div>
@@ -109,7 +109,7 @@
                     </div>
                     <!--end::Tools-->
                     <!--begin::Setting-->
-                    <div id="settings_container" class="tab-pane fade">
+                    <div id="settings_container" class="tab-pane fade active show">
                         <div class="aside-footer d-flex flex-column py-3 px-5">
                             <!--begin::Title-->
                             <div class="menu-item mb-5">
@@ -147,21 +147,24 @@
                                             </a>
                                             <!--end:Menu link-->
                                             <!--begin:Menu link-->
-                                            <label for="" class="menu-link">
+                                            <label for="change_item" class="menu-link">
                                                 <span class="menu-bullet">
                                                     <i class="fa fa-solid fa-layer-group"></i>
                                                 </span>
                                                 <span class="menu-title ">Available Journal Items</span>
                                             </label>
                                             <div class="form-control-solid col-10 mb-4 mx-auto">
-                                                <select id="change_layer" name="change_layer"
+                                                <select id="change_item" name="change_item"
                                                         class="form-control form-control-sm form-select form-select-sm this-role-form-field mb-4">
-                                                    <option value="-1" disabled selected>Select one</option>
+                                                    <option value="-1" disabled selected>
+                                                        No journal items available
+                                                    </option>
                                                 </select>
                                                 <div class="form-control-solid mb-4 flex-row align-items-start justify-content-between">
                                                     <button type="button" id="edit_item-btn"
+                                                            data-bs-toggle="modal" data-bs-target="#modal_journal"
                                                             class="btn btn-sm py-1 px-2 btn-warning">
-                                                        Delete Item
+                                                        Edit Item
                                                     </button>
                                                     <button type="button" id="delete_item-btn"
                                                             class="btn btn-sm py-1 px-2 btn-danger">
@@ -196,6 +199,10 @@
                                                     <i class="fa fa-solid fa-layer-group"></i>
                                                 </span>
                                                 <span class="menu-title ">Available Maps</span>
+                                                <button type="button" id="select_layer-btn"
+                                                        class="btn btn-sm py-1 px-2 me-6 btn-dark">
+                                                    Select Map
+                                                </button>
                                             </label>
                                             <div class="form-control-solid col-10 mb-4 mx-auto">
                                                 <select id="change_layer" name="change_layer"
@@ -207,10 +214,6 @@
                                                             data-bs-toggle="modal" data-bs-target="#add_layer-modal"
                                                             class="btn btn-sm py-1 px-2 btn-warning">
                                                         Edit Map
-                                                    </button>
-                                                    <button type="button" id="select_layer-btn"
-                                                            class="btn btn-sm py-1 px-2 btn-primary">
-                                                        Select Map
                                                     </button>
                                                     <button type="button" id="delete_layer-btn"
                                                             class="btn btn-sm py-1 px-2 btn-danger">

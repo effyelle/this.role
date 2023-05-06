@@ -13,7 +13,13 @@ function initGame(dbGame, session) {
         sheetsContainer: 'draggable-modals_container',
         folder: '/assets/media/games/' + dbGame.game_folder + '/players/',
         onLoad: function (data) {
+            // Create sheets in
             customSheets(data);
+            // If journal item creation exists in html means user is creator
+            if (q('#modal_journal-toggle').length > 0) {
+                adminJournal(data);
+            }
+
         },
         onError: function (e) {
             console.log(e);
@@ -57,6 +63,56 @@ function initGame(dbGame, session) {
                     }
                 });
             }
+        }
+    }
+
+    function adminJournal(data) {
+        // * Fill creator admin settings journal part * //
+        if (q('#change_item').length > 0) {
+            loadAdminItems();
+        }
+        // * Check and uncheck edits * //
+        if (q('#include_players').length > 0) {
+            switchIncludePlayers();
+            q('#journal-item_type')[0].onchange = switchIncludePlayers;
+        }
+        // * Add or edit journal item when save button clicked * //
+        q('#save_journal_item-btn')[0].click(saveJournalItem);
+        // * Empty modal when add new journal item button is clicked * //
+        q('#modal_journal-toggle').click(emptyJournalModal);
+        // * Use modal to edit an item when clicked * //
+        q('#edit_item-btn')[0].click(fillJournalModal);
+        // * Delete item * //
+        q('#delete_item-btn').click(function () {
+            openConfirmation(deleteJournalItem);
+        });
+    }
+
+    function loadAdminItems() {
+        // Fill select
+        q('#change_item')[0].innerHTML = '';
+        for (let i in journal.items.list) {
+            let item = journal.items.list[i].info;
+            q('#change_item')[0].innerHTML += '<option value="' + item.item_id + '">' + item.item_title + '</option>';
+        }
+        // Listen to delete button
+    }
+
+    function switchIncludePlayers() {
+        let can_see = $('.can_see-can_edit .can_see');
+        let can_edit = $('.can_see-can_edit .can_edit');
+        switch (q('#journal-item_type')[0].value) {
+            case 'character':
+                can_see.hide();
+                can_edit.show();
+                break;
+            case 'handout':
+                can_see.show();
+                can_edit.hide();
+                break;
+            default:
+                can_see.hide();
+                can_edit.hide();
         }
     }
 
@@ -114,7 +170,6 @@ function initGame(dbGame, session) {
         // * Add listener to html form fields * //
         this_fields.blur(function () {
             saveField(this, item.info.item_id).done((data) => {
-                console.log(data);
                 if (data.response) {
                     // Refill fields dataf-from
                     getDataFromFields(this_fields, item);
@@ -193,52 +248,18 @@ function initGame(dbGame, session) {
         });
     }
 
-    if (q('#modal_journal-toggle').length > 0) {
-
-        // * Check and uncheck edits * //
-        if (q('#include_players').length > 0) {
-            let can_see = $('.can_see-can_edit .can_see');
-            let can_edit = $('.can_see-can_edit .can_edit');
-            switchIncludePlayers();
-            q('#journal-item_type')[0].onchange = switchIncludePlayers;
-
-            function switchIncludePlayers() {
-                switch (this.value) {
-                    case 'character':
-                        can_see.hide();
-                        can_edit.show();
-                        break;
-                    case 'handout':
-                        can_see.show();
-                        can_edit.hide();
-                        break;
-                    default:
-                        can_see.hide();
-                        can_edit.hide();
-                }
-            }
+    function getJournalModalForm() {
+        let post = getForm('#modal_journal');
+        let item_id = q('#save_journal_item-btn')[0].value
+        if (item_id && item_id !== "") {
+            post.item_id = item_id;
         }
-
-        // * Add journal item when save button clicked * //
-        q('#save_journal_item-btn').click(function () {
-            toggleProgressSpinner(true);
-            let form = getForm('#modal_journal');
-            if (form) {
-                saveJournalItem(form);
-            }
-            toggleProgressSpinner(false);
-        });
-    }
-
-    function saveJournalItem(post = {}) {
         $('#modal_journal .error').hide();
         let canSee = q('#include_players .player-can_see');
         let canEdit = q('#include_players .player-can_edit');
         let players = {};
         [canSee, canEdit].forEach(obj => {
-            console.log(obj)
             for (let o of obj) {
-                console.log(o.checked)
                 if (o.checked) {
                     players[o.id] = o.id.substring(2);
                 }
@@ -247,20 +268,27 @@ function initGame(dbGame, session) {
         if (Object.keys(players).length > 0) {
             post.players = players;
         }
+        return post;
+    }
+
+    function deleteJournalItem() {
+        console.log(q('#change_item')[0].value);
         $.ajax({
             type: 'post',
-            url: '/app/games_ajax/set_journal_item/' + dbGame.game_id,
-            data: post,
+            url: '/app/games_ajax/delete_journal_item/' + q('#change_item')[0].value,
+            data: getJournalModalForm(),
             dataType: 'json',
             success: function (data) {
-                console.log(data);
-                if (data['response']) {
+                if (data.response) {
+                    // Reload journal
+                    journal.reload();
                     // Dismiss journal modal
-                    $('.modal_success_response').html('Added successfully');
+                    $('.modal_success_response').html(data.msg);
                     $('#modal_success-toggle').click();
-                } else if (data['msg']) {
-                    $('#modal_journal .error').show();
+                    return;
                 }
+                $('.modal_error_response').html(data.msg);
+                $('#modal_error-toggle').click();
             },
             error: function (e) {
                 console.log("Error: ", e);
@@ -268,14 +296,79 @@ function initGame(dbGame, session) {
         });
     }
 
-    // ********************************** //
-    // * Empty journal modal on closure * //
-    // ********************************** //
-    $('#modal_journal').on('hidden.bs.modal', function () {
+    function saveJournalItem() {
+        toggleProgressSpinner(true);
+        // Check if item id is saved -> This tells the difference between a new item and an update
+        $.ajax({
+            type: 'post',
+            url: '/app/games_ajax/set_journal_item/' + dbGame.game_id,
+            data: getJournalModalForm(),
+            dataType: 'json',
+            success: function (data) {
+                if (data.response) {
+                    // Reload journal
+                    journal.reload();
+                    // Dismiss journal modal
+                    $('.modal_success_response').html(data.msg);
+                    $('#modal_success-toggle').click();
+                } else if (data.msg) {
+                    $('#modal_journal .error').show();
+                }
+            },
+            error: function (e) {
+                console.log("Error: ", e);
+            }
+        });
+        toggleProgressSpinner(false);
+    }
+
+    function emptyJournalModal() {
+        q('#save_journal_item-btn')[0].value = "";
         $('#journal_title-input').val('');
-        $('#journal-item_type option[value="-1"]').prop('selected', true);
+        $('#journal-item_type option[value="character"]').prop('selected', true);
         $('#modal_journal input').prop('checked', false);
-    });
+    }
+
+    function fillJournalModal() {
+        let item = {};
+        for (let i in journal.items.list) {
+            let itemHolder = journal.items.list[i].info;
+            if (itemHolder.item_id === q('#change_item')[0].value) {
+                item = itemHolder;
+            }
+        }
+        if (!item || item === {}) return;
+        q('#save_journal_item-btn')[0].value = item.item_id;
+        $('#journal_title-input').val(item.item_title);
+        $('#journal-item_type option[value="' + item.item_type + '"]').prop('selected', true);
+        switchIncludePlayers();
+        if (q('.can_see-can_edit').length > 0) {
+            let viewers = item.item_viewers;
+            let editors = item.item_editors;
+            for (let i = 0; i < q('.can_see-can_edit').length; i++) {
+                let checked = false;
+                let canSeeCheckbox = q('.player-can_see')[i];
+                let canEditCheckbox = q('.player-can_edit')[i];
+                // Reset checkboxes
+                canSeeCheckbox.checked = checked;
+                canEditCheckbox.checked = checked;
+                if (viewers) {
+                    for (let v of viewers) {
+                        if (v == canSeeCheckbox.id.charAt(0)) checked = true;
+                    }
+                    canSeeCheckbox.checked = checked;
+                }
+                checked = false;
+                if (editors) {
+                    for (let e of editors) {
+                        if (e == canEditCheckbox.id.charAt(0)) checked = true;
+                    }
+                    canEditCheckbox.checked = checked;
+                }
+            }
+        }
+        //$('#modal_journal input').prop('checked', false);
+    }
 
     // **************************** //
     // ******* end::Journal ******* //
@@ -375,7 +468,6 @@ function initGame(dbGame, session) {
                     contentType: false,
                     success: (data) => {
                         data = (JSON.parse(data)).data;
-                        console.log(data);
                         let img = data.img;
                         if (data.response) {
                             // Reload map layers
@@ -403,25 +495,24 @@ function initGame(dbGame, session) {
                 url: "/app/games_ajax/delete_layer/" + q('#change_layer')[0].value,
                 dataType: "json",
                 success: (data) => {
-                    console.log(data);
                     board.map.loadLayers();
                 }, error: (e) => {
                     console.log("Error: ", e);
                 }
             });
-            console.log(e);
         }
 
         this.btn.click(newMap);
 
+        // Select map on click
         q('#select_layer-btn').click(selectMap);
 
-        q('#select_layer-btn').click(selectMap);
+        // Delete layer on click
+        q('#delete_layer-btn').click(function () {
+            openConfirmation(deleteMap);
+        });
 
-        // Delete layer onclick
-        q('#delete_layer-btn').click(deleteMap);
-
-        // Fill add modal onclick
+        // Fill add modal on click
         q('#edit_layer-btn').click((e) => {
             q('#layer_name')[0].value = $('#change_layer').find(':selected').text();
             this.btn.removeEventListener('click', newMap);
@@ -525,7 +616,6 @@ function initGame(dbGame, session) {
             url: "/app/games_ajax/get_chat/" + dbGame.game_id,
             dataType: "json",
             success: function (data) {
-                console.log(this);
                 // Check if there are any new messages before updating chat
                 if (data.msg || (data.msgs && $('.chat-messages .menu-item').length !== data.msgs.length)) {
                     chat.record.innerHTML = '';
@@ -580,7 +670,7 @@ function initGame(dbGame, session) {
     }
 
 
-    setInterval(thisShouldBeAWebSocket, 2500);
+    setInterval(thisShouldBeAWebSocket, 25000);
 
     function thisShouldBeAWebSocket() {
         reloadGameInfo();

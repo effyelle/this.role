@@ -303,6 +303,7 @@ class Games extends BaseController
                 'item_title' => validate($_POST['journal_title-input']),
                 'item_type' => validate($_POST['journal-item_type'])
             ];
+            // Save players can see or edit if it was set
             if (isset($_POST['players'])) {
                 $item_viewers = [];
                 $item_editors = [];
@@ -317,10 +318,35 @@ class Games extends BaseController
                 if ($item_viewers) $post['item_viewers'] = json_encode($item_viewers);
                 if ($item_editors) $post['item_editors'] = json_encode($item_editors);
             }
-            if ($this->journalmodel->new($post)) {
-                $data = ['response' => true, 'msg' => null];
+            // If item id is set would mean an update
+            if (!isset($_POST['item_id'])) {
+                if ($this->journalmodel->new($post)) {
+                    $data = ['response' => true, 'msg' => 'Added successfully'];
+                } else {
+                    $data['msg'] = 'Item could not be added';
+                }
             } else {
-                $data['msg'] = 'Item could not be added';
+                if ($this->journalmodel->updt($post, ['item_id' => $_POST['item_id']])) {
+                    $data = ['response' => true, 'msg' => 'Updated successfully'];
+                } else {
+                    $data['msg'] = 'Item could not be updated';
+                }
+            }
+        }
+        return json_encode($data);
+    }
+
+    function delete_journal_item($id): string
+    {
+        $data = [
+            'response' => false,
+            'msg' => 'Item not found'
+        ];
+        if ($this->journalmodel->get(['item_id' => $id])) {
+            if ($this->journalmodel->del(['item_id' => $id])) {
+                $data = ['response' => true, 'msg' => 'Deleted successfully'];
+            } else {
+                $data['msg'] = 'Item could not be deleted';
             }
         }
         return json_encode($data);

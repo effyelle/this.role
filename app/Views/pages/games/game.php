@@ -78,8 +78,7 @@
                         <label for="journal-item_type" class="form-label required">Type of item</label>
                         <select type="text" id="journal-item_type" name="journal-item_type"
                                 class="form-control this-role-form-field">
-                            <option disabled selected value="-1">Select one</option>
-                            <option value="character">Character</option>
+                            <option value="character" selected>Character</option>
                             <option value="handout">Handout</option>
                         </select>
                     </div>

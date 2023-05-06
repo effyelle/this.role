@@ -83,7 +83,7 @@
                             <option value="handout">Handout</option>
                         </select>
                     </div>
-                    <div class="row gap-1">
+                    <div class="row gap-1 mb-5">
                         <?php if (isset($players) && !(count($players) === 1 && $players[0]['user_id'] === $_SESSION['user']['user_id'])): ?>
                             <span class="form-label text-gray-800 fw-bolder">Choose if players can see this item</span>
                             <div id="include_players" class="flex-row-wrap gap-12 fs-8">
@@ -91,19 +91,19 @@
                                     if ($player['user_id'] !== $_SESSION['user']['user_id']): ?>
                                         <div class="flex-column gap-2 can_see-can_edit">
                                             <span class="text-gray-800 text-italic fs-7"><?= $player['user_username'] ?></span>
-                                            <div class="player-checkbox form-check form-check-solid">
+                                            <div class="player-checkbox form-check form-check-solid can_see">
                                                 <input type="checkbox" id="<?= $player['user_id'] ?>-can_see"
                                                        name="<?= $player['user_id'] ?>-can_see"
                                                        class="form-check-input form-check-inline player-can_see"/>
                                                 <label for="<?= $player['user_id'] ?>-can_see"
-                                                       class="form-check-label this-role-form-field">
+                                                       class="form-check-label">
                                                     Can see
                                                 </label>
                                             </div>
-                                            <div class="player-checkbox form-check form-check-solid">
+                                            <div class="player-checkbox form-check form-check-solid can_edit">
                                                 <input type="checkbox" id="<?= $player['user_id'] ?>-can_edit"
                                                        name="<?= $player['user_id'] ?>-can_edit"
-                                                       class="form-check-input form-check-inline player-can_edit this-role-form-field"/>
+                                                       class="form-check-input form-check-inline player-can_edit"/>
                                                 <label for="<?= $player['user_id'] ?>-can_edit"
                                                        class="form-check-label">
                                                     Can edit
@@ -137,10 +137,10 @@
         </div>
     </div>
     <!--end::Modal-->
-    <!--begin::Draggable Modals-->
-    <div id="draggable-modals_container"></div>
-    <!--emd::Draggable Modals-->
 <?php endif; ?>
+<!--begin::Draggable Modals-->
+<div id="draggable-modals_container"></div>
+<!--emd::Draggable Modals-->
 <script src="/assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js"></script>
 <script src="/assets/js/custom/apps/ckeditor/CKEditor.js"></script>
 <script type="text/javascript" src="/assets/js/custom/games/game.js"></script>

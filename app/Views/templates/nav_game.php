@@ -42,12 +42,10 @@
 
                     <!--begin::Chat-->
                     <div id="chat_container" class="tab-pane fade show active">
-                        <div class="aside-footer d-flex flex-column py-3 chat-container mb-3">
-                            <div class=hover-scroll-overlay-y">
-                                <!--begin::Chat messages-->
-                                <div class="chat-messages px-5"></div>
-                                <!--end::Chat messages-->
-                            </div>
+                        <div class="aside-footer d-flex flex-column py-3 chat-container mb-3 gap-5">
+                            <!--begin::Chat messages-->
+                            <div class="chat-messages overflow-y-scroll px-5"></div>
+                            <!--end::Chat messages-->
                             <div class="d-flex flex-column justify-content-center px-5 h-175px">
                                 <div class="chat-bubble">
                                     <label for="chat" class="form-label mb-3">Chat</label>
@@ -149,19 +147,23 @@
                                             </a>
                                             <!--end:Menu link-->
                                             <!--begin:Menu link-->
-                                            <label for="" class="menu-link d-none">
+                                            <label for="" class="menu-link">
                                                 <span class="menu-bullet">
                                                     <i class="fa fa-solid fa-layer-group"></i>
                                                 </span>
                                                 <span class="menu-title ">Available Journal Items</span>
                                             </label>
-                                            <div class="form-control-solid col-10 mb-4 mx-auto d-none">
+                                            <div class="form-control-solid col-10 mb-4 mx-auto">
                                                 <select id="change_layer" name="change_layer"
                                                         class="form-control form-control-sm form-select form-select-sm this-role-form-field mb-4">
                                                     <option value="-1" disabled selected>Select one</option>
                                                 </select>
-                                                <div class="form-control-solid mb-4 flex-row align-items-start justify-content-end">
-                                                    <button type="button" id="delete_layer-btn"
+                                                <div class="form-control-solid mb-4 flex-row align-items-start justify-content-between">
+                                                    <button type="button" id="edit_item-btn"
+                                                            class="btn btn-sm py-1 px-2 btn-warning">
+                                                        Delete Item
+                                                    </button>
+                                                    <button type="button" id="delete_item-btn"
                                                             class="btn btn-sm py-1 px-2 btn-danger">
                                                         Delete Item
                                                     </button>

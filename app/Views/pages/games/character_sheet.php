@@ -175,7 +175,7 @@
                                                     <div class="flex-column justify-content-center align-items-center gap-2">
                                                         <span type="text" data-from="this-ac"
                                                               class="combat-item_content">10</span>
-                                                        <label for="this-ac" class="combat-item_title">CA</label>
+                                                        <label for="this-ac" class="combat-item_title">AC</label>
                                                         <input type="text" id="this-ac" name="this-ac"
                                                                class="d-none this-role-form-field"/>
                                                     </div>
@@ -592,17 +592,17 @@
                                 <div class="position-relative w-180px h-125px p-3">
                                     <div class="hit_points this-outline">
                                         <input type="text" id="cur_hp" name="cur_hp" value="50"
-                                               class="combat-item_content this-score this-role-form-field w-50 fs-1"/>
+                                               class="combat-item_content this-hp this-role-form-field w-50 fs-1"/>
                                         <label for="cur_hp" class="fs-8">CURRENT HIT POINTS</label>
                                     </div>
                                     <div class="hit_points hit_points-sm this-outline start-0">
                                         <input type="text" id="total_hp" name="total_hp" value="50"
-                                               class="combat-item_content this-score this-role-form-field w-75 fs-6"/>
+                                               class="combat-item_content this-hp this-role-form-field w-75 fs-6"/>
                                         <label for="total_hp">TOTAL HIT POINTS</label>
                                     </div>
                                     <div class="hit_points hit_points-sm this-outline end-0">
                                         <input type="text" id="temp_hp" name="temp_hp" value="0"
-                                               class="combat-item_content this-score this-role-form-field w-75 fs-6"/>
+                                               class="combat-item_content this-hp this-role-form-field w-75 fs-6"/>
                                         <label for="temp_hp">TEMPORARY HIT POINTS</label>
                                     </div>
                                 </div>

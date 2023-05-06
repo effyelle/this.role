@@ -26,11 +26,28 @@ class Journal {
                 // Iterate results
                 for (let item of data.results) {
                     // Save id to for modal container
-                    // Save a DND sheet for each item
-                    this.items.list[this.items.length] = new this.SheetDnD(this.sheetsContainer, {
-                        itemInfo: item
-                    });
-                    this.items.length++;
+                    let viewer = false;
+                    let editor = false;
+                    if (item.item_viewers) {
+                        item.item_viewers = JSON.parse(item.item_viewers);
+                        for (let i of item.item_viewers) {
+                            if (i == session.user_id) viewer = true;
+                        }
+                    }
+                    if (item.item_editors) {
+                        item.item_editors = JSON.parse(item.item_editors);
+                        for (let i of item.item_editors) {
+                            if (i == session.user_id) editor = true;
+                        }
+                    }
+
+                    if (session.user_id === dbGame.game_creator || viewer || editor) {
+                        // Save a DND sheet for each item
+                        this.items.list[this.items.length] = new this.SheetDnD(this.sheetsContainer, {
+                            itemInfo: item
+                        });
+                        this.items.length++;
+                    }
                 }
                 // Show list
                 this.formatJournalItems(this.items.list);
@@ -83,6 +100,7 @@ class Journal {
                 ' </div>' +
                 ' <!--end::Menu Item-->';
         }
+        ;
     }
 
 

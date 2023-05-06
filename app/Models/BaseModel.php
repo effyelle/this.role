@@ -52,6 +52,7 @@ class BaseModel extends Model
                 $builder->orderBy($k, $v);
             }
         }
+        if ($this->table === 'game_chat') $builder->limit(100);
         return $builder->get()->getResultArray();
     }
 

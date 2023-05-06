@@ -53,7 +53,7 @@ class Games extends BaseController
                 // * Begin game folder and game icon * //
                 // *********************************** //
                 // Get the new game ID
-                $game_id = intval($this->gamesmodel->maxID()->{'MAX(game_id)'});
+                $game_id = intval($this->gamesmodel->maxID()->game_id);
                 // Add user to players in this game
                 $this->playermodel->new([
                     'game_player_id_user' => $sessionUser,
@@ -141,6 +141,7 @@ class Games extends BaseController
                         }
                     }
                     $img = upload_img('game_icon', $fullRoute, 'game_icon');
+                    $data['img'] = $img;
                     if (str_contains($img, 'game_icon')) {
                         $newFile = explode('/', $img)[count(explode('/', $img)) - 1];
                         $this->gamesmodel->updt(['game_icon' => $newFile], ['game_id' => $id]);
@@ -201,6 +202,15 @@ class Games extends BaseController
     /* ********************************************************************
      ***************************** AJAX CALLS *****************************
      **********************************************************************/
+
+    function get_game_info($id): string
+    {
+        $data['response'] = false;
+        $game = $this->gamesmodel->get(['game_id' => $id]);
+        if ($game) $data ['response'] = true;
+        $data['game'] = $game[0];
+        return json_encode($data);
+    }
 
     /**
      * Create a url to join a game
@@ -277,7 +287,7 @@ class Games extends BaseController
 
     function get_chat($id): string
     {
-        if ($gameChat = $this->gamechatmodel->get(['chat_game_id' => $id])) {
+        if ($gameChat = $this->gamechatmodel->get(['chat_game_id' => $id], null, ['chat_id' => 'desc'])) {
             return json_encode(['response' => true, 'msgs' => $gameChat]);
         }
         return json_encode(['response' => false, 'msg' => 'Messages could not be loaded']);
@@ -288,19 +298,29 @@ class Games extends BaseController
         $data['response'] = false;
         $data['msg'] = 'Missing some data';
         if (isset($_POST['journal_title-input']) && isset($_POST['journal-item_type']) && $_POST['journal-item_type'] !== '-1') {
-            $gameId = is_numeric(validate($id)) ? intval(validate($id)) : null;
-            if (isset($gameId)) {
-                if ($this->journalmodel->new([
-                    'item_id_game' => $gameId,
-                    'item_title' => validate($_POST['journal_title-input']),
-                    'item_type' => validate($_POST['journal-item_type']),
-                ])) {
-                    $data = ['response' => true, 'msg' => null];
-                } else {
-                    $data['msg'] = 'Item could not be added';
+            $post = [
+                'item_id_game' => $id,
+                'item_title' => validate($_POST['journal_title-input']),
+                'item_type' => validate($_POST['journal-item_type'])
+            ];
+            if (isset($_POST['players'])) {
+                $item_viewers = [];
+                $item_editors = [];
+                foreach ($_POST['players'] as $k => $v) {
+                    if ($v === 'can_see') {
+                        $item_viewers[] = substr($k, 0, 1);
+                    }
+                    if ($v === 'can_edit') {
+                        $item_editors[] = substr($k, 0, 1);
+                    }
                 }
+                if ($item_viewers) $post['item_viewers'] = json_encode($item_viewers);
+                if ($item_editors) $post['item_editors'] = json_encode($item_editors);
+            }
+            if ($this->journalmodel->new($post)) {
+                $data = ['response' => true, 'msg' => null];
             } else {
-                $data['msg'] = 'Please don\'t script into Database!';
+                $data['msg'] = 'Item could not be added';
             }
         }
         return json_encode($data);
@@ -316,7 +336,12 @@ class Games extends BaseController
 
     function sheet($id): string
     {
-        return view('/pages/games/sheet', ['sheet' => $this->journalmodel->get(['item_id' => $id])[0]]);
+        $sheet = $this->journalmodel->get(['item_id' => $id])[0];
+        return match ($_POST['item_type']) {
+            'character' => view('/pages/games/character_sheet', ['sheet' => $sheet]),
+            'handout' => view('/pages/games/handout_sheet', ['sheet' => $sheet]),
+            default => view('/pages/game/not_found_sheet'),
+        };
     }
 
     function save_sheet($id): string

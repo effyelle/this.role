@@ -916,6 +916,10 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     }
 }
 
+.chat-messages {
+    display: flex;
+    flex-direction: column-reverse;
+}
 
 .chat-messages .menu-item {
     border-bottom: 1px solid var(--bs-gray-200);

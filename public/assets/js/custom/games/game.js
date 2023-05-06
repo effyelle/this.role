@@ -62,7 +62,11 @@ function initGame(dbGame, session) {
 
     function getSheetHTML(info) {
         return $.ajax({
-            type: "get", url: '/app/games_ajax/sheet/' + info.item_id, dataType: "text", success: (data) => {
+            type: "post",
+            url: "/app/games_ajax/sheet/" + info.item_id,
+            data: {item_type: info.item_type},
+            dataType: "text",
+            success: (data) => {
                 return data;
             }, error: (e) => {
                 console.log("Error", e);
@@ -190,6 +194,31 @@ function initGame(dbGame, session) {
     }
 
     if (q('#modal_journal-toggle').length > 0) {
+
+        // * Check and uncheck edits * //
+        if (q('#include_players').length > 0) {
+            let can_see = $('.can_see-can_edit .can_see');
+            let can_edit = $('.can_see-can_edit .can_edit');
+            switchIncludePlayers();
+            q('#journal-item_type')[0].onchange = switchIncludePlayers;
+
+            function switchIncludePlayers() {
+                switch (this.value) {
+                    case 'character':
+                        can_see.hide();
+                        can_edit.show();
+                        break;
+                    case 'handout':
+                        can_see.show();
+                        can_edit.hide();
+                        break;
+                    default:
+                        can_see.hide();
+                        can_edit.hide();
+                }
+            }
+        }
+
         // * Add journal item when save button clicked * //
         q('#save_journal_item-btn').click(function () {
             toggleProgressSpinner(true);
@@ -202,7 +231,22 @@ function initGame(dbGame, session) {
     }
 
     function saveJournalItem(post = {}) {
-        $('#modal_journal .text-danger').hide();
+        $('#modal_journal .error').hide();
+        let canSee = q('#include_players .player-can_see');
+        let canEdit = q('#include_players .player-can_edit');
+        let players = {};
+        [canSee, canEdit].forEach(obj => {
+            console.log(obj)
+            for (let o of obj) {
+                console.log(o.checked)
+                if (o.checked) {
+                    players[o.id] = o.id.substring(2);
+                }
+            }
+        });
+        if (Object.keys(players).length > 0) {
+            post.players = players;
+        }
         $.ajax({
             type: 'post',
             url: '/app/games_ajax/set_journal_item/' + dbGame.game_id,
@@ -223,7 +267,7 @@ function initGame(dbGame, session) {
             error: function (e) {
                 console.log("Error: ", e);
             }
-        })
+        });
     }
 
     // ********************************** //
@@ -483,6 +527,7 @@ function initGame(dbGame, session) {
             url: "/app/games_ajax/get_chat/" + dbGame.game_id,
             dataType: "json",
             success: function (data) {
+                console.log(this);
                 // Check if there are any new messages before updating chat
                 if (data.msg || (data.msgs && $('.chat-messages .menu-item').length !== data.msgs.length)) {
                     chat.record.innerHTML = '';
@@ -501,12 +546,15 @@ function initGame(dbGame, session) {
                                 sender: sender, src: src, msg: msgText, msgType: msgType
                             });
                         }
+                        //chat.record.scrollTop = chat.record.scrollHeight;
                         return;
                     }
                     chat.formatMessage({
                         sender: sender, src: src, msg: msgText, msgType: msgType
                     });
                 }
+            }, error: function (e) {
+                console.log("Error: ", e);
             }
         });
     }
@@ -516,10 +564,28 @@ function initGame(dbGame, session) {
     // ******** end::Chat ********* //
     // **************************** //
 
+    function reloadGameInfo() {
+        $.ajax({
+            type: "get",
+            url: "/app/games_ajax/get_game_info/" + dbGame.game_id,
+            dataType: "json",
+            succes: (data) => {
+                if (data.response && data.game) dbGame = data.game;
+                else {
+                    alert("Este juego ya no existe");
+                    window.location.assign('/index');
+                }
+            }, error: (e) => {
+                console.log("Error: ", e);
+            }
+        });
+    }
 
-    setInterval(thisShouldBeAWebSocket, 2500);
+
+    setInterval(thisShouldBeAWebSocket, 25000);
 
     function thisShouldBeAWebSocket() {
+        reloadGameInfo();
         getChat();
         board.map.loadLayers();
     }

@@ -255,8 +255,6 @@ function initGame(dbGame, session) {
             success: function (data) {
                 console.log(data);
                 if (data['response']) {
-                    // Add item to HTML
-                    journal.reload();
                     // Dismiss journal modal
                     $('.modal_success_response').html('Added successfully');
                     $('#modal_success-toggle').click();
@@ -582,11 +580,16 @@ function initGame(dbGame, session) {
     }
 
 
-    setInterval(thisShouldBeAWebSocket, 25000);
+    setInterval(thisShouldBeAWebSocket, 2500);
 
     function thisShouldBeAWebSocket() {
         reloadGameInfo();
         getChat();
         board.map.loadLayers();
+        journal.getJournalAjax().done((data) => {
+            if (!data.results || data.results.length !== journal.items.length) {
+                journal.reload();
+            }
+        });
     }
 }

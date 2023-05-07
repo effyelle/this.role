@@ -57,7 +57,7 @@ function initGame(dbGame, session) {
                                     return;
                                 }
                                 // Set item events
-                                makeInteractable(item)
+                                makeInteractable(item);
                             });
                         }
                     }
@@ -173,24 +173,21 @@ function initGame(dbGame, session) {
         // Get data from fields
         getDataFromFields(this_fields, item);
 
-        let itemIconInputs = q('.journal_item_modal .this-role-form-field[name=item_icon]');
-        for (let i = 0; i < itemIconInputs.length; i++) {
-            itemIconInputs[i].change(function () {
+        let itemIconInput = q('#' + item.draggableContainerId + ' .this-role-form-field[name="item_icon"]')[0];
 
-                // * This does not work properly with several opened sheets * //
-
-                // Change holder in sheet
-                readImageChange(this, q('.item_icon-holder')[i]);
-                // Change holder in list
-                readImageChange(this, q('.sheet_icon')[i]);
-
-                // * This does not work properly with several opened sheets * //
-
-                // Save image
-                saveItemIcon(this, item.info.item_id).done((data) => {
-                });
+        itemIconInput.change(function () {
+            // Save image
+            saveItemIcon(this, item.info.item_id).done((data) => {
+                data = JSON.parse(data);
+                console.log(data.response)
+                if (data.response) {
+                    journal.reload();
+                    console.log(item.draggableIconHolder)
+                    console.log('url("' + journal.folder + item.info.item_icon + '")')
+                    readImageChange(this, item.draggableIconHolder);
+                }
             });
-        }
+        });
         // * Add listener to html form fields * //
         this_fields.blur(function () {
             saveField(this, item.info.item_id).done((data) => {
@@ -206,6 +203,7 @@ function initGame(dbGame, session) {
     }
 
     function getDataFromFields(inputs, item) {
+        console.log(item)
         for (let i of inputs) {
             let divName = i.getAttribute('name');
             if (divName !== '') {
@@ -215,7 +213,8 @@ function initGame(dbGame, session) {
                     // Load scores
                     getScores(divName, i.value, item);
                 } else {
-                    let data_from = q('[data-from=' + divName + ']');
+                    let data_from = q('#' + item.draggableContainerId + ' [data-from=' + divName + ']');
+                    console.log(data_from)
                     for (let el of data_from) {
                         el.innerHTML = getGenericFields(divName, i.value, item);
                     }
@@ -267,8 +266,6 @@ function initGame(dbGame, session) {
             processData: false,
             contentType: false,
             success: (data) => {
-                data = JSON.parse(data);
-                console.log(data);
                 return data;
             }, error: (e) => {
                 console.log("Error: ", e);

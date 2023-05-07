@@ -25,10 +25,14 @@
                                 <!--begin::Character name-->
                                 <div class="form-control-solid">
                                     <div class="flex-column">
-                                        <input type="text" value="<?= $sheet['item_title'] ?>"
-                                               id="item_title" name="item_title"
-                                               class="form-control form-control-sm this-role-form-field ff-poiret fs-5 fw-boldest"/>
-                                        <label for="item_title">Handout Name</label>
+                                        <?php if ($sheet['game_creator'] === $_SESSION['user']['user_id']) { ?>
+                                            <input type="text" value="<?= $sheet['item_title'] ?>"
+                                                   id="item_title" name="item_title"
+                                                   class="form-control form-control-sm this-role-form-field ff-poiret fs-5 fw-boldest"/>
+                                            <label for="item_title">Handout Name</label>
+                                        <?php } else { ?>
+                                            <h4 data-from="item_title"><?= $sheet['item_title'] ?></h4>
+                                        <?php } ?>
                                     </div>
                                 </div>
                                 <!--end::Character name-->
@@ -39,14 +43,17 @@
                                         <input id="item_icon" name="item_icon" type="file"
                                                class="d-none this-role-form-field"/>
                                         <span class="item_icon-holder w-100 h-100"
-                                              style="background: url(/assets/media/avatars/blank.png); background-size: cover;min-height: 50vh;"></span>
+                                              style="background-image: url(/assets/media/avatars/blank.png);
+                                              background-size: cover;background-position: center center;min-height: 50vh;"></span>
                                     </div>
                                     <!--end::Image-->
-                                    <!--begin::Label-->
-                                    <div class="d-flex justify-content-center align-items-center icon-hover-label">
-                                        <label for="item_icon" class="btn btn-sm btn-link fs-7 p-0">Change</label>
-                                    </div>
-                                    <!--end::Label-->
+                                    <?php if ($sheet['game_creator'] === $_SESSION['user']['user_id']) { ?>
+                                        <!--begin::Label-->
+                                        <div class="d-flex justify-content-center align-items-center icon-hover-label">
+                                            <label for="item_icon" class="btn btn-sm btn-link fs-7 p-0">Change</label>
+                                        </div>
+                                        <!--end::Label-->
+                                    <?php } ?>
                                 </div>
                                 <!--end::Row-->
                             </div>

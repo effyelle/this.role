@@ -44,7 +44,7 @@ class Journal {
                     if (session.user_id === dbGame.game_creator || viewer || editor) {
                         // Save a DND sheet for each item
                         this.items.list[this.items.length] = new this.SheetDnD(this.sheetsContainer, {
-                            itemInfo: item
+                            itemInfo: item, folder: this.folder,
                         });
                         this.items.length++;
                     }
@@ -78,9 +78,9 @@ class Journal {
         for (let i in items) {
             let item = items[i].info;
             // Check image data, if it does not exist, put a default one
-            let icon = urlExists(this.folder + item.item_icon)
-                ? this.folder + item.item_icon // original icon
-                : '/assets/media/avatars/blank.png'; // default icon
+            if (!urlExists(this.folder + item.item_icon)) {
+                items[i].info.item_icon = '/assets/media/avatars/blank.png';
+            }
             // * HTML format * //
             q('#' + this.container)[0].innerHTML += '' +
                 '<!--begin::Menu Item-->' +
@@ -89,9 +89,9 @@ class Journal {
                 '     <button type="button" class="btn menu-link col-12" value="' + item.item_id + '">' +
                 '         <!--begin::Symbol-->' +
                 '         <div class="me-2 symbol symbol-20px symbol-md-30px">' +
-                '             <span class="symbol-label circle sheet_icon" ' +
-                '                  style="background:url(' + icon + ');' +
-                '                      background-size: cover">' +
+                '             <span class="symbol-label circle item_icon-holder"' +
+                '                  style="background-image: url(' + this.folder + item.item_icon + ');' +
+                '                      background-size: cover; background-position: center center;">' +
                 '             </span>' +
                 '         </div>' +
                 '         <!--end::Symbol-->' +
@@ -100,7 +100,6 @@ class Journal {
                 ' </div>' +
                 ' <!--end::Menu Item-->';
         }
-        ;
     }
 
 
@@ -145,6 +144,8 @@ class Journal {
                 '       ' + htmlText +
                 '    </div>' +
                 '</div>';
+            this.draggableIconHolder = q('#' + this.draggableContainerId + ' .item_icon-holder')[0];
+            this.draggableIconHolder.style.backgroundImage = 'url("' + params.folder + this.info.item_icon + '")';
         }
         this.getLevel = (xp) => {
             // This is like super dirty code

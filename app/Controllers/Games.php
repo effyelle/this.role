@@ -363,7 +363,7 @@ class Games extends BaseController
 
     function sheet($id): string
     {
-        $sheet = $this->journalmodel->get(['item_id' => $id])[0];
+        $sheet = $this->journalmodel->get(['item_id' => $id], ['games' => 'game_id=item_id_game'])[0];
         return match ($_POST['item_type']) {
             'character' => view('/pages/games/character_sheet', ['sheet' => $sheet]),
             'handout' => view('/pages/games/handout_sheet', ['sheet' => $sheet]),
@@ -401,7 +401,7 @@ class Games extends BaseController
             // Save user folder
             $userFolder = $_SESSION['user']['user_id'] . '/';
             // If folder for user does not exist, create it
-            if (!is_dir($userFolder)) mkdir($userFolder);
+            if (!is_dir($targetFolder . $userFolder)) mkdir($targetFolder . $userFolder);
             // Attempt to upload image
             $img = upload_img('item_icon', $targetFolder . $userFolder, $newName);
             $data['img'] = $img;

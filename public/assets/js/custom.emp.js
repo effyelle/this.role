@@ -173,6 +173,7 @@ function readImageChange(img_input, img_holder) {
     let file = URL.createObjectURL(img_input.files[0]);
     img_holder.style.backgroundImage = 'url(' + file + ')';
     img_holder.style.backgroundSize = 'cover';
+    img_holder.style.backgroundPosition = 'center center';
 }
 
 function toSentenceCase(str) {

@@ -66,7 +66,8 @@
                                                     <input id="item_icon" name="item_icon" type="file"
                                                            class="d-none this-role-form-field"/>
                                                     <span class="symbol-label circle item_icon-holder"
-                                                          style="background: url(/assets/media/avatars/blank.png); background-size: cover;">
+                                                          style="background-image: url(/assets/media/avatars/blank.png);
+                                                          background-size: cover;background-position: center center;">
                                         </span>
                                                 </div>
                                             </div>

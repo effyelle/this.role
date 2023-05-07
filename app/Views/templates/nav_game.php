@@ -199,10 +199,6 @@
                                                     <i class="fa fa-solid fa-layer-group"></i>
                                                 </span>
                                                 <span class="menu-title ">Available Maps</span>
-                                                <button type="button" id="select_layer-btn"
-                                                        class="btn btn-sm py-1 px-2 me-6 btn-dark">
-                                                    Select Map
-                                                </button>
                                             </label>
                                             <div class="form-control-solid col-10 mb-4 mx-auto">
                                                 <select id="change_layer" name="change_layer"
@@ -214,6 +210,10 @@
                                                             data-bs-toggle="modal" data-bs-target="#add_layer-modal"
                                                             class="btn btn-sm py-1 px-2 btn-primary">
                                                         Edit Map
+                                                    </button>
+                                                    <button type="button" id="select_layer-btn"
+                                                            class="btn btn-sm py-1 px-2 btn-warning">
+                                                        Select Map
                                                     </button>
                                                     <button type="button" id="delete_layer-btn"
                                                             class="btn btn-sm py-1 px-2 btn-danger">

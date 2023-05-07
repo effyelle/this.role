@@ -127,4 +127,4 @@ nb-configuration.xml
 
 # Uploaded media through project
 /public/assets/media/avatars/*
-/public/assets/media/games/*
+# /public/assets/media/games/*

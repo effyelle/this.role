@@ -1,4 +1,7 @@
-<?php if (isset($sheet)) { ?>
+<?php if (isset($sheet)) {
+    $scores = json_decode($sheet['ability_scores']);
+
+    ?>
     <div class="modal-header flex-row-wrap justify-content-between align-items-center cursor-move">
         <div class="" data-from="item_title">
             <!--Autofill-->
@@ -197,7 +200,7 @@
                                                 <!--begin::Speed-->
                                                 <div class="this-outline combat-item">
                                                     <div class="flex-column justify-content-center align-items-center gap-2">
-                                                        <input type="text" id="this-walkspeed" name="this-walkspeed"
+                                                        <input type="text" id="this-walkspeed" name="speed"
                                                                value="0"
                                                                class="combat-item_content this-role-form-field"/>
                                                         <label for="this-walkspeed" class="combat-item_title">WALK
@@ -251,7 +254,8 @@
                                         <!--end::Row-->
                                         <!--begin::Row-->
                                         <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
-                                            <input type="text" id="this-score-str" name="this-score-str" value="10"
+                                            <input type="text" id="this-score-str" name="this_score_str"
+                                                   value="<?= $scores->this_score_str ?? 10 ?>"
                                                    class="combat-item_content this-score this-role-form-field"/>
                                         </div>
                                         <!--end::Row-->
@@ -282,7 +286,8 @@
                                         <!--end::Row-->
                                         <!--begin::Row-->
                                         <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
-                                            <input type="text" id="this-score-dex" name="this-score-dex" value="10"
+                                            <input type="text" id="this-score-dex" name="this_score_dex"
+                                                   value="<?= $scores->this_score_dex ?? 10 ?>"
                                                    class="combat-item_content this-score this-role-form-field"/>
                                         </div>
                                         <!--end::Row-->
@@ -312,7 +317,8 @@
                                         <!--end::Row-->
                                         <!--begin::Row-->
                                         <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
-                                            <input type="text" id="this-score-con" name="this-score-con" value="10"
+                                            <input type="text" id="this-score-con" name="this_score_con"
+                                                   value="<?= $scores->this_score_con ?? 10 ?>"
                                                    class="combat-item_content this-score this-role-form-field"/>
                                         </div>
                                         <!--end::Row-->
@@ -342,7 +348,8 @@
                                         <!--end::Row-->
                                         <!--begin::Row-->
                                         <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
-                                            <input type="text" id="this-score-int" name="this-score-int" value="10"
+                                            <input type="text" id="this-score-int" name="this_score_int"
+                                                   value="<?= $scores->this_score_int ?? 10 ?>"
                                                    class="combat-item_content this-score this-role-form-field"/>
                                         </div>
                                         <!--end::Row-->
@@ -372,7 +379,8 @@
                                         <!--end::Row-->
                                         <!--begin::Row-->
                                         <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
-                                            <input type="text" id="this-score-wis" name="this-score-wis" value="10"
+                                            <input type="text" id="this-score-wis" name="this_score_wis"
+                                                   value="<?= $scores->this_score_wis ?? 10 ?>"
                                                    class="combat-item_content this-score this-role-form-field"/>
                                         </div>
                                         <!--end::Row-->
@@ -402,7 +410,8 @@
                                         <!--end::Row-->
                                         <!--begin::Row-->
                                         <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
-                                            <input type="text" id="this-score-cha" name="this-score-cha" value="10"
+                                            <input type="text" id="this-score-cha" name="this_score_cha"
+                                                   value="<?= $scores->this_score_cha ?? 10 ?>"
                                                    class="combat-item_content this-score this-role-form-field"/>
                                         </div>
                                         <!--end::Row-->

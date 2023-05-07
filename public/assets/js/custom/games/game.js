@@ -57,7 +57,7 @@ function initGame(dbGame, session) {
                                     return;
                                 }
                                 // Set item events
-                                makeInteractable(item);
+                                makeItemsInteractable(item);
                             });
                         }
                     }
@@ -136,7 +136,7 @@ function initGame(dbGame, session) {
         });
     }
 
-    function makeInteractable(item) {
+    function makeItemsInteractable(item) {
         // Save the necessary html objects to make sheet interactable
         let modalBody = q('#' + item.draggableContainerId + ' .modal-body');
         let modals = q('.' + item.draggableContainerClass);
@@ -179,13 +179,15 @@ function initGame(dbGame, session) {
             // Save image
             saveItemIcon(this, item.info.item_id).done((data) => {
                 data = JSON.parse(data);
-                console.log(data.response)
                 if (data.response) {
                     journal.reload();
                     console.log(item.draggableIconHolder)
                     console.log('url("' + journal.folder + item.info.item_icon + '")')
                     readImageChange(this, item.draggableIconHolder);
+                    return;
                 }
+                $('.modal_error_response').html('Image could not be uploaded');
+                $('#modal_error-toggle').click();
             });
         });
         // * Add listener to html form fields * //
@@ -194,6 +196,8 @@ function initGame(dbGame, session) {
                 if (data.response) {
                     // Refill fields dataf-from
                     getDataFromFields(this_fields, item);
+                    let rawScores = q('#' + item.draggableContainerId + ' .this-score');
+                    let scoreProf = q('#' + item.draggableContainerId + ' .score-prof');
                     // Change name in '.aside' journal list
                     q('#' + journal.container + ' button[value="' + item.info.item_id + '"] .menu-title')[0]
                         .innerHTML = q('#' + item.draggableContainerId + ' input[name=item_title]')[0].value;
@@ -203,18 +207,13 @@ function initGame(dbGame, session) {
     }
 
     function getDataFromFields(inputs, item) {
-        console.log(item)
         for (let i of inputs) {
             let divName = i.getAttribute('name');
             if (divName !== '') {
                 if (i.nodeName === 'SELECT') {
                     i.value = (i.getAttribute('aria-selected'));
-                } else if (i.classList.contains('this-score')) {
-                    // Load scores
-                    getScores(divName, i.value, item);
-                } else {
+                } else if (!i.classList.contains('this-score')) {
                     let data_from = q('#' + item.draggableContainerId + ' [data-from=' + divName + ']');
-                    console.log(data_from)
                     for (let el of data_from) {
                         el.innerHTML = getGenericFields(divName, i.value, item);
                     }
@@ -238,23 +237,6 @@ function initGame(dbGame, session) {
         }
     }
 
-    function getScores(n, v, i) {
-        switch (n) {
-            case 'this-score-str':
-                break;
-            case 'this-score-dex':
-                break;
-            case 'this-score-con':
-                break;
-            case 'this-score-int':
-                break;
-            case 'this-score-wis':
-                break;
-            case 'this-score-cha':
-                break;
-        }
-    }
-
     function saveItemIcon(object, id) {
         let form = new FormData();
         form.append('item_icon[]', object.files[0]);
@@ -275,13 +257,15 @@ function initGame(dbGame, session) {
 
     function saveField(object, id) {
         let data = {};
-        data [object.getAttribute('name')] = object.value;
+        let objName = object.getAttribute('name');
+        data [objName] = object.value;
         return $.ajax({
             type: "post",
             url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
             data: {sheet: data, item_id: id},
             dataType: "json",
             success: (data) => {
+                console.log(data)
                 return data;
             },
             error: (e) => {

@@ -371,6 +371,24 @@ class Games extends BaseController
         };
     }
 
+    function thisScores($p, $k, $s = null): string
+    {
+        if (!isset($s)) {
+            $s = [
+                "this_score_str" => "10",
+                "this_score_dex" => "10",
+                "this_score_con" => "10",
+                "this_score_int" => "10",
+                "this_score_wis" => "10",
+                "this_score_cha" => "10",
+            ];
+            $s = json_encode($s);
+        }
+        $s = json_decode($s);
+        $s->$k = $p[$k];
+        return json_encode($s);
+    }
+
     function save_sheet($id): string
     {
         $data['response'] = false;
@@ -380,13 +398,16 @@ class Games extends BaseController
                 $params[$key] = validate($val);
             }
             $key = array_keys($params)[0];
-            $data['keys'] = $key;
-
-            if ($this->journalmodel->updt($params, ['item_id' => $_POST['item_id']])) {
-                $data['response'] = true;
+            $item = $this->journalmodel->get(['item_id' => $_POST['item_id']])[0];
+            if (str_contains($key, 'this_score')) {
+                $params = ['ability_scores' => $this->thisScores($params, $key, $item['ability_scores'])];
             }
+            $data['response'] = $this->journalmodel->updt($params, ['item_id' => $_POST['item_id']]);
+
             $data['params'] = $params;
-        } elseif (isset($_FILES['item_icon'])) {
+
+        } // * begin::Image upload * //
+        elseif (isset($_FILES['item_icon'])) {
             // Search for old file
             $item = $this->journalmodel->get(
                 ['item_id' => $_POST['item_id']], // where
@@ -417,7 +438,14 @@ class Games extends BaseController
                 }
             }
         }
+        // * end::Image upload * //
+
         return json_encode($data);
+    }
+
+    function saveAbilityScores($param): mixed
+    {
+        return $param;
     }
 
     function add_map($id): string
@@ -543,3 +571,6 @@ class Games extends BaseController
         return json_encode($data);
     }
 }
+
+$abilityScores = function () {
+};

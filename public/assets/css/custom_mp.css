@@ -397,7 +397,7 @@ a .hover-flip {
     transition: all 0.4s ease;
 }
 
-.this-role-form-field:not([type=checkbox]):not(textarea):not(select) {
+.this-role-form-field:not([type=checkbox]):not(textarea):not(select):not(button) {
     border: 0 !important;
     border-radius: 0;
     border-bottom: 1px solid var(--bs-gray-400) !important;
@@ -1013,7 +1013,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 }
 
 .combat-item-sm {
-    width: 25px;
+    width: 35px;
     height: 25px;
 }
 
@@ -1022,7 +1022,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 }
 
 .combat-item input.this-score {
-    width: 18px;
+    width: 25px;
     border: none;
 }
 
@@ -1091,6 +1091,10 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 
 .top-65px {
     top: 65px;
+}
+
+.top-90px {
+    top: 90px;
 }
 
 .top-100px {

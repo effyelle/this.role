@@ -4,8 +4,7 @@ class Journal {
         this.container = id;
         this.itemClass = id + '_item';
         this.sheetsContainer = options.sheetsContainer;
-        // Folder to draw the images from
-        this.folder = this.opt.folder;
+        this.defaultIcon = '/assets/media/games/blank.png';
         this.items = {
             list: {},
             length: 0,
@@ -22,7 +21,6 @@ class Journal {
         this.getJournalAjax().done((data) => {
             // Checck data is not null
             if (data.results && typeof data.results === 'object' && data.results.length > 0) {
-                console.log(data.results);
                 // Iterate results
                 for (let item of data.results) {
                     // Save id to for modal container
@@ -44,7 +42,8 @@ class Journal {
                     if (session.user_id === dbGame.game_creator || viewer || editor) {
                         // Save a DND sheet for each item
                         this.items.list[this.items.length] = new this.SheetDnD(this.sheetsContainer, {
-                            itemInfo: item, folder: this.folder,
+                            itemInfo: item,
+                            folder: this.opt.folder,
                         });
                         this.items.length++;
                     }
@@ -78,9 +77,10 @@ class Journal {
         for (let i in items) {
             let item = items[i].info;
             // Check image data, if it does not exist, put a default one
-            if (!urlExists(this.folder + item.item_icon)) {
-                items[i].info.item_icon = '/assets/media/avatars/blank.png';
-            }
+            let icon = !urlExists(this.opt.folder + item.item_icon)
+                ? this.defaultIcon
+                : this.opt.folder + item.item_icon;
+
             // * HTML format * //
             q('#' + this.container)[0].innerHTML += '' +
                 '<!--begin::Menu Item-->' +
@@ -90,7 +90,7 @@ class Journal {
                 '         <!--begin::Symbol-->' +
                 '         <div class="me-2 symbol symbol-20px symbol-md-30px">' +
                 '             <span class="symbol-label circle item_icon-holder"' +
-                '                  style="background-image: url(' + this.folder + item.item_icon + ');' +
+                '                  style="background-image: url(' + icon + ');' +
                 '                      background-size: cover; background-position: center center;">' +
                 '             </span>' +
                 '         </div>' +
@@ -135,17 +135,20 @@ class Journal {
         this.modalsContainer = id;
         this.draggableContainerId = 'draggable_' + this.info.item_id;
         this.draggableContainerClass = 'journal_item_modal';
-        this.icon = this.info.item_icon ? this.info.item_icon : '';
-        this.type = this.info.item_type;
+        this.folder = params.folder;
         this.openItem = async (htmlText) => {
+            let icon = '/assets/media/games/blank.png';
+            if (urlExists(this.folder + this.info.item_icon)) {
+                icon = this.folder + this.info.item_icon;
+            }
             q('#' + this.modalsContainer)[0].innerHTML += '' +
                 '<div id="' + this.draggableContainerId + '" class="' + this.draggableContainerClass + ' show">' +
                 '    <div class="modal-content bg-white">' +
                 '       ' + htmlText +
                 '    </div>' +
                 '</div>';
-            this.draggableIconHolder = q('#' + this.draggableContainerId + ' .item_icon-holder')[0];
-            this.draggableIconHolder.style.backgroundImage = 'url("' + params.folder + this.info.item_icon + '")';
+            q('#' + this.draggableContainerId + ' .item_icon-holder')[0]
+                .style.backgroundImage = 'url("' + icon + '")';
         }
         this.getLevel = (xp) => {
             // This is like super dirty code
@@ -203,20 +206,54 @@ class Journal {
             }
             return this_ac;
         }
+        this.getProficiency = () => {
+            if (this.info.xp) {
+                // Starts in +2 and adds +1 for every 4 levels until level 20
+                return Math.ceil(this.getLevel(this.info.xp) / 4) + 1;
+            }
+            return 2;
+        }
+        this.getRawScoreModifiers = () => {
+            if (this.info.ability_scores) {
+                const scores = JSON.parse(this.info.ability_scores);
+                const mods = {};
+                for (let i in scores) {
+                    if (i.match(/this_score/)) {
+                        mods[i] = Math.floor((parseInt(scores[i]) - 10) / 2);
+                    }
+                }
+                return mods;
+            }
+            return false;
+        }
+        this.getProfScoreModifiers = () => {
+            if (this.info.ability_scores) {
+                const scores = JSON.parse(this.info.ability_scores);
+                const mods = {};
+                for (let i in scores) {
+                    if (i.match(/this_score/)) {
+                        let mod = 0;
+                        let prof = 'this_prof' + i.substring(10);
+                        let save = 'this_save' + i.substring(10);
+                        if (scores[prof] === "1") {
+                            mod = this.getProficiency();
+                        }
+                        mods[save] = Math.floor((parseInt(scores[i]) - 10) / 2) + mod;
+                    }
+                }
+                return mods;
+            }
+            return false;
+        }
         this.getInitTierBreaker = () => {
             // Add init modifiers (?)
             const tb = 1.045;
-            let dex = 4;
-            if (this.info.ability_scores && typeof this.info.ability_scores === 'object' && this.info.ability_scores.dex) {
-                dex = this.info.ability_scores.dex;
+            let dex = 0;
+            let scoreModifiers = this.getRawScoreModifiers();
+            if (scoreModifiers) {
+                dex = scoreModifiers.this_score_dex;
             }
             return dex * tb;
-        }
-        this.getProficiency = (xp) => {
-            // Starts in +2 and adds +1 for every 4 levels until level 20
-            let level = this.getLevel(xp);
-            //if (level !== 1) level--;
-            return Math.ceil(this.getLevel(xp) / 4) + 1;
         }
     }
 }

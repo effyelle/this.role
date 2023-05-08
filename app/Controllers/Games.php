@@ -2,9 +2,6 @@
 
 namespace App\Controllers;
 
-use function PHPUnit\Framework\isFalse;
-use function PHPUnit\Framework\isNan;
-
 class Games extends BaseController
 {
     protected mixed $gamesmodel;
@@ -293,6 +290,26 @@ class Games extends BaseController
         return json_encode(['response' => false, 'msg' => 'Messages could not be loaded']);
     }
 
+    function initMultivalueFields(array $post): array
+    {
+
+        $post['ability_scores'] = json_encode([
+            "this_score_str" => 10,
+            "this_prof_str" => 0,
+            "this_score_dex" => 10,
+            "this_prof_dex" => 0,
+            "this_score_con" => 10,
+            "this_prof_con" => 0,
+            "this_score_int" => 10,
+            "this_prof_int" => 0,
+            "this_score_wis" => 10,
+            "this_prof_wis" => 0,
+            "this_score_cha" => 10,
+            "this_prof_cha" => 0
+        ]);
+        return $post;
+    }
+
     function set_journal_item($id): string
     {
         $data['response'] = false;
@@ -321,6 +338,8 @@ class Games extends BaseController
             $data['see_edit'] = [$item_viewers, $item_editors];
             // If item id is set would mean an update
             if (!isset($_POST['item_id'])) {
+                $post = $this->initMultivalueFields($post);
+
                 if ($this->journalmodel->new($post)) {
                     $data = ['response' => true, 'msg' => 'Added successfully'];
                 } else {
@@ -371,74 +390,65 @@ class Games extends BaseController
         };
     }
 
-    function thisScores($p, $k, $s = null): string
+    function saveJournalIcon(): bool
     {
-        if (!isset($s)) {
-            $s = [
-                "this_score_str" => "10",
-                "this_score_dex" => "10",
-                "this_score_con" => "10",
-                "this_score_int" => "10",
-                "this_score_wis" => "10",
-                "this_score_cha" => "10",
-            ];
-            $s = json_encode($s);
+        // Search for old file
+        $item = $this->journalmodel->get(
+            ['item_id' => $_POST['item_id']], // where
+            ['games' => 'game_id=item_id_game'] // join
+        )[0];
+        $targetFolder = $this->mediaGames . $item['game_folder'] . '/players/';
+        // Delete old file
+        if (is_file($targetFolder . $item['item_icon'])) unlink($targetFolder . $item['item_icon']);
+        // * Upload new file * //
+        // Save new name
+        $newName = time();
+        // Save user folder
+        $userFolder = $_SESSION['user']['user_id'] . '/';
+        // If folder for user does not exist, create it
+        if (!is_dir($targetFolder . $userFolder)) mkdir($targetFolder . $userFolder);
+        // Attempt to upload image
+        $img = upload_img('item_icon', $targetFolder . $userFolder, $newName);
+        $data['img'] = $img;
+        // Check image uploaded
+        if (str_contains($img, $newName)) {
+            $newFile = explode('/', $img)[count(explode('/', $img)) - 1];
+            // If image uploaded, update database
+            if ($this->journalmodel->updt(
+                ['item_icon' => $userFolder . $newFile], // data
+                ['item_id' => $_POST['item_id']]) // where
+            ) {
+                return true;
+            }
         }
-        $s = json_decode($s);
-        $s->$k = $p[$k];
-        return json_encode($s);
+        return false;
     }
 
     function save_sheet($id): string
     {
-        $data['response'] = false;
-        if (isset($_POST['sheet'])) {
+        // * begin::Image upload * //
+        if (isset($_FILES['item_icon'])) {
+            $data['response'] = $this->saveJournalIcon();
+        } // * end::Image upload * //
+        // * begin::Other fields * //
+        else {
             $params = [];
-            foreach ($_POST['sheet'] as $key => $val) {
-                $params[$key] = validate($val);
+            foreach ($_POST as $key => $val) {
+                if ($key !== 'item_id') {
+                    $params[$key] = validate($val);
+                }
             }
             $key = array_keys($params)[0];
             $item = $this->journalmodel->get(['item_id' => $_POST['item_id']])[0];
-            if (str_contains($key, 'this_score')) {
-                $params = ['ability_scores' => $this->thisScores($params, $key, $item['ability_scores'])];
+            if (preg_match('/this_score|this_prof/', $key)) {
+                $scores = json_decode($item['ability_scores']);
+                $scores->$key = $params[$key];
+                $params = ['ability_scores' => json_encode($scores)];
             }
             $data['response'] = $this->journalmodel->updt($params, ['item_id' => $_POST['item_id']]);
 
             $data['params'] = $params;
-
-        } // * begin::Image upload * //
-        elseif (isset($_FILES['item_icon'])) {
-            // Search for old file
-            $item = $this->journalmodel->get(
-                ['item_id' => $_POST['item_id']], // where
-                ['games' => 'game_id=item_id_game'] // join
-            )[0];
-            $targetFolder = $this->mediaGames . $item['game_folder'] . '/players/';
-            // Delete old file
-            if (is_file($targetFolder . $item['item_icon'])) unlink($targetFolder . $item['item_icon']);
-            // * Upload new file * //
-            // Save new name
-            $newName = time();
-            // Save user folder
-            $userFolder = $_SESSION['user']['user_id'] . '/';
-            // If folder for user does not exist, create it
-            if (!is_dir($targetFolder . $userFolder)) mkdir($targetFolder . $userFolder);
-            // Attempt to upload image
-            $img = upload_img('item_icon', $targetFolder . $userFolder, $newName);
-            $data['img'] = $img;
-            // Check image uploaded
-            if (str_contains($img, $newName)) {
-                $newFile = explode('/', $img)[count(explode('/', $img)) - 1];
-                // If image uploaded, update database
-                if ($this->journalmodel->updt(
-                    ['item_icon' => $userFolder . $newFile], // data
-                    ['item_id' => $_POST['item_id']]) // where
-                ) {
-                    $data['response'] = true;
-                }
-            }
         }
-        // * end::Image upload * //
 
         return json_encode($data);
     }
@@ -571,6 +581,3 @@ class Games extends BaseController
         return json_encode($data);
     }
 }
-
-$abilityScores = function () {
-};

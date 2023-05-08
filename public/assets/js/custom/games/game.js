@@ -7,8 +7,7 @@ function initGame(dbGame, session) {
     // * Journal intance * //
     const journal = new Journal('journal', {
         ajax: {
-            url: '/app/games_ajax/get_journal_items/' + dbGame.game_id,
-            dataType: 'json',
+            url: '/app/games_ajax/get_journal_items/' + dbGame.game_id, dataType: 'json',
         },
         sheetsContainer: 'draggable-modals_container',
         folder: '/assets/media/games/' + dbGame.game_folder + '/players/',
@@ -40,8 +39,7 @@ function initGame(dbGame, session) {
                     // Get item info from Journal
                     let item = false;
                     for (let i in journal.items.list) {
-                        if (journal.items.list[i].info.item_id === this.value)
-                            item = journal.items.list[i];
+                        if (journal.items.list[i].info.item_id === this.value) item = journal.items.list[i];
                     }
                     if (item) {
                         // Check if container doesn't exist already
@@ -54,10 +52,8 @@ function initGame(dbGame, session) {
                                     // Return message error if length is not 1
                                     $('.modal_error_response').html('Item could not be opened');
                                     $('#modal_error-toggle').click();
-                                    return;
                                 }
-                                // Set item events
-                                makeItemsInteractable(item);
+                                makeItemsInteractable();
                             });
                         }
                     }
@@ -122,7 +118,7 @@ function initGame(dbGame, session) {
         }
     }
 
-    function getSheetHTML(info) {
+    const getSheetHTML = (info) => {
         return $.ajax({
             type: "post",
             url: "/app/games_ajax/sheet/" + info.item_id,
@@ -130,24 +126,25 @@ function initGame(dbGame, session) {
             dataType: "text",
             success: (data) => {
                 return data;
-            }, error: (e) => {
+            },
+            error: (e) => {
                 console.log("Error", e);
             }
         });
     }
 
-    function makeItemsInteractable(item) {
+    function makeItemsInteractable() {
         // Save the necessary html objects to make sheet interactable
-        let modalBody = q('#' + item.draggableContainerId + ' .modal-body');
-        let modals = q('.' + item.draggableContainerClass);
-        let closeBtns = q('.' + item.draggableContainerClass + ' .close_item-btn');
-        let cursorMove = q('.cursor-move');
+        let modals = q('.journal_item_modal');
+        let closeBtns = q('.journal_item_modal .close_item-btn');
+        let cursorMove = q('.journal_item_modal .cursor-move');
         // * Check they have the correct lengths * //
-        if (!(modalBody.length === 1 && modals.length === closeBtns.length && closeBtns.length === cursorMove.length)) {
+        if (!(modals.length === closeBtns.length && closeBtns.length === cursorMove.length)) {
             return;
         }
+
         // * Make items dragagble * //
-        new Draggable('.' + item.draggableContainerClass, '.cursor-move');
+        new Draggable('.journal_item_modal', '.journal_item_modal .cursor-move');
 
         // * Iterate through modals and buttons * //
         for (let i = 0; i < closeBtns.length; i++) {
@@ -158,8 +155,7 @@ function initGame(dbGame, session) {
         }
 
         // Set all selects that shall have aria-selected to load the attribute
-        let selects = q('select');
-        for (let select of selects) {
+        for (let select of q('select')) {
             let s = select.getAttribute('aria-selected');
             if (s) {
                 select.value = s;
@@ -169,50 +165,85 @@ function initGame(dbGame, session) {
             }
         }
 
-        let this_fields = q('#' + item.draggableContainerId + ' .this-role-form-field');
-        // Get data from fields
-        getDataFromFields(this_fields, item);
-
-        let itemIconInput = q('#' + item.draggableContainerId + ' .this-role-form-field[name="item_icon"]')[0];
-
-        itemIconInput.change(function () {
-            // Save image
-            saveItemIcon(this, item.info.item_id).done((data) => {
-                data = JSON.parse(data);
-                if (data.response) {
-                    journal.reload();
-                    console.log(item.draggableIconHolder)
-                    console.log('url("' + journal.folder + item.info.item_icon + '")')
-                    readImageChange(this, item.draggableIconHolder);
-                    return;
+        // * This only applies to last opened item * //
+        for (let modal of modals) {
+            let item = false;
+            for (let i in journal.items.list) {
+                if (journal.items.list[i].draggableContainerId === modal.id) {
+                    item = journal.items.list[i];
                 }
-                $('.modal_error_response').html('Image could not be uploaded');
-                $('#modal_error-toggle').click();
+            }
+
+            if (!item) continue;
+
+            let iconInput = q('#' + item.draggableContainerId + ' .this-role-form-field[name="item_icon"]');
+            iconInput.change(function () {
+                // Save image
+                saveField(this, item.info.item_id).done((data) => {
+                    data = JSON.parse(data);
+                    if (data.response) {
+                        journal.reload();
+                        readImageChange(this, q('#' + item.draggableContainerId + ' .item_icon-holder')[0]);
+                        return;
+                    }
+                    $('.modal_error_response').html('Image could not be uploaded');
+                    $('#modal_error-toggle').click();
+                });
             });
-        });
-        // * Add listener to html form fields * //
-        this_fields.blur(function () {
-            saveField(this, item.info.item_id).done((data) => {
-                if (data.response) {
-                    // Refill fields dataf-from
-                    getDataFromFields(this_fields, item);
-                    let rawScores = q('#' + item.draggableContainerId + ' .this-score');
-                    let scoreProf = q('#' + item.draggableContainerId + ' .score-prof');
-                    // Change name in '.aside' journal list
-                    q('#' + journal.container + ' button[value="' + item.info.item_id + '"] .menu-title')[0]
-                        .innerHTML = q('#' + item.draggableContainerId + ' input[name=item_title]')[0].value;
-                }
+
+            // * Add listener to html form fields * //
+            let this_fields = q('#' + item.draggableContainerId + ' .this-role-form-field');
+            // Get data from fields
+            getDataFromFields(this_fields, item);
+            this_fields.blur(function () {
+                saveField(this, item.info.item_id).done((data) => {
+                    data = JSON.parse(data);
+                    if (data.response) {
+                        // Update item
+                        for (let key in data.params) {
+                            item.info[key] = data.params[key];
+                        }
+                        // Refill fields dataf-from
+                        getDataFromFields(this_fields, item);
+                        let rawScores = q('#' + item.draggableContainerId + ' .this-score');
+                        let scoreProf = q('#' + item.draggableContainerId + ' .score-prof');
+                        // Change name in '.aside' journal list
+                        q('#' + journal.container + ' button[value="' + item.info.item_id + '"] .menu-title')[0].innerHTML = q('#' + item.draggableContainerId + ' input[name=item_title]')[0].value;
+                    }
+                });
             });
-        });
+        }
     }
 
     function getDataFromFields(inputs, item) {
         for (let i of inputs) {
             let divName = i.getAttribute('name');
-            if (divName !== '') {
-                if (i.nodeName === 'SELECT') {
+            if (divName && divName !== '') {
+                // * begin::Score Modifiers * //
+                if (divName.match(/this_score/)) {
+                    let label = q('label[for="' + divName + '"')[0];
+                    let rawScoreModifiers = item.getRawScoreModifiers();
+                    if (rawScoreModifiers && label) {
+                        let mod = rawScoreModifiers[divName];
+                        label.innerHTML = (mod >= 0 ? '+' : '') + mod;
+                    }
+                } // * end::Score Modifiers * //
+                // * begin::Score proficiency bonuses * //
+                else if (divName.match(/this_prof/) && i.checked) {
+                    q('label[for="' + divName + '"')[0].innerHTML = '+' + item.getProficiency();
+                } // * end::Score proficiency bonuses * //
+                // * begin::Saving Throws * //
+                else if (divName.match(/this_save/)) {
+                    let scoreModifiers = item.getProfScoreModifiers();
+                    if (scoreModifiers) {
+                        let mod = scoreModifiers[divName];
+                        i.value = mod;
+                        i.innerHTML += (mod >= 0 ? '+' : '') + mod;
+                    }
+                } // * end::Saving Throws * //
+                else if (i.nodeName === 'SELECT') {
                     i.value = (i.getAttribute('aria-selected'));
-                } else if (!i.classList.contains('this-score')) {
+                } else {
                     let data_from = q('#' + item.draggableContainerId + ' [data-from=' + divName + ']');
                     for (let el of data_from) {
                         el.innerHTML = getGenericFields(divName, i.value, item);
@@ -237,9 +268,19 @@ function initGame(dbGame, session) {
         }
     }
 
-    function saveItemIcon(object, id) {
+    function saveField(object, id) {
         let form = new FormData();
-        form.append('item_icon[]', object.files[0]);
+        let objName = object.getAttribute('name');
+        let objVal = object.value;
+        if (objName.match(/this_prof|this_skill/)) {
+            objVal = object.checked ? "1" : "0";
+        }
+        console.log(objVal)
+        if (objName === 'item_icon') {
+            objName = 'item_icon[]';
+            objVal = object.files[0];
+        }
+        form.append(objName, objVal);
         form.append('item_id', id);
         return $.ajax({
             type: "post",
@@ -248,24 +289,6 @@ function initGame(dbGame, session) {
             processData: false,
             contentType: false,
             success: (data) => {
-                return data;
-            }, error: (e) => {
-                console.log("Error: ", e);
-            }
-        });
-    }
-
-    function saveField(object, id) {
-        let data = {};
-        let objName = object.getAttribute('name');
-        data [objName] = object.value;
-        return $.ajax({
-            type: "post",
-            url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
-            data: {sheet: data, item_id: id},
-            dataType: "json",
-            success: (data) => {
-                console.log(data)
                 return data;
             },
             error: (e) => {
@@ -524,7 +547,8 @@ function initGame(dbGame, session) {
                 dataType: "json",
                 success: (data) => {
                     board.map.loadLayers();
-                }, error: (e) => {
+                },
+                error: (e) => {
                     console.log("Error: ", e);
                 }
             });
@@ -642,10 +666,7 @@ function initGame(dbGame, session) {
 
     function getChat() {
         $.ajax({
-            type: "get",
-            url: "/app/games_ajax/get_chat/" + dbGame.game_id,
-            dataType: "json",
-            success: function (data) {
+            type: "get", url: "/app/games_ajax/get_chat/" + dbGame.game_id, dataType: "json", success: function (data) {
                 // Check if there are any new messages before updating chat
                 if (data.msg || (data.msgs && $('.chat-messages .menu-item').length !== data.msgs.length)) {
                     chat.record.innerHTML = '';
@@ -684,12 +705,8 @@ function initGame(dbGame, session) {
 
     function reloadGameInfo() {
         $.ajax({
-            type: "get",
-            url: "/app/games_ajax/get_game_info/" + dbGame.game_id,
-            dataType: "json",
-            succes: (data) => {
-                if (data.response && data.game) dbGame = data.game;
-                else {
+            type: "get", url: "/app/games_ajax/get_game_info/" + dbGame.game_id, dataType: "json", succes: (data) => {
+                if (data.response && data.game) dbGame = data.game; else {
                     alert("Este juego ya no existe");
                     window.location.assign('/index');
                 }
@@ -700,14 +717,26 @@ function initGame(dbGame, session) {
     }
 
 
+    thisShouldBeAWebSocket();
     setInterval(thisShouldBeAWebSocket, 25000);
+
+    const dataChanged = (data) => {
+        const items = data.results;
+        for (let i in items) {
+            if (items[i].item_icon !== journal.items.list[i].info.item_icon) {
+                return;
+            }
+        }
+        return false;
+    }
 
     function thisShouldBeAWebSocket() {
         reloadGameInfo();
         getChat();
         board.map.loadLayers();
         journal.getJournalAjax().done((data) => {
-            if (!data.results || data.results.length !== journal.items.length) {
+            if (data.results && data.results.length === journal.items.length) {
+                if (!dataChanged(data)) return;
                 journal.reload();
             }
         });

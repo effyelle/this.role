@@ -205,19 +205,19 @@
                                                         class="form-control form-control-sm form-select form-select-sm this-role-form-field mb-4">
                                                     <option value="-1" disabled selected>Select one</option>
                                                 </select>
-                                                <div class="form-control-solid mb-4 flex-row align-items-start justify-content-between">
+                                                <div class="form-control-solid mb-4 flex-row-wrap align-items-start justify-content-between gap-3">
                                                     <button type="button" id="edit_layer-btn"
                                                             data-bs-toggle="modal" data-bs-target="#add_layer-modal"
                                                             class="btn btn-sm py-1 px-2 btn-primary">
                                                         Edit Map
                                                     </button>
-                                                    <button type="button" id="select_layer-btn"
-                                                            class="btn btn-sm py-1 px-2 btn-warning">
-                                                        Select Map
-                                                    </button>
                                                     <button type="button" id="delete_layer-btn"
                                                             class="btn btn-sm py-1 px-2 btn-danger">
                                                         Delete Map
+                                                    </button>
+                                                    <button type="button" id="select_layer-btn"
+                                                            class="btn btn-sm py-1 px-2 btn-warning">
+                                                        Select Map
                                                     </button>
                                                 </div>
                                             </div>

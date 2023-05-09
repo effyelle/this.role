@@ -40,8 +40,6 @@ class Draggable {
         for (let i = 0; i < this.pointers.length; i++) {
             // Bring element to the front on creation (without clicking it)
             this.containers[i].style.zIndex = this.zIndex + 10;
-            // Set it resizable
-            this.containers[i].style.resize = 'both';
             // Create mouse down for the container to switch z-index with other draggable elements
             this.containers[i].onmousedown = (e) => {
                 this.zIndexSwitch(this.containers[i]);

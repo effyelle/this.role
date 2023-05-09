@@ -73,6 +73,7 @@ CREATE TABLE game_journal(
 	subclass VARCHAR(50),
 	race VARCHAR(25),
 	background VARCHAR(50),
+	lvl INT,
 	xp INT,
 	ability_scores JSON, -- proficiencies 0 or 1
 	skills JSON, -- proficiencies 0 OR 1

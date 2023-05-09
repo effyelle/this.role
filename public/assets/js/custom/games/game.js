@@ -238,7 +238,7 @@ function initGame(dbGame, session) {
                     if (scoreModifiers) {
                         let mod = scoreModifiers[divName];
                         i.value = mod;
-                        i.innerHTML += (mod >= 0 ? '+' : '') + mod;
+                        i.innerHTML = 'SAVING THROW' + (mod >= 0 ? '+' : '') + mod;
                     }
                 } // * end::Saving Throws * //
                 else if (i.nodeName === 'SELECT') {
@@ -275,7 +275,6 @@ function initGame(dbGame, session) {
         if (objName.match(/this_prof|this_skill/)) {
             objVal = object.checked ? "1" : "0";
         }
-        console.log(objVal)
         if (objName === 'item_icon') {
             objName = 'item_icon[]';
             objVal = object.files[0];

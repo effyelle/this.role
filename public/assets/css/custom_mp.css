@@ -397,6 +397,16 @@ a .hover-flip {
     transition: all 0.4s ease;
 }
 
+.game .this-role-form-field:not([type=checkbox]):not(textarea):not(select):not(button) {
+    border: 0 !important;
+    border-bottom: 1px solid transparent !important;
+}
+
+.game .this-role-form-field:not([type=checkbox]):not(textarea):not(select):not(button):focus,
+.game .this-role-form-field:not([type=checkbox]):not(textarea):not(select):not(button):hover {
+    border-bottom: 1px solid var(--bs-gray-400) !important;
+}
+
 .this-role-form-field:not([type=checkbox]):not(textarea):not(select):not(button) {
     border: 0 !important;
     border-radius: 0;
@@ -515,6 +525,10 @@ input.form-control.this-role-form-field[disabled] {
 
 .h-100vh {
     min-height: calc(100vh - 160px);
+}
+
+.h-120px {
+    height: 120px;
 }
 
 .editable .editable-item {
@@ -954,7 +968,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     z-index: 1990;
     width: 866px;
     height: 90vh;
-    overflow-x: hidden;
+    resize: both;
     overflow-y: auto;
     outline: 0;
     border-radius: 10px;
@@ -971,7 +985,6 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 }
 
 .journal_item_modal .modal-body {
-    overflow-x: hidden;
     overflow-y: auto;
 }
 
@@ -1032,6 +1045,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 
 .combat-item_title {
     font-size: 8px !important;
+    text-transform: capitalize;
 }
 
 .combat-item_content {
@@ -1162,4 +1176,12 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 
 .overflow-y-scroll {
     overflow-y: scroll;
+}
+
+.mt--25px {
+    margin-top: -25px;
+}
+
+.max-w-150px {
+    max-width: 150px;
 }

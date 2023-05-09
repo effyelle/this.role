@@ -1,7 +1,7 @@
 <?php if (isset($sheet)) {
     $scores = json_decode($sheet['ability_scores']); ?>
     <div class="modal-header flex-row-wrap justify-content-between align-items-center cursor-move">
-        <div class="" data-from="item_title">
+        <div class="h6" data-from="item_title">
             <!--Autofill-->
         </div>
         <div class="flex-row-wrap gap-5 align-items-end justify-content-end align-self-start">
@@ -210,13 +210,13 @@
                                     <!--end::Row-->
                                     <!--begin::Row-->
                                     <div class="row">
-                                        <div class="column form-control-solid">
+                                        <div class="column form-control-solid w-50">
                                             <label for="lvl">Level</label>
                                             <input type="number" id="lvl" name="lvl"
                                                    value="<?= $sheet['level'] ?? '1' ?>"
                                                    class="form-control this-role-form-field ms-3"/>
                                         </div>
-                                        <div class="column form-control-solid">
+                                        <div class="column form-control-solid w-50">
                                             <label for="xp">XP</label>
                                             <input type="number" id="xp" name="xp"
                                                    value="<?= $sheet['xp'] ?? '0' ?>"

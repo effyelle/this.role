@@ -1,0 +1,91 @@
+{
+    "info": {
+        "name": "",
+        "race": "",
+        "background": "",
+        "characteristics": {
+            "personality_traits": "",
+            "ideals": "",
+            "bonds": "",
+            "flaws": ""
+        }
+    },
+    "class": [],
+    "xp": "0",
+    "ability_scores": {
+        "this_score_str": {
+            "score": "10",
+            "is_prof": "0"
+        },
+        "this_score_dex": {
+            "score": "10",
+            "is_prof": "0"
+        },
+        "this_score_con": {
+            "score": "10",
+            "is_prof": "0"
+        },
+        "this_score_int": {
+            "score": "10",
+            "is_prof": "0"
+        },
+        "this_score_wis": {
+            "score": "10",
+            "is_prof": "0"
+        },
+        "this_score_cha": {
+            "score": "10",
+            "is_prof": "0"
+        }
+    },
+    "expertises": [],
+    "health": {
+        "hit_points": {
+            "current_hp": "0",
+            "total_hp": "0",
+            "temporary_hp": "0"
+        },
+        "death_saves": {
+            "successes": "0",
+            "failures": "0"
+        },
+        "conditions": {
+            "ehaustion": {
+                "lvl": "0",
+                "1": "Disadvantage on ability checks",
+                "2": "Speed halved",
+                "3": "Disadvantage on attack rolls and saving throws",
+                "4": "Hit point maximum halved",
+                "5": "Speed reduced to 0",
+                "6": "Death"
+            },
+            "blinded": "0",
+            "charmed": "0",
+            "deafened": "0",
+            "frightened": "0",
+            "grappled": "0",
+            "incapacitated": "0",
+            "invisible": "0",
+            "paralized": "0",
+            "petrified": "0",
+            "poisoned": "0",
+            "prone": "0",
+            "restrained": "0",
+            "stunned": "0",
+            "unconscious": "0"
+        }
+    },
+    "attacks": [],
+    "global_modifiers": [],
+    "tools_n_custom": [],
+    "bag": {
+        "capacity": {
+            "total_weight": "0",
+            "overweight": "0"
+        },
+        "bag_items": []
+    },
+    "custom_features": [],
+    "notes": "",
+    "backstory": ""
+}

@@ -23,7 +23,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#journal_container">
+                            <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#journal_container">
                                 <i class="fa fa-newspaper text-this-role-light"></i>
                             </a>
                         </li>
@@ -33,7 +33,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#settings_container">
+                            <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#settings_container">
                                 <i class="fa fa-solid fa-gear text-this-role-light"></i>
                             </a>
                         </li>
@@ -73,7 +73,7 @@
                     <!--end::Chat-->
 
                     <!--begin::Journal-->
-                    <div id="journal_container" class="tab-pane fade">
+                    <div id="journal_container" class="tab-pane fade active show">
                         <div class="aside-footer d-flex flex-column py-3 px-5">
                             <div id="journal" data-kt-menu="true"
                                  class="menu menu-column menu-rounded fw-bold fs-7 gap-2 mt-3">
@@ -109,7 +109,7 @@
                     </div>
                     <!--end::Tools-->
                     <!--begin::Setting-->
-                    <div id="settings_container" class="tab-pane fade active show">
+                    <div id="settings_container" class="tab-pane fade">
                         <div class="aside-footer d-flex flex-column py-3 px-5">
                             <!--begin::Title-->
                             <div class="menu-item mb-5">

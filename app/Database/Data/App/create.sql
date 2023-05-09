@@ -65,27 +65,28 @@ CREATE TABLE game_journal(
 	item_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
 	item_id_game INT UNSIGNED,
 	item_icon VARCHAR(100),
-	item_title VARCHAR(50),
+	item_name VARCHAR(50),
 	item_type VARCHAR(20),
 	item_viewers JSON DEFAULT '[]', -- ID users
 	item_editors JSON DEFAULT '[]', -- ID users
-	class VARCHAR(20),
-	subclass VARCHAR(50),
-	race VARCHAR(25),
-	background VARCHAR(50),
-	lvl INT,
+	item_sheet INT UNSIGNED
+);
+
+CREATE TABLE game_sheet(
+	sheet_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	info JSON,
+	class JSON,
 	xp INT,
-	ability_scores JSON, -- proficiencies 0 or 1
-	skills JSON, -- proficiencies 0 OR 1
-	speed INT,
-	hit_points JSON,
-	death_saves INT,
-	exhaustion_level INT,
-	attacks_spells JSON,
+	ability_scores JSON,
+	expertises JSON,
+	health JSON,
+	attacks JSON,
 	global_modifiers JSON,
+	tools_n_custom JSON,
 	bag JSON,
-	other_resources JSON,
-	spells_learned JSON
+	custom_features JSON,
+	notes LONGTEXT,
+	backstory LONGTEXT
 );
 
 CREATE TABLE game_layers(

@@ -2,12 +2,15 @@
 
 namespace App\Controllers;
 
+use JsonException;
+
 class Games extends BaseController
 {
     protected mixed $gamesmodel;
     protected mixed $gamechatmodel;
     protected mixed $usermodel;
     protected mixed $journalmodel;
+    protected mixed $sheetmodel;
     protected mixed $playermodel;
     protected mixed $layermodel;
     protected string $now;
@@ -19,6 +22,7 @@ class Games extends BaseController
         $this->gamechatmodel = model('GameChatModel');
         $this->usermodel = model('UsersModel');
         $this->journalmodel = model('GameJournalModel');
+        $this->sheetmodel = model('GameSheetModel');
         $this->playermodel = model('GamePlayerModel');
         $this->layermodel = model('GameLayersModel');
         $this->now = date('Y-m-d H:i:s', time());
@@ -204,7 +208,7 @@ class Games extends BaseController
     {
         $data['response'] = false;
         $game = $this->gamesmodel->get(['game_id' => $id]);
-        if ($game) $data ['response'] = true;
+        if ($game) $data['response'] = true;
         $data['game'] = $game[0];
         return json_encode($data);
     }
@@ -290,37 +294,23 @@ class Games extends BaseController
         return json_encode(['response' => false, 'msg' => 'Messages could not be loaded']);
     }
 
-    function initMultivalueFields(array $post): array
-    {
-
-        $post['ability_scores'] = json_encode([
-            "this_score_str" => 10,
-            "this_prof_str" => 0,
-            "this_score_dex" => 10,
-            "this_prof_dex" => 0,
-            "this_score_con" => 10,
-            "this_prof_con" => 0,
-            "this_score_int" => 10,
-            "this_prof_int" => 0,
-            "this_score_wis" => 10,
-            "this_prof_wis" => 0,
-            "this_score_cha" => 10,
-            "this_prof_cha" => 0
-        ]);
-        return $post;
-    }
-
     function set_journal_item($id): string
     {
         $data['response'] = false;
         $data['msg'] = 'Missing some data';
-        if (isset($_POST['journal_title-input']) && isset($_POST['journal-item_type']) && $_POST['journal-item_type'] !== '-1') {
+
+        $itemName = $_POST['item_name'] ?? false;
+        $itemType = $_POST['item_type'] ?? false;
+
+        if ($itemName && $itemType && $itemName !== '' && $itemType !== '-1') {
+            // * begin::Save general fields * //
             $post = [
                 'item_id_game' => $id,
-                'item_title' => validate($_POST['journal_title-input']),
-                'item_type' => validate($_POST['journal-item_type'])
+                'item_name' => validate($itemName),
+                'item_type' => validate($itemType)
             ];
-            // Save players can see or edit if it was set
+            // * end::Save general fields * //
+            // * begin::Save players can see or edit if it was set * //
             $item_viewers = [];
             $item_editors = [];
             if (isset($_POST['players'])) {
@@ -335,23 +325,39 @@ class Games extends BaseController
             }
             $post['item_viewers'] = json_encode($item_viewers);
             $post['item_editors'] = json_encode($item_editors);
-            $data['see_edit'] = [$item_viewers, $item_editors];
-            // If item id is set would mean an update
-            if (!isset($_POST['item_id'])) {
-                $post = $this->initMultivalueFields($post);
-
-                if ($this->journalmodel->new($post)) {
-                    $data = ['response' => true, 'msg' => 'Added successfully'];
-                } else {
-                    $data['msg'] = 'Item could not be added';
+            // * end::Save players can see or edit if it was set * //
+            // * begin::DataBase connection * //
+            // Create DnD Sheet item
+            $t = new SheetDnD();
+            if (!isset($_POST['item_id'])) { // If item ID not set, create new item
+                $post['item_sheet'] = json_encode((new SheetDnD())->__init($post['item_type']));
+                // Create new sheet
+                $newSheet = (new SheetDnD())->__init();
+                $sheetPost = [];
+                foreach ($newSheet as $k => $v) {
+                    // Encode if array
+                    if (gettype($v) === 'array') $v = json_encode($v);
+                    $sheetPost[$k] = $v;
                 }
-            } else {
+                // Attempt to save sheet
+                if ($this->sheetmodel->new($sheetPost)) {
+                    // Attempt to save new item
+                    $post['item_sheet'] = $this->sheetmodel->maxID()->sheet_id;
+                    if ($this->journalmodel->new($post)) {
+                        $data = ['response' => true, 'msg' => 'Added successfully'];
+                    } else {
+                        $data['msg'] = 'Item could not be added';
+                    }
+                }
+            } else { // If item ID set, update item
+                // Update sheet
                 if ($this->journalmodel->updt($post, ['item_id' => $_POST['item_id']])) {
                     $data = ['response' => true, 'msg' => 'Updated successfully'];
                 } else {
                     $data['msg'] = 'Item could not be updated';
                 }
             }
+            // * end::DataBase connection * //
         }
         return json_encode($data);
     }
@@ -374,18 +380,18 @@ class Games extends BaseController
 
     function get_journal_items($id): string
     {
-        if ($journalItems = $this->journalmodel->get(['item_id_game' => $id], null, ['item_title' => 'ASC'])) {
-            return json_encode(['response' => true, 'results' => $journalItems]);
+        if ($journal = $this->journalmodel->get(['item_id_game' => $id], null, ['item_name' => 'ASC'])) {
+            return json_encode(['response' => true, 'results' => $journal]);
         }
         return json_encode(['response' => false]);
     }
 
     function sheet($id): string
     {
-        $sheet = $this->journalmodel->get(['item_id' => $id], ['games' => 'game_id=item_id_game'])[0];
+        $item = $this->journalmodel->get(['item_id' => $id], ['games' => 'game_id=item_id_game'])[0];
         return match ($_POST['item_type']) {
-            'character' => view('/pages/games/character_sheet', ['sheet' => $sheet]),
-            'handout' => view('/pages/games/handout_sheet', ['sheet' => $sheet]),
+            'character' => view('/pages/games/character_sheet', ['item' => $item, 'sheet' => json_decode($item['item_sheet'])]),
+            'handout' => view('/pages/games/handout_sheet', ['item' => $item]),
             default => view('/pages/game/not_found_sheet'),
         };
     }
@@ -416,7 +422,8 @@ class Games extends BaseController
             // If image uploaded, update database
             if ($this->journalmodel->updt(
                 ['item_icon' => $userFolder . $newFile], // data
-                ['item_id' => $_POST['item_id']]) // where
+                ['item_id' => $_POST['item_id']]
+            ) // where
             ) {
                 return true;
             }
@@ -476,7 +483,7 @@ class Games extends BaseController
                 $newRoute = $this->mediaGames . $game['game_folder'] . '/layers/';
                 // * Upload game icon into the new folder * //
                 $img = upload_img('layer_img', $newRoute, $newName);
-                $data ['img'] = $img;
+                $data['img'] = $img;
                 // If the file was uploaded, update layer
                 if (str_contains($img, $newName)) {
                     $newFile = explode('/', $img)[count(explode('/', $img)) - 1];
@@ -498,7 +505,7 @@ class Games extends BaseController
 
     function get_layers($id): string
     {
-        $data ['response'] = false;
+        $data['response'] = false;
         if ($data['layers'] = $this->layermodel->get(['layer_id_game' => $id])) {
             $data['response'] = true;
         }
@@ -520,7 +527,7 @@ class Games extends BaseController
             // Validate name
             $layerName = validate($_POST['layer_name']);
             // Save name to data to update
-            $updateData ['layer_name'] = $layerName;
+            $updateData['layer_name'] = $layerName;
             // Check if and image was selected
             if (isset($_FILES['layer_img'])) {
                 // Set new name for image file
@@ -539,9 +546,8 @@ class Games extends BaseController
                     $data['oldMap'] = $oldMap;
                 }
 
-                $data ['img'] = $img;
+                $data['img'] = $img;
                 $data['gameFolder'] = $layerFolder;
-
             }
             // Update layer
             if ($this->layermodel->updt($updateData, ['layer_id' => $layer['layer_id']])) {

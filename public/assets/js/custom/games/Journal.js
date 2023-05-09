@@ -7,7 +7,7 @@ class Journal {
         this.defaultIcon = '/assets/media/games/blank.png';
         this.items = {
             list: {},
-            length: 0,
+            length: 0
         }
         // Init journal
         this.init();
@@ -15,8 +15,11 @@ class Journal {
 
     init() {
         // If ajax, init journal item creation from url
+        if (!(this.opt.ajax && this.opt.ajax.url)) {
+            this.error(this.opt.onError);
+            return;
+        }
         if (!this.opt.ajax.method) this.opt.ajax.method = "get";
-        if (!this.opt.ajax.url) this.error(this.opt.onError);
         // Get data through ajax
         this.getJournalAjax().done((data) => {
             // Checck data is not null
@@ -50,11 +53,10 @@ class Journal {
                 }
                 // Show list
                 this.formatJournalItems(this.items.list);
-
-            } else {
-                this.error(this.opt.onError, "No data was received.");
+                this.load(this.opt.onLoad, data);
+                return;
             }
-            this.load(this.opt.onLoad, data);
+            this.error(this.opt.onError, "No data was received.");
         });
     }
 
@@ -65,10 +67,11 @@ class Journal {
             dataType: 'json', // Comment this line for debugging,
             async: true,
             success: (data) => {
+                console.log(data);
                 return data;
             },
             error: (e) => {
-                return this.error(this.opt.onError, e);
+                return this.opt.onError(e);
             }
         });
     }
@@ -95,7 +98,7 @@ class Journal {
                 '             </span>' +
                 '         </div>' +
                 '         <!--end::Symbol-->' +
-                '         <span class="menu-title fw-bolder fs-7 text-gray-600 text-hover-dark">' + item.item_title + '</span>' +
+                '         <span class="menu-title fw-bolder fs-7 text-gray-600 text-hover-dark">' + item.item_name + '</span>' +
                 '     </button>' +
                 ' </div>' +
                 ' <!--end::Menu Item-->';

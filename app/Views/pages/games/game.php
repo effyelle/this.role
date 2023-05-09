@@ -69,14 +69,14 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-10">
-                        <label for="journal_title-input" class="form-label required">Enter a name or title</label>
-                        <input type="text" id="journal_title-input" name="journal_title-input" autocomplete="off"
+                        <label for="item_name" class="form-label required">Enter a name or title</label>
+                        <input type="text" id="item_name" name="item_name" autocomplete="off"
                                value="Character or handout"
                                class="form-control this-role-form-field"/>
                     </div>
                     <div class="mb-10">
-                        <label for="journal-item_type" class="form-label required">Type of item</label>
-                        <select type="text" id="journal-item_type" name="journal-item_type"
+                        <label for="item_type" class="form-label required">Type of item</label>
+                        <select type="text" id="item_type" name="item_type"
                                 class="form-control this-role-form-field">
                             <option value="character" selected>Character</option>
                             <option value="handout">Handout</option>

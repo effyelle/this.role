@@ -1185,3 +1185,15 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 .max-w-150px {
     max-width: 150px;
 }
+
+.max-w-200px {
+    max-width: 200px;
+}
+
+.max-w-250px {
+    max-width: 250px;
+}
+
+.column.this-outline {
+    max-width: 450px;
+}

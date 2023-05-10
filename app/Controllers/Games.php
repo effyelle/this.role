@@ -434,7 +434,7 @@ class Games extends BaseController
                     $params = $t->_process_post($params, $item);
                     $data['params'] = $t->_process_post($params, $item);
                     if ($params) {
-                        //$data['response'] = $this->journalmodel->updt($params, ['item_id' => $_POST['item_id']]);
+                        $data['response'] = $this->journalmodel->updt($params, ['item_id' => $_POST['item_id']]);
                     }
                 }
             } else {

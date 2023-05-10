@@ -212,7 +212,6 @@ class SheetDnD
         $k = array_keys($params)[0];
         $v = $params[$k];
         $other = [$k => $v];
-        $post = [$k => $v];
         switch ($k) {
             case 'item_name':
                 break;
@@ -224,56 +223,35 @@ class SheetDnD
                 $v = json_encode($info);
                 break;
             case (bool)preg_match('/class|subclass|lvl/', $k):
-                //$classes = $this->getClass($item, $k, $v);
-                // If field is classname, save it as it is
-                // If field is level or subclass, separate div name to get classname
-                $classname = $k === 'class' ? $v : (explode('_', $k)[1]);
-                $$k = $k === 'class' ? $k : (explode('_', $k)[0]);
                 // Get existing classes
                 $classes = json_decode($item['classes'], true);
+                $classExists = false;
                 if ($classes) {
                     // Check if class exists
                     foreach ($classes as $key => $class) {
                         // Find class
-                        if ($class['class'] === $classname) {
-                            $classes[$key][$$k] = $v;
+                        $other['preg_match'] = preg_match('/' . $class['class'] . '/', $k);
+                        if (preg_match('/' . $class['class'] . '/', $k)) {
+                            $classes[$key][$k] = $v;
                             $classExists = true;
                         }
                     }
+                }// Create new class if it does not exist
+                if (!$classExists && !$classes && $k === 'class') {
+                    $newClass = $this->class;
+                    // Save field value
+                    $newClass[$k] = $v;
+                    // Insert new class into classes array
+                    $classes[] = $newClass;
+                    $v = json_encode($classes);
                 }
-                $$k = 'classes';
-                $$v = json_encode($classes);
-                $post = [$$k => $$v];
+                $k = 'classes';
                 break;
             case (bool)preg_match('/this_prof|this_score/', $k):
                 $v = 'Preg match';
                 break;
         }
-        return $post;
+        return [$k => $v];
         return [$k => $v, 'other' => $other];
-    }
-
-    function getClass($item, $k, $v): array
-    {
-        $classes = json_decode($item['classes'], true);
-        $classExists = false;
-        if ($classes) {
-            // Check if class exists
-            foreach ($classes as $key => $class) {
-                // Find class
-                if ($class['class'] === $classname) {
-                    $classes[$key][$k] = $v;
-                    $classExists = true;
-                }
-            }
-        } // Create new class if it does not exist
-        if (!$classExists && !$classes && $k === 'class') {
-            $newClass = $this->class;
-            // Save field value
-            $newClass[$k] = $v;
-            // Insert new class into classes array
-            $classes[] = $newClass;
-        }
-        return $classes;
     }
 }

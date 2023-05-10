@@ -401,9 +401,10 @@ function initGame(dbGame, session) {
                 }
             }
             saveClass.click(function () {
-                saveField(classSelect, item.info.item_id);
-                saveField(subclass, item.info.item_id);
-                saveField(classLvl, item.info.item_id);
+                saveField(classSelect, item.info.item_id).done((data) => {
+                    saveField(subclass, item.info.item_id);
+                    saveField(classLvl, item.info.item_id);
+                });
             });
         }
     }

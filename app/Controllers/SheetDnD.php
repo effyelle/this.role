@@ -52,7 +52,7 @@ class SheetDnD
                 "flaws" => "",
             ],
         ];
-        $this->class = ["name" => "", "subclass" => "", "lvl" => ""];
+        $this->class = ["class" => "", "subclass" => "", "lvl" => ""];
         $this->xp = "0";
         $this->ability_scores = [
             "this_score_str" => [
@@ -157,7 +157,7 @@ class SheetDnD
             "item_type" => $this->type,
             "item_icon" => $this->icon,
             "info" => $this->info,
-            "class" => [],
+            "classes" => [],
             "xp" => $this->xp,
             "ability_scores" => $this->ability_scores,
             "expertises" => $this->expertises,
@@ -205,8 +205,37 @@ class SheetDnD
         }
         return $post;
     }
-    /*
-        function __get($id): array
-        {
-        }*/
+
+    function _process_post($params, $item): array
+    {
+        $this->__init($item['item_type']);
+        $k = array_keys($params)[0];
+        $v = $params[$k];
+        $other = 'other';
+        switch ($k) {
+            case 'item_name':
+                break;
+            case 'this_insp':
+                $info = json_decode($item['info']);
+                $info->inspiration = $info->inspiration === "0" ? "1" : "0";
+                $k = 'info';
+                $v = json_encode($info);
+                break;
+            case (bool)preg_match('/class|subclass|lvl/', $k):
+                $classes = json_decode($item['classes']);
+                if ($classes) {
+                    // Run foreach
+                }
+                $newClass = $this->class;
+                $newClass[$k] = $v;
+                $k = 'classes';
+                $v = json_encode($newClass);
+                $other = $newClass;
+                break;
+            case (bool)preg_match('/this_prof|this_score/', $k):
+                $v = 'Preg match';
+                break;
+        }
+        return [$k => $v, 'other' => $other];
+    }
 }

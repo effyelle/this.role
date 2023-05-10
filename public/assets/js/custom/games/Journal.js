@@ -219,35 +219,30 @@ class Journal {
             }
             return 2;
         }
-        this.getRawScoreModifiers = () => {
+        this.getRawScoreModifier = (score) => {
             if (this.info.ability_scores) {
                 const scores = JSON.parse(this.info.ability_scores);
-                const mods = {};
+                let modifier = 0;
                 for (let i in scores) {
-                    if (i.match(/this_score/)) {
-                        mods[i] = Math.floor((parseInt(scores[i]) - 10) / 2);
+                    if (i.match(score)) {
+                        return Math.floor((parseInt(scores[i].score) - 10) / 2);
                     }
                 }
-                return mods;
+                return modifier;
             }
             return false;
         }
-        this.getProfScoreModifiers = () => {
+        this.getProfScoreModifier = (score) => {
             if (this.info.ability_scores) {
                 const scores = JSON.parse(this.info.ability_scores);
-                const mods = {};
+                let modifier = 0;
                 for (let i in scores) {
-                    if (i.match(/this_score/)) {
-                        let mod = 0;
-                        let prof = 'this_prof' + i.substring(10);
-                        let save = 'this_save' + i.substring(10);
-                        if (scores[prof] === "1") {
-                            mod = this.getProficiency();
-                        }
-                        mods[save] = Math.floor((parseInt(scores[i]) - 10) / 2) + mod;
+                    if (i.match(score)) {
+                        return Math.floor((parseInt(scores[i].score) - 10) / 2) +
+                            (scores[i].is_prof === "1" ? this.getProficiency() : 0) + '';
                     }
                 }
-                return mods;
+                return modifier;
             }
             return false;
         }
@@ -255,7 +250,7 @@ class Journal {
             // Add init modifiers (?)
             const tb = 1.045;
             let dex = 0;
-            let scoreModifiers = this.getRawScoreModifiers();
+            let scoreModifiers = this.getRawScoreModifier();
             if (scoreModifiers) {
                 dex = scoreModifiers.this_score_dex;
             }

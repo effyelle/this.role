@@ -311,10 +311,10 @@ class Games extends BaseController
         $itemType = $_POST['item_type'] ?? false;
 
         if ($itemName && $itemType && $itemName !== '' && $itemType !== '-1') {
-            // Create DnD Sheet item
-            $t = new SheetDnD();
             // If item ID not set, create new item
             if (!isset($_POST['item_id'])) {
+                // Create DnD Sheet item
+                $t = new SheetDnD();
                 // Init data
                 $post = $t->__init(validate($itemName), validate($itemType));
                 // Add editors and/or viewers
@@ -408,29 +408,37 @@ class Games extends BaseController
 
     function save_sheet($id): string
     {
-        // * begin::Image upload * //
+        $data['response'] = false;
+        //* begin::Image upload *//
         if (isset($_FILES['item_icon'])) {
             $data['response'] = $this->saveJournalIcon();
-        } // * end::Image upload * //
-        // * begin::Other fields * //
+        } //* end::Image upload *//
+        //* begin::Other fields *//
         else {
+            // Look for the field to be saved
             $params = [];
             foreach ($_POST as $key => $val) {
                 if ($key !== 'item_id') {
-                    $params[$key] = validate($val);
+                    if (validate($val) !== '' && validate($val) !== '-1') {
+                        $params[$key] = validate($val);
+                    }
                 }
             }
-            $key = array_keys($params)[0];
-            $item = $this->journalmodel->get(['item_id' => $_POST['item_id']])[0];
-            if (preg_match('/this_score|this_prof/', $key)) {
-                $scores = json_decode($item['ability_scores']);
-                $scores->$key = $params[$key];
-                $params = ['ability_scores' => json_encode($scores)];
+            if ($params) {
+                // Create DND sheet item
+                $t = new SheetDnD();
+                // Get the item from DB
+                $item = $this->journalmodel->get(['item_id' => $_POST['item_id']])[0];
+                // Process the field
+                $params = $t->_process_post($params, $item);
+                if ($params) {
+                    $data['params'] = $params;
+                }
+                //$data['response'] = $this->journalmodel->updt($params, ['item_id' => $_POST['item_id']]);
             }
-            $data['response'] = $this->journalmodel->updt($params, ['item_id' => $_POST['item_id']]);
-
-            $data['params'] = $params;
+            $data['msg'] = 'Field cannot be empty';
         }
+        //* end::Other fields *//
 
         return json_encode($data);
     }

@@ -86,7 +86,7 @@ function initGame(dbGame, session) {
     function emptyJournalModal() {
         $('#modal_journal .modal-header h4').html('Add Journal Item');
         q('#save_journal_item-btn')[0].value = "";
-        $('#item_name').val('');
+        $('#item_name').val("Character or Handout");
         $('#item_type option[value="character"]').prop('selected', true);
         $('#modal_journal input[type=checkbox]').prop('checked', false);
     }
@@ -164,7 +164,7 @@ function initGame(dbGame, session) {
                                     $('.modal_error_response').html('Item could not be opened');
                                     $('#modal_error-toggle').click();
                                 }
-                                //makeItemsInteractable();
+                                makeItemsInteractable();
                             });
                         }
                     }
@@ -219,21 +219,26 @@ function initGame(dbGame, session) {
                 }
             }
         }
+        listenToSheetChanges(modals);
+    }
 
-        // * This only applies to last opened item * //
+    function listenToSheetChanges(modals) {
+        // * You need to reapply listeners to all opened items when you open a new one * //
         for (let modal of modals) {
+            // Search for item
             let item = false;
             for (let i in journal.items.list) {
                 if (journal.items.list[i].draggableContainerId === modal.id) {
                     item = journal.items.list[i];
                 }
             }
-
-            if (!item) continue;
-
+            // Do not do further actions if item was not found
+            if (!item) {
+                continue;
+            }
+            //* begin::Image change *//
             let iconInput = q('#' + item.draggableContainerId + ' .this-role-form-field[name="item_icon"]');
             iconInput.change(function () {
-                // Save image
                 saveField(this, item.info.item_id).done((data) => {
                     data = JSON.parse(data);
                     if (data.response) {
@@ -245,11 +250,12 @@ function initGame(dbGame, session) {
                     $('#modal_error-toggle').click();
                 });
             });
-
-            // * Add listener to html form fields * //
+            //* end::Image change *//
+            //* begin::Inputs change *//
             let this_fields = q('#' + item.draggableContainerId + ' .this-role-form-field');
             // Get data from fields
             getDataFromFields(this_fields, item);
+            // Save on field lost of focus
             this_fields.blur(function () {
                 saveField(this, item.info.item_id).done((data) => {
                     data = JSON.parse(data);
@@ -274,26 +280,37 @@ function initGame(dbGame, session) {
         for (let i of inputs) {
             let divName = i.getAttribute('name');
             if (divName && divName !== '') {
-                // * begin::Score Modifiers * //
+                if (divName === 'this_insp') {
+                    if (item.info.info) {
+                        let info = JSON.parse(item.info.info);
+                        if (info.inspiration) {
+                            i.value = info.inspiration;
+                            if (i.value === "1") {
+                                i.children[0].style.backgroundImage = 'url("/assets/media/games/journal/insp.png")';
+                                continue;
+                            }
+                            i.children[0].style.backgroundImage = 'none';
+                        }
+                    }
+                }
+                //* begin::Score Modifiers *//
                 if (divName.match(/this_score/)) {
                     let label = q('label[for="' + divName + '"')[0];
-                    let rawScoreModifiers = item.getRawScoreModifiers();
-                    if (rawScoreModifiers && label) {
-                        let mod = rawScoreModifiers[divName];
-                        label.innerHTML = (mod >= 0 ? '+' : '') + mod;
+                    let rawScoreModifier = item.getRawScoreModifier(divName.substring(10));
+                    if (rawScoreModifier && label) {
+                        label.innerHTML = rawScoreModifier;
                     }
-                } // * end::Score Modifiers * //
-                // * begin::Score proficiency bonuses * //
+                } //* end::Score Modifiers *//
+                //* begin::Score proficiency bonuses *//
                 else if (divName.match(/this_prof/) && i.checked) {
                     q('label[for="' + divName + '"')[0].innerHTML = '+' + item.getProficiency();
                 } // * end::Score proficiency bonuses * //
                 // * begin::Saving Throws * //
                 else if (divName.match(/this_save/)) {
-                    let scoreModifiers = item.getProfScoreModifiers();
-                    if (scoreModifiers) {
-                        let mod = scoreModifiers[divName];
-                        i.value = mod;
-                        i.innerHTML = 'SAVING THROW' + (mod >= 0 ? '+' : '') + mod;
+                    let profScoreModifier = item.getProfScoreModifier(divName.substring(10));
+                    if (profScoreModifier) {
+                        i.value = profScoreModifier;
+                        i.innerHTML = 'SAVING THROW' + (profScoreModifier >= 0 ? '+' : '') + profScoreModifier;
                     }
                 } // * end::Saving Throws * //
                 else if (i.nodeName === 'SELECT') {
@@ -327,13 +344,15 @@ function initGame(dbGame, session) {
         let form = new FormData();
         let objName = object.getAttribute('name');
         let objVal = object.value;
-        if (objName.match(/this_prof|this_skill/)) {
-            objVal = object.checked ? "1" : "0";
-        }
         if (objName === 'item_icon') {
             objName = 'item_icon[]';
             objVal = object.files[0];
         }
+        if (objName.match(/this_prof|this_skill/)) {
+            objVal = object.checked ? "1" : "0";
+        }
+        console.log(objName)
+        console.log(objVal)
         form.append(objName, objVal);
         form.append('item_id', id);
         return $.ajax({
@@ -343,6 +362,7 @@ function initGame(dbGame, session) {
             processData: false,
             contentType: false,
             success: (data) => {
+                console.log(data)
                 return data;
             },
             error: (e) => {

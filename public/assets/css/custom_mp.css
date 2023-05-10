@@ -1019,10 +1019,20 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     align-items: center;
     align-content: center;
     justify-content: center;
-    width: 60px;
-    height: 60px;
+    width: 55px;
+    height: 55px;
     font-weight: 600;
     padding: 0;
+}
+
+.combat-item.inspiration {
+    width: 50px;
+    height: 50px
+}
+
+.scores-container .combat-item:not(.combat-item-sm) {
+    width: 60px;
+    height: 60px;
 }
 
 .combat-item-sm {
@@ -1131,7 +1141,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     top: 140px;
 }
 
-.score-prof, .skill-prof {
+.score_prof, .skill_prof {
     height: 15px !important;
     width: 15px !important;
 }
@@ -1196,8 +1206,4 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 
 .column.this-outline {
     max-width: 450px;
-}
-
-.symbol-label {
-    background-size: contain !important;
 }

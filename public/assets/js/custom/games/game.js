@@ -251,6 +251,28 @@ function initGame(dbGame, session) {
                 });
             });
             //* end::Image change *//
+            //* begin::Save class *//
+            let saveClass = q('#' + item.draggableContainerId + ' .save_class');
+            let classSelect = q('#' + item.draggableContainerId + ' select[name=class]')[0];
+            let subclass = q('#' + item.draggableContainerId + ' input[name=subclass]')[0];
+            let classLvl = q('#' + item.draggableContainerId + ' input[name=lvl]')[0];
+            if (classSelect && subclass && classLvl) {
+                classSelect.onchange = function () {
+                    subclass.setAttribute('name', 'subclass_' + this.value);
+                    classLvl.setAttribute('name', 'lvl_' + this.value);
+                }
+                if (saveClass.length > 0) {
+                    saveClass.click(function () {
+                        saveField(classSelect, item.info.item_id).done((data) => {
+                            data = JSON.parse(data);
+                            if (!data.response) {
+                                console.log(data);
+                            }
+                        });
+                    });
+                }
+            }
+            //* end::Save class *//
             //* begin::Inputs change *//
             let this_fields = q('#' + item.draggableContainerId + ' .this-role-form-field');
             // Get data from fields
@@ -351,7 +373,7 @@ function initGame(dbGame, session) {
         if (objName.match(/this_prof|this_skill/)) {
             objVal = object.checked ? "1" : "0";
         }
-        console.log(objName)
+        console.log('checking', objName);
         console.log(objVal)
         form.append(objName, objVal);
         form.append('item_id', id);
@@ -362,11 +384,7 @@ function initGame(dbGame, session) {
             processData: false,
             contentType: false,
             success: (data) => {
-                console.log(data)
                 return data;
-            },
-            error: (e) => {
-                console.log("Error: ", e);
             }
         });
     }
@@ -690,7 +708,10 @@ function initGame(dbGame, session) {
 
     function getChat() {
         $.ajax({
-            type: "get", url: "/app/games_ajax/get_chat/" + dbGame.game_id, dataType: "json", success: function (data) {
+            type: "get",
+            url: "/app/games_ajax/get_chat/" + dbGame.game_id,
+            dataType: "json",
+            success: function (data) {
                 // Check if there are any new messages before updating chat
                 if (data.msg || (data.msgs && $('.chat-messages .menu-item').length !== data.msgs.length)) {
                     chat.record.innerHTML = '';
@@ -716,7 +737,8 @@ function initGame(dbGame, session) {
                         sender: sender, src: src, msg: msgText, msgType: msgType
                     });
                 }
-            }, error: function (e) {
+            },
+            error: function (e) {
                 console.log("Error: ", e);
             }
         });
@@ -729,12 +751,16 @@ function initGame(dbGame, session) {
 
     function reloadGameInfo() {
         $.ajax({
-            type: "get", url: "/app/games_ajax/get_game_info/" + dbGame.game_id, dataType: "json", succes: (data) => {
+            type: "get",
+            url: "/app/games_ajax/get_game_info/" + dbGame.game_id,
+            dataType: "json",
+            succes: (data) => {
                 if (data.response && data.game) dbGame = data.game; else {
                     alert("Este juego ya no existe");
                     window.location.assign('/index');
                 }
-            }, error: (e) => {
+            },
+            error: (e) => {
                 console.log("Error: ", e);
             }
         });

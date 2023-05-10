@@ -141,16 +141,11 @@ class Journal {
         this.draggableContainerClass = 'journal_item_modal';
         this.folder = params.folder;
         this.openItem = async (htmlText) => {
+            q('#' + this.modalsContainer)[0].innerHTML += htmlText;
             let icon = '/assets/media/games/blank.png';
             if (urlExists(this.folder + this.info.item_icon)) {
                 icon = this.folder + this.info.item_icon;
             }
-            q('#' + this.modalsContainer)[0].innerHTML += '' +
-                '<div id="' + this.draggableContainerId + '" class="' + this.draggableContainerClass + ' show">' +
-                '    <div class="modal-content bg-white">' +
-                '       ' + htmlText +
-                '    </div>' +
-                '</div>';
             const iconHolder = q('#' + this.draggableContainerId + ' .item_icon-holder');
             if (iconHolder.length > 0) {
                 iconHolder[0].style.backgroundImage = 'url("' + icon + '")';

@@ -214,6 +214,7 @@ class SheetDnD
         $other = 'other';
         switch ($k) {
             case 'item_name':
+            case 'race':
                 break;
             case 'this_insp':
                 $info = json_decode($item['info']);
@@ -222,20 +223,42 @@ class SheetDnD
                 $v = json_encode($info);
                 break;
             case (bool)preg_match('/class|subclass|lvl/', $k):
-                $classes = json_decode($item['classes']);
+                $classes = json_decode($item['classes'], true);
+                $classExists = false;
                 if ($classes) {
-                    // Run foreach
+                    // Check if class exists
+                    foreach ($classes as $key => $class) {
+                        if ($k === 'class') {
+                            $field = $k;
+                            $classname = $v;
+                        } else {
+                            $field = explode('_', $k)[0];
+                            $classname = explode('_', $k)[1];
+                        }
+                        if ($class['class'] === $classname) {
+                            $classes[$key][$field] = $v;
+                            $classExists = true;
+                        }
+                    }
                 }
-                $newClass = $this->class;
-                $newClass[$k] = $v;
+                if (!$classExists) {
+                    // Create new class
+                    $newClass = $this->class;
+                    // Save field value
+                    $newClass[$k] = $v;
+                    // Insert new class into classes array
+                    $classes[] = $newClass;
+                    break;
+                }
                 $k = 'classes';
-                $v = json_encode($newClass);
-                $other = $newClass;
+                $v = json_encode($classes);
                 break;
-            case (bool)preg_match('/this_prof|this_score/', $k):
+            case
+            (bool)preg_match('/this_prof|this_score/', $k):
                 $v = 'Preg match';
                 break;
         }
+        return [$k => $v];
         return [$k => $v, 'other' => $other];
     }
 }

@@ -428,15 +428,18 @@ class Games extends BaseController
                 // Create DND sheet item
                 $t = new SheetDnD();
                 // Get the item from DB
-                $item = $this->journalmodel->get(['item_id' => $_POST['item_id']])[0];
-                // Process the field
-                $params = $t->_process_post($params, $item);
-                if ($params) {
-                    $data['params'] = $params;
+                if ($item = $this->journalmodel->get(['item_id' => $_POST['item_id']])) {
+                    $item = $item[0];
+                    // Process the field
+                    $params = $t->_process_post($params, $item);
+                    if ($params) {
+                        $data['params'] = $params;
+                        $data['response'] = $this->journalmodel->updt($params, ['item_id' => $_POST['item_id']]);
+                    }
                 }
-                //$data['response'] = $this->journalmodel->updt($params, ['item_id' => $_POST['item_id']]);
+            } else {
+                $data['msg'] = 'Field cannot be empty';
             }
-            $data['msg'] = 'Field cannot be empty';
         }
         //* end::Other fields *//
 

@@ -150,3 +150,5 @@ UPDATE users SET user_confirmed=NULL WHERE user_username='effy.elle';
  *    ^ Character description -> appearance, backstory, allies&organizations, treasure
  *    ^ Spells
  */
+ 
+ UPDATE game_journal SET classes='[]' WHERE item_id=1;

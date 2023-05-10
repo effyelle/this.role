@@ -252,49 +252,11 @@ function initGame(dbGame, session) {
             });
             //* end::Image change *//
             //* begin::Save class *//
-            let saveClass = q('#' + item.draggableContainerId + ' .save_class')[0];
-            let classSelect = q('#' + item.draggableContainerId + ' select[name=class]')[0];
-            let subclass = q('#' + item.draggableContainerId + ' input[name=subclass]')[0];
-            let classLvl = q('#' + item.draggableContainerId + ' input[name=lvl]')[0];
-            if (classSelect && subclass && classLvl && saveClass) {
-                let classes = JSON.parse(item.info.classes);
-                if (classes && classes.length > 0) {
-                    // Set main class
-                    classSelect.value = classes[0].class;
-                    // Set atributes to related inputs
-                    subclass.setAttribute('name', 'subclass_' + classes[0].class);
-                    classLvl.setAttribute('name', 'lvl_' + classes[0].class);
-                    // Fill data from class if exists
-                    subclass.value = classes[0].subclass;
-                    classLvl.value = classes[0].lvl;
-                }
-                classSelect.onchange = function () {
-                    // Set atributes to related inputs
-                    subclass.setAttribute('name', 'subclass_' + this.value);
-                    classLvl.setAttribute('name', 'lvl_' + this.value);
-                    // This needs to be redeclared here in case data has changed from page load
-                    let classes = JSON.parse(item.info.classes);
-                    // Fill data from class if exists
-                    if (classes && classes.length > 0) {
-                        let classFound = false;
-                        for (let i in classes) {
-                            if (classes[i].class === this.value) {
-                                subclass.value = classes[i].subclass;
-                                classLvl.value = classes[i].lvl;
-                                classFound = true;
-                            }
-                        }
-                        if (!classFound) {
-                            subclass.value = "";
-                            classLvl.value = "";
-                        }
-                    }
-                }
-                saveClass.click(function () {
-                    saveField(classSelect, item.info.item_id);
-                });
-            }
+            setClassGroup(item);
             //* end::Save class *//
+            //* begin::Inspiration *//
+            setInspiration(item);
+            //* end::Inspiration *//
             //* begin::Inputs change *//
             let this_fields = q('#' + item.draggableContainerId + ' .this-role-form-field');
             // Get data from fields
@@ -306,23 +268,52 @@ function initGame(dbGame, session) {
         }
     }
 
+    function saveField(object, id) {
+        let form = new FormData();
+        let objName = object.getAttribute('name');
+        let objVal = object.value;
+        if (objName === 'item_icon') {
+            objName = 'item_icon[]';
+            objVal = object.files[0];
+        }
+        if (objName.match(/this_prof|this_skill/)) {
+            objVal = object.checked ? "1" : "0";
+        }
+        form.append(objName, objVal);
+        form.append('item_id', id);
+        console.log('checking', objName);
+        console.log(objVal)
+        return $.ajax({
+            type: "post",
+            url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
+            data: form,
+            processData: false,
+            contentType: false,
+            success: (data) => {
+                data = JSON.parse(data);
+                console.log(data);
+                if (data.response) {
+                    for (let i in journal.items.list) {
+                        if (journal.items.list[i].info.item_id === id) {
+                            for (let j in data.params) {
+                                console.log(data.params[j])
+                                console.log(journal.items.list[i].info[j])
+                                journal.items.list[i].info[j] = data.params[j];
+                            }
+                        }
+                    }
+                }
+                return data;
+            }, error: (e) => {
+                console.log(e);
+            }
+        });
+    }
+
     function getDataFromFields(inputs, item) {
         for (let i of inputs) {
             let divName = i.getAttribute('name');
             if (divName && divName !== '') {
-                if (divName === 'this_insp') {
-                    if (item.info.info) {
-                        let info = JSON.parse(item.info.info);
-                        if (info.inspiration) {
-                            i.value = info.inspiration;
-                            if (i.value === "1") {
-                                i.children[0].style.backgroundImage = 'url("/assets/media/games/journal/insp.png")';
-                                continue;
-                            }
-                            i.children[0].style.backgroundImage = 'none';
-                        }
-                    }
-                }
                 //* begin::Score Modifiers *//
                 if (divName.match(/this_score/)) {
                     let label = q('label[for="' + divName + '"')[0];
@@ -370,43 +361,79 @@ function initGame(dbGame, session) {
         }
     }
 
-    function saveField(object, id) {
-        let form = new FormData();
-        let objName = object.getAttribute('name');
-        let objVal = object.value;
-        if (objName === 'item_icon') {
-            objName = 'item_icon[]';
-            objVal = object.files[0];
-        }
-        if (objName.match(/this_prof|this_skill/)) {
-            objVal = object.checked ? "1" : "0";
-        }
-        console.log('checking', objName);
-        console.log(objVal)
-        form.append(objName, objVal);
-        form.append('item_id', id);
-        return $.ajax({
-            type: "post",
-            url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
-            data: form,
-            processData: false,
-            contentType: false,
-            success: (data) => {
-                data = JSON.parse(data);
-                if (data.response) {
-                    for (let i in journal.items.list) {
-                        if (journal.items.list[i].info.item_id === id) {
-                            for (let j in data.params) {
-                                journal.items.list[i].info[j] = data.params[j];
-                            }
+    function setClassGroup(item) {
+        let saveClass = q('#' + item.draggableContainerId + ' .save_class')[0];
+        let classSelect = q('#' + item.draggableContainerId + ' select[name=class]')[0];
+        let subclass = q('#' + item.draggableContainerId + ' input[name=subclass]')[0];
+        let classLvl = q('#' + item.draggableContainerId + ' input[name=lvl]')[0];
+        if (classSelect && subclass && classLvl && saveClass) {
+            let classes = JSON.parse(item.info.classes);
+            if (classes && classes.length > 0) {
+                // Set main class
+                classSelect.value = classes[0].class;
+                // Set atributes to related inputs
+                subclass.setAttribute('name', 'subclass_' + classes[0].class);
+                classLvl.setAttribute('name', 'lvl_' + classes[0].class);
+                // Fill data from class if exists
+                subclass.value = classes[0].subclass;
+                classLvl.value = classes[0].lvl;
+            }
+            classSelect.onchange = function () {
+                // Set atributes to related inputs
+                subclass.setAttribute('name', 'subclass_' + this.value);
+                classLvl.setAttribute('name', 'lvl_' + this.value);
+                // This needs to be redeclared here in case data has changed from page load
+                let classes = JSON.parse(item.info.classes);
+                // Fill data from class if exists
+                if (classes && classes.length > 0) {
+                    let classFound = false;
+                    for (let i in classes) {
+                        if (classes[i].class === this.value) {
+                            subclass.value = classes[i].subclass;
+                            classLvl.value = classes[i].lvl;
+                            classFound = true;
                         }
                     }
+                    if (!classFound) {
+                        subclass.value = "";
+                        classLvl.value = "";
+                    }
                 }
-                return data;
-            }, error: (e) => {
-                console.log(e);
             }
-        });
+            saveClass.click(function () {
+                saveField(classSelect, item.info.item_id);
+                saveField(subclass, item.info.item_id);
+                saveField(classLvl, item.info.item_id);
+            });
+        }
+    }
+
+    function setInspiration(item) {
+        const inspCont = q('#' + item.draggableContainerId + ' .inspiration')[0];
+        const insp = q('#' + item.draggableContainerId + ' [name=inspiration]')[0];
+        if (inspCont && insp) {
+            function loadInsp() {
+                if (item.info.info) {
+                    let info = JSON.parse(item.info.info);
+                    if (info.inspiration) {
+                        insp.value = info.inspiration;
+                        if (insp.value === "1") {
+                            console.log(insp.children[0])
+                            insp.children[0].style.backgroundImage = 'url("/assets/media/games/journal/insp.png")';
+                            return;
+                        }
+                        insp.children[0].style.backgroundImage = 'none';
+                        return;
+                    }
+                    insp.value = "0";
+                }
+            }
+
+            loadInsp();
+            inspCont.click(function () {
+                saveField(insp, item.info.item_id).done((loadInsp));
+            });
+        }
     }
 
     function getJournalModalForm() {

@@ -95,11 +95,11 @@
                                                 <!--begin::Inspiration-->
                                                 <div class="this-double-outline combat-item inspiration cursor-pointer bg-white circle">
                                                     <div class="flex-column justify-content-center align-items-center gap-2">
-                                                        <button type="button" name="this_insp" id="this_insp"
-                                                                class="symbol symbol-25px btn p-0 circle this-role-form-field bg-transparent">
+                                                        <button type="button" name="inspiration" id="inspiration"
+                                                                class="symbol symbol-25px btn p-0 circle bg-transparent">
                                                             <span class="symbol-label bg-transparent"></span>
                                                         </button>
-                                                        <label for="this_insp"
+                                                        <label for="inspiration"
                                                                class="combat-item_title">INSPIRATION</label>
                                                     </div>
                                                 </div>
@@ -133,7 +133,7 @@
                                                         <option value="wizard">Wizard</option>
                                                     </select>
                                                     <button type="button" id="save_class" name="save_class"
-                                                            class="btn btn-sm btn-primary p-2 save_class">
+                                                            class="btn btn-sm btn-primary p-1 save_class">
                                                         <i class="fa-solid fa-save ms-1"></i>
                                                     </button>
                                                 </div>
@@ -141,7 +141,8 @@
                                                 <!--begin::Race-->
                                                 <div class="column form-control-solid">
                                                     <label for="race">Race</label>
-                                                    <input type="text" id="race" name="race" value=""
+                                                    <input type="text" id="race" name="race"
+                                                           value="<?= $info['race'] ?? "" ?>"
                                                            class="form-control this-role-form-field ms-3"/>
                                                 </div>
                                                 <!--end::Race-->
@@ -206,7 +207,8 @@
                                             <!--begin::Speed-->
                                             <div class="this-outline combat-item">
                                                 <div class="flex-column justify-content-center align-items-center">
-                                                    <input type="text" id="walkspeed" name="walkspeed" value="0"
+                                                    <input type="text" id="walkspeed" name="walkspeed"
+                                                           value="<?= $info['walkspeed'] ?? "0" ?>"
                                                            class="combat-item_content this-role-form-field"/>
                                                     <label for="walkspeed" class="combat-item_title">WALK SPEED</label>
                                                 </div>

@@ -259,6 +259,6 @@ class SheetDnD
                 break;
         }
         return [$k => $v];
-        return [$k => $v, 'other' => $other];
+        //return [$k => $v, 'other' => $other];
     }
 }

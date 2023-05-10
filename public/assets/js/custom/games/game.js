@@ -252,25 +252,47 @@ function initGame(dbGame, session) {
             });
             //* end::Image change *//
             //* begin::Save class *//
-            let saveClass = q('#' + item.draggableContainerId + ' .save_class');
+            let saveClass = q('#' + item.draggableContainerId + ' .save_class')[0];
             let classSelect = q('#' + item.draggableContainerId + ' select[name=class]')[0];
             let subclass = q('#' + item.draggableContainerId + ' input[name=subclass]')[0];
             let classLvl = q('#' + item.draggableContainerId + ' input[name=lvl]')[0];
-            if (classSelect && subclass && classLvl) {
+            if (classSelect && subclass && classLvl && saveClass) {
+                let classes = JSON.parse(item.info.classes);
+                if (classes && classes.length > 0) {
+                    // Set main class
+                    classSelect.value = classes[0].class;
+                    // Set atributes to related inputs
+                    subclass.setAttribute('name', 'subclass_' + classes[0].class);
+                    classLvl.setAttribute('name', 'lvl_' + classes[0].class);
+                    // Fill data from class if exists
+                    subclass.value = classes[0].subclass;
+                    classLvl.value = classes[0].lvl;
+                }
                 classSelect.onchange = function () {
+                    // Set atributes to related inputs
                     subclass.setAttribute('name', 'subclass_' + this.value);
                     classLvl.setAttribute('name', 'lvl_' + this.value);
-                }
-                if (saveClass.length > 0) {
-                    saveClass.click(function () {
-                        saveField(classSelect, item.info.item_id).done((data) => {
-                            data = JSON.parse(data);
-                            if (!data.response) {
-                                console.log(data);
+                    // This needs to be redeclared here in case data has changed from page load
+                    let classes = JSON.parse(item.info.classes);
+                    // Fill data from class if exists
+                    if (classes && classes.length > 0) {
+                        let classFound = false;
+                        for (let i in classes) {
+                            if (classes[i].class === this.value) {
+                                subclass.value = classes[i].subclass;
+                                classLvl.value = classes[i].lvl;
+                                classFound = true;
                             }
-                        });
-                    });
+                        }
+                        if (!classFound) {
+                            subclass.value = "";
+                            classLvl.value = "";
+                        }
+                    }
                 }
+                saveClass.click(function () {
+                    saveField(classSelect, item.info.item_id);
+                });
             }
             //* end::Save class *//
             //* begin::Inputs change *//
@@ -279,21 +301,7 @@ function initGame(dbGame, session) {
             getDataFromFields(this_fields, item);
             // Save on field lost of focus
             this_fields.blur(function () {
-                saveField(this, item.info.item_id).done((data) => {
-                    data = JSON.parse(data);
-                    if (data.response) {
-                        // Update item
-                        for (let key in data.params) {
-                            item.info[key] = data.params[key];
-                        }
-                        // Refill fields dataf-from
-                        getDataFromFields(this_fields, item);
-                        let rawScores = q('#' + item.draggableContainerId + ' .this-score');
-                        let scoreProf = q('#' + item.draggableContainerId + ' .score-prof');
-                        // Change name in '.aside' journal list
-                        q('#' + journal.container + ' button[value="' + item.info.item_id + '"] .menu-title')[0].innerHTML = q('#' + item.draggableContainerId + ' input[name=item_name]')[0].value;
-                    }
-                });
+                saveField(this, item.info.item_id);
             });
         }
     }
@@ -384,7 +392,19 @@ function initGame(dbGame, session) {
             processData: false,
             contentType: false,
             success: (data) => {
+                data = JSON.parse(data);
+                if (data.response) {
+                    for (let i in journal.items.list) {
+                        if (journal.items.list[i].info.item_id === id) {
+                            for (let j in data.params) {
+                                journal.items.list[i].info[j] = data.params[j];
+                            }
+                        }
+                    }
+                }
                 return data;
+            }, error: (e) => {
+                console.log(e);
             }
         });
     }

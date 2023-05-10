@@ -69,11 +69,6 @@ CREATE TABLE game_journal(
 	item_type VARCHAR(20),
 	item_viewers JSON DEFAULT '[]', -- ID users
 	item_editors JSON DEFAULT '[]', -- ID users
-	item_sheet INT UNSIGNED
-);
-
-CREATE TABLE game_sheet(
-	sheet_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
 	info JSON,
 	class JSON,
 	xp INT,

@@ -105,7 +105,6 @@ function initGame(dbGame, session) {
         if (!item || item === {}) return;
         // Put id into save button
         q('#save_journal_item-btn')[0].value = item.item_id;
-        console.log(item);
         $('#item_name').val(item.item_name);
         $('#item_type option[value="' + item.item_type + '"]').prop('selected', true);
         switchIncludePlayers();

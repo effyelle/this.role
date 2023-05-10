@@ -53,10 +53,12 @@ class Journal {
                 }
                 // Show list
                 this.formatJournalItems(this.items.list);
-                this.load(this.opt.onLoad, data);
-                return;
+            } else {
+                console.log("No journal items in this game yet");
             }
-            this.error(this.opt.onError, "No data was received.");
+            this.load(this.opt.onLoad, data);
+        }).fail((e) => {
+            console.log("Error: ", e);
         });
     }
 
@@ -67,11 +69,10 @@ class Journal {
             dataType: 'json', // Comment this line for debugging,
             async: true,
             success: (data) => {
-                console.log(data);
                 return data;
             },
             error: (e) => {
-                return this.opt.onError(e);
+                return e;
             }
         });
     }
@@ -150,8 +151,10 @@ class Journal {
                 '       ' + htmlText +
                 '    </div>' +
                 '</div>';
-            q('#' + this.draggableContainerId + ' .item_icon-holder')[0]
-                .style.backgroundImage = 'url("' + icon + '")';
+            const iconHolder = q('#' + this.draggableContainerId + ' .item_icon-holder');
+            if (iconHolder.length > 0) {
+                iconHolder[0].style.backgroundImage = 'url("' + icon + '")';
+            }
         }
         this.getLevel = (xp) => {
             // This is like super dirty code

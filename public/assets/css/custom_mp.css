@@ -1197,3 +1197,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 .column.this-outline {
     max-width: 450px;
 }
+
+.symbol-label {
+    background-size: contain !important;
+}

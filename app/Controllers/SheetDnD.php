@@ -4,6 +4,9 @@ namespace App\Controllers;
 
 class SheetDnD
 {
+    public string $name;
+    public string $type;
+    public string $icon;
     public array $info;
     public array $class;
     public string $xp;
@@ -19,9 +22,9 @@ class SheetDnD
     public string $notes;
     public string $backstory;
 
-    function __init($type = 'character'): array
+    function __init($name, $type = 'character'): array
     {
-        return $this->$type();
+        return $this->$type($name);
     }
 
     function handout(): array
@@ -32,10 +35,14 @@ class SheetDnD
         return ['info' => $this->info];
     }
 
-    function character(): array
+    function character($name): array
     {
+        $this->name = $name;
+        $this->type = "character";
+        $this->icon = "";
         $this->info = [
-            "name" => "",
+            "walkspeed" => "0",
+            "inspiration" => "0",
             "race" => "",
             "background" => "",
             "characteristics" => [
@@ -45,7 +52,7 @@ class SheetDnD
                 "flaws" => "",
             ],
         ];
-        $this->class = ["name" => "", "lvl" => ""];
+        $this->class = ["name" => "", "subclass" => "", "lvl" => ""];
         $this->xp = "0";
         $this->ability_scores = [
             "this_score_str" => [
@@ -130,7 +137,7 @@ class SheetDnD
         ];
         $this->bag_item = [
             "units" => "",
-            "item_name" => "",
+            "name" => "",
             "weight" => "0",
         ];
         $this->bag = [
@@ -146,6 +153,9 @@ class SheetDnD
         $this->backstory = "";
 
         return [
+            "item_name" => $this->name,
+            "item_type" => $this->type,
+            "item_icon" => $this->icon,
             "info" => $this->info,
             "class" => [],
             "xp" => $this->xp,
@@ -164,4 +174,39 @@ class SheetDnD
             "backstory" => $this->backstory
         ];
     }
+
+    function _edit_view($post): array
+    {
+        // * begin::Save players can see or edit if it was set * //
+        $post['item_viewers'] = [];
+        $post['item_editors'] = [];
+        if (isset($_POST['players'])) {
+            foreach ($_POST['players'] as $k => $v) {
+                if ($v === 'can_see') {
+                    $post['item_viewers'][] = substr($k, 0, 1);
+                }
+                if ($v === 'can_edit') {
+                    $post['item_editors'][] = substr($k, 0, 1);
+                }
+            }
+        }
+        // * end::Save players can see or edit if it was set * //
+        return $post;
+    }
+
+    function _json_process($post): array
+    {
+        foreach ($post as $k => $v) {
+            // Encode if array
+            if (gettype($v) === 'array' || gettype($v) === 'object') {
+                $v = json_encode($v);
+            }
+            $post[$k] = $v;
+        }
+        return $post;
+    }
+    /*
+        function __get($id): array
+        {
+        }*/
 }

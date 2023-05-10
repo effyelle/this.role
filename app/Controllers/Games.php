@@ -294,6 +294,14 @@ class Games extends BaseController
         return json_encode(['response' => false, 'msg' => 'Messages could not be loaded']);
     }
 
+    function get_journal_items($id): string
+    {
+        if ($journal = $this->journalmodel->get(['item_id_game' => $id], null, ['item_name' => 'ASC'])) {
+            return json_encode(['response' => true, 'results' => $journal]);
+        }
+        return json_encode(['response' => false]);
+    }
+
     function set_journal_item($id): string
     {
         $data['response'] = false;
@@ -303,53 +311,28 @@ class Games extends BaseController
         $itemType = $_POST['item_type'] ?? false;
 
         if ($itemName && $itemType && $itemName !== '' && $itemType !== '-1') {
-            // * begin::Save general fields * //
-            $post = [
-                'item_id_game' => $id,
-                'item_name' => validate($itemName),
-                'item_type' => validate($itemType)
-            ];
-            // * end::Save general fields * //
-            // * begin::Save players can see or edit if it was set * //
-            $item_viewers = [];
-            $item_editors = [];
-            if (isset($_POST['players'])) {
-                foreach ($_POST['players'] as $k => $v) {
-                    if ($v === 'can_see') {
-                        $item_viewers[] = substr($k, 0, 1);
-                    }
-                    if ($v === 'can_edit') {
-                        $item_editors[] = substr($k, 0, 1);
-                    }
-                }
-            }
-            $post['item_viewers'] = json_encode($item_viewers);
-            $post['item_editors'] = json_encode($item_editors);
-            // * end::Save players can see or edit if it was set * //
-            // * begin::DataBase connection * //
             // Create DnD Sheet item
             $t = new SheetDnD();
-            if (!isset($_POST['item_id'])) { // If item ID not set, create new item
-                $post['item_sheet'] = json_encode((new SheetDnD())->__init($post['item_type']));
-                // Create new sheet
-                $newSheet = (new SheetDnD())->__init();
-                $sheetPost = [];
-                foreach ($newSheet as $k => $v) {
-                    // Encode if array
-                    if (gettype($v) === 'array') $v = json_encode($v);
-                    $sheetPost[$k] = $v;
-                }
-                // Attempt to save sheet
-                if ($this->sheetmodel->new($sheetPost)) {
-                    // Attempt to save new item
-                    $post['item_sheet'] = $this->sheetmodel->maxID()->sheet_id;
-                    if ($this->journalmodel->new($post)) {
-                        $data = ['response' => true, 'msg' => 'Added successfully'];
-                    } else {
-                        $data['msg'] = 'Item could not be added';
-                    }
+            // If item ID not set, create new item
+            if (!isset($_POST['item_id'])) {
+                // Init data
+                $post = $t->__init(validate($itemName), validate($itemType));
+                // Add editors and/or viewers
+                $post = $t->_edit_view($post);
+                $post = $t->_json_process($post);
+                // Save game ID
+                $post['item_id_game'] = $id;
+                // Attempt to save new item
+                if ($this->journalmodel->new($post)) {
+                    $data = ['response' => true, 'msg' => 'Added successfully', 'post' => $post];
+                } else {
+                    $data['msg'] = 'Item could not be added';
                 }
             } else { // If item ID set, update item
+                $post = [
+                    'item_name' => $itemName,
+                    'item_type' => $itemType
+                ];
                 // Update sheet
                 if ($this->journalmodel->updt($post, ['item_id' => $_POST['item_id']])) {
                     $data = ['response' => true, 'msg' => 'Updated successfully'];
@@ -378,19 +361,11 @@ class Games extends BaseController
         return json_encode($data);
     }
 
-    function get_journal_items($id): string
-    {
-        if ($journal = $this->journalmodel->get(['item_id_game' => $id], null, ['item_name' => 'ASC'])) {
-            return json_encode(['response' => true, 'results' => $journal]);
-        }
-        return json_encode(['response' => false]);
-    }
-
     function sheet($id): string
     {
         $item = $this->journalmodel->get(['item_id' => $id], ['games' => 'game_id=item_id_game'])[0];
         return match ($_POST['item_type']) {
-            'character' => view('/pages/games/character_sheet', ['item' => $item, 'sheet' => json_decode($item['item_sheet'])]),
+            'character' => view('/pages/games/character_sheet', ['data' => $item]),
             'handout' => view('/pages/games/handout_sheet', ['item' => $item]),
             default => view('/pages/game/not_found_sheet'),
         };

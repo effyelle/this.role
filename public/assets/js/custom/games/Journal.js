@@ -243,13 +243,10 @@ class Journal {
         }
         this.getInitTierBreaker = () => {
             // Add init modifiers (?)
-            const tb = 1.045;
-            let dex = 0;
-            let scoreModifiers = this.getRawScoreModifier();
-            if (scoreModifiers) {
-                dex = scoreModifiers.this_score_dex;
-            }
-            return dex * tb;
+            const tierBreaker = 1.045;
+            let dex = this.getRawScoreModifier('dex');
+            if (!dex) dex = 0;
+            return dex * tierBreaker;
         }
     }
 }

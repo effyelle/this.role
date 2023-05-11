@@ -281,8 +281,8 @@ function initGame(dbGame, session) {
         }
         form.append(objName, objVal);
         form.append('item_id', id);
-        console.log('checking', objName);
-        console.log(objVal)
+        //console.log('saveField objName= ', objName);
+        //console.log('saveField objVal= ', objVal)
         return $.ajax({
             type: "post",
             url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
@@ -291,13 +291,10 @@ function initGame(dbGame, session) {
             contentType: false,
             success: (data) => {
                 data = JSON.parse(data);
-                console.log(data);
                 if (data.response) {
                     for (let i in journal.items.list) {
                         if (journal.items.list[i].info.item_id === id) {
                             for (let j in data.params) {
-                                console.log(data.params[j])
-                                console.log(journal.items.list[i].info[j])
                                 journal.items.list[i].info[j] = data.params[j];
                             }
                         }
@@ -352,7 +349,7 @@ function initGame(dbGame, session) {
                 return i.getLevel(v);
             case 'this-ac':
                 return i.getClassArmor();
-            case 'this-init':
+            case 'this_init':
                 return i.getInitTierBreaker();
             case 'this-prof':
                 return i.getProficiency(v);
@@ -362,50 +359,81 @@ function initGame(dbGame, session) {
     }
 
     function setClassGroup(item) {
-        let saveClass = q('#' + item.draggableContainerId + ' .save_class')[0];
+        let saveClass = q('#' + item.draggableContainerId + ' button[name=new_main]')[0];
         let classSelect = q('#' + item.draggableContainerId + ' select[name=class]')[0];
         let subclass = q('#' + item.draggableContainerId + ' input[name=subclass]')[0];
         let classLvl = q('#' + item.draggableContainerId + ' input[name=lvl]')[0];
-        if (classSelect && subclass && classLvl && saveClass) {
+        let scoreProfs = q('#' + item.draggableContainerId + ' input.score_prof');
+        if (classSelect && subclass && classLvl && saveClass && scoreProfs) {
             let classes = JSON.parse(item.info.classes);
             if (classes && classes.length > 0) {
-                // Set main class
-                classSelect.value = classes[0].class;
-                // Set atributes to related inputs
-                subclass.setAttribute('name', 'subclass_' + classes[0].class);
-                classLvl.setAttribute('name', 'lvl_' + classes[0].class);
-                // Fill data from class if exists
-                subclass.value = classes[0].subclass;
-                classLvl.value = classes[0].lvl;
+                // Get select values
+                let c = findClass();
+                selectClass(c);
+                selectSavingThrows(c);
             }
             classSelect.onchange = function () {
+                let c = findClass(this.value);
+                selectClass(c);
+                selectSavingThrows(c);
                 // Set atributes to related inputs
+                // This must always happen onchange
                 subclass.setAttribute('name', 'subclass_' + this.value);
                 classLvl.setAttribute('name', 'lvl_' + this.value);
-                // This needs to be redeclared here in case data has changed from page load
-                let classes = JSON.parse(item.info.classes);
-                // Fill data from class if exists
-                if (classes && classes.length > 0) {
-                    let classFound = false;
-                    for (let i in classes) {
-                        if (classes[i].class === this.value) {
-                            subclass.value = classes[i].subclass;
-                            classLvl.value = classes[i].lvl;
-                            classFound = true;
-                        }
+            }
+            saveClass.click(function () {
+                saveClass.value = classSelect.value;
+                saveField(saveClass, item.info.item_id).done((data) => {
+                    console.log(data);
+                });
+            });
+        }
+
+        function findClass(name) {
+            let classes = JSON.parse(item.info.classes);
+            for (let i in classes) {
+                let c = classes[i];
+                if (name) {
+                    if (c.class.match(name)) {
+                        return c;
                     }
-                    if (!classFound) {
-                        subclass.value = "";
-                        classLvl.value = "";
+                } else if (c.is_main) {
+                    return c;
+                }
+            }
+            return null;
+        }
+
+        function selectClass(c) {
+            if (!c) {
+                classSelect.value = "-1";
+                subclass.setAttribute("name", "");
+                classLvl.setAttribute("name", "");
+                subclass.value = "";
+                classLvl.value = "";
+                return;
+            }
+            // Set class
+            classSelect.value = c.class;
+            // Set atributes to related inputs
+            subclass.setAttribute('name', 'subclass_' + c.class);
+            classLvl.setAttribute('name', 'lvl_' + c.class);
+            // Fill data from class if exists
+            subclass.value = c.subclass;
+            classLvl.value = c.lvl;
+        }
+
+        function selectSavingThrows(c) {
+            let saves = false;
+            if (c && c.saves) {
+                saves = c.saves.split(',');
+                for (let s of saves) {
+                    for (let i of scoreProfs) {
+                        i.checked = i.id.match(s);
                     }
                 }
             }
-            saveClass.click(function () {
-                saveField(classSelect, item.info.item_id).done((data) => {
-                    saveField(subclass, item.info.item_id);
-                    saveField(classLvl, item.info.item_id);
-                });
-            });
+            return saves;
         }
     }
 
@@ -419,7 +447,6 @@ function initGame(dbGame, session) {
                     if (info.inspiration) {
                         insp.value = info.inspiration;
                         if (insp.value === "1") {
-                            console.log(insp.children[0])
                             insp.children[0].style.backgroundImage = 'url("/assets/media/games/journal/insp.png")';
                             return;
                         }
@@ -510,15 +537,15 @@ function initGame(dbGame, session) {
         toggleProgressSpinner(false);
     }
 
-    // **************************** //
-    // ******* end::Journal ******* //
-    // **************************** //
+// **************************** //
+// ******* end::Journal ******* //
+// **************************** //
 
-    // **************************** //
-    // ******* begin::Board ******* //
-    // **************************** //
+// **************************** //
+// ******* begin::Board ******* //
+// **************************** //
 
-    // * Board intance * //
+// * Board intance * //
     const board = new Board('.btn.dice');
     board.map = new GameMap('#this-game', {
         folder: '/assets/media/games/' + dbGame.game_folder + '/layers/',
@@ -677,19 +704,19 @@ function initGame(dbGame, session) {
 
     }
 
-    // **************************** //
-    // ******** end::Board ******** //
-    // **************************** //
+// **************************** //
+// ******** end::Board ******** //
+// **************************** //
 
-    // **************************** //
-    // ******* begin::Chat ******** //
-    // **************************** //
+// **************************** //
+// ******* begin::Chat ******** //
+// **************************** //
 
-    // * Chat object * //
+// * Chat object * //
     const chat = new board.Chat('.chat-messages');
     getChat();
 
-    // * Listen to dices buttons pressed * //
+// * Listen to dices buttons pressed * //
     $('.btn.dice').click(function () {
         chat.formatMessage({
             src: "",
@@ -700,12 +727,12 @@ function initGame(dbGame, session) {
             rolling: $('#roll-' + this.value).val()
         });
     });
-    // * Chat textarea constant * //
+// * Chat textarea constant * //
     const chatText = q('.chat-bubble textarea')[0];
-    // * Chat textarea holder * //
+// * Chat textarea holder * //
     let chatMessage = '';
 
-    // * Listen to chat pressed keys * //
+// * Listen to chat pressed keys * //
     chatText.addEventListener('keydown', function (e) {
         if (e.key === 'Backspace') {
             chatMessage = chatMessage.substring(0, chatMessage.length - 1);
@@ -726,7 +753,7 @@ function initGame(dbGame, session) {
         chatMessage += e.key;
     });
 
-    // * Listen to send button in chat * //
+// * Listen to send button in chat * //
     document.querySelector('.chat-bubble ~ div .btn').addEventListener('click', function () {
         setChat(chatMessage.trim(), $('#charsheet_selected').find(':selected').text(), "chatMessage");
     });
@@ -793,9 +820,9 @@ function initGame(dbGame, session) {
     }
 
 
-    // **************************** //
-    // ******** end::Chat ********* //
-    // **************************** //
+// **************************** //
+// ******** end::Chat ********* //
+// **************************** //
 
     function reloadGameInfo() {
         $.ajax({

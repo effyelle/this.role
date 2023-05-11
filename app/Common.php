@@ -115,3 +115,8 @@ function upload_img($formname, $target, $preferred_filename = null): string|bool
     if (move_uploaded_file($_FILES[$formname]["tmp_name"], $target . $new_filename)) return $target . $new_filename;
     return false;
 }
+
+function strtosentence(string $str): string
+{
+    return strtoupper(substr($str, 0, 1)) . strtolower(substr($str, 1, strlen($str)));
+}

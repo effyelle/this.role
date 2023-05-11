@@ -430,10 +430,13 @@ class Games extends BaseController
                 // Get the item from DB
                 if ($item = $this->journalmodel->get(['item_id' => $_POST['item_id']])) {
                     $item = $item[0];
-                    // Process the field
+                    // Init sheet type
+                    $t->__init($item['item_type']);
+                    // Process the field(s)
                     $params = $t->_process_post($params, $item);
-                    $data['params'] = $t->_process_post($params, $item);
                     if ($params) {
+                        $params = $t->_json_process($params);
+                        $data['params'] = $params;
                         $data['response'] = $this->journalmodel->updt($params, ['item_id' => $_POST['item_id']]);
                     }
                 }
@@ -442,7 +445,6 @@ class Games extends BaseController
             }
         }
         //* end::Other fields *//
-
         return json_encode($data);
     }
 

@@ -1,6 +1,6 @@
 <?php if (isset($data)) {
     $info = json_decode($data['info'], true);
-    $class = json_decode($data['classes'], true);
+    $classes = json_decode($data['classes'], true);
     $xp = $data['xp'];
     $scores = json_decode($data['ability_scores'], true);
     $expertises = json_decode($data['expertises'], true);
@@ -57,11 +57,11 @@
                         <div class="flex-row-wrap gap-5 justify-content-start align-items-stretch">
                             <!--begin::Basic info-->
                             <div class="column this-outline">
-                                <div class="flex-row-wrap justify-content-center p-4">
+                                <div class="flex-column justify-content-between align-items-center gap-6 p-4 h-100">
                                     <!--begin::Row-->
-                                    <div class="flex-row-wrap justify-content-center align-items-stretch gap-6">
+                                    <div class="flex-row-wrap justify-content-center align-items-stretch gap-12">
                                         <!--begin::Col-->
-                                        <div class="flex-column gap-2 max-w-150px">
+                                        <div class="flex-column gap-5 max-w-150px">
                                             <!--begin::Row (Character name)-->
                                             <div class="form-control-solid">
                                                 <div class="flex-column">
@@ -91,7 +91,7 @@
                                             </div>
                                             <!--end::Row (Avatar)-->
                                             <!--begin::Row-->
-                                            <div class="flex-row gap-12 justify-content-end position-relative mt--25px">
+                                            <div class="flex-row gap-12 justify-content-end position-relative mt--50px">
                                                 <!--begin::Inspiration-->
                                                 <div class="this-double-outline combat-item inspiration cursor-pointer bg-white circle">
                                                     <div class="flex-column justify-content-center align-items-center gap-2">
@@ -111,125 +111,125 @@
                                         <!--begin::Col (Character Origin Details)-->
                                         <div class="flex-column justify-content-start align-items-stretch max-w-200px">
                                             <!--begin::Row-->
-                                            <div class="column form-control-solid">
+                                            <div class="row justify-content-evenly">
                                                 <!--begin::Class-->
-                                                <label for="class">Class</label>
-                                                <div class="flex-row gap-3 align-items-center">
-                                                    <select id="class" name="class" aria-selected="-1"
-                                                            class="px-3 form-control form-control-sm">
-                                                        <option value="-1" disabled selected>Select one</option>
-                                                        <option value="artificer">Artificer</option>
-                                                        <option value="barbarian">Barbarian</option>
-                                                        <option value="bard">Bard</option>
-                                                        <option value="cleric">Cleric</option>
-                                                        <option value="druid">Druid</option>
-                                                        <option value="fighter">Fighter</option>
-                                                        <option value="monk">Monk</option>
-                                                        <option value="paladin">Paladin</option>
-                                                        <option value="ranger">Ranger</option>
-                                                        <option value="rogue">Rogue</option>
-                                                        <option value="sorcerer">Sorcerer</option>
-                                                        <option value="warlock">Warlock</option>
-                                                        <option value="wizard">Wizard</option>
-                                                    </select>
-                                                    <button type="button" id="save_class" name="save_class"
-                                                            class="btn btn-sm btn-primary p-1 save_class">
-                                                        <i class="fa-solid fa-save ms-1"></i>
-                                                    </button>
+                                                <div class="column form-control-solid mb-5">
+                                                    <div class="flex-column gap-3">
+                                                        <div class="flex-row form-control-solid align-items-center">
+                                                            <label for="class">Class</label>
+                                                            <select id="class" name="class" aria-selected="-1"
+                                                                    class="px-3 ms-3 form-control form-control-sm">
+                                                                <option value="-1" disabled selected>Select one</option>
+                                                                <?php if ($classes) {
+                                                                    foreach ($classes as $class) { ?>
+                                                                        <option value="<?= strtolower($class['class']); ?>">
+                                                                            <?= strtosentence($class['class']); ?>
+                                                                        </option>
+                                                                    <?php }
+                                                                } ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-control-solid ms-auto">
+                                                            <button type="button" id="new_main" name="new_main"
+                                                                    class="btn btn-sm btn-primary p-1 px-2 save_class">
+                                                                <i class="fa-solid fa-save ms-1"></i> Set new main class
+                                                            </button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <!--end::Class-->
-                                                <!--begin::Race-->
-                                                <div class="column form-control-solid">
+                                                <!--begin::Row Level & XP-->
+                                                <div class="row justify-content-start row-cols-2 mb-5">
+                                                    <div class="flex-row form-control-solid">
+                                                        <label for="lvl">Level</label>
+                                                        <input type="number" id="lvl" name="lvl" value="1"
+                                                               class="form-control this-role-form-field ms-3 w-75"/>
+                                                    </div>
+                                                    <div class="flex-row form-control-solid">
+                                                        <label for="xp">XP</label>
+                                                        <input type="number" id="xp" name="xp"
+                                                               value="<?= $data['xp'] ?? '0' ?>"
+                                                               class="form-control this-role-form-field ms-3 w-75"/>
+                                                    </div>
+                                                </div>
+                                                <!--end::Row Level & XP-->
+                                                <!--begin::Row Subclass-->
+                                                <div class="flex-row form-control-solid mb-5">
+                                                    <label for="subclass">Subclass</label>
+                                                    <input type="text" id="subclass" name="subclass" value=""
+                                                           class="form-control this-role-form-field ms-3"/>
+                                                </div>
+                                                <!--end::Row Subclass-->
+                                                <!--begin::Row Race-->
+                                                <div class="flex-row form-control-solid mb-5">
                                                     <label for="race">Race</label>
                                                     <input type="text" id="race" name="race"
                                                            value="<?= $info['race'] ?? "" ?>"
                                                            class="form-control this-role-form-field ms-3"/>
                                                 </div>
-                                                <!--end::Race-->
-                                            </div>
-                                            <!--end::Row-->
-                                            <!--begin::Row-->
-                                            <div class="row justify-content-evenly mb-5">
-                                                <div class="column form-control-solid">
-                                                    <label for="subclass">Subclass</label>
-                                                    <input type="text" id="subclass" name="subclass" value=""
-                                                           class="form-control this-role-form-field ms-3"/>
-                                                </div>
-                                                <div class="column form-control-solid">
+                                                <!--end::Row Race-->
+                                                <!--begin::Row Background-->
+                                                <div class="flex-row form-control-solid mb-5">
                                                     <label for="background">Background</label>
                                                     <input type="text" id="background" name="background"
                                                            value="<?= $info['background'] ?? '' ?>"
                                                            class="form-control this-role-form-field ms-3"/>
                                                 </div>
-                                            </div>
-                                            <!--end::Row-->
-                                            <!--begin::Row-->
-                                            <div class="row justify-content-start row-cols-2">
-                                                <div class="column form-control-solid">
-                                                    <label for="lvl">Level</label>
-                                                    <input type="number" id="lvl" name="lvl" value="1"
-                                                           class="form-control this-role-form-field ms-3 w-75"/>
-                                                </div>
-                                                <div class="column form-control-solid">
-                                                    <label for="xp">XP</label>
-                                                    <input type="number" id="xp" name="xp"
-                                                           value="<?= $data['xp'] ?? '0' ?>"
-                                                           class="form-control this-role-form-field ms-3 w-75"/>
-                                                </div>
+                                                <!--end::Row Background-->
                                             </div>
                                             <!--end::Row-->
                                         </div>
                                         <!--end::Col (Character Origin Details)-->
-                                        <!--begin::Row - Combat (general)-->
-                                        <div class="flex-row-wrap justify-content-center align-items-center gap-3 mt-3">
-                                            <!--begin::Class Armor (CA)-->
-                                            <div class="this-ca combat-item">
-                                                <div class="flex-column justify-content-center align-items-center">
+                                    </div>
+                                    <!--end::Row-->
+                                    <!--begin::Row - Combat (general)-->
+                                    <div class="flex-row-wrap justify-content-center align-items-center gap-3 mt-3 mb-6">
+                                        <!--begin::Class Armor (CA)-->
+                                        <div class="this-ca combat-item">
+                                            <div class="flex-column justify-content-center align-items-center">
                                                 <span type="text" data-from="this-ac"
                                                       class="combat-item_content">10</span>
-                                                    <label for="this-ac" class="combat-item_title">AC</label>
-                                                    <input type="text" id="this-ac" name="this-ac"
-                                                           class="d-none this-role-form-field"/>
-                                                </div>
+                                                <label for="this-ac" class="combat-item_title">AC</label>
+                                                <input type="text" id="this-ac" name="this-ac"
+                                                       class="d-none this-role-form-field"/>
                                             </div>
-                                            <!--end::Class Armor (CA)-->
-                                            <!--begin::Initiative bonus-->
-                                            <div class="this-outline combat-item">
-                                                <div class="flex-column justify-content-center align-items-center">
+                                        </div>
+                                        <!--end::Class Armor (CA)-->
+                                        <!--begin::Initiative bonus-->
+                                        <div class="this-outline combat-item">
+                                            <div class="flex-column justify-content-center align-items-center">
                                                 <span type="text" data-from="this_init"
                                                       class="combat-item_content">+0</span>
-                                                    <input type="text" id="this_init" name="this_init"
-                                                           class="d-none this-role-form-field"/>
-                                                    <label for="this_init" class="combat-item_title">INITIATIVE</label>
-                                                </div>
+                                                <input type="text" id="this_init" name="this_init"
+                                                       class="d-none this-role-form-field"/>
+                                                <label for="this_init" class="combat-item_title">INITIATIVE</label>
                                             </div>
-                                            <!--end::Initiative bonus-->
-                                            <!--begin::Speed-->
-                                            <div class="this-outline combat-item">
-                                                <div class="flex-column justify-content-center align-items-center">
-                                                    <input type="text" id="walkspeed" name="walkspeed"
-                                                           value="<?= $info['walkspeed'] ?? "0" ?>"
-                                                           class="combat-item_content this-role-form-field"/>
-                                                    <label for="walkspeed" class="combat-item_title">WALK SPEED</label>
-                                                </div>
+                                        </div>
+                                        <!--end::Initiative bonus-->
+                                        <!--begin::Speed-->
+                                        <div class="this-outline combat-item">
+                                            <div class="flex-column justify-content-center align-items-center">
+                                                <input type="text" id="walkspeed" name="walkspeed"
+                                                       value="<?= $info['walkspeed'] ?? "0" ?>"
+                                                       class="combat-item_content this-role-form-field"/>
+                                                <label for="walkspeed" class="combat-item_title">WALK SPEED</label>
                                             </div>
-                                            <!--end::Speed-->
-                                            <!--begin::Proficiency bonus-->
-                                            <div class="this-outline combat-item">
-                                                <div class="flex-column justify-content-center align-items-center">
+                                        </div>
+                                        <!--end::Speed-->
+                                        <!--begin::Proficiency bonus-->
+                                        <div class="this-outline combat-item">
+                                            <div class="flex-column justify-content-center align-items-center">
                                                 <span type="text" class="combat-item_content">
                                                     +<span data-from="this-prof">+0</span>
                                                 </span>
-                                                    <input type="text" id="this-prof" name="this-prof" value="0"
-                                                           class="d-none this-role-form-field"/>
-                                                    <label for="this-prof" class="combat-item_title">PROF</label>
-                                                </div>
+                                                <input type="text" id="this-prof" name="this-prof" value="0"
+                                                       class="d-none this-role-form-field"/>
+                                                <label for="this-prof" class="combat-item_title">PROF</label>
                                             </div>
-                                            <!--end::Proficiency bonus-->
                                         </div>
-                                        <!--end::Row - Combat (general)-->
+                                        <!--end::Proficiency bonus-->
                                     </div>
-                                    <!--end::Row-->
+                                    <!--end::Row - Combat (general)-->
                                 </div>
                             </div>
                             <!--end::Basic info-->

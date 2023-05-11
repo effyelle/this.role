@@ -1192,6 +1192,10 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     margin-top: -25px;
 }
 
+.mt--50px {
+    margin-top: -50px;
+}
+
 .max-w-150px {
     max-width: 150px;
 }

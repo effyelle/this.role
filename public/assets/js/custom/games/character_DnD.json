@@ -176,7 +176,7 @@
       "failures": "0"
     },
     "conditions": {
-      "ehaustion": {
+      "exhaustion": {
         "lvl": "0",
         "1": "Disadvantage on ability checks",
         "2": "Speed halved",

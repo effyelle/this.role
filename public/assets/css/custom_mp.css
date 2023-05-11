@@ -1054,7 +1054,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 }
 
 .combat-item_title {
-    font-size: 8px !important;
+    font-size: 9px !important;
     text-transform: capitalize;
 }
 
@@ -1141,7 +1141,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     top: 140px;
 }
 
-.score_prof, .skill_prof, .exhaustion, .death_saves {
+.score_prof, .skill_prof, .exhaustion, .death_saves, .condition {
     height: 15px !important;
     width: 15px !important;
 }
@@ -1251,4 +1251,9 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 .form-check-input.expertise ~ .form-check-label,
 .was-validated .form-check-input:invalid ~ .form-check-label {
     color: var(--this-role-ocher);
+}
+
+.badge-ocher {
+    color: #fff;
+    background-color: var(--this-role-ocher);
 }

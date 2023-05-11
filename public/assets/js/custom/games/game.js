@@ -219,6 +219,17 @@ function initGame(dbGame, session) {
             let item = searchJournalItem(modal.id);
             // Do not do further actions if item was not found
             if (!item) continue;
+
+            let this_fields = q('#' + item.draggableContainerId + ' .this-role-form-field');
+            //* begin::General Inputs change *//
+            getDataFromFields(this_fields, item);
+            // Save on field lost of focus
+            this_fields.blur(function () {
+                saveField(this, item.info.item_id).done(() => {
+                    getDataFromFields(this_fields, item);
+                });
+            });
+            //* end::General Inputs change *//
             //* begin::Image change *//
             let iconInput = q('#' + item.draggableContainerId + ' .this-role-form-field[name="item_icon"]');
             iconInput.change(function () {
@@ -234,19 +245,14 @@ function initGame(dbGame, session) {
                 });
             });
             //* end::Image change *//
-            //* begin::Save class *//
-            setClassGroup(item);
-            //* end::Save class *//
             //* begin::Inspiration *//
             setInspiration(item);
             //* end::Inspiration *//
-            let this_fields = q('#' + item.draggableContainerId + ' .this-role-form-field');
             //* begin::Skill proficiencies *//
             let skillsChecks = q('#' + item.draggableContainerId + ' .skill_prof');
             if (skillsChecks) {
                 skillsChecks.click(function () {
-                    saveField(this, item.info.item_id);
-                    getSkills();
+                    saveField(this, item.info.item_id).done(getSkills);
                 });
                 getSkills();
 
@@ -258,25 +264,17 @@ function initGame(dbGame, session) {
                         for (let k in skills) {
                             if (name.match(k)) {
                                 i.value = skills[k];
-                                console.log(skills[k]);
-                                console.log(i.value);
-                                i.checked = this.value === "1" || this.value === "2";
-                                i.toggleClass('expertise', this.value === "2");
+                                i.checked = i.value === "1" || i.value === "2";
+                                i.toggleClass('expertise', i.value === "2");
                             }
                         }
                     }
                 }
             }
             //* end::Skill proficiencies *//
-            //* begin::General Inputs change *//
-            // Get data from fields
-            getDataFromFields(this_fields, item);
-            // Save on field lost of focus
-            this_fields.blur(function () {
-                saveField(this, item.info.item_id).done(() => {
-                    getDataFromFields(this_fields, item);
-                });
-            });
+            //* begin::Save class *//
+            setClassGroup(item);
+            //* end::Save class *//
         }
     }
 
@@ -341,7 +339,7 @@ function initGame(dbGame, session) {
                 } //* end::Score Modifiers *//
                 //* begin::Score proficiency bonuses *//
                 else if (divName.match(/this_prof/)) {
-                    let label = q('label[for="' + divName + '"')[0];
+                    let label = q('#' + item.draggableContainerId + ' label[for="' + divName + '"')[0];
                     if (label) {
                         label.innerHTML = i.checked ? '+' + it.getProficiency() : "+0";
                     }
@@ -408,7 +406,13 @@ function initGame(dbGame, session) {
                 newMainBtn.value = classSelect.value;
                 saveField(newMainBtn, item.info.item_id).done((data) => {
                     let c = findClass();
-                    saveClassSavingThrows(c, item.info.item_id);
+                    saveClassSavingThrows(c, item);
+                });
+            });
+            getDataFromFields(scoreProfs, item);
+            scoreProfs.click(function () {
+                saveField(this, item.info.item_id).done((data) => {
+                    getDataFromFields(scoreProfs, item);
                 });
             });
         }
@@ -449,17 +453,25 @@ function initGame(dbGame, session) {
             classLvl.value = c.lvl;
         }
 
-        function saveClassSavingThrows(c, id) {
+        function saveClassSavingThrows(c, item) {
             let saves = false;
             if (c && c.saves) {
                 saves = c.saves.split(',');
                 // Check the found ones
+                for (let i of scoreProfs) {
+                    i.checked = false;
+                }
                 for (let s of saves) {
                     for (let i of scoreProfs) {
+                        // If statement is necessary for it would erase the previous ones
                         if (i.id.match(s)) {
                             i.checked = true;
-                            saveField(i, id);
                         }
+                    }
+                    for (let i of scoreProfs) {
+                        saveField(i, item.info.item_id).done(() => {
+                            getDataFromFields(scoreProfs, item);
+                        });
                     }
                 }
             }

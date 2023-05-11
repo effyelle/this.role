@@ -266,7 +266,7 @@
                                                     <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
                                                         <label for="this_prof_str" class="me-3">+0</label>
                                                         <input type="checkbox" id="this_prof_str" name="this_prof_str"
-                                                               class="form-control form-check-input this-role-form-field b-0 position-absolute ms-9 score_prof"/>
+                                                               class="form-control form-check-input b-0 position-absolute ms-9 score_prof"/>
                                                     </div>
                                                     <!--end::Row-->
                                                     <!--begin::Row (Saving Throw Button)-->
@@ -303,7 +303,7 @@
                                                     <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
                                                         <label for="this_prof_dex" class="me-3">+0</label>
                                                         <input type="checkbox" id="this_prof_dex" name="this_prof_dex"
-                                                               class="form-control form-check-input this-role-form-field b-0 position-absolute ms-9 score_prof"/>
+                                                               class="form-control form-check-input b-0 position-absolute ms-9 score_prof"/>
                                                     </div>
                                                     <!--end::Row-->
                                                     <!--begin::Row (Saving Throw Button)-->
@@ -340,7 +340,7 @@
                                                     <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
                                                         <label for="this_prof_con" class="me-3">+0</label>
                                                         <input type="checkbox" id="this_prof_con" name="this_prof_con"
-                                                               class="form-control form-check-input this-role-form-field b-0 position-absolute ms-9 score_prof"/>
+                                                               class="form-control form-check-input b-0 position-absolute ms-9 score_prof"/>
                                                     </div>
                                                     <!--end::Row-->
                                                     <!--begin::Row (Saving Throw Button)-->
@@ -377,7 +377,7 @@
                                                     <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
                                                         <label for="this_prof_int" class="me-3">+0</label>
                                                         <input type="checkbox" id="this_prof_int" name="this_prof_int"
-                                                               class="form-control form-check-input this-role-form-field b-0 position-absolute ms-9 score_prof"/>
+                                                               class="form-control form-check-input b-0 position-absolute ms-9 score_prof"/>
                                                     </div>
                                                     <!--end::Row-->
                                                     <!--begin::Row (Saving Throw Button)-->
@@ -414,7 +414,7 @@
                                                     <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
                                                         <label for="this_prof_wis" class="me-3">+0</label>
                                                         <input type="checkbox" id="this_prof_wis" name="this_prof_wis"
-                                                               class="form-control form-check-input this-role-form-field b-0 position-absolute ms-9 score_prof"/>
+                                                               class="form-control form-check-input b-0 position-absolute ms-9 score_prof"/>
                                                     </div>
                                                     <!--end::Row-->
                                                     <!--begin::Row (Saving Throw Button)-->
@@ -451,7 +451,7 @@
                                                     <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
                                                         <label for="this_prof_cha" class="me-3">+0</label>
                                                         <input type="checkbox" id="this_prof_cha" name="this_prof_cha"
-                                                               class="form-control form-check-input this-role-form-field b-0 position-absolute ms-9 score_prof"/>
+                                                               class="form-control form-check-input b-0 position-absolute ms-9 score_prof"/>
                                                     </div>
                                                     <!--end::Row-->
                                                     <!--begin::Row (Saving Throw Button)-->
@@ -495,6 +495,16 @@
                                         <?php } ?>
                                     </div>
                                 </div>
+                                <!--begin::Info Legend-->
+                                <div class="flex-row justify-content-between p-3 gap-3">
+                                    <span class="badge badge-primary text-uppercase fs-8">
+                                        PROFICIENCY
+                                    </span>
+                                    <span class="badge badge-ocher text-uppercase fs-8">
+                                        EXPERTISE
+                                    </span>
+                                </div>
+                                <!--end::Info Legend-->
                             </div>
                             <!--end::Skills-->
                             <!--begin::Health & Conditions-->
@@ -564,27 +574,22 @@
                                     <!--end::Death Saves-->
                                     <div class="fs-3 p-3 w-100">Conditions</div>
                                     <!--begin::Conditions-->
-                                    <div class="flex-row row-cols-2 w-180px mb-5">
-                                        <!--begin::Blinded-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="blinded" name="blinded"
-                                                   class="form-control form-check-input condition this-role-form-field"/>
-                                            <label for="blinded" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Blinded
-                                            </label>
-                                        </div>
-                                        <!--end::Blinded-->
-                                        <!--begin::Blinded-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="blinded" name="blinded"
-                                                   class="form-control form-check-input condition this-role-form-field"/>
-                                            <label for="blinded" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Blinded
-                                            </label>
-                                        </div>
-                                        <!--end::Blinded-->
+                                    <div class="flex-row-wrap row-cols-2 mb-5 p-5">
+                                        <?php foreach ($health['conditions'] as $n => $c) {
+                                            if ($n !== 'exhaustion') { ?>
+                                                <!--begin::Blinded-->
+                                                <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                                                    <input type="checkbox" id="this_cond_<?= $n ?>"
+                                                           name="this_cond_<?= $n ?>" <?= $c === "1" ? "checked" : "" ?>
+                                                           class="form-control form-check-input condition"/>
+                                                    <label for="this_cond_<?= $n ?>" type="button"
+                                                           class="btn p-0 text-hover-primary fs-8 skill">
+                                                        <?= strtosentence($n); ?>
+                                                    </label>
+                                                </div>
+                                                <!--end::Blinded-->
+                                            <?php }
+                                        } ?>
                                     </div>
                                     <!--end::Conditions-->
                                 </div>

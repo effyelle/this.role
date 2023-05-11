@@ -154,7 +154,7 @@ class Journal {
         this.getLevel = () => {
             if (this.info.classes) {
                 const classes = JSON.parse(this.info.classes);
-                let lvl = 0;
+                let lvl = 1;
                 for (let i in classes) {
                     let c = classes[i];
                     if (c.lvl && c.lvl !== "" && c.lvl !== "0" && !isNaN(c.lvl)) {
@@ -195,11 +195,10 @@ class Journal {
             return this_ac;
         }
         this.getProficiency = () => {
-            if (this.info.xp) {
-                // Starts in +2 and adds +1 for every 4 levels until level 20
-                return Math.ceil(this.getLevel(this.info.xp) / 4) + 1;
-            }
-            return 2;
+            // Starts in +2 and adds +1 for every 4 levels until level 20
+            let prof = Math.ceil(this.getLevel() / 4) + 1;
+            console.log(prof)
+            return prof;
         }
         this.getMainClass = () => {
             if (this.info.classes) {

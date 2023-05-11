@@ -435,6 +435,7 @@ class Games extends BaseController
                     // Process the field(s)
                     $params = $t->_process_post($params, $item);
                     if ($params) {
+                        //return json_encode($params);
                         $params = $t->_json_process($params);
                         $data['params'] = $params;
                         $data['response'] = $this->journalmodel->updt($params, ['item_id' => $_POST['item_id']]);

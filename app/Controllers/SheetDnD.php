@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use function PHPUnit\Framework\stringContains;
+
 class SheetDnD
 {
     public string $name;
@@ -35,158 +37,15 @@ class SheetDnD
         return ['info' => $this->info];
     }
 
-    function character($name): array
+    function character($name): array|bool
     {
-        $this->name = $name;
-        $this->type = "character";
-        $this->icon = "";
-        $this->info = [
-            "walkspeed" => "0",
-            "inspiration" => "0",
-            "race" => "",
-            "background" => "",
-            "characteristics" => [
-                "personality_traits" => "",
-                "ideals" => "",
-                "bonds" => "",
-                "flaws" => "",
-            ],
-        ];
-        $this->classes = [
-            ["class" => "artificer", "subclass" => "", "lvl" => "", "saves" => "con,int"],
-            ["class" => "barbarian", "subclass" => "", "lvl" => "", "saves" => "str,con"],
-            ["class" => "bard", "subclass" => "", "lvl" => "", "saves" => "dex,cha"],
-            ["class" => "cleric", "subclass" => "", "lvl" => "", "saves" => "wis,cha"],
-            ["class" => "druid", "subclass" => "", "lvl" => "", "saves" => "int,wis"],
-            ["class" => "fighter", "subclass" => "", "lvl" => "", "saves" => "str,con"],
-            ["class" => "monk", "subclass" => "", "lvl" => "", "saves" => "str,dex"],
-            ["class" => "paladin", "subclass" => "", "lvl" => "", "saves" => "wis,cha"],
-            ["class" => "ranger", "subclass" => "", "lvl" => "", "saves" => "str,dex"],
-            ["class" => "rogue", "subclass" => "", "lvl" => "", "saves" => "dex,int"],
-            ["class" => "sorcerer", "subclass" => "", "lvl" => "", "saves" => "con,cha"],
-            ["class" => "warlock", "subclass" => "", "lvl" => "", "saves" => "wis,cha"],
-            ["class" => "wizard", "subclass" => "", "lvl" => "", "saves" => "int,wis"],
-        ];
-        $this->xp = "0";
-        $this->ability_scores = [
-            "this_score_str" => [
-                "score" => "10",
-                "is_prof" => "0",
-            ],
-            "this_score_dex" => [
-                "score" => "10",
-                "is_prof" => "0",
-            ],
-            "this_score_con" => [
-                "score" => "10",
-                "is_prof" => "0",
-            ],
-            "this_score_int" => [
-                "score" => "10",
-                "is_prof" => "0",
-            ],
-            "this_score_wis" => [
-                "score" => "10",
-                "is_prof" => "0",
-            ],
-            "this_score_cha" => [
-                "score" => "10",
-                "is_prof" => "0",
-            ],
-        ];
-        $this->expertises = [];
-        $this->health = [
-            'hit_points' => [
-                "current_hp" => "0",
-                "total_hp" => "0",
-                "temporary_hp" => "0",
-            ],
-            "death_saves" => [
-                "successes" => "0",
-                "failures" => "0"
-            ],
-            "conditions" => [
-                "ehaustion" => [
-                    "lvl" => "0",
-                    "1" => "Disadvantage on ability checks",
-                    "2" => "Speed halved",
-                    "3" => "Disadvantage on attack rolls and saving throws",
-                    "4" => "Hit point maximum halved",
-                    "5" => "Speed reduced to 0",
-                    "6" => "Death",
-                ],
-                "blinded" => "0",
-                "charmed" => "0",
-                "deafened" => "0",
-                "frightened" => "0",
-                "grappled" => "0",
-                "incapacitated" => "0",
-                "invisible" => "0",
-                "paralized" => "0",
-                "petrified" => "0",
-                "poisoned" => "0",
-                "prone" => "0",
-                "restrained" => "0",
-                "stunned" => "0",
-                "unconscious" => "0",
-            ],
-        ];
-        $this->attack = [
-            "name" => "",
-            "attack" => "",
-            "damage_n_type" => "",
-            "saving_throw" => "",
-        ];
-        $this->global_modifier = [
-            "name" => "",
-            "attack" => "",
-            "damage" => "",
-            "save" => "",
-            "ac" => "",
-        ];
-        $this->tool_or_custom = [
-            "tool" => "",
-            "proficiency" => "",
-            "attribute" => "",
-        ];
-        $this->bag_item = [
-            "units" => "",
-            "name" => "",
-            "weight" => "0",
-        ];
-        $this->bag = [
-            "total_weight" => "0",
-            "overweight" => "0",
-        ];
-        $this->custom_feature = [
-            "name" => "",
-            "origin" => "",
-            "description" => "",
-        ];
-        $this->notes = "";
-        $this->backstory = "";
-
-        return [
-            "item_name" => $this->name,
-            "item_type" => $this->type,
-            "item_icon" => $this->icon,
-            "info" => $this->info,
-            "classes" => $this->classes,
-            "xp" => $this->xp,
-            "ability_scores" => $this->ability_scores,
-            "expertises" => $this->expertises,
-            "health" => $this->health,
-            "attacks" => [],
-            "global_modifiers" => [],
-            "tools_n_custom" => [],
-            "bag" => [
-                "capacity" => $this->bag,
-                "bag_items" => [],
-            ],
-            "custom_features" => [],
-            "notes" => $this->notes,
-            "backstory" => $this->backstory
-        ];
+        $sheet = file_get_contents(FCPATH . '/assets/js/custom/games/character_DnD.json');
+        if ($sheet) {
+            $sheet = json_decode($sheet, true);
+            $sheet['item_name'] = $name;
+            $sheet['item_type'] = 'character';
+        }
+        return $sheet;
     }
 
     function _edit_view($post): array
@@ -213,7 +72,7 @@ class SheetDnD
         foreach ($post as $k => $v) {
             // Encode if array
             if (gettype($v) === 'array' || gettype($v) === 'object') {
-                $v = json_encode($v);
+                $v = json_encode($v, JSON_UNESCAPED_UNICODE);
             }
             $post[$k] = $v;
         }
@@ -226,39 +85,74 @@ class SheetDnD
         $v = $params[$k];
         switch ($k) {
             case 'item_name':
+            case 'xp':
                 return [$k => $v];
+            //* begin::Info **//
             case (bool)preg_match('/race|background|walkspeed|inspiration/', $k):
                 $info = json_decode($item['info'], true);
-                if ($k === 'inspiration') $v = $info['inspiration'] === "0" ? "1" : "0";
-                $info[$k] = $v;
-                return ['info' => json_decode($info)];
+                if ($info) {
+                    if ($k === 'inspiration') $v = $info['inspiration'] === "0" ? "1" : "0";
+                    $info[$k] = $v;
+                    return ['info' => $info];
+                }
+                break;
+            //* end::Info **//
+            //* begin::Classes **//
             case (bool)preg_match('/class|subclass|lvl|new_main/', $k):
                 $classes = json_decode($item['classes'], true);
-                return ['classes' => $this->getClasses($classes, $k, $v)];
+                if ($classes) return ['classes' => $this->getClasses($classes, $k, $v)];
+                break;
+            //* end::Classes *//
+            //* begin::Ability Scores **//
             case (bool)preg_match('/this_prof|this_score/', $k):
-                return ['scores' => [$k, $v]];
+                $scores = json_decode($item['ability_scores'], true);
+                if ($scores) return ['ability_scores' => $this->getScores($scores, $k, $v)];
+                break;
+            //* end::Ability Scores **//
+            case str_contains($k, 'this_skill'):
+                $skills = json_decode($item['skill_proficiencies'], true);
+                if ($skills) return ['skill_proficiencies' => $this->getSkills($skills, $k, $v)];
+                break;
         }
         return false;
     }
 
-    function getClasses($classes, $k, $v): array
+    function getClasses(array $classes, string $k, string $v): array
     {
-        $main = $this->hasMain($classes);
+        $main = function ($classes): bool|array {
+            foreach ($classes as $c) {
+                if (isset($c['is_main']) && $c['is_main']) {
+                    return $c;
+                }
+            }
+            return false;
+        };
         for ($i = 0; $i < count($classes); $i++) {
             $c = $classes[$i];
+            // Find the class that matches the key or the value of post field
             if (str_contains($k, $c['class']) || str_contains($v, $c['class'])) {
-                if (!$main) {
+                // Set the class as main if there is no main
+                if (!$main($classes)) {
                     $classes[$i]['is_main'] = true;
                 }
-                if ($main && $main !== $c) {
+                // If there is a main and this class is not it, set it as subclass
+                if ($main($classes) && $main($classes) !== $c) {
                     $classes[$i]['is_subclass'] = true;
                 }
                 if (preg_match('/subclass|lvl/', $k)) {
                     $classes[$i][explode('_', $k)[0]] = $v;
-                } elseif ($k === 'new_main') {
-                    foreach ($classes as $class) {
-                        $class['is_main'] = false;
+                    if (str_contains($k, 'lvl') && ($v === "" || $v === "0")) {
+                        // Erase as class if level is zero or empty
+                        $classes[$i]['is_main'] = false;
+                        $classes[$i]['is_subclass'] = false;
                     }
+                } elseif ($k === 'new_main') {
+                    // Remove main
+                    for ($j = 0; $j < count($classes); $j++) {
+                        $classes[$j]['is_main'] = false;
+                    }
+                    // Set new main
+                    $classes[$i]['is_subclass'] = false;
                     $classes[$i]['is_main'] = true;
                 }
             }
@@ -266,13 +160,24 @@ class SheetDnD
         return $classes;
     }
 
-    function hasMain($classes): bool|array
+    function getScores(array $scores, string $k, string $v): array
     {
-        foreach ($classes as $c) {
-            if (isset($c['is_main']) && $c['is_main']) {
-                return $c;
+        foreach ($scores as $name => $score) {
+            if (str_contains($k, $name)) {
+                $key = str_contains($k, 'this_prof') ? "is_prof" : "score";
+                $scores[$name][$key] = $v;
             }
         }
-        return false;
+        return $scores;
+    }
+
+    function getSkills(array $skills, string $k, string $v): array
+    {
+        foreach ($skills as $name => $skill) {
+            if (str_contains($k, $name)) {
+                $skills[$name] = $v === "0" ? "1" : ($v === "1" ? "2" : "0");
+            }
+        }
+        return $skills;
     }
 }

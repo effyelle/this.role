@@ -73,7 +73,7 @@ CREATE TABLE game_journal(
 	classes JSON,
 	xp INT,
 	ability_scores JSON,
-	expertises JSON,
+	skill_proficiencies JSON,
 	health JSON,
 	attacks JSON,
 	global_modifiers JSON,

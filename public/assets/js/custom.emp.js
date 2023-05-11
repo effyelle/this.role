@@ -60,9 +60,9 @@ const q = function (t) {
             el[i].addEventListener('change', callback);
         }
     }
-    el.toggleClass = function (classname) {
+    el.toggleClass = function (classname = " ", bool = true) {
         for (let i = 0; i < el.length; i++) {
-            el[i].classList.toggle(classname);
+            el[i].classList.toggle(classname, bool);
         }
     }
     el.addClass = function (classname) {
@@ -85,8 +85,8 @@ const q = function (t) {
         el[i].change = (callback) => {
             el[i].addEventListener('change', callback);
         }
-        el[i].toggleClass = function (classname) {
-            this.classList.toggle(classname);
+        el[i].toggleClass = function (classname, bool = true) {
+            this.classList.toggle(classname, bool);
         }
         el[i].addClass = function (classname) {
             this.classList.add(classname);

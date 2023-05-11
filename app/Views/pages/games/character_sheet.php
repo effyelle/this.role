@@ -3,7 +3,7 @@
     $classes = json_decode($data['classes'], true);
     $xp = $data['xp'];
     $scores = json_decode($data['ability_scores'], true);
-    $expertises = json_decode($data['expertises'], true);
+    $skill_proficiencies = json_decode($data['skill_proficiencies'], true);
     $health = json_decode($data['health'], true);
     $attacks = json_decode($data['attacks'], true);
     $global_modifiers = json_decode($data['global_modifiers'], true);
@@ -477,176 +477,22 @@
                                 <!--end::Title-->
                                 <div class="flex-row-wrap justify-content-center">
                                     <div class="flex-column justify-content-between p-3">
-                                        <!--begin::Arcana-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="arcana" name="arcana"
-                                                   class="form-control form-check-input skill_prof this-role-form-field"/>
-                                            <label for="arcana" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Arcana
-                                            </label>
-                                        </div>
-                                        <!--end::Arcana-->
-                                        <!--begin::Acrobatics-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="acrobatics" name="acrobatics"
-                                                   class="form-control form-check-input skill_prof this-role-form-field"/>
-                                            <label for="acrobatics" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Acrobatics
-                                            </label>
-                                        </div>
-                                        <!--end::Acrobatics-->
-                                        <!--begin::Athletics-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="athletics" name="athletics"
-                                                   class="form-control form-check-input skill_prof this-role-form-field"/>
-                                            <label for="athletics" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Athletics
-                                            </label>
-                                        </div>
-                                        <!--end::Athletics-->
-                                        <!--begin::Deception-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="deception" name="deception"
-                                                   class="form-control form-check-input skill_prof this-role-form-field"/>
-                                            <label for="deception" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Deception
-                                            </label>
-                                        </div>
-                                        <!--end::Deception-->
-                                        <!--begin::Insight-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="insight" name="insight"
-                                                   class="form-control form-check-input skill_prof this-role-form-field"/>
-                                            <label for="insight" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Insight
-                                            </label>
-                                        </div>
-                                        <!--end::Insight-->
-                                        <!--begin::Intimidation-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="intimidation" name="intimidation"
-                                                   class="form-control form-check-input skill_prof this-role-form-field"/>
-                                            <label for="intimidation" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Intimidation
-                                            </label>
-                                        </div>
-                                        <!--end::Intimidation-->
-                                        <!--begin::Investigation-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="investigation" name="investigation"
-                                                   class="form-control form-check-input skill_prof this-role-form-field"/>
-                                            <label for="investigation" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Investigation
-                                            </label>
-                                        </div>
-                                        <!--end::Investigation-->
-                                        <!--begin::History-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="history" name="history"
-                                                   class="form-control form-check-input skill_prof this-role-form-field"/>
-                                            <label for="history" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                History
-                                            </label>
-                                        </div>
-                                        <!--end::History-->
-                                        <!--begin::Medicine-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="medicine" name="medicine"
-                                                   class="form-control form-check-input skill_prof this-role-form-field"/>
-                                            <label for="medicine" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Medicine
-                                            </label>
-                                        </div>
-                                        <!--end::Medicine-->
-                                        <!--begin::Nature-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="nature" name="nature"
-                                                   class="form-control form-check-input skill_prof this-role-form-field"/>
-                                            <label for="nature" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Nature
-                                            </label>
-                                        </div>
-                                        <!--end::Nature-->
-                                        <!--begin::Perception-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="perception" name="perception"
-                                                   class="form-control form-check-input skill_prof this-role-form-field"/>
-                                            <label for="perception" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Perception
-                                            </label>
-                                        </div>
-                                        <!--end::Perception-->
-                                        <!--begin::Performance-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="performance" name="performance"
-                                                   class="form-control form-check-input skill_prof this-role-form-field"/>
-                                            <label for="performance" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Performance
-                                            </label>
-                                        </div>
-                                        <!--end::Performance-->
-                                        <!--begin::Persuasion-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="persuasion" name="persuasion"
-                                                   class="form-control form-check-input skill_prof this-role-form-field"/>
-                                            <label for="persuasion" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Persuasion
-                                            </label>
-                                        </div>
-                                        <!--end::Persuasion-->
-                                        <!--begin::Religion-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="religion" name="religion"
-                                                   class="form-control form-check-input skill_prof this-role-form-field"/>
-                                            <label for="religion" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Religion
-                                            </label>
-                                        </div>
-                                        <!--end::Religion-->
-                                        <!--begin::Sleight of Hand-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="sleight_of_hand" name="sleight_of_hand"
-                                                   class="form-control form-check-input skill_prof this-role-form-field"/>
-                                            <label for="sleight_of_hand" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Sleight of Hand
-                                            </label>
-                                        </div>
-                                        <!--end::Sleight of Hand-->
-                                        <!--begin::Stealth-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="stealth" name="stealth"
-                                                   class="form-control form-check-input skill_prof this-role-form-field"/>
-                                            <label for="stealth" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Stealth
-                                            </label>
-                                        </div>
-                                        <!--end::Stealth-->
-                                        <!--begin::Survival-->
-                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                            <input type="checkbox" id="survival" name="survival"
-                                                   class="form-control form-check-input skill_prof this-role-form-field"/>
-                                            <label for="survival" type="button"
-                                                   class="btn p-0 text-hover-primary fs-8 skill">
-                                                Survival
-                                            </label>
-                                        </div>
-                                        <!--end::Survival-->
+                                        <?php foreach ($skill_proficiencies as $skill_name => $skill_details) {
+                                            $name = strtolower($skill_name);
+                                            $title = strtosentence(get_title($skill_name));
+                                            ?>
+                                            <!--begin::Arcana-->
+                                            <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                                                <input type="checkbox" id="this_skill_<?= $name ?>"
+                                                       name="this_skill_<?= $name ?>" value="<?= $skill_details ?>"
+                                                       class="form-control form-check-input skill_prof"/>
+                                                <button type="button"
+                                                        class="btn p-0 text-hover-primary fs-8 <?= $name ?>">
+                                                    <?= $title ?>
+                                                </button>
+                                            </div>
+                                            <!--end::Arcana-->
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>
@@ -678,20 +524,20 @@
                                     <div class="flex-row row-cols-3 justify-content-center align-items-center w-200px gap-3">
                                         <div class="flex-row row-cols-3 justify-content-center align-items-center form-control-solid form-check p-0 gap-2">
                                             <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input skill_prof this-role-form-field m-0"/>
+                                                   class="form-control form-check-input exhaustion this-role-form-field m-0"/>
                                             <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input skill_prof this-role-form-field m-0"/>
+                                                   class="form-control form-check-input exhaustion this-role-form-field m-0"/>
                                             <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input skill_prof this-role-form-field m-0"/>
+                                                   class="form-control form-check-input exhaustion this-role-form-field m-0"/>
                                         </div>
                                         <div class="fs-8 fw-bolder col-5">EXHAUSTION</div>
                                         <div class="flex-row row-cols-3 justify-content-center align-items-center form-control-solid form-check p-0 gap-2">
                                             <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input skill_prof this-role-form-field m-0"/>
+                                                   class="form-control form-check-input exhaustion this-role-form-field m-0"/>
                                             <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input skill_prof this-role-form-field m-0"/>
+                                                   class="form-control form-check-input exhaustion this-role-form-field m-0"/>
                                             <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input skill_prof this-role-form-field m-0"/>
+                                                   class="form-control form-check-input exhaustion this-role-form-field m-0"/>
                                         </div>
                                     </div>
                                     <!--end::Exhaustion-->
@@ -699,110 +545,46 @@
                                     <div class="flex-row row-cols-3 justify-content-center align-items-center w-200px gap-3">
                                         <div class="flex-row row-cols-3 justify-content-center align-items-center form-control-solid form-check p-0 gap-2">
                                             <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input skill_prof this-role-form-field m-0"/>
+                                                   class="form-control form-check-input death_saves this-role-form-field m-0"/>
                                             <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input skill_prof this-role-form-field m-0"/>
+                                                   class="form-control form-check-input death_saves this-role-form-field m-0"/>
                                             <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input skill_prof this-role-form-field m-0"/>
+                                                   class="form-control form-check-input death_saves this-role-form-field m-0"/>
                                         </div>
                                         <div class="fs-8 fw-bolder col-5">DEATH SAVES</div>
                                         <div class="flex-row row-cols-3 justify-content-center align-items-center form-control-solid form-check p-0 gap-2">
                                             <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input skill_prof this-role-form-field m-0"/>
+                                                   class="form-control form-check-input death_saves this-role-form-field m-0"/>
                                             <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input skill_prof this-role-form-field m-0"/>
+                                                   class="form-control form-check-input death_saves this-role-form-field m-0"/>
                                             <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input skill_prof this-role-form-field m-0"/>
+                                                   class="form-control form-check-input death_saves this-role-form-field m-0"/>
                                         </div>
                                     </div>
                                     <!--end::Death Saves-->
                                     <div class="fs-3 p-3 w-100">Conditions</div>
                                     <!--begin::Conditions-->
                                     <div class="flex-row row-cols-2 w-180px mb-5">
-                                        <div class="column">
-                                            <!--begin::Blinded-->
-                                            <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                                <input type="checkbox" id="blinded" name="blinded"
-                                                       class="form-control form-check-input skill_prof this-role-form-field"/>
-                                                <label for="blinded" type="button"
-                                                       class="btn p-0 text-hover-primary fs-8 skill">
-                                                    Blinded
-                                                </label>
-                                            </div>
-                                            <!--end::Blinded-->
-                                            <!--begin::Blinded-->
-                                            <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                                <input type="checkbox" id="blinded" name="blinded"
-                                                       class="form-control form-check-input skill_prof this-role-form-field"/>
-                                                <label for="blinded" type="button"
-                                                       class="btn p-0 text-hover-primary fs-8 skill">
-                                                    Blinded
-                                                </label>
-                                            </div>
-                                            <!--end::Blinded-->
-                                            <!--begin::Blinded-->
-                                            <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                                <input type="checkbox" id="blinded" name="blinded"
-                                                       class="form-control form-check-input skill_prof this-role-form-field"/>
-                                                <label for="blinded" type="button"
-                                                       class="btn p-0 text-hover-primary fs-8 skill">
-                                                    Blinded
-                                                </label>
-                                            </div>
-                                            <!--end::Blinded-->
-                                            <!--begin::Blinded-->
-                                            <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                                <input type="checkbox" id="blinded" name="blinded"
-                                                       class="form-control form-check-input skill_prof this-role-form-field"/>
-                                                <label for="blinded" type="button"
-                                                       class="btn p-0 text-hover-primary fs-8 skill">
-                                                    Blinded
-                                                </label>
-                                            </div>
-                                            <!--end::Blinded-->
+                                        <!--begin::Blinded-->
+                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                                            <input type="checkbox" id="blinded" name="blinded"
+                                                   class="form-control form-check-input condition this-role-form-field"/>
+                                            <label for="blinded" type="button"
+                                                   class="btn p-0 text-hover-primary fs-8 skill">
+                                                Blinded
+                                            </label>
                                         </div>
-                                        <div class="column">
-                                            <!--begin::Blinded-->
-                                            <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                                <input type="checkbox" id="blinded" name="blinded"
-                                                       class="form-control form-check-input skill_prof this-role-form-field"/>
-                                                <label for="blinded" type="button"
-                                                       class="btn p-0 text-hover-primary fs-8 skill">
-                                                    Blinded
-                                                </label>
-                                            </div>
-                                            <!--end::Blinded-->
-                                            <!--begin::Blinded-->
-                                            <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                                <input type="checkbox" id="blinded" name="blinded"
-                                                       class="form-control form-check-input skill_prof this-role-form-field"/>
-                                                <label for="blinded" type="button"
-                                                       class="btn p-0 text-hover-primary fs-8 skill">
-                                                    Blinded
-                                                </label>
-                                            </div>
-                                            <!--end::Blinded-->
-                                            <!--begin::Blinded-->
-                                            <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                                <input type="checkbox" id="blinded" name="blinded"
-                                                       class="form-control form-check-input skill_prof this-role-form-field"/>
-                                                <label for="blinded" type="button"
-                                                       class="btn p-0 text-hover-primary fs-8 skill">
-                                                    Blinded
-                                                </label>
-                                            </div>
-                                            <!--end::Blinded-->
-                                            <!--begin::Blinded-->
-                                            <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                                <input type="checkbox" id="blinded" name="blinded"
-                                                       class="form-control form-check-input skill_prof this-role-form-field"/>
-                                                <label for="blinded" type="button"
-                                                       class="btn p-0 text-hover-primary fs-8 skill">
-                                                    Blinded
-                                                </label>
-                                            </div>
-                                            <!--end::Blinded-->
+                                        <!--end::Blinded-->
+                                        <!--begin::Blinded-->
+                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                                            <input type="checkbox" id="blinded" name="blinded"
+                                                   class="form-control form-check-input condition this-role-form-field"/>
+                                            <label for="blinded" type="button"
+                                                   class="btn p-0 text-hover-primary fs-8 skill">
+                                                Blinded
+                                            </label>
                                         </div>
+                                        <!--end::Blinded-->
                                     </div>
                                     <!--end::Conditions-->
                                 </div>

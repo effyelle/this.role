@@ -151,59 +151,46 @@ class Journal {
                 iconHolder[0].style.backgroundImage = 'url("' + icon + '")';
             }
         }
-        this.getLevel = (xp) => {
-            // This is like super dirty code
-            // but bro I didn't find any formulas
-            if (xp >= 0 && xp < 300) return 1;
-            if (xp >= 300 && xp < 900) return 2;
-            if (xp >= 900 && xp < 2700) return 3;
-            if (xp >= 2700 && xp < 6500) return 4;
-            if (xp >= 6500 && xp < 14000) return 5;
-            if (xp >= 14000 && xp < 23000) return 6;
-            if (xp >= 23000 && xp < 34000) return 7;
-            if (xp >= 34000 && xp < 48000) return 8;
-            if (xp >= 48000 && xp < 64000) return 9;
-            if (xp >= 64000 && xp < 85000) return 10;
-            if (xp >= 85000 && xp < 100000) return 11;
-            if (xp >= 10000 && xp < 120000) return 12;
-            if (xp >= 120000 && xp < 140000) return 13;
-            if (xp >= 140000 && xp < 165000) return 14;
-            if (xp >= 165000 && xp < 195000) return 15;
-            if (xp >= 195000 && xp < 225000) return 16;
-            if (xp >= 225000 && xp < 265000) return 17;
-            if (xp >= 265000 && xp < 305000) return 18;
-            if (xp >= 305000 && xp < 355000) return 19;
-            if (xp >= 355000) return 20;
+        this.getLevel = () => {
+            if (this.info.classes) {
+                const classes = JSON.parse(this.info.classes);
+                let lvl = 0;
+                for (let i in classes) {
+                    let c = classes[i];
+                    if (c.lvl && c.lvl !== "" && c.lvl !== "0" && !isNaN(c.lvl)) {
+                        lvl += parseInt(c.lvl);
+                    }
+                }
+                return lvl;
+            }
+            return 1;
         }
         this.getClassArmor = () => {
             // Base armor starts in 10
             let this_ac = 10;
             // Check character sheet is correctly filled
-            if (this.info.ability_scores && typeof this.info.ability_scores === 'object' &&
-                this.info.class && this.info.bag && this.info.bag === 'object') {
-                let dex = this.info.ability_scores.dex;
-                let cons = this.info.ability_scores.cons;
-                let armor = this.info.bag.armor && this.info.bag.armor.on ? this.info.bag.armor.val : 0;
-                let shield = this.info.bag.shield && this.info.bag.shield.on ? this.info.bag.shield.val : 0;
-                let custom_mods = this.info.global_modifiers && this.info.global.modifiers.ca ? this.info.global.modifiers.ca : 0;
+            let dex = this.getRawScoreModifier('dex');
+            let con = this.getRawScoreModifier('con');
+            let main_class = this.getMainClass();
+            if (dex && main_class) {
+                let armor = this.info.bag.armor && this.info.bag.armor.equiped ? this.info.bag.armor.val : 0;
+                // This is yet to write
+                let heavyArmor = false;
+                let shield = 0;
+                let custom_mods = 0;
                 // Then you add: DEX modifier, armor modifier, shield
-                // Always add DEX and custom modifiers
-                this_ac += dex + custom_mods;
-                switch (this.info.class) {
-                    case 'barbarian':
-                    case 'monk':
-                        // Ultimately add CONS if barbarian or monk
-                        // while wearing no armor or shield
-                        if (!armor && !shield) {
-                            this_ac += cons;
-                            break;
-                        }
-                        this_ac += armor + shield;
-                        break;
-                    default:
-                        this_ac += armor + shield;
+                // Always add custom modifiers
+                this_ac += parseInt(custom_mods);
+                // Add constitution modifier if it is a barbarian or a monk while not wearing any armor
+                if (con && main_class.class.match(/barbarian|monk/) && !armor && !shield) {
+                    this_ac += con;
                 }
-
+                // Add dexterity modifier if not wearing heavy armor
+                if (!armor && !heavyArmor) {
+                    this_ac += dex;
+                }
+                // Otherwise add armor and shield
+                this_ac += parseInt(armor) + parseInt(shield);
             }
             return this_ac;
         }
@@ -213,6 +200,28 @@ class Journal {
                 return Math.ceil(this.getLevel(this.info.xp) / 4) + 1;
             }
             return 2;
+        }
+        this.getMainClass = () => {
+            if (this.info.classes) {
+                let classes = JSON.parse(this.info.classes)
+                if (classes) {
+                    for (let c of classes) {
+                        if (c.is_main) return c;
+                    }
+                }
+            }
+            return false;
+        }
+        this.getScore = (score) => {
+            if (this.info.ability_scores) {
+                const scores = JSON.parse(this.info.ability_scores);
+                for (let i in scores) {
+                    if (i.match(score)) {
+                        return scores[i];
+                    }
+                }
+            }
+            return false;
         }
         this.getRawScoreModifier = (score) => {
             if (this.info.ability_scores) {

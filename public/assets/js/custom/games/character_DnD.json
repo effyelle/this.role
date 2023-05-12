@@ -20,7 +20,7 @@
       "lvl": "",
       "saves": "con,int",
       "is_main": false,
-      "is_subclass": false,
+      "is_multiclass": false,
       "hit_dice": "1d10"
     },
     {
@@ -29,7 +29,7 @@
       "lvl": "",
       "saves": "str,con",
       "is_main": false,
-      "is_subclass": false,
+      "is_multiclass": false,
       "hit_dice": "1d12"
     },
     {
@@ -38,7 +38,7 @@
       "lvl": "",
       "saves": "dex,cha",
       "is_main": false,
-      "is_subclass": false,
+      "is_multiclass": false,
       "hit_dice": "1d8"
     },
     {
@@ -47,7 +47,7 @@
       "lvl": "",
       "saves": "wis,cha",
       "is_main": false,
-      "is_subclass": false,
+      "is_multiclass": false,
       "hit_dice": "1d8"
     },
     {
@@ -56,7 +56,7 @@
       "lvl": "",
       "saves": "int,wis",
       "is_main": false,
-      "is_subclass": false,
+      "is_multiclass": false,
       "hit_dice": "1d8"
     },
     {
@@ -65,7 +65,7 @@
       "lvl": "",
       "saves": "str,con",
       "is_main": false,
-      "is_subclass": false,
+      "is_multiclass": false,
       "hit_dice": "1d10"
     },
     {
@@ -74,7 +74,7 @@
       "lvl": "",
       "saves": "str,dex",
       "is_main": false,
-      "is_subclass": false,
+      "is_multiclass": false,
       "hit_dice": "1d8"
     },
     {
@@ -83,7 +83,7 @@
       "lvl": "",
       "saves": "wis,cha",
       "is_main": false,
-      "is_subclass": false,
+      "is_multiclass": false,
       "hit_dice": "1d10"
     },
     {
@@ -92,7 +92,7 @@
       "lvl": "",
       "saves": "str,dex",
       "is_main": false,
-      "is_subclass": false,
+      "is_multiclass": false,
       "hit_dice": "1d10"
     },
     {
@@ -101,7 +101,7 @@
       "lvl": "",
       "saves": "dex,int",
       "is_main": false,
-      "is_subclass": false,
+      "is_multiclass": false,
       "hit_dice": "1d8"
     },
     {
@@ -110,7 +110,7 @@
       "lvl": "",
       "saves": "con,cha",
       "is_main": false,
-      "is_subclass": false,
+      "is_multiclass": false,
       "hit_dice": "1d6"
     },
     {
@@ -128,7 +128,7 @@
       "lvl": "",
       "saves": "int,wis",
       "is_main": false,
-      "is_subclass": false,
+      "is_multiclass": false,
       "hit_dice": "1d6"
     }
   ],

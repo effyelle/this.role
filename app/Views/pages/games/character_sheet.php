@@ -13,6 +13,71 @@
     $notes = $data['notes'];
     $backstory = $data['backstory'];
     ?>
+
+    <!--begin::Modal-->
+    <div class="modal fade manage_class_modal" tabindex="-1" id="manage_class_<?= $data['item_id'] ?>">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Manage <span data-from="item_name"> </span>'s classes</h4>
+                </div>
+                <div class="modal-body">
+                    <!--begin:Menu item-->
+                    <div class="flex-row form-control-solid align-items-center">
+                        <label for="class">Class</label>
+                        <select id="class" name="class" aria-selected="-1"
+                                class="px-3 ms-3 form-control form-control-sm">
+                            <option value="-1" disabled selected>Select one</option>
+                            <?php if ($classes) {
+                                foreach ($classes as $class) { ?>
+                                    <option value="<?= strtolower($class['class']); ?>">
+                                        <?= strtosentence($class['class']); ?>
+                                    </option>
+                                <?php }
+                            } ?>
+                        </select>
+                        <!--begin::Row Level-->
+                        <div class="flex-row form-control-solid ms-3 w-100px">
+                            <label for="lvl">Level</label>
+                            <input type="number" id="lvl" name="lvl" value="1"
+                                   class="form-control this-role-form-field ms-3 text-end"/>
+                        </div>
+                        <!--end::Row Level-->
+                    </div>
+                    <div class="flex-row form-control-solid align-items-center mt-5 gap-3">
+                        <!--begin::Row Subclass-->
+                        <div class="flex-row form-control-solid col-12">
+                            <label for="subclass">Subclass</label>
+                            <input type="text" id="subclass" name="subclass" value=""
+                                   class="form-control this-role-form-field ms-3"/>
+                        </div>
+                        <!--end::Row Subclass-->
+                    </div>
+                    <div id="add_layer-error" class="fs-4 text-danger text-center w-100 d-none">
+                        Error message here !!!
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-sm btn-dark dismiss_btn" data-bs-dismiss="modal"
+                            tabindex="0">
+                        Cancel
+                    </button>
+                    <button type="button" id="" name="save_classes" tabindex="-1" class="btn btn-sm btn btn-primary">
+                        <!--begin::Indicator label-->
+                        <span class="indicator-label">Save</span>
+                        <!--end::Indicator label-->
+                        <!--begin::Indicator progress-->
+                        <span class="indicator-progress">Please wait...
+                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </span>
+                        <!--end::Indicator progress-->
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end::Modal-->
+
     <div id="draggable_<?= $data['item_id'] ?>" class="journal_item_modal show">
         <div class="modal-content bg-white">
             <div class="modal-header flex-row-wrap justify-content-between align-items-center cursor-move">
@@ -112,54 +177,21 @@
                                         <div class="flex-column justify-content-start align-items-stretch max-w-200px">
                                             <!--begin::Row-->
                                             <div class="row justify-content-evenly">
-                                                <!--begin::Class-->
-                                                <div class="column form-control-solid mb-5">
-                                                    <div class="flex-column gap-3">
-                                                        <div class="flex-row form-control-solid align-items-center">
-                                                            <label for="class">Class</label>
-                                                            <select id="class" name="class" aria-selected="-1"
-                                                                    class="px-3 ms-3 form-control form-control-sm">
-                                                                <option value="-1" disabled selected>Select one</option>
-                                                                <?php if ($classes) {
-                                                                    foreach ($classes as $class) { ?>
-                                                                        <option value="<?= strtolower($class['class']); ?>">
-                                                                            <?= strtosentence($class['class']); ?>
-                                                                        </option>
-                                                                    <?php }
-                                                                } ?>
-                                                            </select>
-                                                        </div>
-                                                        <div class="form-control-solid ms-auto">
-                                                            <button type="button" id="new_main" name="new_main"
-                                                                    class="btn btn-sm btn-primary p-1 px-2 save_class">
-                                                                <i class="fa-solid fa-save ms-1"></i> Set new main class
-                                                            </button>
-                                                        </div>
-                                                    </div>
+                                                <!--begin::Row Classes deploy-->
+                                                <div class="column flex-column form-control-solid mb-5">
+                                                    <label for="class">Class</label>
+                                                    <em>
+                                                        <?php $classlist = "";
+                                                        foreach ($classes as $class) {
+                                                            if ($class['is_main'] || $class['is_multiclass']) {
+                                                                $classlist .= strtosentence($class['class']) . " level " . $class['lvl'] . "<br/>";
+                                                            }
+                                                        }
+                                                        if ($classlist !== "") echo substr($classlist, 0, strlen($classlist) - 5);
+                                                        else echo 'You haven\'t added any classes yet.'; ?>
+                                                    </em>
                                                 </div>
-                                                <!--end::Class-->
-                                                <!--begin::Row Level & XP-->
-                                                <div class="row justify-content-start row-cols-2 mb-5">
-                                                    <div class="flex-row form-control-solid">
-                                                        <label for="lvl">Level</label>
-                                                        <input type="number" id="lvl" name="lvl" value="1"
-                                                               class="form-control this-role-form-field ms-3 w-75"/>
-                                                    </div>
-                                                    <div class="flex-row form-control-solid">
-                                                        <label for="xp">XP</label>
-                                                        <input type="number" id="xp" name="xp"
-                                                               value="<?= $data['xp'] ?? '0' ?>"
-                                                               class="form-control this-role-form-field ms-3 w-75"/>
-                                                    </div>
-                                                </div>
-                                                <!--end::Row Level & XP-->
-                                                <!--begin::Row Subclass-->
-                                                <div class="flex-row form-control-solid mb-5">
-                                                    <label for="subclass">Subclass</label>
-                                                    <input type="text" id="subclass" name="subclass" value=""
-                                                           class="form-control this-role-form-field ms-3"/>
-                                                </div>
-                                                <!--end::Row Subclass-->
+                                                <!--end::Row Classes deploy-->
                                                 <!--begin::Row Race-->
                                                 <div class="flex-row form-control-solid mb-5">
                                                     <label for="race">Race</label>
@@ -176,12 +208,35 @@
                                                            class="form-control this-role-form-field ms-3"/>
                                                 </div>
                                                 <!--end::Row Background-->
+                                                <!--begin::Row XP-->
+                                                <div class="row justify-content-start row-cols-2 mb-5">
+                                                    <div class="flex-row form-control-solid">
+                                                        <label for="xp">XP</label>
+                                                        <input type="number" id="xp" name="xp"
+                                                               value="<?= $data['xp'] ?? '0' ?>"
+                                                               class="form-control this-role-form-field ms-3 w-75"/>
+                                                    </div>
+                                                </div>
+                                                <!--end::Row XP-->
                                             </div>
                                             <!--end::Row-->
                                         </div>
                                         <!--end::Col (Character Origin Details)-->
                                     </div>
                                     <!--end::Row-->
+                                    <!--begin::Row - Class Management-->
+                                    <div class="column flex-column justify-self-end form-control-solid mb-5 w-100">
+                                        <div class="form-control-solid ms-auto">
+                                            <button type="button" id="new_main" name="new_main"
+                                                    data-bs-target="#manage_class_<?= $data['item_id'] ?>"
+                                                    data-bs-toggle="modal"
+                                                    class="btn btn-sm btn-primary p-1 px-2 save_class">
+                                                <i class="fa-solid fa-save ms-1"></i>
+                                                Manage character classes
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!--end::Row - Class Management-->
                                     <!--begin::Row - Combat (general)-->
                                     <div class="flex-row-wrap justify-content-center align-items-center gap-3 mt-3 mb-6">
                                         <!--begin::Class Armor (CA)-->
@@ -251,7 +306,7 @@
                                                         <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
                                                             <button type="button"
                                                                     class="btn p-0 combat-item_title text-hover-primary">
-                                                                <?= strtoupper($score['fname']); // Name in CAPS                                                    ?>
+                                                                <?= strtoupper($score['fname']); // Name in CAPS                                                                                     ?>
                                                             </button>
                                                             <label for="this_score_<?= $short; ?>"
                                                                    class="fs-3">0</label>
@@ -388,7 +443,9 @@
                                                     <span class="text-uppercase">SUCCESSES</span>
                                                     <div class="flex-row gap-2">
                                                         <?php for ($i = 0; $i < 3; $i++) { ?>
-                                                            <input type="checkbox" id="" name="this_death_save_successes" value="<?= $i + 1; ?>"
+                                                            <input type="checkbox" id=""
+                                                                   name="this_death_save_successes"
+                                                                   value="<?= $i + 1; ?>"
                                                                    class="form-control form-check-input death_saves success m-0 cursor-pointer"/>
                                                         <?php } ?>
                                                     </div>
@@ -397,7 +454,8 @@
                                                     <span class="text-uppercase">FAILURES</span>
                                                     <div class="flex-row gap-2">
                                                         <?php for ($i = 0; $i < 3; $i++) { ?>
-                                                            <input type="checkbox" id="" name="this_death_save_failures" value="<?= $i + 1; ?>"
+                                                            <input type="checkbox" id="" name="this_death_save_failures"
+                                                                   value="<?= $i + 1; ?>"
                                                                    class="form-control form-check-input death_saves danger m-0 cursor-pointer"/>
                                                         <?php } ?>
                                                     </div>

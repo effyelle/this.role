@@ -186,6 +186,7 @@ function initGame(dbGame, session) {
                 return data;
             },
             error: (e) => {
+                console.log(e.responseText)
                 console.log("Error", e);
             }
         });
@@ -194,6 +195,7 @@ function initGame(dbGame, session) {
     function makeItemsInteractable() {
         // Save the necessary html objects to make sheet interactable
         let modals = q('.journal_item_modal');
+        let bootsModal = q('.modal.manage_class_modal');
         let closeBtns = q('.journal_item_modal .close_item-btn');
         let cursorMove = q('.journal_item_modal .cursor-move');
         // * Check they have the correct lengths * //
@@ -206,6 +208,7 @@ function initGame(dbGame, session) {
             // * Add a close event * //
             closeBtns[i].click(() => {
                 modals[i].remove();
+                bootsModal[i].remove();
             });
         }
 
@@ -220,17 +223,20 @@ function initGame(dbGame, session) {
             // Do not do further actions if item was not found
             if (!item) continue;
 
-            let this_fields = q('#' + item.draggableContainerId + ' .this-role-form-field');
+            let this_draggable_fields = q('#' + item.draggableContainerId + ' .this-role-form-field');
+            let this_mngclasses_fields = q('#manage_class_' + item.info.item_id + ' .this-role-form-field');
             //* begin::General Inputs change *//
-            getDataFromFields(this_fields, item);
-            // Save on field lost of focus
-            this_fields.blur(function () {
-                saveField(this, item.info.item_id).done(() => {
-                    getDataFromFields(this_fields, item);
-                    // Get skill proficiencies
-                    getDataFromFields(q('#' + item.draggableContainerId + ' input.skill_prof'), item);
-                    // Get hit dices
-                    getDataFromFields(q('#' + item.draggableContainerId + ' select[name="this_hit_dices"]'), item);
+            [this_draggable_fields, this_mngclasses_fields].forEach(this_fields => {
+                getDataFromFields(this_fields, item);
+                // Save on field lost of focus
+                this_fields.blur(function () {
+                    saveField(this, item.info.item_id).done(() => {
+                        getDataFromFields(this_fields, item);
+                        // Get skill proficiencies
+                        getDataFromFields(q('#' + item.draggableContainerId + ' input.skill_prof'), item);
+                        // Get hit dices
+                        getDataFromFields(q('#' + item.draggableContainerId + ' select[name="this_hit_dices"]'), item);
+                    });
                 });
             });
             //* end::General Inputs change *//
@@ -425,10 +431,13 @@ function initGame(dbGame, session) {
                 }
             }
 
-            let data_from = q('#' + it.draggableContainerId + ' [data-from="' + divName + '"]');
-            for (let el of data_from) {
-                el.innerHTML = this.getGenericFields();
-            }
+            let data_from_sheet = q('#' + it.draggableContainerId + ' [data-from="' + divName + '"]');
+            let data_from_mngclass_modal = q('#manage_class_' + it.info.item_id + ' [data-from="' + divName + '"]');
+            [data_from_sheet, data_from_mngclass_modal].forEach(data_from => {
+                for (let el of data_from) {
+                    el.innerHTML = this.getGenericFields();
+                }
+            });
             if (divName && divName !== '') {
                 //* begin::Score Modifiers *//
                 if (divName.match(/this_score/)) {
@@ -516,12 +525,12 @@ function initGame(dbGame, session) {
     }
 
     function setClassGroup(item) {
-        let newMainBtn = q('#' + item.draggableContainerId + ' button[name=new_main]')[0];
-        let classSelect = q('#' + item.draggableContainerId + ' select[name=class]')[0];
-        let subclass = q('#' + item.draggableContainerId + ' input[name=subclass]')[0];
-        let classLvl = q('#' + item.draggableContainerId + ' input[name=lvl]')[0];
+        let saveClassesBtn = q('#manage_class_' + item.info.item_id + ' button[name=save_classes]')[0];
+        let classSelect = q('#manage_class_' + item.info.item_id + ' select[name=class]')[0];
+        let subclass = q('#manage_class_' + item.info.item_id + ' input[name=subclass]')[0];
+        let classLvl = q('#manage_class_' + item.info.item_id + ' input[name=lvl]')[0];
         let scoreProfs = q('#' + item.draggableContainerId + ' input.score_prof');
-        if (classSelect && subclass && classLvl && newMainBtn && scoreProfs) {
+        if (classSelect && subclass && classLvl && saveClassesBtn && scoreProfs) {
             // Get select values
             let c = findClass();
             selectClass(c);
@@ -533,9 +542,10 @@ function initGame(dbGame, session) {
                 subclass.setAttribute('name', 'subclass_' + this.value);
                 classLvl.setAttribute('name', 'lvl_' + this.value);
             }
-            newMainBtn.click(function () {
-                newMainBtn.value = classSelect.value;
-                saveField(newMainBtn, item.info.item_id).done((data) => {
+            saveClassesBtn.click(function () {
+                console.log(this)
+                saveClassesBtn.value = classSelect.value;
+                saveField(saveClassesBtn, item.info.item_id).done((data) => {
                     let c = findClass();
                     // Load saving throws
                     saveClassSavingThrows(c, item);
@@ -546,7 +556,7 @@ function initGame(dbGame, session) {
             });
             getDataFromFields(scoreProfs, item);
             scoreProfs.click(function () {
-                saveField(this, item.info.item_id).done((data) => {
+                saveField(this, item.info.item_id).done(() => {
                     getDataFromFields(scoreProfs, item);
                 });
             });

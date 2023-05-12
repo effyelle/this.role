@@ -407,6 +407,12 @@ a .hover-flip {
     border-bottom: 1px solid var(--bs-gray-400) !important;
 }
 
+.game .manage_class_modal .this-role-form-field:not([type=checkbox]):not(textarea):not(select):not(button) {
+    padding: 0;
+    line-height: 17px;
+    border-bottom: 1px solid var(--bs-gray-400) !important;
+}
+
 .this-role-form-field:not([type=checkbox]):not(textarea):not(select):not(button) {
     border: 0 !important;
     border-radius: 0;
@@ -997,7 +1003,8 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     border-bottom: 1px solid var(--bs-gray-300);
 }
 
-.game .journal_item_modal .this-role-form-field:not(.game .journal_item_modal .this-role-form-field:focus):not([type=checkbox]) {
+.game .journal_item_modal .this-role-form-field:not(.game .journal_item_modal .this-role-form-field:focus):not([type=checkbox]),
+.game .manage_class_modal .this-role-form-field:not(.game .journal_item_modal .this-role-form-field:focus):not([type=checkbox]) {
     background: transparent;
 }
 

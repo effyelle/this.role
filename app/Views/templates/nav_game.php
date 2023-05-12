@@ -127,13 +127,13 @@
                                 <!--begin::Menu Accordion-->
                                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                                     <!--begin:Menu link-->
-                                    <span class="menu-link">
-                                    <span class="menu-icon">
-                                        <i class="fa fa-solid fa-gear fa-lg hover-flip"></i>
-                                    </span>
-                                    <span class="menu-title">Admin</span>
-                                    <span class="menu-arrow"></span>
-                                </span>
+                                    <div class="menu-link">
+                                        <span class="menu-icon">
+                                            <i class="fa fa-solid fa-gear fa-lg hover-flip"></i>
+                                        </span>
+                                        <span class="menu-title">Admin</span>
+                                        <span class="menu-arrow"></span>
+                                    </div>
                                     <!--end:Menu link-->
                                     <!--begin:Menu sub-->
                                     <div class="menu-sub menu-sub-accordion">

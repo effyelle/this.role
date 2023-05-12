@@ -20,7 +20,8 @@
       "lvl": "",
       "saves": "con,int",
       "is_main": false,
-      "is_subclass": false
+      "is_subclass": false,
+      "hit_dice": "1d10"
     },
     {
       "class": "barbarian",
@@ -28,7 +29,8 @@
       "lvl": "",
       "saves": "str,con",
       "is_main": false,
-      "is_subclass": false
+      "is_subclass": false,
+      "hit_dice": "1d12"
     },
     {
       "class": "bard",
@@ -36,7 +38,8 @@
       "lvl": "",
       "saves": "dex,cha",
       "is_main": false,
-      "is_subclass": false
+      "is_subclass": false,
+      "hit_dice": "1d8"
     },
     {
       "class": "cleric",
@@ -44,7 +47,8 @@
       "lvl": "",
       "saves": "wis,cha",
       "is_main": false,
-      "is_subclass": false
+      "is_subclass": false,
+      "hit_dice": "1d8"
     },
     {
       "class": "druid",
@@ -52,7 +56,8 @@
       "lvl": "",
       "saves": "int,wis",
       "is_main": false,
-      "is_subclass": false
+      "is_subclass": false,
+      "hit_dice": "1d8"
     },
     {
       "class": "fighter",
@@ -60,7 +65,8 @@
       "lvl": "",
       "saves": "str,con",
       "is_main": false,
-      "is_subclass": false
+      "is_subclass": false,
+      "hit_dice": "1d10"
     },
     {
       "class": "monk",
@@ -68,7 +74,8 @@
       "lvl": "",
       "saves": "str,dex",
       "is_main": false,
-      "is_subclass": false
+      "is_subclass": false,
+      "hit_dice": "1d8"
     },
     {
       "class": "paladin",
@@ -76,7 +83,8 @@
       "lvl": "",
       "saves": "wis,cha",
       "is_main": false,
-      "is_subclass": false
+      "is_subclass": false,
+      "hit_dice": "1d10"
     },
     {
       "class": "ranger",
@@ -84,7 +92,8 @@
       "lvl": "",
       "saves": "str,dex",
       "is_main": false,
-      "is_subclass": false
+      "is_subclass": false,
+      "hit_dice": "1d10"
     },
     {
       "class": "rogue",
@@ -92,7 +101,8 @@
       "lvl": "",
       "saves": "dex,int",
       "is_main": false,
-      "is_subclass": false
+      "is_subclass": false,
+      "hit_dice": "1d8"
     },
     {
       "class": "sorcerer",
@@ -100,7 +110,8 @@
       "lvl": "",
       "saves": "con,cha",
       "is_main": false,
-      "is_subclass": false
+      "is_subclass": false,
+      "hit_dice": "1d6"
     },
     {
       "class": "warlock",
@@ -108,7 +119,8 @@
       "lvl": "",
       "saves": "wis,cha",
       "is_main": false,
-      "is_subclass": false
+      "is_multiclass": false,
+      "hit_dice": "1d8"
     },
     {
       "class": "wizard",
@@ -116,32 +128,39 @@
       "lvl": "",
       "saves": "int,wis",
       "is_main": false,
-      "is_subclass": false
+      "is_subclass": false,
+      "hit_dice": "1d6"
     }
   ],
   "xp": "0",
   "ability_scores": {
     "str": {
+      "fname": "strength",
       "score": "10",
       "is_prof": "0"
     },
     "dex": {
+      "fname": "dexterity",
       "score": "10",
       "is_prof": "0"
     },
     "con": {
+      "fname": "constitution",
       "score": "10",
       "is_prof": "0"
     },
     "int": {
+      "fname": "intelligence",
       "score": "10",
       "is_prof": "0"
     },
     "wis": {
+      "fname": "wisdom",
       "score": "10",
       "is_prof": "0"
     },
     "cha": {
+      "fname": "charisma",
       "score": "10",
       "is_prof": "0"
     }
@@ -167,13 +186,10 @@
   },
   "health": {
     "hit_points": {
-      "current_hp": "0",
+      "cur_hp": "0",
       "total_hp": "0",
-      "temporary_hp": "0",
-      "hit_dices": {
-        "total": "1",
-        "current": "1"
-      }
+      "temp_hp": "0",
+      "cur_hd": "1"
     },
     "death_saves": {
       "successes": "0",

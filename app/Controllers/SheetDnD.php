@@ -109,10 +109,25 @@ class SheetDnD
                 if ($scores) return ['ability_scores' => $this->getScores($scores, $k, $v)];
                 break;
             //* end::Ability Scores **//
+            //* begin::Skill Proficiencies **//
             case str_contains($k, 'this_skill'):
                 $skills = json_decode($item['skill_proficiencies'], true);
                 if ($skills) return ['skill_proficiencies' => $this->getSkills($skills, $k, $v)];
                 break;
+            //* end::Skill Proficiencies **//
+            case (bool)preg_match('/_hp|_hd/', $k):
+                $health = json_decode($item['health'], true);
+                if ($health) {
+                    $health['hit_points'][$k] = $v;
+                    return ['health' => $health];
+                }
+                break;
+            case str_contains($k, 'this_exhaustion'):
+                $health = json_decode($item['health'], true);
+                if ($health) {
+                    $health['conditions']['exhaustion']['lvl'] = $v;
+                    return ['health' => $health];
+                }
         }
         return false;
     }
@@ -137,14 +152,14 @@ class SheetDnD
                 }
                 // If there is a main and this class is not it, set it as subclass
                 if ($main($classes) && $main($classes) !== $c) {
-                    $classes[$i]['is_subclass'] = true;
+                    $classes[$i]['is_multiclass'] = true;
                 }
                 if (preg_match('/subclass|lvl/', $k)) {
                     $classes[$i][explode('_', $k)[0]] = $v;
                     if (str_contains($k, 'lvl') && ($v === "" || $v === "0")) {
                         // Erase as class if level is zero or empty
                         $classes[$i]['is_main'] = false;
-                        $classes[$i]['is_subclass'] = false;
+                        $classes[$i]['is_multiclass'] = false;
                     }
                 } elseif ($k === 'new_main') {
                     // Remove main
@@ -152,7 +167,7 @@ class SheetDnD
                         $classes[$j]['is_main'] = false;
                     }
                     // Set new main
-                    $classes[$i]['is_subclass'] = false;
+                    $classes[$i]['is_multiclass'] = false;
                     $classes[$i]['is_main'] = true;
                 }
             }
@@ -179,5 +194,11 @@ class SheetDnD
             }
         }
         return $skills;
+    }
+
+    function getHealth(array $health, string $k, string $v): array
+    {
+        $health['hit_points'][$k] = $v;
+        return $health;
     }
 }

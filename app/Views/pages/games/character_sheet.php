@@ -242,228 +242,49 @@
                                     <!--begin::Ability scores-->
                                     <div class="flex-column justify-content-between p-3 scores-container">
                                         <div class="flex-row-wrap row-cols-2 max-w-200px">
-                                            <!--begin::Col-->
-                                            <div class="flex-column justify-content-end align-items-center">
-                                                <!--begin::Strength-->
-                                                <div class="flex-column align-items-center justify-content-start position-relative w-90px h-120px">
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
-                                                        <button type="button"
-                                                                class="btn p-0 combat-item_title text-hover-primary">
-                                                            STRENGTH
+                                            <?php foreach ($scores as $short => $score) { ?>
+                                                <!--begin::Col-->
+                                                <div class="flex-column justify-content-end align-items-center">
+                                                    <!--begin::Strength-->
+                                                    <div class="flex-column align-items-center justify-content-start position-relative w-90px h-120px">
+                                                        <!--begin::Row-->
+                                                        <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
+                                                            <button type="button"
+                                                                    class="btn p-0 combat-item_title text-hover-primary">
+                                                                <?= strtoupper($score['fname']); // Name in CAPS                                        ?>
+                                                            </button>
+                                                            <label for="this_score_<?= $short; ?>"
+                                                                   class="fs-3">0</label>
+                                                        </div>
+                                                        <!--end::Row-->
+                                                        <!--begin::Row-->
+                                                        <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
+                                                            <input type="text" id="this_score_<?= $short; ?>"
+                                                                   name="this_score_<?= $short; ?>"
+                                                                   value="10"
+                                                                   class="combat-item_content this-score this-role-form-field"/>
+                                                        </div>
+                                                        <!--end::Row-->
+                                                        <!--begin::Row-->
+                                                        <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
+                                                            <label for="this_prof_<?= $short; ?>"
+                                                                   class="me-3">+0</label>
+                                                            <input type="checkbox" id="this_prof_<?= $short; ?>"
+                                                                   name="this_prof_<?= $short; ?>"
+                                                                   class="form-control form-check-input b-0 position-absolute ms-9 score_prof"/>
+                                                        </div>
+                                                        <!--end::Row-->
+                                                        <!--begin::Row (Saving Throw Button)-->
+                                                        <button type="button" name="this_save_<?= $short; ?>"
+                                                                class="btn p-0 combat-item_title text-hover-primary position-absolute top-90px bg-white this-role-form-field">
+                                                            SAVING THROW +0
                                                         </button>
-                                                        <label for="this_score_str" class="fs-3">0</label>
+                                                        <!--begin::Row (Saving Throw Button)-->
                                                     </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
-                                                        <input type="text" id="this_score_str" name="this_score_str"
-                                                               value="10"
-                                                               class="combat-item_content this-score this-role-form-field"/>
-                                                    </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
-                                                        <label for="this_prof_str" class="me-3">+0</label>
-                                                        <input type="checkbox" id="this_prof_str" name="this_prof_str"
-                                                               class="form-control form-check-input b-0 position-absolute ms-9 score_prof"/>
-                                                    </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row (Saving Throw Button)-->
-                                                    <button type="button" name="this_save_str"
-                                                            class="btn p-0 combat-item_title text-hover-primary position-absolute top-90px bg-white this-role-form-field">
-                                                        SAVING THROW +0
-                                                    </button>
-                                                    <!--begin::Row (Saving Throw Button)-->
+                                                    <!--end::Strength-->
                                                 </div>
-                                                <!--end::Strength-->
-                                            </div>
-                                            <!--end::Col-->
-                                            <!--begin::Col-->
-                                            <div class="flex-column justify-content-start align-items-center">
-                                                <!--begin::Dexterity-->
-                                                <div class="flex-column align-items-center justify-content-start position-relative w-90px h-120px">
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
-                                                        <button type="button"
-                                                                class="btn p-0 combat-item_title text-hover-primary">
-                                                            DEXTERITY
-                                                        </button>
-                                                        <label for="this_score_dex" class="fs-3">0</label>
-                                                    </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
-                                                        <input type="text" id="this_score_dex" name="this_score_dex"
-                                                               value="10"
-                                                               class="combat-item_content this-score this-role-form-field"/>
-                                                    </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
-                                                        <label for="this_prof_dex" class="me-3">+0</label>
-                                                        <input type="checkbox" id="this_prof_dex" name="this_prof_dex"
-                                                               class="form-control form-check-input b-0 position-absolute ms-9 score_prof"/>
-                                                    </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row (Saving Throw Button)-->
-                                                    <button type="button" name="this_save_dex"
-                                                            class="btn p-0 combat-item_title text-hover-primary position-absolute top-90px bg-white this-role-form-field">
-                                                        Saving Throw
-                                                    </button>
-                                                    <!--begin::Row (Saving Throw Button)-->
-                                                </div>
-                                                <!--end::Dexterity-->
-                                            </div>
-                                            <!--end::Col-->
-                                            <!--begin::Col-->
-                                            <div class="flex-column justify-content-end align-items-center">
-                                                <!--begin::Constitution-->
-                                                <div class="flex-column align-items-center justify-content-start position-relative w-90px h-120px">
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
-                                                        <button type="button"
-                                                                class="btn p-0 combat-item_title text-hover-primary">
-                                                            CONSTITUTION
-                                                        </button>
-                                                        <label for="this_score_con" class="fs-3">0</label>
-                                                    </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
-                                                        <input type="text" id="this_score_con" name="this_score_con"
-                                                               value="10"
-                                                               class="combat-item_content this-score this-role-form-field"/>
-                                                    </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
-                                                        <label for="this_prof_con" class="me-3">+0</label>
-                                                        <input type="checkbox" id="this_prof_con" name="this_prof_con"
-                                                               class="form-control form-check-input b-0 position-absolute ms-9 score_prof"/>
-                                                    </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row (Saving Throw Button)-->
-                                                    <button type="button" name="this_save_con"
-                                                            class="btn p-0 combat-item_title text-hover-primary position-absolute top-90px bg-white this-role-form-field">
-                                                        Saving Throw
-                                                    </button>
-                                                    <!--begin::Row (Saving Throw Button)-->
-                                                </div>
-                                                <!--end::Constitution-->
-                                            </div>
-                                            <!--end::Col-->
-                                            <!--begin::Col-->
-                                            <div class="flex-column justify-content-start align-items-center">
-                                                <!--begin::Intelligence-->
-                                                <div class="flex-column align-items-center justify-content-start position-relative w-90px h-120px">
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
-                                                        <button type="button"
-                                                                class="btn p-0 combat-item_title text-hover-primary">
-                                                            INTELLIGENCE
-                                                        </button>
-                                                        <label for="this_score_int" class="fs-3">0</label>
-                                                    </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
-                                                        <input type="text" id="this_score_int" name="this_score_int"
-                                                               value="10"
-                                                               class="combat-item_content this-score this-role-form-field"/>
-                                                    </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
-                                                        <label for="this_prof_int" class="me-3">+0</label>
-                                                        <input type="checkbox" id="this_prof_int" name="this_prof_int"
-                                                               class="form-control form-check-input b-0 position-absolute ms-9 score_prof"/>
-                                                    </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row (Saving Throw Button)-->
-                                                    <button type="button" name="this_save_int"
-                                                            class="btn p-0 combat-item_title text-hover-primary position-absolute top-90px bg-white this-role-form-field">
-                                                        Saving Throw
-                                                    </button>
-                                                    <!--begin::Row (Saving Throw Button)-->
-                                                </div>
-                                                <!--end::Intelligence-->
-                                            </div>
-                                            <!--end::Col-->
-                                            <!--begin::Col-->
-                                            <div class="flex-column justify-content-end align-items-center">
-                                                <!--begin::Wisdom-->
-                                                <div class="flex-column align-items-center justify-content-start position-relative w-90px h-120px">
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
-                                                        <button type="button"
-                                                                class="btn p-0 combat-item_title text-hover-primary">
-                                                            WISDOM
-                                                        </button>
-                                                        <label for="this_score_wis" class="fs-3">0</label>
-                                                    </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
-                                                        <input type="text" id="this_score_wis" name="this_score_wis"
-                                                               value="10"
-                                                               class="combat-item_content this-score this-role-form-field"/>
-                                                    </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
-                                                        <label for="this_prof_wis" class="me-3">+0</label>
-                                                        <input type="checkbox" id="this_prof_wis" name="this_prof_wis"
-                                                               class="form-control form-check-input b-0 position-absolute ms-9 score_prof"/>
-                                                    </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row (Saving Throw Button)-->
-                                                    <button type="button" name="this_save_wis"
-                                                            class="btn p-0 combat-item_title text-hover-primary position-absolute top-90px bg-white this-role-form-field">
-                                                        Saving Throw
-                                                    </button>
-                                                    <!--begin::Row (Saving Throw Button)-->
-                                                </div>
-                                                <!--end::Wisdom-->
-                                            </div>
-                                            <!--end::Col-->
-                                            <!--begin::Col-->
-                                            <div class="flex-column justify-content-start align-items-center">
-                                                <!--begin::Charisma-->
-                                                <div class="flex-column align-items-center justify-content-start position-relative w-90px h-120px">
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
-                                                        <button type="button"
-                                                                class="btn p-0 combat-item_title text-hover-primary">
-                                                            CHARISMA
-                                                        </button>
-                                                        <label for="this_score_cha" class="fs-3">0</label>
-                                                    </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline combat-item combat-item-sm position-absolute top-0 bg-white">
-                                                        <input type="text" id="this_score_cha" name="this_score_cha"
-                                                               value="10"
-                                                               class="combat-item_content this-score this-role-form-field"/>
-                                                    </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row-->
-                                                    <div class="this-outline form-control-solid form-check combat-item combat-item-sm flex-column align-items-center justify-content-center gap-3 position-absolute top-65px bg-white">
-                                                        <label for="this_prof_cha" class="me-3">+0</label>
-                                                        <input type="checkbox" id="this_prof_cha" name="this_prof_cha"
-                                                               class="form-control form-check-input b-0 position-absolute ms-9 score_prof"/>
-                                                    </div>
-                                                    <!--end::Row-->
-                                                    <!--begin::Row (Saving Throw Button)-->
-                                                    <button type="button" name="this_save_cha"
-                                                            class="btn p-0 combat-item_title text-hover-primary position-absolute top-90px bg-white this-role-form-field">
-                                                        Saving Throw
-                                                    </button>
-                                                    <!--begin::Row (Saving Throw Button)-->
-                                                </div>
-                                                <!--end::Charisma-->
-                                            </div>
-                                            <!--end::Col-->
+                                                <!--end::Col-->
+                                            <?php } ?>
                                         </div>
                                     </div>
                                     <!--end::Ability scores-->
@@ -514,13 +335,13 @@
                                     <!--begin::Row - Hit Points-->
                                     <div class="position-relative w-180px h-125px p-3">
                                         <div class="hit_points this-outline flex-column justify-content-start">
-                                            <input type="text" id="cur_hp" name="cur_hp" value="50"
+                                            <input type="text" id="cur_hp" name="cur_hp" value="0"
                                                    class="combat-item_content this-hp this-role-form-field w-50 fs-2"/>
                                             <label for="cur_hp" class="fs-8">CURRENT HIT POINTS</label>
                                         </div>
                                         <div class="flex-row gap-3">
                                             <div class="hit_points hit_points-sm this-outline start-0">
-                                                <input type="text" id="total_hp" name="total_hp" value="50"
+                                                <input type="text" id="total_hp" name="total_hp" value="0"
                                                        class="combat-item_content this-hp this-role-form-field w-75 fs-6"/>
                                                 <label for="total_hp">TOTAL HIT POINTS</label>
                                             </div>
@@ -533,74 +354,79 @@
                                     </div>
                                     <!--end::Row - Hit Points-->
                                     <!--begin::Row-->
-                                    <div class="flex-row-wrap justify-content-evenly align-items-stretch">
+                                    <div class="flex-row-wrap justify-content-evenly align-items-center">
                                         <!--begin::Col - Hit dices-->
-                                        <div class="column col-4">
-                                            <div class="hit_points this-outline form-control-solid h-60px">
+                                        <div class="column col-6">
+                                            <div class="hit_points this-outline form-control-solid">
                                                 <div class="flex-column justify-content-center align-items-center">
-                                                    <div class="this-outline bg-white flex-row justify-content-center align-items-center col-10 position-relative mt--10px">
-                                                        <span class="fs-8">Total</span>
-                                                        <input type="number" id="total_hd" name="total_hd" value="1"
-                                                               class="combat-item_content this-hp this-role-form-field w-50 fs-8 ms-1"/>
+                                                    <div class="this-outline bg-white flex-row justify-content-center align-items-center col-10 gap-1 position-relative mt--10px fs-8">
+                                                        <span class="">Total</span>
+                                                        <span class="total_hd">1</span>
                                                     </div>
+                                                    <label for="cur_hd" class="fs-8">Current</label>
                                                     <input type="number" id="cur_hd" name="cur_hd" value="1"
                                                            class="combat-item_content this-hp this-role-form-field w-50 fs-4 ms-3"/>
-                                                    <button type="button" name="" class="btn btn-sm btn-link p-0">
-                                                        Hit dice
-                                                    </button>
+                                                    <div class="flex-row w-100 gap-1 fs-8 this-outline bg-white position-relative mt-3">
+                                                        <button type="button" name=""
+                                                                class="btn btn-sm p-0 text-hover-primary col-4">
+                                                            Roll
+                                                        </button>
+                                                        <select id="this_hit_dices" name="this_hit_dices"
+                                                                class="col-7 border-0 bg-transparent">
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <!--end::Col - Hit dices-->
                                         <!--begin::Col-->
-                                        <div class="column col-7">
-                                            <!--begin::Row - Exhaustion-->
-                                            <div class="flex-row row-cols-3 justify-content-center align-items-center text-center">
-                                                <div class="flex-row row-cols-3 justify-content-center align-items-center form-control-solid form-check p-0 gap-1">
-                                                    <input type="checkbox" id="" name="" value=""
-                                                           class="form-control form-check-input exhaustion m-0"/>
-                                                    <input type="checkbox" id="" name="" value=""
-                                                           class="form-control form-check-input exhaustion m-0"/>
-                                                    <input type="checkbox" id="" name="" value=""
-                                                           class="form-control form-check-input exhaustion m-0"/>
-                                                </div>
-                                                <div class="fs-9 fw-bolder col-5">EXHAUSTION</div>
-                                                <div class="flex-row row-cols-3 justify-content-center align-items-center form-control-solid form-check p-0 gap-1">
-                                                    <input type="checkbox" id="" name="" value=""
-                                                           class="form-control form-check-input exhaustion m-0"/>
-                                                    <input type="checkbox" id="" name="" value=""
-                                                           class="form-control form-check-input exhaustion m-0"/>
-                                                    <input type="checkbox" id="" name="" value=""
-                                                           class="form-control form-check-input exhaustion m-0"/>
-                                                </div>
-                                            </div>
-                                            <!--end::Row - Exhaustion-->
+                                        <div class="column col-5">
                                             <!--begin::Row - Death Saves-->
-                                            <div class="flex-row row-cols-3 justify-content-center align-items-center text-center">
-                                                <div class="flex-row row-cols-3 justify-content-center align-items-center form-control-solid form-check p-0 gap-1">
-                                                    <input type="checkbox" id="" name="" value=""
-                                                           class="form-control form-check-input death_saves m-0"/>
-                                                    <input type="checkbox" id="" name="" value=""
-                                                           class="form-control form-check-input death_saves m-0"/>
-                                                    <input type="checkbox" id="" name="" value=""
-                                                           class="form-control form-check-input death_saves m-0"/>
+                                            <div class="flex-column align-items-start justify-content-center gap-2 ms-3">
+                                                <div class="flex-row justify-content-between gap-3 text-center col-12">
+                                                    <span class="text-uppercase fs-8">SUCCESSES</span>
+                                                    <div class="flex-row gap-2">
+                                                        <?php for ($i = 0; $i < 3; $i++) { ?>
+                                                            <input type="checkbox" id="" name="" value=""
+                                                                   class="form-control form-check-input death_saves success m-0"/>
+                                                        <?php } ?>
+                                                    </div>
                                                 </div>
-                                                <div class="fs-9 fw-bolder col-5">DEATH SAVES</div>
-                                                <div class="flex-row row-cols-3 justify-content-center align-items-center form-control-solid form-check p-0 gap-1">
-                                                    <input type="checkbox" id="" name="" value=""
-                                                           class="form-control form-check-input death_saves m-0"/>
-                                                    <input type="checkbox" id="" name="" value=""
-                                                           class="form-control form-check-input death_saves m-0"/>
-                                                    <input type="checkbox" id="" name="" value=""
-                                                           class="form-control form-check-input death_saves m-0"/>
+                                                <div class="flex-row justify-content-between gap-3 text-center col-12">
+                                                    <span class="text-uppercase fs-8">FAILURES</span>
+                                                    <div class="flex-row gap-2">
+                                                        <?php for ($i = 0; $i < 3; $i++) { ?>
+                                                            <input type="checkbox" id="" name="" value=""
+                                                                   class="form-control form-check-input death_saves danger m-0"/>
+                                                        <?php } ?>
+                                                    </div>
                                                 </div>
+                                                <button type="button"
+                                                        class="btn btn-sm p-0 text-hover-danger fs-9 fw-bolder">
+                                                    DEATH SAVE
+                                                </button>
                                             </div>
                                             <!--end::Row - Death Saves-->
                                         </div>
                                         <!--end::Col-->
                                     </div>
                                     <!--end::Row-->
-                                    <div class="fs-3 p-3 pb-0 w-100">Conditions</div>
+                                    <!--begin::Row - Exhaustion-->
+                                    <div class="flex-column justify-content-center align-items-center text-start mt-5 col-12">
+                                        <div class="flex-row justify-content-center align-items-center form-control-solid form-check p-0 gap-1 col-12">
+                                            <label for="this_exhaustion" class="fs-9 fw-bolder me-2">
+                                                EXHAUSTION
+                                            </label>
+                                            <?php for ($i = 0; $i < 6; $i++) { ?>
+                                                <input type="checkbox" id="this_exhaustion"
+                                                       name="this_exhaustion" value="<?= $i + 1; ?>"
+                                                       class="form-control form-check-input exhaustion <?= $i < 3 ? 'warning' : 'danger'; ?> m-0"/>
+                                            <?php } ?>
+                                        </div>
+                                        <span class="ps-5 exhaustion_effects fs-8 d-none col-12"><b>Exhaustion effects:</b></span>
+                                    </div>
+                                    <!--end::Row - Exhaustion-->
+                                    <div class="fs-3 p-3 pb-0">Conditions</div>
                                     <!--begin::Conditions-->
                                     <div class="flex-row-wrap row-cols-2 mb-5 p-5">
                                         <?php foreach ($health['conditions'] as $n => $c) {

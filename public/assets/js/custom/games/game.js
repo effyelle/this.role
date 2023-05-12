@@ -227,7 +227,10 @@ function initGame(dbGame, session) {
             this_fields.blur(function () {
                 saveField(this, item.info.item_id).done(() => {
                     getDataFromFields(this_fields, item);
+                    // Get skill proficiencies
                     getDataFromFields(q('#' + item.draggableContainerId + ' input.skill_prof'), item);
+                    // Get hit dices
+                    getDataFromFields(q('#' + item.draggableContainerId + ' select[name="this_hit_dices"]'), item);
                 });
             });
             //* end::General Inputs change *//
@@ -291,6 +294,7 @@ function initGame(dbGame, session) {
                         if (journal.items.list[i].info.item_id === id) {
                             for (let j in data.params) {
                                 journal.items.list[i].info[j] = data.params[j];
+                                // Load hit dices
                             }
                         }
                     }
@@ -311,26 +315,24 @@ function initGame(dbGame, session) {
                 let scoreName = divName.substring(11);
                 let sc = it.getScore(scoreName);
                 i.value = sc.score;
-                let check = q('#' + item.draggableContainerId + ' [name="this_prof_' + scoreName + '"]')[0];
+                let check = q('#' + it.draggableContainerId + ' [name="this_prof_' + scoreName + '"]')[0];
                 if (check) check.checked = sc.is_prof === "1";
-                let label = q('#' + item.draggableContainerId + ' label[for="' + divName + '"')[0];
+                let label = q('#' + it.draggableContainerId + ' label[for="' + divName + '"')[0];
                 let rawScoreModifier = it.getRawScoreModifier(scoreName);
                 if (rawScoreModifier && label) {
                     label.innerHTML = rawScoreModifier;
                 }
             }
             this.scoreProfBonuses = () => {
-                let label = q('#' + item.draggableContainerId + ' label[for="' + divName + '"')[0];
+                let label = q('#' + it.draggableContainerId + ' label[for="' + divName + '"')[0];
                 if (label) {
                     label.innerHTML = i.checked ? '+' + it.getProficiency() : "+0";
                 }
             }
             this.savingThrows = () => {
                 let score = divName.substring(10);
-                let check = q('#' + item.draggableContainerId + ' [name="this_prof_' + score + '"]')[0];
-                let profScoreModifier = check && check.checked
-                    ? it.getProfScoreModifier(score)
-                    : it.getRawScoreModifier(score);
+                let check = q('#' + it.draggableContainerId + ' [name="this_prof_' + score + '"]')[0];
+                let profScoreModifier = check && check.checked ? it.getProfScoreModifier(score) : it.getRawScoreModifier(score);
                 if (profScoreModifier) {
                     i.value = profScoreModifier;
                     i.innerHTML = 'SAVING THROW' + (profScoreModifier >= 0 ? '+' : '') + profScoreModifier;
@@ -338,20 +340,92 @@ function initGame(dbGame, session) {
             }
             this.skills = () => {
                 // These titles are also the buttons to roll a skill dice
-                let skillTitle = q('#' + item.draggableContainerId
-                    + ' .skill_prof[name="' + divName + '"] ~ button')[0];
+                let skillTitle = q('#' + it.draggableContainerId + ' .skill_prof[name="' + divName + '"] ~ button')[0];
                 const skills = JSON.parse(it.info.skill_proficiencies);
                 let skillName = divName.substring(11);
                 i.value = skills[skillName];
                 i.checked = i.value === "1" || i.value === "2";
                 i.toggleClass('expertise', i.value === "2");
-                console.log("Skill = ")
-                item.getProficiency()
+                it.getProficiency();
                 if (skillTitle) {
-                    skillTitle.innerHTML = toSentenceCase(skillName) + " +" +
-                        parseInt(i.value) * item.getProficiency();
+                    skillTitle.innerHTML = toSentenceCase(skillName) + " +" + parseInt(i.value) * it.getProficiency();
                 }
             }
+            this.hp = () => {
+                // Set total hit dices
+                const level = it.getLevel();
+                let totalHitDices = q('#' + it.draggableContainerId + ' .total_hd')[0];
+                if (totalHitDices) totalHitDices.innerHTML = level;
+                // Save hit points and hit dices info
+                const itemHealth = JSON.parse(it.info.health);
+                if (itemHealth && itemHealth.hit_points) {
+                    i.value = itemHealth.hit_points[divName];
+                }
+                if (divName.match(/_hd/)) {
+                    if (i.value > level) {
+                        i.value = level;
+                    }
+                }
+            }
+            this.hitDices = () => {
+                const classes = JSON.parse(it.info.classes);
+                let hitDices = [];
+                for (let c of classes) {
+                    if (c.is_main || c.is_multiclass) {
+                        if (!hitDices[c.hit_dice]) {
+                            hitDices[c.hit_dice] = c.hit_dice;
+                        }
+                    }
+                }
+                if (hitDices) {
+                    i.innerHTML = '';
+                    for (let h in hitDices) {
+                        i.innerHTML += '<option value="' + h + '">' + h + '</option>'
+                    }
+                } else {
+                    i.innerHTML = '<option value="-1" disabled selected>Select a class</option>';
+                }
+            }
+            this.exh = () => {
+                console.log(i)
+                const exhaustion = JSON.parse(it.info.health).conditions.exhaustion;
+                if (exhaustion) {
+                    i.checked = i.value <= exhaustion.lvl;
+                    let exhaustionEffects = q('#' + it.draggableContainerId + ' .exhaustion_effects')[0];
+                    exhaustionEffects.toggleClass('d-none', exhaustion.lvl == 0);
+                    if (exhaustionEffects && i.checked) {
+                        exhaustionEffects.innerHTML += "<br/> - " + exhaustion[i.value];
+                    }
+                }
+            }
+            this.deathSaves = () => {
+
+            }
+            this.getGenericFields = () => {
+                switch (divName) {
+                    case 'xp':
+                        return it.getLevel(i.value);
+                    case 'this-ac':
+                        return it.getClassArmor();
+                    case 'this-prof':
+                        // This is the proficiency bonus main square
+                        return it.getProficiency();
+                    case 'this_init':
+                        return it.getInitTierBreaker();
+                    default:
+                        return i.value;
+                }
+            }
+
+            try {
+                let data_from = q('#' + it.draggableContainerId + ' [data-from="' + divName + '"]');
+                for (let el of data_from) {
+                    el.innerHTML = this.getGenericFields();
+                }
+            } catch (DOMException) {
+                console.log(DOMException);
+            }
+
             if (divName && divName !== '') {
                 //* begin::Score Modifiers *//
                 if (divName.match(/this_score/)) {
@@ -365,42 +439,27 @@ function initGame(dbGame, session) {
                 else if (divName.match(/this_save/)) {
                     this.savingThrows();
                 } // * end::Saving Throws * //
+                else if (divName.match(/this_skill/)) {
+                    this.skills();
+                }
+                //* begin::Hit points *//
+                else if (divName.match(/_hp|_hd/)) {
+                    this.hp();
+                }//* end::Hit points *//
+                //* begin::Hit dices select *//
+                else if (divName.match(/this_hit_dices/)) {
+                    this.hitDices();
+                }//* end::Hit dices select *//
+                else if (divName.match(/exhaustion/)) {
+                    this.exh();
+                } else if (divName.match(/death_save/)) {
+                    this.deathSaves();
+                }
                 //* begin::Select *//
                 else if (i.nodeName === 'SELECT') {
                     i.value = (i.getAttribute('aria-selected'));
                 } //* end::Select *//
-                else if (divName.match(/this_skill/)) {
-                    this.skills();
-                }
-                //* begin::Level *//
-                else if (divName.match(/lvl/)) {
-                    // On level change, get total proficiencies again
-
-                }
-                //* end::Leve *//
-                else {
-                    let data_from = q('#' + it.draggableContainerId + ' [data-from=' + divName + ']');
-                    for (let el of data_from) {
-                        el.innerHTML = getGenericFields(divName, i.value, it);
-                    }
-                }
             }
-        }
-    }
-
-    function getGenericFields(n, v, i) {
-        switch (n) {
-            case 'xp':
-                return i.getLevel(v);
-            case 'this-ac':
-                return i.getClassArmor();
-            case 'this-prof':
-                // This is the proficiency bonus main square
-                return i.getProficiency();
-            case 'this_init':
-                return i.getInitTierBreaker();
-            default:
-                return v;
         }
     }
 
@@ -427,9 +486,7 @@ function initGame(dbGame, session) {
 
             loadInsp();
             inspCont.click(function () {
-                saveField(insp, item.info.item_id).done(() => {
-                    loadInsp(item.item_id);
-                });
+                saveField(insp, item.info.item_id).done(loadInsp);
             });
         }
     }
@@ -470,7 +527,11 @@ function initGame(dbGame, session) {
                 newMainBtn.value = classSelect.value;
                 saveField(newMainBtn, item.info.item_id).done((data) => {
                     let c = findClass();
+                    // Load saving throws
                     saveClassSavingThrows(c, item);
+                    // Load hit dices
+                    let selectHitDice = q('#' + item.draggableContainerId + ' select[name="this_hit_dices"]');
+                    if (selectHitDice) getDataFromFields(selectHitDice, item);
                 });
             });
             getDataFromFields(scoreProfs, item);
@@ -544,16 +605,58 @@ function initGame(dbGame, session) {
     }
 
     function setHealth(item) {
-        const itemHealth = JSON.parse(item.info.health);
-        //* Hit points and hit dices *//
-
+        this.hitDices = function () {
+            let it = searchJournalItem(item.draggableContainerId);
+            if (it.getLevel() < this.value) {
+                this.value = it.getLevel();
+            }
+        }
+        this.exhaustion = function (exhaustionChecks) {
+            let exhaustionEffects = q('#' + item.draggableContainerId + ' .exhaustion_effects')[0];
+            if (exhaustionEffects) exhaustionEffects.innerHTML = '<b>Exhaustion effects:</b>';
+            getDataFromFields(exhaustionsChecks, item);
+            exhaustionsChecks.click(function () {
+                let valueHolder = parseInt(this.value);
+                let limit = this.checked || this.nextElementSibling.checked ? valueHolder : valueHolder - 1;
+                this.value = limit;
+                for (let i = 0; i < limit; i++) {
+                    exhaustionsChecks[i].checked = true;
+                }
+                saveField(this, item.info.item_id).done(() => {
+                    this.value = valueHolder;
+                    if (exhaustionEffects) exhaustionEffects.innerHTML = '<b>Exhaustion effects:</b>';
+                    getDataFromFields(exhaustionsChecks, item);
+                });
+            });
+        }
+        this.deathSaves = function (ds) {
+            ds.click(function () {
+                console.log(this)
+            });
+        }
+        this.conditions = function () {
+        }
+        //* Current hit dices cannot be more than the available levels *//
+        const curhd = q('#' + item.draggableContainerId + ' input[name="cur_hd"]')[0];
+        if (curhd) {
+            curhd.onchange = this.hitDices;
+            curhd.onkeyup = this.hitDices;
+        }
+        // Available hit dices must match the classes available for character
+        const selectHitDice = q('#' + item.draggableContainerId + ' select[name="this_hit_dices"]');
+        if (selectHitDice) getDataFromFields(selectHitDice, item);
         //* Death saves *//
-
+        const deathSaves = q('#' + item.draggableContainerId + ' .death_saves');
+        if (deathSaves) {
+            this.deathSaves(deathSaves);
+        }
         //* Exhaustion *//
-
+        const exhaustionsChecks = q('#' + item.draggableContainerId + ' input.exhaustion');
+        if (exhaustionsChecks) {
+            this.exhaustion(exhaustionsChecks);
+        }
         //* Conditions *//
-
-        console.log(itemHealth);
+        //
     }
 
     function searchJournalItem(containerID) {

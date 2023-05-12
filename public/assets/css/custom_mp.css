@@ -1147,8 +1147,8 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 }
 
 .exhaustion, .death_saves {
-    height: 10px !important;
-    width: 10px !important;
+    height: 12px !important;
+    width: 12px !important;
 }
 
 .w-120px {
@@ -1162,7 +1162,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     justify-content: start;
     text-align: center;
     height: 70px;
-    border-radius: 2rem;
+    border-radius: 1.1rem;
 }
 
 .hit_points.hit_points-sm {
@@ -1218,8 +1218,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     max-width: 450px;
 }
 
-.form-select.expertise,
-.was-validated .form-select:invalid {
+.form-select.expertise {
     border-color: var(--this-role-ocher);
 }
 
@@ -1233,14 +1232,12 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     background-size: 16px 12px, calc(.75em + .75rem) calc(.75em + .75rem)
 }
 
-.form-select.expertise:focus,
-.was-validated .form-select:invalid:focus {
+.form-select.expertise:focus {
     border-color: var(--this-role-ocher);
-    box-shadow: 0 0 0 .25rem rgba(241, 65, 108, .25)
+    box-shadow: 0 0 0 .25rem rgba(182, 156, 51, 0.25);
 }
 
-.form-check-input.expertise,
-.was-validated .form-check-input:invalid {
+.form-check-input.expertise {
     border-color: var(--this-role-ocher);
 }
 
@@ -1251,7 +1248,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 
 .form-check-input.expertise:focus,
 .was-validated .form-check-input:invalid:focus {
-    box-shadow: 0 0 0 .25rem rgba(241, 65, 108, .25)
+    box-shadow: 0 0 0 .25rem rgba(182, 156, 51, 0.25);
 }
 
 .form-check-input.expertise ~ .form-check-label,
@@ -1266,4 +1263,106 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 
 .form-check:not(.form-switch) .form-check-input[type=checkbox] {
     background-size: 70% 70%;
+}
+
+.form-select.danger:not([multiple]):not([size]),
+.form-select.danger:not([multiple])[size="1"],
+.was-validated .form-select:invalid:not([multiple]):not([size]),
+.was-validated .form-select:invalid:not([multiple])[size="1"] {
+    padding-right: 5.5rem;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%237E8299' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e"), url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23F2614E'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23F2614E' stroke='none'/%3e%3c/svg%3e");
+    background-position: right 1rem center, center right 3rem;
+    background-size: 16px 12px, calc(.75em + .75rem) calc(.75em + .75rem)
+}
+
+.form-select.danger:focus {
+    border-color: var(--bs-danger);
+    box-shadow: 0 0 0 .25rem rgba(241, 65, 108, .25)
+}
+
+.form-check-input.danger {
+    border-color: rgba(0, 0, 0, .25);
+}
+
+.form-check-input.danger:checked,
+.was-validated .form-check-input:invalid:checked {
+    background-color: var(--bs-danger);
+}
+
+.form-check-input.danger:focus,
+.was-validated .form-check-input:invalid:focus {
+    box-shadow: 0 0 0 .25rem rgba(241, 65, 108, .25)
+}
+
+.form-check-input.danger ~ .form-check-label,
+.was-validated .form-check-input:invalid ~ .form-check-label {
+    color: var(--bs-danger);
+}
+
+.form-select.warning:not([multiple]):not([size]),
+.form-select.warning:not([multiple])[size="1"],
+.was-validated .form-select:invalid:not([multiple]):not([size]),
+.was-validated .form-select:invalid:not([multiple])[size="1"] {
+    padding-right: 5.5rem;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%237E8299' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e"), url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23F2614E'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23F2614E' stroke='none'/%3e%3c/svg%3e");
+    background-position: right 1rem center, center right 3rem;
+    background-size: 16px 12px, calc(.75em + .75rem) calc(.75em + .75rem);
+}
+
+.form-select.warning:focus {
+    border-color: var(--this-role-ocher);
+    box-shadow: 0 0 0 .25rem rgba(189, 162, 52, 0.31);
+}
+
+.form-check-input.warning {
+    border-color: rgba(0, 0, 0, .25);
+}
+
+.form-check-input.warning:checked,
+.was-validated .form-check-input:invalid:checked {
+    background-color: var(--this-role-ocher);
+}
+
+.form-check-input.warning:focus,
+.was-validated .form-check-input:invalid:focus {
+    box-shadow: 0 0 0 .25rem rgba(189, 162, 52, 0.31);
+}
+
+.form-check-input.warning ~ .form-check-label,
+.was-validated .form-check-input:invalid ~ .form-check-label {
+    color: var(--this-role-ocher);
+}
+
+.form-select.success:not([multiple]):not([size]),
+.form-select.success:not([multiple])[size="1"],
+.was-validated .form-select:invalid:not([multiple]):not([size]),
+.was-validated .form-select:invalid:not([multiple])[size="1"] {
+    padding-right: 5.5rem;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%237E8299' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e"), url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23F2614E'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23F2614E' stroke='none'/%3e%3c/svg%3e");
+    background-position: right 1rem center, center right 3rem;
+    background-size: 16px 12px, calc(.75em + .75rem) calc(.75em + .75rem);
+}
+
+.form-select.success:focus {
+    border-color: var(--this-role-green);
+    box-shadow: 0 0 0 .25rem rgba(52, 167, 149, 0.25);
+}
+
+.form-check-input.success {
+    border-color: rgba(0, 0, 0, .25);
+}
+
+.form-check-input.success:checked,
+.was-validated .form-check-input:invalid:checked {
+    background-color: var(--this-role-green);
+}
+
+.form-check-input.success:focus,
+.was-validated .form-check-input:invalid:focus {
+    box-shadow: 0 0 0 .25rem rgba(52, 167, 149, 0.25);
+}
+
+.form-check-input.success ~ .form-check-label,
+.was-validated .form-check-input:invalid ~ .form-check-label {
+    color: var(--this-role-green);
 }

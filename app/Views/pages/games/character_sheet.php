@@ -388,7 +388,7 @@
                                                     <span class="text-uppercase">SUCCESSES</span>
                                                     <div class="flex-row gap-2">
                                                         <?php for ($i = 0; $i < 3; $i++) { ?>
-                                                            <input type="checkbox" id="" name="this_death_save_success" value="<?= $i + 1; ?>"
+                                                            <input type="checkbox" id="" name="this_death_save_successes" value="<?= $i + 1; ?>"
                                                                    class="form-control form-check-input death_saves success m-0 cursor-pointer"/>
                                                         <?php } ?>
                                                     </div>
@@ -397,7 +397,7 @@
                                                     <span class="text-uppercase">FAILURES</span>
                                                     <div class="flex-row gap-2">
                                                         <?php for ($i = 0; $i < 3; $i++) { ?>
-                                                            <input type="checkbox" id="" name="this_death_save_failure" value="<?= $i + 1; ?>"
+                                                            <input type="checkbox" id="" name="this_death_save_failures" value="<?= $i + 1; ?>"
                                                                    class="form-control form-check-input death_saves danger m-0 cursor-pointer"/>
                                                         <?php } ?>
                                                     </div>
@@ -427,16 +427,16 @@
                                         <span class="ps-5 exhaustion_effects fs-8 d-none col-12"><b>Exhaustion effects:</b></span>
                                     </div>
                                     <!--end::Row - Exhaustion-->
-                                    <div class="fs-3 p-3 pb-0">Conditions</div>
+                                    <div class="fs-3 p-3 pb-0 w-100">Conditions</div>
                                     <!--begin::Conditions-->
-                                    <div class="flex-row-wrap row-cols-2 mb-5 p-5">
+                                    <div class="flex-row-wrap row-cols-2 mb-5 px-5">
                                         <?php foreach ($health['conditions'] as $n => $c) {
                                             if ($n !== 'exhaustion') { ?>
                                                 <!--begin::Blinded-->
                                                 <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
                                                     <input type="checkbox" id="this_cond_<?= $n ?>"
                                                            name="this_cond_<?= $n ?>" <?= $c === "1" ? "checked" : "" ?>
-                                                           class="form-control form-check-input condition"/>
+                                                           class="form-control form-check-input warning condition"/>
                                                     <label for="this_cond_<?= $n ?>" type="button"
                                                            class="btn p-0 text-hover-primary fs-8 skill">
                                                         <?= strtosentence($n); ?>

@@ -122,15 +122,17 @@ class SheetDnD
                     return ['health' => $health];
                 }
                 break;
-            case str_contains($k, 'this_exhaustion'):
+            case (bool)preg_match('/this_death_save|this_cond|this_exhaustion/', $k):
                 $health = json_decode($item['health'], true);
                 if ($health) {
-                    $health['conditions']['exhaustion']['lvl'] = $v;
+                    $split = explode('_', $k);
+                    $type = $split[count($split) - 1];
+                    if (str_contains($k, 'this_death_save')) $health['death_saves'][$type] = $v;
+                    elseif (str_contains($k, 'this_cond')) $health['conditions'][$type] = $v;
+                    elseif (str_contains($k, 'this_exhaustion')) $health['conditions']['exhaustion']['lvl'] = $v;
                     return ['health' => $health];
                 }
                 break;
-            case str_contains($k, 'this_death_save'):
-                return [$k => $v];
         }
         return false;
     }

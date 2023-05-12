@@ -319,7 +319,7 @@ function initGame(dbGame, session) {
                 if (check) check.checked = sc.is_prof === "1";
                 let label = q('#' + it.draggableContainerId + ' label[for="' + divName + '"')[0];
                 let rawScoreModifier = it.getRawScoreModifier(scoreName);
-                if (rawScoreModifier && label) {
+                if (rawScoreModifier || rawScoreModifier == 0 && label) {
                     label.innerHTML = rawScoreModifier;
                 }
             }
@@ -398,7 +398,16 @@ function initGame(dbGame, session) {
                 }
             }
             this.deathSaves = () => {
-
+                const dSaves = JSON.parse(it.info.health).death_saves;
+                let split = divName.split('_');
+                let type = split[split.length - 1];
+                i.checked = i.value <= dSaves[type];
+            }
+            this.conditions = () => {
+                const conds = JSON.parse(it.info.health).conditions;
+                let split = divName.split('_');
+                let type = split[split.length - 1];
+                i.checked = conds[type] === "1";
             }
             this.getGenericFields = () => {
                 switch (divName) {
@@ -416,15 +425,10 @@ function initGame(dbGame, session) {
                 }
             }
 
-            try {
-                let data_from = q('#' + it.draggableContainerId + ' [data-from="' + divName + '"]');
-                for (let el of data_from) {
-                    el.innerHTML = this.getGenericFields();
-                }
-            } catch (DOMException) {
-                console.log(DOMException);
+            let data_from = q('#' + it.draggableContainerId + ' [data-from="' + divName + '"]');
+            for (let el of data_from) {
+                el.innerHTML = this.getGenericFields();
             }
-
             if (divName && divName !== '') {
                 //* begin::Score Modifiers *//
                 if (divName.match(/this_score/)) {
@@ -449,11 +453,18 @@ function initGame(dbGame, session) {
                 else if (divName.match(/this_hit_dices/)) {
                     this.hitDices();
                 }//* end::Hit dices select *//
+                //* begin::Exhaustion *//
                 else if (divName.match(/exhaustion/)) {
                     this.exh();
-                } else if (divName.match(/death_save/)) {
+                } //* end::Exhaustion *//
+                //* begin::Death Saves *//
+                else if (divName.match(/death_save/)) {
                     this.deathSaves();
-                }
+                } //* end::Death Saves *//
+                //* begin::Conditions *//
+                else if (divName.match(/this_cond/)) {
+                    this.conditions();
+                } //* end::Conditions *//
                 //* begin::Select *//
                 else if (i.nodeName === 'SELECT') {
                     i.value = (i.getAttribute('aria-selected'));
@@ -606,47 +617,48 @@ function initGame(dbGame, session) {
     function setHealth(item) {
         const curhd = q('#' + item.draggableContainerId + ' input[name="cur_hd"]')[0];
         const deathSaves = q('#' + item.draggableContainerId + ' .death_saves');
+        const deathSavesSuccess = q('#' + item.draggableContainerId + ' .death_saves.success');
+        const deathSavesFailure = q('#' + item.draggableContainerId + ' .death_saves.danger');
         const exhaustionsChecks = q('#' + item.draggableContainerId + ' input.exhaustion');
+        const conditionChecks = q('#' + item.draggableContainerId + ' .condition');
         this.hitDices = function () {
             let it = searchJournalItem(item.draggableContainerId);
             if (it.getLevel() < this.value) {
                 this.value = it.getLevel();
             }
         }
-        this.exhaustion = function () {
+        this.set_checks = function () {
             let exhaustionEffects = q('#' + item.draggableContainerId + ' .exhaustion_effects')[0];
             if (exhaustionEffects) exhaustionEffects.innerHTML = '<b>Exhaustion effects:</b>';
-            getDataFromFields(exhaustionsChecks, item);
-            exhaustionsChecks.click(function () {
-                let valueHolder = parseInt(this.value);
-                let limit = this.checked || this.nextElementSibling.checked ? valueHolder : valueHolder - 1;
-                this.value = limit;
-                for (let i = 0; i < limit; i++) {
-                    exhaustionsChecks[i].checked = true;
-                }
+            const checks = [deathSavesSuccess, deathSavesFailure, exhaustionsChecks];
+            for (let c of checks) {
+                getDataFromFields(c, item);
+                c.click(function () {
+                    let valueHolder = parseInt(this.value);
+                    let limit = this.checked || (this.nextElementSibling && this.nextElementSibling.checked) ? valueHolder : valueHolder - 1;
+                    this.value = limit;
+                    for (let i = 0; i < limit; i++) {
+                        c[i].checked = true;
+                    }
+                    saveField(this, item.info.item_id).done(() => {
+                        this.value = valueHolder;
+                        if (exhaustionEffects && this.getAttribute('name').match(/_exh/)) {
+                            exhaustionEffects.innerHTML = '<b>Exhaustion effects:</b>';
+                        }
+                        getDataFromFields(c, item);
+                    });
+                });
+            }
+        }
+        this.setConditions = function () {
+            getDataFromFields(conditionChecks, item);
+            conditionChecks.click(function () {
+                this.value = this.checked ? "1" : "0";
                 saveField(this, item.info.item_id).done(() => {
-                    this.value = valueHolder;
-                    if (exhaustionEffects) exhaustionEffects.innerHTML = '<b>Exhaustion effects:</b>';
-                    getDataFromFields(exhaustionsChecks, item);
+                    // do things?
+                    getDataFromFields(conditionChecks, item);
                 });
             });
-        }
-        this.death_saves = function () {
-            getDataFromFields(deathSaves, item);
-            deathSaves.click(function () {
-                let valueHolder = parseInt(this.value);
-                let limit = this.checked ? valueHolder : valueHolder - 1;
-                this.value = limit;
-                for (let i = 0; i < limit; i++) {
-                    deathSaves[i].checked = true;
-                }
-                saveField(this, item.info.item_id).done(() => {
-                    this.value = valueHolder;
-                    getDataFromFields(exhaustionsChecks, item);
-                });
-            });
-        }
-        this.conditions = function () {
         }
         //* Current hit dices cannot be more than the available levels *//
         if (curhd) {
@@ -657,17 +669,9 @@ function initGame(dbGame, session) {
         const selectHitDice = q('#' + item.draggableContainerId + ' select[name="this_hit_dices"]');
         if (selectHitDice) getDataFromFields(selectHitDice, item);
         //* Death saves *//
-        console.log(deathSaves);
-        if (deathSaves) {
-            console.log(deathSaves);
-            this.death_saves();
-        }
-        //* Exhaustion *//
-        if (exhaustionsChecks) {
-            this.exhaustion();
-        }
+        if (deathSaves && exhaustionsChecks) this.set_checks();
         //* Conditions *//
-        //
+        if (conditionChecks) this.setConditions();
     }
 
     function searchJournalItem(containerID) {

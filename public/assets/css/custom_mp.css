@@ -1146,7 +1146,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     width: 15px !important;
 }
 
-.exhaustion, .death_saves {
+.exhaustion, .death_saves, .condition {
     height: 12px !important;
     width: 12px !important;
 }

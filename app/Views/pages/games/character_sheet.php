@@ -251,7 +251,7 @@
                                                         <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
                                                             <button type="button"
                                                                     class="btn p-0 combat-item_title text-hover-primary">
-                                                                <?= strtoupper($score['fname']); // Name in CAPS                                        ?>
+                                                                <?= strtoupper($score['fname']); // Name in CAPS                                                    ?>
                                                             </button>
                                                             <label for="this_score_<?= $short; ?>"
                                                                    class="fs-3">0</label>
@@ -292,41 +292,42 @@
                             </div>
                             <!--end::Ability Scores-->
                             <!--begin::Skills-->
-                            <div class="column this-outline p-3">
-                                <!--begin::Title-->
-                                <div class="fs-3 p-3 ps-0 w-100">Skill Proficiencies</div>
-                                <!--end::Title-->
-                                <div class="flex-row-wrap justify-content-center">
-                                    <div class="flex-column justify-content-between p-3">
-                                        <?php foreach ($skill_proficiencies as $skill_name => $skill_details) {
-                                            $name = strtolower($skill_name);
-                                            $title = strtosentence(get_title($skill_name));
-                                            ?>
-                                            <!--begin::Arcana-->
-                                            <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
-                                                <input type="checkbox" id="this_skill_<?= $name ?>"
-                                                       name="this_skill_<?= $name ?>" value="<?= $skill_details ?>"
-                                                       class="form-control form-check-input skill_prof"/>
-                                                <button type="button"
-                                                        class="btn p-0 text-hover-primary fs-8 <?= $name ?>">
-                                                    <?= $title ?>
-                                                </button>
-                                            </div>
-                                            <!--end::Arcana-->
-                                        <?php } ?>
-                                    </div>
+                            <div class="column flex-column justify-content-between this-outline p-3">
+                                <!--begin::Row - Skill Proficiencies-->
+                                <div class="flex-column justify-content-between p-3 pt-0">
+                                    <!--begin::Row - Title-->
+                                    <div class="fs-3 p-3 ps-0 w-100">Skill Proficiencies</div>
+                                    <!--end::Row - Title-->
+                                    <?php foreach ($skill_proficiencies as $skill_name => $skill_details) {
+                                        $name = strtolower($skill_name);
+                                        $title = strtosentence(get_title($skill_name));
+                                        ?>
+                                        <!--begin::<?= $title; ?>-->
+                                        <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
+                                            <input type="checkbox" id="this_skill_<?= $name ?>"
+                                                   name="this_skill_<?= $name ?>" value="<?= $skill_details ?>"
+                                                   class="form-control form-check-input skill_prof"/>
+                                            <button type="button"
+                                                    class="btn p-0 text-hover-primary fs-8 <?= $name ?>">
+                                                <?= $title ?>
+                                            </button>
+                                        </div>
+                                        <!--end::<?= $title; ?>-->
+                                    <?php } ?>
                                 </div>
-                                <!--begin::Info Legend-->
-                                <div class="flex-row justify-content-between p-3 gap-3">
-                                    <span class="badge badge-primary text-uppercase fs-8">
+                                <!--end::Row - Skill Proficiencies-->
+                                <!--begin::Row - Info Legend-->
+                                <div class="flex-row justify-content-between p-3">
+                                    <span class="badge badge-primary text-uppercase fs-9">
                                         PROFICIENCY
                                     </span>
-                                    <span class="badge badge-ocher text-uppercase fs-8">
+                                    <span class="badge badge-ocher text-uppercase fs-9">
                                         EXPERTISE
                                     </span>
                                 </div>
-                                <!--end::Info Legend-->
+                                <!--end::Row - Info Legend-->
                             </div>
+                            <!--end::Row-->
                             <!--end::Skills-->
                             <!--begin::Health & Conditions-->
                             <div class="column this-outline p-3">
@@ -382,22 +383,22 @@
                                         <!--begin::Col-->
                                         <div class="column col-5">
                                             <!--begin::Row - Death Saves-->
-                                            <div class="flex-column align-items-start justify-content-center gap-2 ms-3">
+                                            <div class="flex-column align-items-start justify-content-center gap-2 ms-3 fs-9">
                                                 <div class="flex-row justify-content-between gap-3 text-center col-12">
-                                                    <span class="text-uppercase fs-8">SUCCESSES</span>
+                                                    <span class="text-uppercase">SUCCESSES</span>
                                                     <div class="flex-row gap-2">
                                                         <?php for ($i = 0; $i < 3; $i++) { ?>
-                                                            <input type="checkbox" id="" name="" value=""
-                                                                   class="form-control form-check-input death_saves success m-0"/>
+                                                            <input type="checkbox" id="" name="this_death_save_success" value="<?= $i + 1; ?>"
+                                                                   class="form-control form-check-input death_saves success m-0 cursor-pointer"/>
                                                         <?php } ?>
                                                     </div>
                                                 </div>
                                                 <div class="flex-row justify-content-between gap-3 text-center col-12">
-                                                    <span class="text-uppercase fs-8">FAILURES</span>
+                                                    <span class="text-uppercase">FAILURES</span>
                                                     <div class="flex-row gap-2">
                                                         <?php for ($i = 0; $i < 3; $i++) { ?>
-                                                            <input type="checkbox" id="" name="" value=""
-                                                                   class="form-control form-check-input death_saves danger m-0"/>
+                                                            <input type="checkbox" id="" name="this_death_save_failure" value="<?= $i + 1; ?>"
+                                                                   class="form-control form-check-input death_saves danger m-0 cursor-pointer"/>
                                                         <?php } ?>
                                                     </div>
                                                 </div>

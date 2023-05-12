@@ -128,6 +128,9 @@ class SheetDnD
                     $health['conditions']['exhaustion']['lvl'] = $v;
                     return ['health' => $health];
                 }
+                break;
+            case str_contains($k, 'this_death_save'):
+                return [$k => $v];
         }
         return false;
     }

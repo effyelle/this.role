@@ -387,7 +387,6 @@ function initGame(dbGame, session) {
                 }
             }
             this.exh = () => {
-                console.log(i)
                 const exhaustion = JSON.parse(it.info.health).conditions.exhaustion;
                 if (exhaustion) {
                     i.checked = i.value <= exhaustion.lvl;
@@ -605,13 +604,16 @@ function initGame(dbGame, session) {
     }
 
     function setHealth(item) {
+        const curhd = q('#' + item.draggableContainerId + ' input[name="cur_hd"]')[0];
+        const deathSaves = q('#' + item.draggableContainerId + ' .death_saves');
+        const exhaustionsChecks = q('#' + item.draggableContainerId + ' input.exhaustion');
         this.hitDices = function () {
             let it = searchJournalItem(item.draggableContainerId);
             if (it.getLevel() < this.value) {
                 this.value = it.getLevel();
             }
         }
-        this.exhaustion = function (exhaustionChecks) {
+        this.exhaustion = function () {
             let exhaustionEffects = q('#' + item.draggableContainerId + ' .exhaustion_effects')[0];
             if (exhaustionEffects) exhaustionEffects.innerHTML = '<b>Exhaustion effects:</b>';
             getDataFromFields(exhaustionsChecks, item);
@@ -629,15 +631,24 @@ function initGame(dbGame, session) {
                 });
             });
         }
-        this.deathSaves = function (ds) {
-            ds.click(function () {
-                console.log(this)
+        this.death_saves = function () {
+            getDataFromFields(deathSaves, item);
+            deathSaves.click(function () {
+                let valueHolder = parseInt(this.value);
+                let limit = this.checked ? valueHolder : valueHolder - 1;
+                this.value = limit;
+                for (let i = 0; i < limit; i++) {
+                    deathSaves[i].checked = true;
+                }
+                saveField(this, item.info.item_id).done(() => {
+                    this.value = valueHolder;
+                    getDataFromFields(exhaustionsChecks, item);
+                });
             });
         }
         this.conditions = function () {
         }
         //* Current hit dices cannot be more than the available levels *//
-        const curhd = q('#' + item.draggableContainerId + ' input[name="cur_hd"]')[0];
         if (curhd) {
             curhd.onchange = this.hitDices;
             curhd.onkeyup = this.hitDices;
@@ -646,14 +657,14 @@ function initGame(dbGame, session) {
         const selectHitDice = q('#' + item.draggableContainerId + ' select[name="this_hit_dices"]');
         if (selectHitDice) getDataFromFields(selectHitDice, item);
         //* Death saves *//
-        const deathSaves = q('#' + item.draggableContainerId + ' .death_saves');
+        console.log(deathSaves);
         if (deathSaves) {
-            this.deathSaves(deathSaves);
+            console.log(deathSaves);
+            this.death_saves();
         }
         //* Exhaustion *//
-        const exhaustionsChecks = q('#' + item.draggableContainerId + ' input.exhaustion');
         if (exhaustionsChecks) {
-            this.exhaustion(exhaustionsChecks);
+            this.exhaustion();
         }
         //* Conditions *//
         //

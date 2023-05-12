@@ -510,69 +510,97 @@
                             <!--begin::Health & Conditions-->
                             <div class="column this-outline p-3">
                                 <div class="flex-column w-300px justify-content-center align-items-center gap-3">
-                                    <div class="fs-3 p-3 w-100">Health</div>
-                                    <!--begin::Hit Points-->
+                                    <div class="fs-3 p-3 pb-0 w-100">Health</div>
+                                    <!--begin::Row - Hit Points-->
                                     <div class="position-relative w-180px h-125px p-3">
-                                        <div class="hit_points this-outline">
+                                        <div class="hit_points this-outline flex-column justify-content-start">
                                             <input type="text" id="cur_hp" name="cur_hp" value="50"
-                                                   class="combat-item_content this-hp this-role-form-field w-50 fs-1"/>
+                                                   class="combat-item_content this-hp this-role-form-field w-50 fs-2"/>
                                             <label for="cur_hp" class="fs-8">CURRENT HIT POINTS</label>
                                         </div>
-                                        <div class="hit_points hit_points-sm this-outline start-0">
-                                            <input type="text" id="total_hp" name="total_hp" value="50"
-                                                   class="combat-item_content this-hp this-role-form-field w-75 fs-6"/>
-                                            <label for="total_hp">TOTAL HIT POINTS</label>
-                                        </div>
-                                        <div class="hit_points hit_points-sm this-outline end-0">
-                                            <input type="text" id="temp_hp" name="temp_hp" value="0"
-                                                   class="combat-item_content this-hp this-role-form-field w-75 fs-6"/>
-                                            <label for="temp_hp">TEMPORARY HIT POINTS</label>
-                                        </div>
-                                    </div>
-                                    <!--end::Hit Points-->
-                                    <!--begin::Exhaustion-->
-                                    <div class="flex-row row-cols-3 justify-content-center align-items-center w-200px gap-3">
-                                        <div class="flex-row row-cols-3 justify-content-center align-items-center form-control-solid form-check p-0 gap-2">
-                                            <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input exhaustion this-role-form-field m-0"/>
-                                            <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input exhaustion this-role-form-field m-0"/>
-                                            <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input exhaustion this-role-form-field m-0"/>
-                                        </div>
-                                        <div class="fs-8 fw-bolder col-5">EXHAUSTION</div>
-                                        <div class="flex-row row-cols-3 justify-content-center align-items-center form-control-solid form-check p-0 gap-2">
-                                            <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input exhaustion this-role-form-field m-0"/>
-                                            <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input exhaustion this-role-form-field m-0"/>
-                                            <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input exhaustion this-role-form-field m-0"/>
+                                        <div class="flex-row gap-3">
+                                            <div class="hit_points hit_points-sm this-outline start-0">
+                                                <input type="text" id="total_hp" name="total_hp" value="50"
+                                                       class="combat-item_content this-hp this-role-form-field w-75 fs-6"/>
+                                                <label for="total_hp">TOTAL HIT POINTS</label>
+                                            </div>
+                                            <div class="hit_points hit_points-sm this-outline end-0">
+                                                <input type="text" id="temp_hp" name="temp_hp" value="0"
+                                                       class="combat-item_content this-hp this-role-form-field w-75 fs-6"/>
+                                                <label for="temp_hp">TEMPORARY HIT POINTS</label>
+                                            </div>
                                         </div>
                                     </div>
-                                    <!--end::Exhaustion-->
-                                    <!--begin::Death Saves-->
-                                    <div class="flex-row row-cols-3 justify-content-center align-items-center w-200px gap-3">
-                                        <div class="flex-row row-cols-3 justify-content-center align-items-center form-control-solid form-check p-0 gap-2">
-                                            <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input death_saves this-role-form-field m-0"/>
-                                            <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input death_saves this-role-form-field m-0"/>
-                                            <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input death_saves this-role-form-field m-0"/>
+                                    <!--end::Row - Hit Points-->
+                                    <!--begin::Row-->
+                                    <div class="flex-row-wrap justify-content-evenly align-items-stretch">
+                                        <!--begin::Col - Hit dices-->
+                                        <div class="column col-4">
+                                            <div class="hit_points this-outline form-control-solid h-60px">
+                                                <div class="flex-column justify-content-center align-items-center">
+                                                    <div class="this-outline bg-white flex-row justify-content-center align-items-center col-10 position-relative mt--10px">
+                                                        <span class="fs-8">Total</span>
+                                                        <input type="number" id="total_hd" name="total_hd" value="1"
+                                                               class="combat-item_content this-hp this-role-form-field w-50 fs-8 ms-1"/>
+                                                    </div>
+                                                    <input type="number" id="cur_hd" name="cur_hd" value="1"
+                                                           class="combat-item_content this-hp this-role-form-field w-50 fs-4 ms-3"/>
+                                                    <button type="button" name="" class="btn btn-sm btn-link p-0">
+                                                        Hit dice
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="fs-8 fw-bolder col-5">DEATH SAVES</div>
-                                        <div class="flex-row row-cols-3 justify-content-center align-items-center form-control-solid form-check p-0 gap-2">
-                                            <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input death_saves this-role-form-field m-0"/>
-                                            <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input death_saves this-role-form-field m-0"/>
-                                            <input type="checkbox" id="" name="" value=""
-                                                   class="form-control form-check-input death_saves this-role-form-field m-0"/>
+                                        <!--end::Col - Hit dices-->
+                                        <!--begin::Col-->
+                                        <div class="column col-7">
+                                            <!--begin::Row - Exhaustion-->
+                                            <div class="flex-row row-cols-3 justify-content-center align-items-center text-center">
+                                                <div class="flex-row row-cols-3 justify-content-center align-items-center form-control-solid form-check p-0 gap-1">
+                                                    <input type="checkbox" id="" name="" value=""
+                                                           class="form-control form-check-input exhaustion m-0"/>
+                                                    <input type="checkbox" id="" name="" value=""
+                                                           class="form-control form-check-input exhaustion m-0"/>
+                                                    <input type="checkbox" id="" name="" value=""
+                                                           class="form-control form-check-input exhaustion m-0"/>
+                                                </div>
+                                                <div class="fs-9 fw-bolder col-5">EXHAUSTION</div>
+                                                <div class="flex-row row-cols-3 justify-content-center align-items-center form-control-solid form-check p-0 gap-1">
+                                                    <input type="checkbox" id="" name="" value=""
+                                                           class="form-control form-check-input exhaustion m-0"/>
+                                                    <input type="checkbox" id="" name="" value=""
+                                                           class="form-control form-check-input exhaustion m-0"/>
+                                                    <input type="checkbox" id="" name="" value=""
+                                                           class="form-control form-check-input exhaustion m-0"/>
+                                                </div>
+                                            </div>
+                                            <!--end::Row - Exhaustion-->
+                                            <!--begin::Row - Death Saves-->
+                                            <div class="flex-row row-cols-3 justify-content-center align-items-center text-center">
+                                                <div class="flex-row row-cols-3 justify-content-center align-items-center form-control-solid form-check p-0 gap-1">
+                                                    <input type="checkbox" id="" name="" value=""
+                                                           class="form-control form-check-input death_saves m-0"/>
+                                                    <input type="checkbox" id="" name="" value=""
+                                                           class="form-control form-check-input death_saves m-0"/>
+                                                    <input type="checkbox" id="" name="" value=""
+                                                           class="form-control form-check-input death_saves m-0"/>
+                                                </div>
+                                                <div class="fs-9 fw-bolder col-5">DEATH SAVES</div>
+                                                <div class="flex-row row-cols-3 justify-content-center align-items-center form-control-solid form-check p-0 gap-1">
+                                                    <input type="checkbox" id="" name="" value=""
+                                                           class="form-control form-check-input death_saves m-0"/>
+                                                    <input type="checkbox" id="" name="" value=""
+                                                           class="form-control form-check-input death_saves m-0"/>
+                                                    <input type="checkbox" id="" name="" value=""
+                                                           class="form-control form-check-input death_saves m-0"/>
+                                                </div>
+                                            </div>
+                                            <!--end::Row - Death Saves-->
                                         </div>
+                                        <!--end::Col-->
                                     </div>
-                                    <!--end::Death Saves-->
-                                    <div class="fs-3 p-3 w-100">Conditions</div>
+                                    <!--end::Row-->
+                                    <div class="fs-3 p-3 pb-0 w-100">Conditions</div>
                                     <!--begin::Conditions-->
                                     <div class="flex-row-wrap row-cols-2 mb-5 p-5">
                                         <?php foreach ($health['conditions'] as $n => $c) {

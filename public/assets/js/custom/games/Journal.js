@@ -152,18 +152,17 @@ class Journal {
             }
         }
         this.getLevel = () => {
+            let lvl = 0;
             if (this.info.classes) {
                 const classes = JSON.parse(this.info.classes);
-                let lvl = 1;
                 for (let i in classes) {
                     let c = classes[i];
                     if (c.lvl && c.lvl !== "" && c.lvl !== "0" && !isNaN(c.lvl)) {
                         lvl += parseInt(c.lvl);
                     }
                 }
-                return lvl;
             }
-            return 1;
+            return lvl !== 0 ? lvl : 1;
         }
         this.getClassArmor = () => {
             // Base armor starts in 10
@@ -196,9 +195,7 @@ class Journal {
         }
         this.getProficiency = () => {
             // Starts in +2 and adds +1 for every 4 levels until level 20
-            let prof = Math.ceil(this.getLevel() / 4) + 1;
-            console.log(prof)
-            return prof;
+            return Math.ceil(this.getLevel() / 4) + 1;
         }
         this.getMainClass = () => {
             if (this.info.classes) {

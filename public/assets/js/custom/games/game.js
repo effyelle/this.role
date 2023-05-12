@@ -227,6 +227,7 @@ function initGame(dbGame, session) {
             this_fields.blur(function () {
                 saveField(this, item.info.item_id).done(() => {
                     getDataFromFields(this_fields, item);
+                    getDataFromFields(q('#' + item.draggableContainerId + ' input.skill_prof'), item);
                 });
             });
             //* end::General Inputs change *//
@@ -249,32 +250,15 @@ function initGame(dbGame, session) {
             setInspiration(item);
             //* end::Inspiration *//
             //* begin::Skill proficiencies *//
-            let skillsChecks = q('#' + item.draggableContainerId + ' .skill_prof');
-            if (skillsChecks) {
-                skillsChecks.click(function () {
-                    saveField(this, item.info.item_id).done(getSkills);
-                });
-                getSkills();
-
-                function getSkills() {
-                    let it = searchJournalItem(item.draggableContainerId);
-                    for (let i of skillsChecks) {
-                        let name = i.getAttribute('name');
-                        let skills = JSON.parse(it.info.skill_proficiencies);
-                        for (let k in skills) {
-                            if (name.match(k)) {
-                                i.value = skills[k];
-                                i.checked = i.value === "1" || i.value === "2";
-                                i.toggleClass('expertise', i.value === "2");
-                            }
-                        }
-                    }
-                }
-            }
+            setSkills(item);
             //* end::Skill proficiencies *//
-            //* begin::Save class *//
+            //* begin::Class *//
+            // Has to be called AFTER the general filling
             setClassGroup(item);
-            //* end::Save class *//
+            //* end::Class *//
+            //* begin::Health Container *//
+            setHealth(item);
+            //* end::Health Container *//
         }
     }
 
@@ -323,42 +307,78 @@ function initGame(dbGame, session) {
         let it = searchJournalItem(item.draggableContainerId);
         for (let i of inputs) {
             let divName = i.getAttribute('name');
+            this.scoreModifiers = () => {
+                let scoreName = divName.substring(11);
+                let sc = it.getScore(scoreName);
+                i.value = sc.score;
+                let check = q('#' + item.draggableContainerId + ' [name="this_prof_' + scoreName + '"]')[0];
+                if (check) check.checked = sc.is_prof === "1";
+                let label = q('#' + item.draggableContainerId + ' label[for="' + divName + '"')[0];
+                let rawScoreModifier = it.getRawScoreModifier(scoreName);
+                if (rawScoreModifier && label) {
+                    label.innerHTML = rawScoreModifier;
+                }
+            }
+            this.scoreProfBonuses = () => {
+                let label = q('#' + item.draggableContainerId + ' label[for="' + divName + '"')[0];
+                if (label) {
+                    label.innerHTML = i.checked ? '+' + it.getProficiency() : "+0";
+                }
+            }
+            this.savingThrows = () => {
+                let score = divName.substring(10);
+                let check = q('#' + item.draggableContainerId + ' [name="this_prof_' + score + '"]')[0];
+                let profScoreModifier = check && check.checked
+                    ? it.getProfScoreModifier(score)
+                    : it.getRawScoreModifier(score);
+                if (profScoreModifier) {
+                    i.value = profScoreModifier;
+                    i.innerHTML = 'SAVING THROW' + (profScoreModifier >= 0 ? '+' : '') + profScoreModifier;
+                }
+            }
+            this.skills = () => {
+                // These titles are also the buttons to roll a skill dice
+                let skillTitle = q('#' + item.draggableContainerId
+                    + ' .skill_prof[name="' + divName + '"] ~ button')[0];
+                const skills = JSON.parse(it.info.skill_proficiencies);
+                let skillName = divName.substring(11);
+                i.value = skills[skillName];
+                i.checked = i.value === "1" || i.value === "2";
+                i.toggleClass('expertise', i.value === "2");
+                console.log("Skill = ")
+                item.getProficiency()
+                if (skillTitle) {
+                    skillTitle.innerHTML = toSentenceCase(skillName) + " +" +
+                        parseInt(i.value) * item.getProficiency();
+                }
+            }
             if (divName && divName !== '') {
                 //* begin::Score Modifiers *//
                 if (divName.match(/this_score/)) {
-                    let scoreName = divName.substring(11);
-                    let sc = it.getScore(scoreName);
-                    i.value = sc.score;
-                    let check = q('#' + item.draggableContainerId + ' [name="this_prof_' + scoreName + '"]')[0];
-                    if (check) check.checked = sc.is_prof === "1";
-                    let label = q('#' + item.draggableContainerId + ' label[for="' + divName + '"')[0];
-                    let rawScoreModifier = it.getRawScoreModifier(scoreName);
-                    if (rawScoreModifier && label) {
-                        label.innerHTML = rawScoreModifier;
-                    }
+                    this.scoreModifiers()
                 } //* end::Score Modifiers *//
                 //* begin::Score proficiency bonuses *//
                 else if (divName.match(/this_prof/)) {
-                    let label = q('#' + item.draggableContainerId + ' label[for="' + divName + '"')[0];
-                    if (label) {
-                        label.innerHTML = i.checked ? '+' + it.getProficiency() : "+0";
-                    }
+                    this.scoreProfBonuses(divName);
                 } // * end::Score proficiency bonuses * //
                 // * begin::Saving Throws * //
                 else if (divName.match(/this_save/)) {
-                    let score = divName.substring(10);
-                    let check = q('#' + item.draggableContainerId + ' [name="this_prof_' + score + '"]')[0];
-                    let profScoreModifier = check && check.checked
-                        ? it.getProfScoreModifier(score)
-                        : it.getRawScoreModifier(score);
-                    if (profScoreModifier) {
-                        i.value = profScoreModifier;
-                        i.innerHTML = 'SAVING THROW' + (profScoreModifier >= 0 ? '+' : '') + profScoreModifier;
-                    }
+                    this.savingThrows();
                 } // * end::Saving Throws * //
+                //* begin::Select *//
                 else if (i.nodeName === 'SELECT') {
                     i.value = (i.getAttribute('aria-selected'));
-                } else {
+                } //* end::Select *//
+                else if (divName.match(/this_skill/)) {
+                    this.skills();
+                }
+                //* begin::Level *//
+                else if (divName.match(/lvl/)) {
+                    // On level change, get total proficiencies again
+
+                }
+                //* end::Leve *//
+                else {
                     let data_from = q('#' + it.draggableContainerId + ' [data-from=' + divName + ']');
                     for (let el of data_from) {
                         el.innerHTML = getGenericFields(divName, i.value, it);
@@ -382,6 +402,50 @@ function initGame(dbGame, session) {
             default:
                 return v;
         }
+    }
+
+    function setInspiration(item) {
+        const inspCont = q('#' + item.draggableContainerId + ' .inspiration')[0];
+        const insp = q('#' + item.draggableContainerId + ' [name=inspiration]')[0];
+        if (inspCont && insp) {
+            function loadInsp() {
+                let it = searchJournalItem(item.draggableContainerId);
+                if (it.info.info) {
+                    let info = JSON.parse(it.info.info);
+                    if (info.inspiration) {
+                        insp.value = info.inspiration;
+                        if (insp.value === "1") {
+                            insp.children[0].style.backgroundImage = 'url("/assets/media/games/journal/insp.png")';
+                            return;
+                        }
+                        insp.children[0].style.backgroundImage = 'none';
+                        return;
+                    }
+                    insp.value = "0";
+                }
+            }
+
+            loadInsp();
+            inspCont.click(function () {
+                saveField(insp, item.info.item_id).done(() => {
+                    loadInsp(item.item_id);
+                });
+            });
+        }
+    }
+
+    function setSkills(item) {
+        // These checkboxes will save if the character is proficient or expert in a skill
+        let skillChecks = q('#' + item.draggableContainerId + ' .skill_prof');
+        if (skillChecks) {
+            getDataFromFields(skillChecks, item);
+            skillChecks.click(function () {
+                saveField(this, item.info.item_id).done(() => {
+                    getDataFromFields(skillChecks, item);
+                });
+            });
+        }
+
     }
 
     function setClassGroup(item) {
@@ -479,34 +543,17 @@ function initGame(dbGame, session) {
         }
     }
 
-    function setInspiration(item) {
-        const inspCont = q('#' + item.draggableContainerId + ' .inspiration')[0];
-        const insp = q('#' + item.draggableContainerId + ' [name=inspiration]')[0];
-        if (inspCont && insp) {
-            function loadInsp() {
-                let it = searchJournalItem(item.draggableContainerId);
-                if (it.info.info) {
-                    let info = JSON.parse(it.info.info);
-                    if (info.inspiration) {
-                        insp.value = info.inspiration;
-                        if (insp.value === "1") {
-                            insp.children[0].style.backgroundImage = 'url("/assets/media/games/journal/insp.png")';
-                            return;
-                        }
-                        insp.children[0].style.backgroundImage = 'none';
-                        return;
-                    }
-                    insp.value = "0";
-                }
-            }
+    function setHealth(item) {
+        const itemHealth = JSON.parse(item.info.health);
+        //* Hit points and hit dices *//
 
-            loadInsp();
-            inspCont.click(function () {
-                saveField(insp, item.info.item_id).done(() => {
-                    loadInsp(item.item_id);
-                });
-            });
-        }
+        //* Death saves *//
+
+        //* Exhaustion *//
+
+        //* Conditions *//
+
+        console.log(itemHealth);
     }
 
     function searchJournalItem(containerID) {

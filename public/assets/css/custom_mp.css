@@ -1141,9 +1141,14 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     top: 140px;
 }
 
-.score_prof, .skill_prof, .exhaustion, .death_saves, .condition {
+.score_prof, .skill_prof, .condition {
     height: 15px !important;
     width: 15px !important;
+}
+
+.exhaustion, .death_saves {
+    height: 10px !important;
+    width: 10px !important;
 }
 
 .w-120px {
@@ -1156,15 +1161,12 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     align-items: center;
     justify-content: start;
     text-align: center;
-    width: 160px;
     height: 70px;
-    padding: 0.5rem;
     border-radius: 2rem;
 }
 
 .hit_points.hit_points-sm {
-    position: absolute;
-    top: 65px;
+    margin-top: -20px;
     width: 80px;
     height: 50px;
     padding: 0.25rem;
@@ -1186,6 +1188,10 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 
 .overflow-y-scroll {
     overflow-y: scroll;
+}
+
+.mt--10px {
+    margin-top: -10px;
 }
 
 .mt--25px {
@@ -1256,4 +1262,8 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 .badge-ocher {
     color: #fff;
     background-color: var(--this-role-ocher);
+}
+
+.form-check:not(.form-switch) .form-check-input[type=checkbox] {
+    background-size: 70% 70%;
 }

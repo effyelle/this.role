@@ -726,8 +726,6 @@ function initGame(dbGame, session) {
                 let table = btn[0].parentNode.nextElementSibling;
                 if (table) {
                     let tableName = table.id.substring(0, table.id.length - 2);
-                    if (table.classList.contains('other_feats_table')) {
-                    }
                     if (table.children[1] && table.children[1].nodeName === "TBODY") {
                         table.children[1].innerHTML = item.info[tableName];
                     } else {
@@ -785,21 +783,15 @@ function initGame(dbGame, session) {
      * @returns {string}
      */
     function newRow(t) {
-        let thead = t.children[0];
-        let tbody = t.children[1];
-        if (thead && thead.nodeName === "THEAD" &&
-            tbody && tbody.nodeName === "TBODY") {
-            thead = thead.children[0].children;
-            // Attacks and spells
-            if (t.classList.contains('attacks_spells_table')) {
-                tbody.innerHTML += rowAttacksSpells();
-            } // Global modifiers
-            else if (t.classList.contains('global_modifiers_table')) {
-                tbody.innerHTML += rowGlobalModifiers();
-            }// Bag
-            else if (t.classList.contains('bag_table')) {
-                tbody.innerHTML += rowBag();
-            }
+        // Attacks and spells
+        if (t.classList.contains('attacks_spells_table')) {
+            t.innerHTML += rowAttacksSpells();
+        } // Global modifiers
+        else if (t.classList.contains('global_modifiers_table')) {
+            t.innerHTML += rowGlobalModifiers();
+        } // Bag
+        else if (t.classList.contains('bag_table')) {
+            t.innerHTML += rowBag();
         } // Other features
         else if (t.classList.contains('other_feats_table')) {
             // Div to fill ????
@@ -808,8 +800,8 @@ function initGame(dbGame, session) {
     }
 
     function abiliyScoresSelect() {
-        return '<select class="this_field form-control form-select">' +
-            '<option value="-1" selected> - </option>' +
+        return '<select class="this_field form-control form-select w-50px" aria-selected="-1">' +
+            '<option value="-1" selected>NONE</option>' +
             '<option value="str">STR</option>' +
             '<option value="dex">DEX</option>' +
             '<option value="con">CON</option>' +
@@ -820,94 +812,166 @@ function initGame(dbGame, session) {
     }
 
     function rowAttacksSpells() {
-        return '<tr class="fs-8">' +
-            '<td>' +
-            '   <input type="text" placeholder="Dagger"' +
-            '        class="this_field form-control w-100px"/>' +
-            '   <span class="d-none"></span>' +
-            '</td>' +
-            '<td>' +
-            '<div class="flex-row align-items-center justify-content-start gap-1">' +
-            '' + abiliyScoresSelect() +
-            '   <span class="d-none"></span>' +
-            '   + <input type="text" placeholder="0"' +
-            '       class="this_field form-control w-25px"/>' +
-            '   <span class="d-none"></span>' +
-            '   <input type="checkbox" class="this_field form-control form-check-input">' +
-            '   <span class="d-none"></span>' +
-            '   <label for="" class="form-check-label fs-9 fw-bolder">PROF</label>' +
+        return '<!--begin::Menu Accordion-->' +
+            '<div data-kt-menu-trigger="click" class="menu-item menu-accordion hover show mb-5">' +
+            '    <!--begin:Menu link-->' +
+            '    <div class="menu-link ps-0 gap-1">' +
+            '        <div class="menu-title gap-1 align-items-center">' +
+            '            <div class="menu-title gap-1">Name</div>' +
+            '            <div class="menu-title gap-1">Attack</div>' +
+            '            <div class="menu-title gap-1">Damage & Type</div>' +
+            '        </div>' +
+            '        <button class="btn">' +
+            '           <span class="menu-arrow" style="width: 1rem;height:1rem;"></span>' +
+            '        </button>' +
+            '    </div>' +
+            '    <!--end:Menu link-->' +
+            '    <!--begin:Menu sub-->' +
+            '    <div class="menu-sub menu-sub-accordion ps-2 gap-2">' +
+            '        <!--begin:Menu item-->' +
+            '        <div class="menu-item">' +
+            '           <input type="text" placeholder="Name"' +
+            '               class="menu-title this_field form-control ps-2 fs-6"/>' +
+            '           <span class="d-none"></span>' +
+            '        </div>' +
+            '        <!--end:Menu item-->' +
+            '        <!--begin:Menu item-->' +
+            '        <div class="menu-item border-bottom-1px-gray-300 pb-2">' +
+            '           <div class="flex-row align-items-center justify-content-start gap-2">' +
+            '               <span class="fw-bolder">Attack:</span>' +
+            '           ' + abiliyScoresSelect() +
+            '               <span class="d-none"></span>' +
+            '               + <input type="text" placeholder="0"' +
+            '                      class="this_field form-control w-25px"/>' +
+            '               <span class="d-none"></span>' +
+            '               <input type="checkbox" class="this_field form-control form-check-input">' +
+            '               <span class="d-none"></span>' +
+            '               <label for="" class="form-check-label fs-9 fw-bolder">PROF</label>' +
+            '           </div>' +
+            '        </div>' +
+            '        <!--end:Menu item-->' +
+            '        <!--begin:Menu item-->' +
+            '        <div class="menu-item border-bottom-1px-gray-300 pb-2">' +
+            '            <div class="flex-column">' +
+            '                <div class="flex-row align-items-center justify-content-start gap-2">' +
+            '                    <span class="fw-bolder">Damage:</span>' +
+            '                    <input type="text" placeholder="1d6"' +
+            '                         class="this_field form-control w-25px"/>' +
+            '                    <span class="d-none"></span>' +
+            '                    + ' + abiliyScoresSelect() +
+            '                    <span class="d-none"></span>' +
+            '                    + <input type="text" placeholder="0"' +
+            '                         class="this_field form-control w-20px"/>' +
+            '                    <span class="d-none"></span>' +
+            '                </div>' +
+            '                <div class="flex-row align-items-center justify-content-start gap-2">' +
+            '                    <label for="" class="form-check-label fs-9 fw-bolder">TYPE</label>' +
+            '                    <input type="text" placeholder="Slashing"' +
+            '                         class="this_field form-control w-100px">' +
+            '                    <span class="d-none"></span>' +
+            '                </div>' +
+            '            </div>' +
+            '        </div>' +
+            '        <!--end:Menu item-->' +
+            '        <!--begin:Menu item-->' +
+            '        <div class="menu-item border-bottom-1px-gray-300 pb-2">' +
+            '            <div class="flex-column">' +
+            '                <div class="flex-row align-items-center justify-content-start gap-2">' +
+            '                <span class="fw-bolder">Saving Throw:</span>' +
+            '                ' + abiliyScoresSelect() +
+            '                    <span class="d-none"></span>' +
+            '                    <label class="fs-9 text-uppercase fw-bolder"> vs dc</label>' +
+            '                ' + abiliyScoresSelect() +
+            '                    <span class="d-none"></span>' +
+            '                </div>' +
+            '                <div class="flex-row align-items-center justify-content-start gap-2">' +
+            '                    <label class="fs-9 text-uppercase fw-bolder"> SAVE EFFECT: </label>' +
+            '                    <input type="text" placeholder="Half-damage"' +
+            '                         class="this_field form-control w-100px">' +
+            '                    <span class="d-none"></span>' +
+            '                </div>' +
+            '            </div>' +
+            '        </div>' +
+            '        <!--end:Menu item-->' +
+            '        <!--begin:Menu item-->' +
+            '        <div class="menu-item d-flex align-self-end">' +
+            '            <button class="btn btn-sm btn-danger p-1 delete_row">' +
+            '                <i class="fa-solid fa-trash ms-1"></i>' +
+            '            </button>' +
+            '        </div>' +
+            '        <!--end:Menu item-->' +
+            '    </div>' +
             '</div>' +
-            '</td>' +
-            '<td>' +
-            '<div class="flex-row align-items-center justify-content-start gap-1">' +
-            '   <input type="text" placeholder="1d6"' +
-            '       class="this_field form-control w-25px"/>' +
-            '   <span class="d-none"></span>' +
-            ' + ' + abiliyScoresSelect() +
-            '   <span class="d-none"></span>' +
-            '  + <input type="text" placeholder="0"' +
-            '        class="this_field form-control w-20px"/>' +
-            '   <span class="d-none"></span>' +
-            '   <label for="" class="form-check-label fs-9 fw-bolder">TYPE</label>' +
-            '   <input type="text" placeholder="Slashing"' +
-            '        class="this_field form-control w-100px">' +
-            '   <span class="d-none"></span>' +
+            '<!--end::Menu Accordion-->' +
+            '<!--begin::Sparator-->' +
+            '<div class="menu-item">' +
+            '    <div class="menu-content p-0">' +
+            '        <div class="separator mx-1"></div>' +
+            '    </div>' +
             '</div>' +
-            '</td>' +
-            '<td>' +
-            '<div class="flex-row align-items-center justify-content-start gap-1">' +
-            '' + abiliyScoresSelect() +
-            '   <span class="d-none"></span>' +
-            '   <label class="fs-9 text-uppercase fw-bolder"> vs dc</label>' +
-            '' + abiliyScoresSelect() +
-            '   <span class="d-none"></span>' +
-            '   <label class="fs-9 text-uppercase fw-bolder"> SAVE EFFECT: </label>' +
-            '   <input type="text" placeholder="Half-damage"' +
-            '       class="this_field form-control w-100px">' +
-            '   <span class="d-none"></span>' +
-            '</div>' +
-            '</td>' +
-            '<td>' +
-            '   <button class="btn btn-sm btn-danger p-1 delete_row">' +
-            '      <i class="fa-solid fa-trash ms-1"></i>' +
-            '   </button>' +
-            '</td>' +
-            '</tr>';
+            '<!--end::Separator-->';
     }
 
     function rowGlobalModifiers() {
-        return '<tr class="fs-8">' +
-            '<td>' +
-            '   <input type="text" placeholder="Bless"' +
-            '        class="this_field form-control w-100px"/>' +
-            '   <span class="d-none"></span>' +
-            '</td>' +
-            '<td>' +
-            '   <input type="text" placeholder="1, 1d4"' +
-            '       class="this_field form-control w-50px"/>' +
-            '   <span class="d-none"></span>' +
-            '</td>' +
-            '<td>' +
-            '   <input type="text" placeholder="1, 1d4"' +
-            '       class="this_field form-control w-50px"/>' +
-            '   <span class="d-none"></span>' +
-            '</td>' +
-            '<td>' +
-            '   <input type="text" placeholder="1, 1d4"' +
-            '       class="this_field form-control w-50px"/>' +
-            '   <span class="d-none"></span>' +
-            '</td>' +
-            '<td>' +
-            '   <input type="text" placeholder="1, 1d4"' +
-            '       class="this_field form-control w-50px"/>' +
-            '   <span class="d-none"></span>' +
-            '</td>' +
-            '<td>' +
-            '   <button class="btn btn-sm btn-danger p-1 delete_row">' +
-            '      <i class="fa-solid fa-trash ms-1"></i>' +
-            '   </button>' +
-            '</td>' +
-            '</tr>';
+        return '<!--begin::Menu Accordion-->' +
+            '<div data-kt-menu-trigger="click" class="menu-item menu-accordion hover show mb-5">' +
+            '    <!--begin:Menu link-->' +
+            '    <div class="menu-link ps-0 gap-1">' +
+            '        <div class="menu-title gap-1 align-items-center">' +
+            '            <div class="menu-title gap-1">Name</div>' +
+            '            <div class="menu-title gap-1">Attack</div>' +
+            '            <div class="menu-title gap-1">Damage</div>' +
+            '            <div class="menu-title gap-1">Save</div>' +
+            '            <div class="menu-title gap-1">CA</div>' +
+            '        </div>' +
+            '        <button class="btn">' +
+            '           <span class="menu-arrow" style="width: 1rem;height:1rem;"></span>' +
+            '        </button>' +
+            '    </div>' +
+            '    <!--end:Menu link-->' +
+            '    <!--begin:Menu sub-->' +
+            '    <div class="menu-sub menu-sub-accordion ps-2 gap-2">' +
+            '        <!--begin:Menu item-->' +
+            '        <div class="menu-title">' +
+            '           <input type="text" placeholder="Bless"' +
+            '                class="menu-title this_field form-control ps-2 fs-6"/>' +
+            '           <span class="d-none"></span>' +
+            '           <div class="flex-row align-items-center justify-content-start gap-2">' +
+            '               <span class="fw-bolder">Attack:</span>' +
+            '               <input type="text" placeholder="1d4"' +
+            '                    class="menu-title this_field form-control ps-2 fs-6 w-50px"/>' +
+            '               <span class="d-none"></span>' +
+            '               <span class="fw-bolder">Damage:</span>' +
+            '               <input type="text" placeholder="1d4"' +
+            '                    class="menu-title this_field form-control ps-2 fs-6 w-50px"/>' +
+            '               <span class="d-none"></span>' +
+            '               <span class="fw-bolder">Skills:</span>' +
+            '               <input type="text" placeholder="1d4"' +
+            '                    class="menu-title this_field form-control ps-2 fs-6 w-50px"/>' +
+            '               <span class="d-none"></span>' +
+            '           </div>' +
+            '           <div class="flex-row-wrap align-items-center justify-content-start gap-2">' +
+            '               <span class="fw-bolder">Saving Throw:</span>' +
+            '               <input type="text" placeholder="1d4"' +
+            '                    class="menu-title this_field form-control ps-2 fs-6 w-50px"/>' +
+            '               <span class="d-none"></span>' +
+            '               <span class="fw-bolder">CA:</span>' +
+            '               <input type="text" placeholder="1"' +
+            '                    class="menu-title this_field form-control ps-2 fs-6 w-50px"/>' +
+            '               <span class="d-none"></span>' +
+            '           </div>' +
+            '        </div>' +
+            '        <!--end:Menu item-->' +
+            '    </div>' +
+            '</div>' +
+            '<!--end::Menu Accordion-->' +
+            '<!--begin::Sparator-->' +
+            '<div class="menu-item">' +
+            '    <div class="menu-content p-0">' +
+            '        <div class="separator mx-1"></div>' +
+            '    </div>' +
+            '</div>' +
+            '<!--end::Separator-->';
     }
 
     function rowBag() {
@@ -937,7 +1001,7 @@ function initGame(dbGame, session) {
 
     function rowCustomFeatures() {
         return '<!--begin::Menu Accordion-->' +
-            '<div data-kt-menu-trigger="click" class="menu-item menu-accordion hover show">' +
+            '<div data-kt-menu-trigger="click" class="menu-item menu-accordion hover show mb-5">' +
             '    <!--begin:Menu link-->' +
             '    <div class="menu-link ps-0 gap-1">' +
             '    <div class="menu-title gap-1 flex-column align-items-start">' +
@@ -953,7 +1017,7 @@ function initGame(dbGame, session) {
             '        </div>' +
             '    </div>' +
             '        <button class="btn">' +
-            '           <span class="menu-arrow" style="width: 1.2rem;height:1.2rem;"></span>' +
+            '           <span class="menu-arrow" style="width: 1rem;height:1rem;"></span>' +
             '        </button>' +
             '    </div>' +
             '    <!--end:Menu link-->' +

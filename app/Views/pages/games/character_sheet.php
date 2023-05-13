@@ -305,7 +305,7 @@
                                                         <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
                                                             <button type="button"
                                                                     class="btn p-0 combat-item_title text-hover-primary">
-                                                                <?= strtoupper($score['fname']); // Name in CAPS                                                                                              ?>
+                                                                <?= strtoupper($score['fname']); // Name in CAPS                                                                                               ?>
                                                             </button>
                                                             <label for="this_score_<?= $short; ?>"
                                                                    class="fs-3">0</label>
@@ -510,7 +510,7 @@
                             <!--begin::Attacks & Spells-->
                             <div class="column this-outline p-3">
                                 <!--begin::Title-->
-                                <div class="flex-row justify-content-between align-items-center w-100">
+                                <div class="flex-row justify-content-between align-items-center w-100 border-bottom-1px-gray-300">
                                     <label for="" class="fs-3 p-3">Attacks & Spells</label>
                                     <button class="btn btn-sm" id="atk_spells_btn<?= $data['item_id']; ?>">
                                         <i class="fa-solid fa-plus fa-xl text-dark"></i>
@@ -518,27 +518,16 @@
                                 </div>
                                 <!--end::Title-->
                                 <!--begin::Table-->
-                                <table id="attacks_<?= $data['item_id']; ?>"
-                                       class="table dataTable fs-8 p-3 attacks_spells_table">
-                                    <thead class="text-gray-700 fw-bolder text-capitalize border-bottom border-gray-300">
-                                    <tr>
-                                        <th>NAME</th>
-                                        <th>ATTACK</th>
-                                        <th>DAMAGE & TYPE</th>
-                                        <th>SAVING THROW</th>
-                                        <th></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+                                <div id="attacks_<?= $data['item_id']; ?>" data-kt-menu="true"
+                                     class="menu menu-column menu-rounded fs-8 px-3 attacks_spells_table">
+                                </div>
                                 <!--end::Table-->
                             </div>
                             <!--end::Attacks & Spells-->
                             <!--begin::Global Modifiers-->
                             <div class="column this-outline p-3">
                                 <!--begin::Title-->
-                                <div class="flex-row justify-content-between align-items-center w-100">
+                                <div class="flex-row justify-content-between align-items-center w-100 border-bottom-1px-gray-300">
                                     <label for="" class="fs-3 p-3">Global Modifiers</label>
                                     <button class="btn btn-sm" id="global_mods_btn<?= $data['item_id']; ?>">
                                         <i class="fa-solid fa-plus fa-xl text-dark"></i>
@@ -546,21 +535,9 @@
                                 </div>
                                 <!--end::Title-->
                                 <!--begin::Table-->
-                                <table id="global_modifiers_<?= $data['item_id']; ?>"
-                                       class="table dataTable fs-8 p-3 global_modifiers_table">
-                                    <thead class="text-gray-700 fw-bolder text-capitalize border-bottom border-gray-300">
-                                    <tr>
-                                        <th>NAME</th>
-                                        <th>ATTACK</th>
-                                        <th>DAMAGE</th>
-                                        <th>SAVE</th>
-                                        <th>CA</th>
-                                        <th></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+                                <div id="global_modifiers_<?= $data['item_id']; ?>" data-kt-menu="true"
+                                     class="menu menu-column menu-rounded fs-8 px-3 global_modifiers_table">
+                                </div>
                                 <!--end::Table-->
                             </div>
                             <!--end::Global Modifiers-->

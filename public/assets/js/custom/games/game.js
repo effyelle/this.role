@@ -307,7 +307,7 @@ function initGame(dbGame, session) {
         let name = t.id.substring(0, t.id.length - 2);
         let id = t.id.substring(t.id.length - 1);
         let form = {item_id: id};
-        form[name] = t.children[1].innerHTML;
+        form[name] = t.innerHTML;
         return $.ajax({
             type: "post",
             url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
@@ -726,24 +726,43 @@ function initGame(dbGame, session) {
                 let table = btn[0].parentNode.nextElementSibling;
                 if (table) {
                     let tableName = table.id.substring(0, table.id.length - 2);
+                    if (table.classList.contains('other_feats_table')) {
+                    }
                     if (table.children[1] && table.children[1].nodeName === "TBODY") {
                         table.children[1].innerHTML = item.info[tableName];
-                        /*
-                        table.Datatable({
-                            responsive: true,
-                            ordering: false,
-                            "dom": '<"row float-start"<"col-12"f>>rt<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>'
-                        });
-                        console.log(table)*/
+                    } else {
+                        table.innerHTML = item.info[tableName];
                     }
+                    setMenus(table);
                     setSaveFields(item.draggableContainerId, table);
                     // Set listener to save fields
                     btn[0].click(function () {
                         newRow(table);
+                        setMenus(table);
                         setSaveFields(item.draggableContainerId, table);
                     });
                 }
             }
+        }
+    }
+
+    function setMenus(t) {
+        let menus = q('#' + t.id + ' .menu-item.menu-accordion');
+        for (let m of menus) {
+            m.click(function (e) {
+                let btn = false;
+                for (let child of m.children[0].children) {
+                    if (child.nodeName === "BUTTON") {
+                        btn = child;
+                    }
+                }
+
+                if (e.target === btn || e.target === btn.children[0]) {
+                    m.toggleClass('hover');
+                    m.toggleClass('show');
+                    saveTable(t);
+                }
+            });
         }
     }
 
@@ -771,20 +790,26 @@ function initGame(dbGame, session) {
         if (thead && thead.nodeName === "THEAD" &&
             tbody && tbody.nodeName === "TBODY") {
             thead = thead.children[0].children;
-            console.log(thead)
+            // Attacks and spells
             if (t.classList.contains('attacks_spells_table')) {
                 tbody.innerHTML += rowAttacksSpells();
-            } else if (t.classList.contains('global_modifiers_table')) {
-            } else if (t.classList.contains('bag_table')) {
+            } // Global modifiers
+            else if (t.classList.contains('global_modifiers_table')) {
+                tbody.innerHTML += rowGlobalModifiers();
+            }// Bag
+            else if (t.classList.contains('bag_table')) {
+                tbody.innerHTML += rowBag();
             }
-        } else if (t.classList.contains('other_feats_table')) {
-
+        } // Other features
+        else if (t.classList.contains('other_feats_table')) {
+            // Div to fill ????
+            t.innerHTML += rowCustomFeatures();
         }
     }
 
     function abiliyScoresSelect() {
-        return '<select class="this_field">' +
-            '<option value="-1" selected>-</option>' +
+        return '<select class="this_field form-control form-select">' +
+            '<option value="-1" selected> - </option>' +
             '<option value="str">STR</option>' +
             '<option value="dex">DEX</option>' +
             '<option value="con">CON</option>' +
@@ -795,37 +820,37 @@ function initGame(dbGame, session) {
     }
 
     function rowAttacksSpells() {
-        return '<tr>' +
+        return '<tr class="fs-8">' +
             '<td>' +
             '   <input type="text" placeholder="Dagger"' +
-            '        class="this_field form-control-solid w-75px"/>' +
+            '        class="this_field form-control w-100px"/>' +
             '   <span class="d-none"></span>' +
             '</td>' +
             '<td>' +
             '<div class="flex-row align-items-center justify-content-start gap-1">' +
             '' + abiliyScoresSelect() +
             '   <span class="d-none"></span>' +
-            '  + <input type="text" placeholder="0"' +
-            '       class="this_field form-control-solid w-25px"/>' +
+            '   + <input type="text" placeholder="0"' +
+            '       class="this_field form-control w-25px"/>' +
             '   <span class="d-none"></span>' +
             '   <input type="checkbox" class="this_field form-control form-check-input">' +
             '   <span class="d-none"></span>' +
             '   <label for="" class="form-check-label fs-9 fw-bolder">PROF</label>' +
-            '</td>' +
             '</div>' +
+            '</td>' +
             '<td>' +
             '<div class="flex-row align-items-center justify-content-start gap-1">' +
             '   <input type="text" placeholder="1d6"' +
-            '       class="this_field form-control-solid w-25px"/>' +
+            '       class="this_field form-control w-25px"/>' +
             '   <span class="d-none"></span>' +
             ' + ' + abiliyScoresSelect() +
             '   <span class="d-none"></span>' +
             '  + <input type="text" placeholder="0"' +
-            '        class="this_field form-control-solid w-20px"/>' +
+            '        class="this_field form-control w-20px"/>' +
             '   <span class="d-none"></span>' +
             '   <label for="" class="form-check-label fs-9 fw-bolder">TYPE</label>' +
             '   <input type="text" placeholder="Slashing"' +
-            '        class="this_field form-control w-75px">' +
+            '        class="this_field form-control w-100px">' +
             '   <span class="d-none"></span>' +
             '</div>' +
             '</td>' +
@@ -838,7 +863,7 @@ function initGame(dbGame, session) {
             '   <span class="d-none"></span>' +
             '   <label class="fs-9 text-uppercase fw-bolder"> SAVE EFFECT: </label>' +
             '   <input type="text" placeholder="Half-damage"' +
-            '       class="this_field form-control w-75px">' +
+            '       class="this_field form-control w-100px">' +
             '   <span class="d-none"></span>' +
             '</div>' +
             '</td>' +
@@ -850,8 +875,108 @@ function initGame(dbGame, session) {
             '</tr>';
     }
 
-    function rowBag() {
+    function rowGlobalModifiers() {
+        return '<tr class="fs-8">' +
+            '<td>' +
+            '   <input type="text" placeholder="Bless"' +
+            '        class="this_field form-control w-100px"/>' +
+            '   <span class="d-none"></span>' +
+            '</td>' +
+            '<td>' +
+            '   <input type="text" placeholder="1, 1d4"' +
+            '       class="this_field form-control w-50px"/>' +
+            '   <span class="d-none"></span>' +
+            '</td>' +
+            '<td>' +
+            '   <input type="text" placeholder="1, 1d4"' +
+            '       class="this_field form-control w-50px"/>' +
+            '   <span class="d-none"></span>' +
+            '</td>' +
+            '<td>' +
+            '   <input type="text" placeholder="1, 1d4"' +
+            '       class="this_field form-control w-50px"/>' +
+            '   <span class="d-none"></span>' +
+            '</td>' +
+            '<td>' +
+            '   <input type="text" placeholder="1, 1d4"' +
+            '       class="this_field form-control w-50px"/>' +
+            '   <span class="d-none"></span>' +
+            '</td>' +
+            '<td>' +
+            '   <button class="btn btn-sm btn-danger p-1 delete_row">' +
+            '      <i class="fa-solid fa-trash ms-1"></i>' +
+            '   </button>' +
+            '</td>' +
+            '</tr>';
+    }
 
+    function rowBag() {
+        return '<tr class="fs-8">' +
+            '<td>' +
+            '   <input type="number" value="0" placeholder="0"' +
+            '        class="this_field form-control w-100px"/>' +
+            '   <span class="d-none"></span>' +
+            '</td>' +
+            '<td>' +
+            '   <input type="text" placeholder="Shield"' +
+            '        class="this_field form-control"/>' +
+            '   <span class="d-none"></span>' +
+            '</td>' +
+            '<td>' +
+            '   <input type="text" placeholder="7.5" pattern="^[0-9]+$"' +
+            '        class="this_field form-control w-100px text-end"/>' +
+            '   <span class="d-none"></span>' +
+            '</td>' +
+            '<td>' +
+            '   <button class="btn btn-sm btn-danger p-1 delete_row">' +
+            '      <i class="fa-solid fa-trash ms-1"></i>' +
+            '   </button>' +
+            '</td>' +
+            '</tr>';
+    }
+
+    function rowCustomFeatures() {
+        return '<!--begin::Menu Accordion-->' +
+            '<div data-kt-menu-trigger="click" class="menu-item menu-accordion hover show">' +
+            '    <!--begin:Menu link-->' +
+            '    <div class="menu-link ps-0 gap-1">' +
+            '    <div class="menu-title gap-1 flex-column align-items-start">' +
+            '        <div class="menu-title gap-1 w-100">' +
+            '           <input type="text" placeholder="Name"' +
+            '               class="menu-title this_field form-control ps-2 fs-3"/>' +
+            '           <span class="d-none"></span>' +
+            '        </div>' +
+            '        <div class="menu-title gap-1 w-100">' +
+            '           <input type="text" placeholder="Source"' +
+            '               class="menu-title this_field form-control ps-2"/>' +
+            '           <span class="d-none"></span>' +
+            '        </div>' +
+            '    </div>' +
+            '        <button class="btn">' +
+            '           <span class="menu-arrow" style="width: 1.2rem;height:1.2rem;"></span>' +
+            '        </button>' +
+            '    </div>' +
+            '    <!--end:Menu link-->' +
+            '    <!--begin:Menu sub-->' +
+            '    <div class="menu-sub menu-sub-accordion ps-2">' +
+            '        <!--begin:Menu item-->' +
+            '        <div class="menu-item">' +
+            '           <label for="" class="menu-bullet">Description</label>' +
+            '           <textarea type="text" id="" placeholder="When you reach level..."' +
+            '               class="menu-title this_field form-control p-2" rows="10"></textarea>' +
+            '           <span class="d-none"></span>' +
+            '        </div>' +
+            '        <!--end:Menu item-->' +
+            '    </div>' +
+            '</div>' +
+            '<!--end::Menu Accordion-->' +
+            '<!--begin::Sparator-->' +
+            '<div class="menu-item">' +
+            '    <div class="menu-content p-0">' +
+            '        <div class="separator mx-1"></div>' +
+            '    </div>' +
+            '</div>' +
+            '<!--end::Separator-->';
     }
 
     function searchJournalItem(containerID) {

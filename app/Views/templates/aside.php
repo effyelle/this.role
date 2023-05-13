@@ -13,8 +13,7 @@
                  data-kt-scroll-dependencies="#kt_header, #kt_aside_footer"
                  data-kt-scroll-wrappers="#kt_aside, #kt_aside_menu" data-kt-scroll-offset="{lg: '75px'}" style="">
                 <!--begin::Menu-->
-                <div class="menu menu-column menu-rounded fw-bold fs-5 gap-6 mt-6" id="#kt_aside_menu"
-                     data-kt-menu="true">
+                <div class="menu menu-column menu-rounded fw-bold fs-5 gap-6 mt-6" id="#kt_aside_menu" data-kt-menu="true">
                     <!--begin::Menu Item-->
                     <div class="menu-item">
                         <a class="menu-link <?php if ($title === 'Home') echo 'hover'; ?>" href="/app/index" title=""

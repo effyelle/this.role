@@ -305,7 +305,7 @@
                                                         <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
                                                             <button type="button"
                                                                     class="btn p-0 combat-item_title text-hover-primary">
-                                                                <?= strtoupper($score['fname']); // Name in CAPS                                                                                            ?>
+                                                                <?= strtoupper($score['fname']); // Name in CAPS                                                                                              ?>
                                                             </button>
                                                             <label for="this_score_<?= $short; ?>"
                                                                    class="fs-3">0</label>
@@ -508,7 +508,7 @@
                             </div>
                             <!--begin::Health & Conditions-->
                             <!--begin::Attacks & Spells-->
-                            <div class="column this-outline p-3 w-100">
+                            <div class="column this-outline p-3">
                                 <!--begin::Title-->
                                 <div class="flex-row justify-content-between align-items-center w-100">
                                     <label for="" class="fs-3 p-3">Attacks & Spells</label>
@@ -536,7 +536,7 @@
                             </div>
                             <!--end::Attacks & Spells-->
                             <!--begin::Global Modifiers-->
-                            <div class="column this-outline p-3 w-100">
+                            <div class="column this-outline p-3">
                                 <!--begin::Title-->
                                 <div class="flex-row justify-content-between align-items-center w-100">
                                     <label for="" class="fs-3 p-3">Global Modifiers</label>
@@ -550,7 +550,7 @@
                                        class="table dataTable fs-8 p-3 global_modifiers_table">
                                     <thead class="text-gray-700 fw-bolder text-capitalize border-bottom border-gray-300">
                                     <tr>
-                                        <th class="col-4">NAME</th>
+                                        <th>NAME</th>
                                         <th>ATTACK</th>
                                         <th>DAMAGE</th>
                                         <th>SAVE</th>
@@ -565,7 +565,7 @@
                             </div>
                             <!--end::Global Modifiers-->
                             <!--begin::Tools & Custom Skills-->
-                            <div class="column this-outline p-3 w-100 d-none">
+                            <div class="column this-outline p-3 d-none">
                                 <!--begin::Title-->
                                 <div class="flex-row justify-content-between align-items-center w-100">
                                     <label for="" class="fs-3 p-3">Tools & Custom Skills</label>
@@ -591,7 +591,7 @@
                             </div>
                             <!--end::Tools & Custom Skills-->
                             <!--begin::Bag-->
-                            <div class="column this-outline p-3 w-100">
+                            <div class="column this-outline p-3">
                                 <!--begin::Title-->
                                 <div class="flex-row justify-content-between align-items-center w-100">
                                     <label for="" class="fs-3 p-3">Bag</label>
@@ -601,7 +601,7 @@
                                 </div>
                                 <!--end::Title-->
                                 <!--begin::Table-->
-                                <table id="bag" class="table dataTable fs-8 px-3 bag_table">
+                                <table id="bag_<?= $data['item_id']; ?>" class="table dataTable fs-8 px-3 bag_table">
                                     <thead class="text-gray-700 fw-bolder text-capitalize border-bottom border-gray-300">
                                     <tr>
                                         <th class="col-2">UNITS</th>
@@ -629,9 +629,9 @@
                             </div>
                             <!--end::Bag-->
                             <!--begin::Other Features-->
-                            <div class="column this-outline p-3" style="overflow-y: scroll">
+                            <div class="column this-outline p-3">
                                 <!--begin::Title-->
-                                <div class="flex-row justify-content-between align-items-center w-100">
+                                <div class="flex-row justify-content-between align-items-center w-100 border-bottom-1px-gray-300">
                                     <label for="" class="fs-3 p-3">
                                         Other Features</label>
                                     <button class="btn btn-sm" id="other_feats_btn<?= $data['item_id']; ?>">
@@ -640,10 +640,9 @@
                                 </div>
                                 <!--end::Title-->
                                 <!--begin::Table-->
-                                <!--begin::Table-->
-                                <div id="custom_features_<?= $data['item_id']; ?>"
-                                     class="table dataTable fs-8 px-3 other_feats_table"></div>
-                                <!--end::Table-->
+                                <div id="custom_features_<?= $data['item_id']; ?>" data-kt-menu="true"
+                                     class="menu menu-column menu-rounded fs-8 px-3 other_feats_table">
+                                </div>
                                 <!--end::Table-->
                             </div>
                             <!--end::Other Features-->

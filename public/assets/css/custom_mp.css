@@ -402,6 +402,8 @@ a .hover-flip {
     border-bottom: 1px solid transparent !important;
 }
 
+.game .manage_class_modal .this-role-form-field:not([type=checkbox]):not(textarea):not(select):not(button),
+.game .table .this-role-form-field:not([type=checkbox]):not(textarea):not(select):not(button),
 .game .this-role-form-field:not([type=checkbox]):not(textarea):not(select):not(button):focus,
 .game .this-role-form-field:not([type=checkbox]):not(textarea):not(select):not(button):hover {
     border-bottom: 1px solid var(--bs-gray-400) !important;
@@ -410,7 +412,6 @@ a .hover-flip {
 .game .manage_class_modal .this-role-form-field:not([type=checkbox]):not(textarea):not(select):not(button) {
     padding: 0;
     line-height: 17px;
-    border-bottom: 1px solid var(--bs-gray-400) !important;
 }
 
 .this-role-form-field:not([type=checkbox]):not(textarea):not(select):not(button) {
@@ -1221,7 +1222,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     max-width: 250px;
 }
 
-.column.this-outline {
+.column.this-outline:not(.w-100) {
     max-width: 450px;
 }
 
@@ -1372,4 +1373,13 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 .form-check-input.success ~ .form-check-label,
 .was-validated .form-check-input:invalid ~ .form-check-label {
     color: var(--this-role-green);
+}
+
+.attacks_spells_table, .global_modifiers_table, .bag_table, .other_feats_table {
+    min-width: 300px;
+}
+
+.game table .form-check-input {
+    width: 15px;
+    height: 15px;
 }

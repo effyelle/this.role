@@ -5,11 +5,11 @@
     $scores = json_decode($data['ability_scores'], true);
     $skill_proficiencies = json_decode($data['skill_proficiencies'], true);
     $health = json_decode($data['health'], true);
-    $attacks = json_decode($data['attacks'], true);
-    $global_modifiers = json_decode($data['global_modifiers'], true);
-    $tools = json_decode($data['tools_n_custom'], true);
-    $bag = json_decode($data['bag'], true);
-    $custom_features = json_decode($data['custom_features'], true);
+    $attacks = $data['attacks'];
+    $global_modifiers = $data['global_modifiers'];
+    $tools = $data['tools_n_custom'];
+    $bag = $data['bag'];
+    $custom_features = $data['custom_features'];
     $notes = $data['notes'];
     $backstory = $data['backstory'];
     ?>
@@ -149,8 +149,7 @@
                                                         <input id="<?= $data['item_id'] ?? ""; ?>-item_icon"
                                                                name="item_icon"
                                                                type="file" class="d-none this-role-form-field"/>
-                                                        <span class="symbol-label circle item_icon-holder">
-                                                </span>
+                                                        <span class="symbol-label circle item_icon-holder"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -184,7 +183,7 @@
                                                         <?php $classlist = "";
                                                         foreach ($classes as $class) {
                                                             if ($class['is_main'] || $class['is_multiclass']) {
-                                                                $classlist .= strtosentence($class['class']) . " level " . $class['lvl'] . "<br/>";
+                                                                $classlist .= strtosentence($class['class']) . " level " . $class['lvl'] . ", " . $class['subclass'] . "<br/>";
                                                             }
                                                         }
                                                         if ($classlist !== "") echo substr($classlist, 0, strlen($classlist) - 5);
@@ -306,7 +305,7 @@
                                                         <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
                                                             <button type="button"
                                                                     class="btn p-0 combat-item_title text-hover-primary">
-                                                                <?= strtoupper($score['fname']); // Name in CAPS                                                                                     ?>
+                                                                <?= strtoupper($score['fname']); // Name in CAPS                                                                                            ?>
                                                             </button>
                                                             <label for="this_score_<?= $short; ?>"
                                                                    class="fs-3">0</label>
@@ -509,23 +508,25 @@
                             </div>
                             <!--begin::Health & Conditions-->
                             <!--begin::Attacks & Spells-->
-                            <div class="column this-outline p-3">
+                            <div class="column this-outline p-3 w-100">
                                 <!--begin::Title-->
                                 <div class="flex-row justify-content-between align-items-center w-100">
                                     <label for="" class="fs-3 p-3">Attacks & Spells</label>
-                                    <button class="btn btn-sm" id="">
+                                    <button class="btn btn-sm" id="atk_spells_btn<?= $data['item_id']; ?>">
                                         <i class="fa-solid fa-plus fa-xl text-dark"></i>
                                     </button>
                                 </div>
                                 <!--end::Title-->
                                 <!--begin::Table-->
-                                <table id="attacks_spells-table" class="table dataTable fs-8 p-3">
+                                <table id="attacks_<?= $data['item_id']; ?>"
+                                       class="table dataTable fs-8 p-3 attacks_spells_table">
                                     <thead class="text-gray-700 fw-bolder text-capitalize border-bottom border-gray-300">
                                     <tr>
                                         <th>NAME</th>
                                         <th>ATTACK</th>
                                         <th>DAMAGE & TYPE</th>
                                         <th>SAVING THROW</th>
+                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -535,111 +536,81 @@
                             </div>
                             <!--end::Attacks & Spells-->
                             <!--begin::Global Modifiers-->
-                            <div class="flex-column gap-3">
-                                <!--begin::Global Modifiers-->
-                                <div class="column this-outline p-3">
-                                    <!--begin::Title-->
-                                    <div class="flex-row justify-content-between align-items-center w-100">
-                                        <label for="" class="fs-3 p-3">Global Modifiers</label>
-                                        <button class="btn btn-sm" id="">
-                                            <i class="fa-solid fa-plus fa-xl text-dark"></i>
-                                        </button>
-                                    </div>
-                                    <!--end::Title-->
-                                    <!--begin::Table-->
-                                    <table id="global_modifiers-table" class="table dataTable fs-8 p-3">
-                                        <thead class="text-gray-700 fw-bolder text-capitalize border-bottom border-gray-300">
-                                        <tr>
-                                            <th class="col-4">NAME</th>
-                                            <th>ATTACK</th>
-                                            <th>DAMAGE</th>
-                                            <th>SAVE</th>
-                                            <th>CA</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                    <!--end::Table-->
-                                </div>
-                                <!--end::Global Modifiers-->
-                                <!--begin::Tools & Custom Skills-->
-                                <div class="column this-outline p-3">
-                                    <!--begin::Title-->
-                                    <div class="flex-row justify-content-between align-items-center w-100">
-                                        <label for="" class="fs-3 p-3">Tools & Custom Skills</label>
-                                        <button class="btn btn-sm" id="">
-                                            <i class="fa-solid fa-plus fa-xl text-dark"></i>
-                                        </button>
-                                    </div>
-                                    <!--end::Title-->
-                                    <!--begin::Table-->
-                                    <table id="tools_custom-table" class="table dataTable fs-8 p-3">
-                                        <thead class="text-gray-700 fw-bolder text-capitalize border-bottom border-gray-300">
-                                        <tr>
-                                            <th class="col-4">TOOL</th>
-                                            <th>PROFICIENCY</th>
-                                            <th>ATTRIBUTE</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                    <!--end::Table-->
-                                </div>
-                                <!--end::Tools & Custom Skills-->
-                            </div>
-                            <!--end::Global Modifiers-->
-                            <!--begin::Bag-->
-                            <div class="column this-outline p-3">
+                            <div class="column this-outline p-3 w-100">
                                 <!--begin::Title-->
                                 <div class="flex-row justify-content-between align-items-center w-100">
-                                    <label for="" class="fs-3 p-3">Bag</label>
-                                    <button class="btn btn-sm" id="">
+                                    <label for="" class="fs-3 p-3">Global Modifiers</label>
+                                    <button class="btn btn-sm" id="global_mods_btn<?= $data['item_id']; ?>">
                                         <i class="fa-solid fa-plus fa-xl text-dark"></i>
                                     </button>
                                 </div>
                                 <!--end::Title-->
                                 <!--begin::Table-->
-                                <table id="tools_custom-table" class="table dataTable fs-8 px-3">
+                                <table id="global_modifiers_<?= $data['item_id']; ?>"
+                                       class="table dataTable fs-8 p-3 global_modifiers_table">
+                                    <thead class="text-gray-700 fw-bolder text-capitalize border-bottom border-gray-300">
+                                    <tr>
+                                        <th class="col-4">NAME</th>
+                                        <th>ATTACK</th>
+                                        <th>DAMAGE</th>
+                                        <th>SAVE</th>
+                                        <th>CA</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <!--end::Table-->
+                            </div>
+                            <!--end::Global Modifiers-->
+                            <!--begin::Tools & Custom Skills-->
+                            <div class="column this-outline p-3 w-100 d-none">
+                                <!--begin::Title-->
+                                <div class="flex-row justify-content-between align-items-center w-100">
+                                    <label for="" class="fs-3 p-3">Tools & Custom Skills</label>
+                                    <button class="btn btn-sm" id="tools_custskills_btn<?= $data['item_id']; ?>">
+                                        <i class="fa-solid fa-plus fa-xl text-dark"></i>
+                                    </button>
+                                </div>
+                                <!--end::Title-->
+                                <!--begin::Table-->
+                                <table id="tools_n_custom_<?= $data['item_id']; ?>"
+                                       class="table dataTable fs-8 p-3 tools_custom_table">
+                                    <thead class="text-gray-700 fw-bolder text-capitalize border-bottom border-gray-300">
+                                    <tr>
+                                        <th class="col-4">TOOL</th>
+                                        <th>ATTRIBUTE</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <!--end::Table-->
+                            </div>
+                            <!--end::Tools & Custom Skills-->
+                            <!--begin::Bag-->
+                            <div class="column this-outline p-3 w-100">
+                                <!--begin::Title-->
+                                <div class="flex-row justify-content-between align-items-center w-100">
+                                    <label for="" class="fs-3 p-3">Bag</label>
+                                    <button class="btn btn-sm" id="bag_btn<?= $data['item_id']; ?>">
+                                        <i class="fa-solid fa-plus fa-xl text-dark"></i>
+                                    </button>
+                                </div>
+                                <!--end::Title-->
+                                <!--begin::Table-->
+                                <table id="bag" class="table dataTable fs-8 px-3 bag_table">
                                     <thead class="text-gray-700 fw-bolder text-capitalize border-bottom border-gray-300">
                                     <tr>
                                         <th class="col-2">UNITS</th>
                                         <th class="col-8">ITEM NAME</th>
                                         <th class="col-3 p-0">WEIGHT</th>
+                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody class="py-1">
-                                    <tr>
-                                        <td class="form-control-solid flex-row">
-                                            <input type="number" id="" value="0"
-                                                   class="form-control this-role-form-field text-center"/>
-                                            <label for=""></label>
-                                        </td>
-                                        <td>
-                                            <input type="text" id="" value="Dragon Egg"
-                                                   class="form-control this-role-form-field"/>
-                                        </td>
-                                        <td class="text-center form-control-solid flex-row p-0">
-                                            <input type="number" id="" class="form-control this-role-form-field w-75">
-                                            <label for="">kg</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="form-control-solid flex-row">
-                                            <input type="number" id="" value="0"
-                                                   class="form-control this-role-form-field text-center"/>
-                                            <label for=""></label>
-                                        </td>
-                                        <td>
-                                            <input type="text" id="" value="Dragon Egg"
-                                                   class="form-control this-role-form-field"/>
-                                        </td>
-                                        <td class="text-center form-control-solid flex-row p-0">
-                                            <input type="number" id="" class="form-control this-role-form-field w-75">
-                                            <label for="">kg</label>
-                                        </td>
-                                    </tr>
                                     </tbody>
                                 </table>
                                 <!--end::Table-->
@@ -663,18 +634,21 @@
                                 <div class="flex-row justify-content-between align-items-center w-100">
                                     <label for="" class="fs-3 p-3">
                                         Other Features</label>
-                                    <button class="btn btn-sm" id="">
+                                    <button class="btn btn-sm" id="other_feats_btn<?= $data['item_id']; ?>">
                                         <i class="fa-solid fa-plus fa-xl text-dark"></i>
                                     </button>
                                 </div>
                                 <!--end::Title-->
                                 <!--begin::Table-->
-                                <table></table>
+                                <!--begin::Table-->
+                                <div id="custom_features_<?= $data['item_id']; ?>"
+                                     class="table dataTable fs-8 px-3 other_feats_table"></div>
+                                <!--end::Table-->
                                 <!--end::Table-->
                             </div>
                             <!--end::Other Features-->
                             <!--begin::Treasures & Notes-->
-                            <div class="column this-outline p-3" style="overflow-y: scroll">
+                            <div class="column this-outline p-3 w-100" style="overflow-y: scroll">
                                 <label for="notes" class="fs-3 p-3 border-bottom border-1 border-gray-300 w-100">
                                     Treasures, Notes & Alliances</label>
                                 <div class="p-3">
@@ -684,7 +658,7 @@
                             </div>
                             <!--end::Treasures & Notes-->
                             <!--begin::Backstory-->
-                            <div class="column this-outline p-3">
+                            <div class="column this-outline p-3 w-100">
                                 <label for="backstory" class="fs-3 p-3 border-bottom border-1 border-gray-300 w-100">
                                     Backstory</label>
                                 <div class="p-3">

@@ -221,17 +221,11 @@
       "unconscious": "0"
     }
   },
-  "attacks": [],
-  "global_modifiers": [],
-  "tools_n_custom": [],
-  "bag": {
-    "capacity": {
-      "total_weight": "0",
-      "overweight": "0"
-    },
-    "bag_items": []
-  },
-  "custom_features": [],
+  "attacks": "",
+  "global_modifiers": "",
+  "tools_n_custom": "",
+  "bag": "",
+  "custom_features": "",
   "notes": "",
   "backstory": ""
 }

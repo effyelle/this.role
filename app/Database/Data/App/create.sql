@@ -75,11 +75,11 @@ CREATE TABLE game_journal(
 	ability_scores JSON,
 	skill_proficiencies JSON,
 	health JSON,
-	attacks JSON,
-	global_modifiers JSON,
-	tools_n_custom JSON,
-	bag JSON,
-	custom_features JSON,
+	attacks LONGTEXT,
+	global_modifiers LONGTEXT,
+	tools_n_custom LONGTEXT,
+	bag LONGTEXT,
+	custom_features LONGTEXT,
 	notes LONGTEXT,
 	backstory LONGTEXT
 );

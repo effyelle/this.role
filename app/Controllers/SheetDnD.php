@@ -86,6 +86,13 @@ class SheetDnD
         switch ($k) {
             case 'item_name':
             case 'xp':
+            case 'notes':
+            case 'backstory':
+            case 'attacks':
+            case 'global_modifiers':
+            case 'tools_n_custom':
+            case 'bag':
+            case 'custom_features':
                 return [$k => $v];
             //* begin::Info **//
             case (bool)preg_match('/race|background|walkspeed|inspiration/', $k):
@@ -98,7 +105,7 @@ class SheetDnD
                 break;
             //* end::Info **//
             //* begin::Classes **//
-            case (bool)preg_match('/class|subclass|lvl|new_main/', $k):
+            case (bool)preg_match('/class|subclass|lvl|save_classes/', $k):
                 $classes = json_decode($item['classes'], true);
                 if ($classes) return ['classes' => $this->getClasses($classes, $k, $v)];
                 break;

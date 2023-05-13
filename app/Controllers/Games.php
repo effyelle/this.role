@@ -420,7 +420,7 @@ class Games extends BaseController
             foreach ($_POST as $key => $val) {
                 if ($key !== 'item_id') {
                     if (validate($val) !== '' && validate($val) !== '-1') {
-                        $params[$key] = validate($val);
+                        $params[$key] = trim($val);
                     }
                 }
             }

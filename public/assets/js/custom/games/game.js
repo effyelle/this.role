@@ -146,32 +146,7 @@ function initGame(dbGame, session) {
             // Iterate items
             for (let itemDOM of itemsDOM) {
                 // Add a click listener to each item to create a new modal
-                itemDOM.click(function () {
-                    // Get item info from Journal
-                    let item = false;
-                    for (let i in journal.items.list) {
-                        if (journal.items.list[i].info.item_id === this.value) item = journal.items.list[i];
-                    }
-                    if (item) {
-                        // Check if container doesn't exist already
-                        if (q('#' + item.draggableContainerId).length === 0) {
-                            // If not, create it
-                            getSheetHTML(item.info).done((htmlText) => {
-                                item.openItem(htmlText);
-                                // Check it was created correctly
-                                if (q('#' + item.draggableContainerId).length !== 1) {
-                                    // Return message error if length is not 1
-                                    $('.modal_error_response').html('Item could not be opened');
-                                    $('#modal_error-toggle').click();
-                                }
-                                // * Make items dragagble * //
-                                new Draggable('.journal_item_modal', '.journal_item_modal .cursor-move');
-                                // * Set other interactions * //
-                                makeItemsInteractable();
-                            });
-                        }
-                    }
-                });
+                itemDOM.click(setItemsClick);
             }
         }
     }
@@ -192,27 +167,50 @@ function initGame(dbGame, session) {
         });
     }
 
-    function makeItemsInteractable() {
-        // Save the necessary html objects to make sheet interactable
-        let modals = q('.journal_item_modal');
-        let bootsModal = q('.modal.manage_class_modal');
-        let closeBtns = q('.journal_item_modal .close_item-btn');
-        let cursorMove = q('.journal_item_modal .cursor-move');
-        // * Check they have the correct lengths * //
-        if (!(modals.length === closeBtns.length && closeBtns.length === cursorMove.length)) {
-            return;
+    function setItemsClick() {
+        // Get item info from Journal
+        let item = false;
+        for (let i in journal.items.list) {
+            if (journal.items.list[i].info.item_id === this.value) item = journal.items.list[i];
         }
+        if (item) {
+            // Check if container doesn't exist already
+            if (q('#' + item.draggableContainerId).length === 0) {
+                // If not, create it
+                getSheetHTML(item.info).done((htmlText) => {
+                    item.openItem(htmlText);
+                    // Check it was created correctly
+                    if (q('#' + item.draggableContainerId).length !== 1) {
+                        // Return message error if length is not 1
+                        $('.modal_error_response').html('Item could not be opened');
+                        $('#modal_error-toggle').click();
+                    }
+                    // * Make items dragagble * //
+                    new Draggable('.journal_item_modal', '.journal_item_modal .cursor-move');
+                    // * Set other interactions * //
+                    // Save the necessary html objects to make sheet interactable
+                    let modals = q('.journal_item_modal');
+                    let bootsModal = q('.modal.manage_class_modal');
+                    let closeBtns = q('.journal_item_modal .close_item-btn');
+                    let cursorMove = q('.journal_item_modal .cursor-move');
+                    // * Check they have the correct lengths * //
+                    if (!(modals.length === closeBtns.length && closeBtns.length === cursorMove.length)) {
+                        return;
+                    }
 
-        // * Iterate through modals and buttons * //
-        for (let i = 0; i < closeBtns.length; i++) {
-            // * Add a close event * //
-            closeBtns[i].click(() => {
-                modals[i].remove();
-                bootsModal[i].remove();
-            });
+                    // * Iterate through modals and buttons * //
+                    for (let i = 0; i < closeBtns.length; i++) {
+                        // * Add a close event * //
+                        closeBtns[i].click(() => {
+                            modals[i].remove();
+                            bootsModal[i].remove();
+                        });
+                    }
+
+                    listenToSheetChanges(modals);
+                });
+            }
         }
-
-        listenToSheetChanges(modals);
     }
 
     function listenToSheetChanges(modals) {
@@ -241,19 +239,7 @@ function initGame(dbGame, session) {
             });
             //* end::General Inputs change *//
             //* begin::Image change *//
-            let iconInput = q('#' + item.draggableContainerId + ' .this-role-form-field[name="item_icon"]');
-            iconInput.change(function () {
-                saveField(this, item.info.item_id).done((data) => {
-                    data = JSON.parse(data);
-                    if (data.response) {
-                        journal.reload();
-                        readImageChange(this, q('#' + item.draggableContainerId + ' .item_icon-holder')[0]);
-                        return;
-                    }
-                    $('.modal_error_response').html('Image could not be uploaded');
-                    $('#modal_error-toggle').click();
-                });
-            });
+            setItemImage(item);
             //* end::Image change *//
             //* begin::Inspiration *//
             setInspiration(item);
@@ -268,6 +254,10 @@ function initGame(dbGame, session) {
             //* begin::Health Container *//
             setHealth(item);
             //* end::Health Container *//
+            //* begin::Table content creation *//
+            // -> This includes attacks & spells, global modifiers, tools & custom skills, and the bag
+            setTables(item);
+            //* end::Table content creation *//
         }
     }
 
@@ -309,6 +299,25 @@ function initGame(dbGame, session) {
             },
             error: (e) => {
                 console.log(e);
+            }
+        });
+    }
+
+    function saveTable(t) {
+        let name = t.id.substring(0, t.id.length - 2);
+        let id = t.id.substring(t.id.length - 1);
+        let form = {item_id: id};
+        form[name] = t.children[1].innerHTML;
+        return $.ajax({
+            type: "post",
+            url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
+            data: form,
+            dataType: "json",
+            success: (data) => {
+                console.log(data)
+                return data;
+            }, error: (e) => {
+                console.log(e.responseText);
             }
         });
     }
@@ -480,6 +489,22 @@ function initGame(dbGame, session) {
                 } //* end::Select *//
             }
         }
+    }
+
+    function setItemImage(item) {
+        let iconInput = q('#' + item.draggableContainerId + ' .this-role-form-field[name="item_icon"]');
+        iconInput.change(function () {
+            saveField(this, item.info.item_id).done((data) => {
+                data = JSON.parse(data);
+                if (data.response) {
+                    journal.reload();
+                    readImageChange(this, q('#' + item.draggableContainerId + ' .item_icon-holder')[0]);
+                    return;
+                }
+                $('.modal_error_response').html('Image could not be uploaded');
+                $('#modal_error-toggle').click();
+            });
+        });
     }
 
     function setInspiration(item) {
@@ -682,6 +707,151 @@ function initGame(dbGame, session) {
         if (deathSaves && exhaustionsChecks) this.set_checks();
         //* Conditions *//
         if (conditionChecks) this.setConditions();
+    }
+
+    function setTables(item) {
+        // Attacks & Spells
+        // Global Modifiers
+        // Tools & Custom Skills
+        // Bag
+        const buttons = [
+            q('#atk_spells_btn' + item.info.item_id),
+            q('#global_mods_btn' + item.info.item_id),
+            q('#tools_custskills_btn' + item.info.item_id),
+            q('#bag_btn' + item.info.item_id),
+            q('#other_feats_btn' + item.info.item_id)
+        ]
+        for (let btn of buttons) {
+            if (btn[0] && btn[0].parentNode.nextElementSibling) {
+                let table = btn[0].parentNode.nextElementSibling;
+                if (table) {
+                    let tableName = table.id.substring(0, table.id.length - 2);
+                    if (table.children[1] && table.children[1].nodeName === "TBODY") {
+                        table.children[1].innerHTML = item.info[tableName];
+                        /*
+                        table.Datatable({
+                            responsive: true,
+                            ordering: false,
+                            "dom": '<"row float-start"<"col-12"f>>rt<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>'
+                        });
+                        console.log(table)*/
+                    }
+                    setSaveFields(item.draggableContainerId, table);
+                    // Set listener to save fields
+                    btn[0].click(function () {
+                        newRow(table);
+                        setSaveFields(item.draggableContainerId, table);
+                    });
+                }
+            }
+        }
+    }
+
+    function setSaveFields(id, t) {
+        let fields = q('#' + id + ' #' + t.id + ' .this_field');
+        for (let f of fields) {
+            if (f) {
+                if (f.nextElementSibling) f.value = f.nextElementSibling.innerHTML;
+                f.blur(function () {
+                    if (this.nextElementSibling) this.nextElementSibling.innerHTML = this.value;
+                    saveTable(t);
+                });
+            }
+        }
+    }
+
+    /**
+     *
+     * @param t
+     * @returns {string}
+     */
+    function newRow(t) {
+        let thead = t.children[0];
+        let tbody = t.children[1];
+        if (thead && thead.nodeName === "THEAD" &&
+            tbody && tbody.nodeName === "TBODY") {
+            thead = thead.children[0].children;
+            console.log(thead)
+            if (t.classList.contains('attacks_spells_table')) {
+                tbody.innerHTML += rowAttacksSpells();
+            } else if (t.classList.contains('global_modifiers_table')) {
+            } else if (t.classList.contains('bag_table')) {
+            }
+        } else if (t.classList.contains('other_feats_table')) {
+
+        }
+    }
+
+    function abiliyScoresSelect() {
+        return '<select class="this_field">' +
+            '<option value="-1" selected>-</option>' +
+            '<option value="str">STR</option>' +
+            '<option value="dex">DEX</option>' +
+            '<option value="con">CON</option>' +
+            '<option value="int">INT</option>' +
+            '<option value="wis">WIS</option>' +
+            '<option value="cha">CHA</option>' +
+            '</select>';
+    }
+
+    function rowAttacksSpells() {
+        return '<tr>' +
+            '<td>' +
+            '   <input type="text" placeholder="Dagger"' +
+            '        class="this_field form-control-solid w-75px"/>' +
+            '   <span class="d-none"></span>' +
+            '</td>' +
+            '<td>' +
+            '<div class="flex-row align-items-center justify-content-start gap-1">' +
+            '' + abiliyScoresSelect() +
+            '   <span class="d-none"></span>' +
+            '  + <input type="text" placeholder="0"' +
+            '       class="this_field form-control-solid w-25px"/>' +
+            '   <span class="d-none"></span>' +
+            '   <input type="checkbox" class="this_field form-control form-check-input">' +
+            '   <span class="d-none"></span>' +
+            '   <label for="" class="form-check-label fs-9 fw-bolder">PROF</label>' +
+            '</td>' +
+            '</div>' +
+            '<td>' +
+            '<div class="flex-row align-items-center justify-content-start gap-1">' +
+            '   <input type="text" placeholder="1d6"' +
+            '       class="this_field form-control-solid w-25px"/>' +
+            '   <span class="d-none"></span>' +
+            ' + ' + abiliyScoresSelect() +
+            '   <span class="d-none"></span>' +
+            '  + <input type="text" placeholder="0"' +
+            '        class="this_field form-control-solid w-20px"/>' +
+            '   <span class="d-none"></span>' +
+            '   <label for="" class="form-check-label fs-9 fw-bolder">TYPE</label>' +
+            '   <input type="text" placeholder="Slashing"' +
+            '        class="this_field form-control w-75px">' +
+            '   <span class="d-none"></span>' +
+            '</div>' +
+            '</td>' +
+            '<td>' +
+            '<div class="flex-row align-items-center justify-content-start gap-1">' +
+            '' + abiliyScoresSelect() +
+            '   <span class="d-none"></span>' +
+            '   <label class="fs-9 text-uppercase fw-bolder"> vs dc</label>' +
+            '' + abiliyScoresSelect() +
+            '   <span class="d-none"></span>' +
+            '   <label class="fs-9 text-uppercase fw-bolder"> SAVE EFFECT: </label>' +
+            '   <input type="text" placeholder="Half-damage"' +
+            '       class="this_field form-control w-75px">' +
+            '   <span class="d-none"></span>' +
+            '</div>' +
+            '</td>' +
+            '<td>' +
+            '   <button class="btn btn-sm btn-danger p-1 delete_row">' +
+            '      <i class="fa-solid fa-trash ms-1"></i>' +
+            '   </button>' +
+            '</td>' +
+            '</tr>';
+    }
+
+    function rowBag() {
+
     }
 
     function searchJournalItem(containerID) {

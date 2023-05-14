@@ -305,7 +305,7 @@
                                                         <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
                                                             <button type="button"
                                                                     class="btn p-0 combat-item_title text-hover-primary">
-                                                                <?= strtoupper($score['fname']); // Name in CAPS                                                                                               ?>
+                                                                <?= strtoupper($score['fname']); // Name in CAPS                                                                                                    ?>
                                                             </button>
                                                             <label for="this_score_<?= $short; ?>"
                                                                    class="fs-3">0</label>
@@ -423,11 +423,11 @@
                                                            class="combat-item_content this-hp this-role-form-field w-50 fs-4 ms-3"/>
                                                     <div class="flex-row w-100 gap-1 fs-8 this-outline bg-white position-relative mt-3">
                                                         <button type="button" name=""
-                                                                class="btn btn-sm p-0 text-hover-primary col-4">
-                                                            Roll
+                                                                class="btn btn-sm p-0 text-hover-primary col-5">
+                                                            Hit dice
                                                         </button>
-                                                        <select id="this_hit_dices" name="this_hit_dices"
-                                                                class="col-7 border-0 bg-transparent">
+                                                        <select id="" name="this_hit_dices"
+                                                                class="col-6 border-0 bg-transparent">
                                                         </select>
                                                     </div>
                                                 </div>
@@ -519,7 +519,7 @@
                                 <!--end::Title-->
                                 <!--begin::Table-->
                                 <div id="attacks_<?= $data['item_id']; ?>" data-kt-menu="true"
-                                     class="menu menu-column menu-rounded fs-8 px-3 attacks_spells_table">
+                                     class="menu menu-column menu-rounded fs-8 px-3 attacks_spells_table this_table">
                                 </div>
                                 <!--end::Table-->
                             </div>
@@ -536,7 +536,7 @@
                                 <!--end::Title-->
                                 <!--begin::Table-->
                                 <div id="global_modifiers_<?= $data['item_id']; ?>" data-kt-menu="true"
-                                     class="menu menu-column menu-rounded fs-8 px-3 global_modifiers_table">
+                                     class="menu menu-column menu-rounded fs-8 px-3 global_modifiers_table this_table">
                                 </div>
                                 <!--end::Table-->
                             </div>
@@ -553,7 +553,7 @@
                                 <!--end::Title-->
                                 <!--begin::Table-->
                                 <table id="tools_n_custom_<?= $data['item_id']; ?>"
-                                       class="table dataTable fs-8 p-3 tools_custom_table">
+                                       class="table dataTable fs-8 p-3 tools_custom_table this_table">
                                     <thead class="text-gray-700 fw-bolder text-capitalize border-bottom border-gray-300">
                                     <tr>
                                         <th class="col-4">TOOL</th>
@@ -578,28 +578,23 @@
                                 </div>
                                 <!--end::Title-->
                                 <!--begin::Table-->
-                                <table id="bag_<?= $data['item_id']; ?>" class="table dataTable fs-8 px-3 bag_table">
-                                    <thead class="text-gray-700 fw-bolder text-capitalize border-bottom border-gray-300">
-                                    <tr>
-                                        <th class="col-2">UNITS</th>
-                                        <th class="col-8">ITEM NAME</th>
-                                        <th class="col-3 p-0">WEIGHT</th>
-                                        <th></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody class="py-1">
-                                    </tbody>
-                                </table>
+                                <div id="bag_<?= $data['item_id']; ?>" data-kt-menu="true"
+                                     class="menu menu-column menu-rounded fs-8 px-3 bag_table this_table">
+                                </div>
                                 <!--end::Table-->
                                 <!--begin::Footer-->
-                                <div class="border-top border-1 border-gray-300 p-3 fs-8 text-gray-700 fw-bolder text-capitalize">
+                                <div class="px-3 fs-8 text-gray-700 fw-bolder text-capitalize mt-3">
                                     <div class="flex-row align-items-center justify-content-between w-100">
                                         <div>TOTAL WEIGHT</div>
-                                        <div class="col-2 ps-5 text-center">0kg</div>
+                                        <div class="col-2 ps-5 text-center">
+                                            <span class="total_weight me-1"> 0 </span>kg
+                                        </div>
                                     </div>
                                     <div class="flex-row align-items-center justify-content-between w-100">
                                         <div>OVERWEIGHT</div>
-                                        <div class="col-2 ps-5 text-center">0kg</div>
+                                        <div class="col-2 ps-5 text-center">
+                                            <span class="overweight me-1"> 0 </span>kg
+                                        </div>
                                     </div>
                                 </div>
                                 <!--end::Footer-->
@@ -618,7 +613,7 @@
                                 <!--end::Title-->
                                 <!--begin::Table-->
                                 <div id="custom_features_<?= $data['item_id']; ?>" data-kt-menu="true"
-                                     class="menu menu-column menu-rounded fs-8 px-3 other_feats_table">
+                                     class="menu menu-column menu-rounded fs-8 px-3 other_feats_table this_table">
                                 </div>
                                 <!--end::Table-->
                             </div>

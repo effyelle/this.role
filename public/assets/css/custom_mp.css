@@ -1166,7 +1166,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     top: 140px;
 }
 
-.score_prof, .skill_prof, .condition {
+.score_prof, .skill_prof, .condition, .this_field[type=checkbox] {
     height: 15px !important;
     width: 15px !important;
 }
@@ -1241,6 +1241,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 
 .column.this-outline:not(.w-100) {
     max-width: 450px;
+    min-height: 105px;
 }
 
 .form-select.expertise {

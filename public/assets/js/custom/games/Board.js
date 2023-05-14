@@ -8,6 +8,10 @@ class Board {
     constructor(dicesClass, options = {}) {
         this.dicesBtns = document.querySelectorAll(dicesClass);
         this.dices = this.createDices(this.dicesBtns);
+        this.dices.isDiceFormat = function (roll) {
+            let split = roll.split('d');
+            return split.length === 2 && split[0] !== "" && split[1] !== "" && !isNaN(split[0]) && !isNaN(split[1]);
+        };
         this.imgFolder = '/assets/media/games/' + dbGame.game_folder + '/gallery/';
         this.mapLayers = [];
     }

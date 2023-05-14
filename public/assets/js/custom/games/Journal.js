@@ -253,5 +253,11 @@ class Journal {
             if (!dex) dex = 0;
             return dex * tierBreaker;
         }
+        this.getCarryingCapacity = () => {
+            if (this.info.ability_scores) {
+                const str = JSON.parse(this.info.ability_scores).str.score;
+                return parseFloat(str) * 6.80389;
+            }
+        }
     }
 }

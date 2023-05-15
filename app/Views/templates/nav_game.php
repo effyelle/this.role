@@ -18,12 +18,12 @@
                     <!--begin::Aside Menu-->
                     <ul class="nav nav-tabs nav-line-tabs pt-2 px-2 justify-content-evenly">
                         <li class="nav-item">
-                            <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#chat_container">
+                            <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#chat_container">
                                 <i class="fa fa-comments f-lg text-this-role-light"></i>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link py-2 px-3 active" data-bs-toggle="tab" href="#journal_container">
+                            <a class="nav-link py-2 px-3" data-bs-toggle="tab" href="#journal_container">
                                 <i class="fa fa-newspaper text-this-role-light"></i>
                             </a>
                         </li>
@@ -41,10 +41,10 @@
                     <!--end::Aside menu-->
 
                     <!--begin::Chat-->
-                    <div id="chat_container" class="tab-pane fade">
+                    <div id="chat_container" class="tab-pane fade active show">
                         <div class="aside-footer d-flex flex-column py-3 chat-container mb-3 gap-5">
                             <!--begin::Chat messages-->
-                            <div class="chat-messages overflow-y-scroll px-5"></div>
+                            <div id="chat_messages" class="chat-messages overflow-y-scroll px-5"></div>
                             <!--end::Chat messages-->
                             <div class="d-flex flex-column justify-content-center px-5 h-175px">
                                 <div class="chat-bubble">
@@ -54,15 +54,13 @@
                                 </div>
                                 <div class="d-flex flex-row justify-content-between align-items-center mt-5">
                                     <div class="select-charsheets">
-                                        <label for="charsheet_selected" class="form-label d-none">
-                                            You're writing as...</label>
+                                        <label for="charsheet_selected" class="form-label">
+                                            Write as...</label>
                                         <select id="charsheet_selected"
                                                 class="form-control form-select form-control-solid this-role-form-field">
-                                            <option selected value="-1">
+                                            <option selected value="username">
                                                 <?= $_SESSION['user']['user_username'] ?>
                                             </option>
-                                            <option value="0">Sabrina</option>
-                                            <option value="1">Salem</option>
                                         </select>
                                     </div>
                                     <button class="btn btn-garnet text-white px-3 py-2">Send</button>
@@ -73,7 +71,7 @@
                     <!--end::Chat-->
 
                     <!--begin::Journal-->
-                    <div id="journal_container" class="tab-pane fade active show">
+                    <div id="journal_container" class="tab-pane fade">
                         <div class="aside-footer d-flex flex-column py-3 px-5">
                             <div id="journal" data-kt-menu="true"
                                  class="menu menu-column menu-rounded fw-bold fs-7 gap-2 mt-3">

@@ -273,11 +273,12 @@ class Games extends BaseController
 
     function set_chat($id): string
     {
-        if (isset($_POST['msg']) && isset($_POST['sender']) && isset($_POST['msgType'])) {
+        if (isset($_POST['msg']) && isset($_POST['sender']) && isset($_POST['msgType']) && isset($_POST['icon'])) {
             if ($this->gamechatmodel->new([
                 'chat_game_id' => $id,
                 'chat_sender' => validate($_POST['sender']),
                 'chat_msg' => validate($_POST['msg']),
+                'chat_icon' => validate($_POST['icon']),
                 'chat_msg_type' => validate($_POST['msgType']),
             ])) {
                 return json_encode(['response' => true]);
@@ -312,11 +313,11 @@ class Games extends BaseController
 
         if ($itemName && $itemType && $itemName !== '' && $itemType !== '-1') {
             // If item ID not set, create new item
+            // Create DnD Sheet item
+            $t = new SheetDnD();
             if (!isset($_POST['item_id'])) {
-                // Create DnD Sheet item
-                $t = new SheetDnD();
                 // Init data
-                $post = $t->__init($itemName, validate($itemType));
+                $post = $t->__init(validate($itemName), validate($itemType));
                 // Add editors and/or viewers
                 $post = $t->_edit_view($post);
                 $post = $t->_json_process($post);
@@ -333,12 +334,15 @@ class Games extends BaseController
                     'item_name' => $itemName,
                     'item_type' => $itemType
                 ];
+                $post = $t->_edit_view($post);
+                $post = $t->_json_process($post);
                 // Update sheet
                 if ($this->journalmodel->updt($post, ['item_id' => $_POST['item_id']])) {
                     $data = ['response' => true, 'msg' => 'Updated successfully'];
                 } else {
                     $data['msg'] = 'Item could not be updated';
                 }
+                $data['post'] = $post;
             }
             // * end::DataBase connection * //
         }

@@ -144,8 +144,9 @@
 <script src="/assets/js/custom/apps/ckeditor/CKEditor.js"></script>
 <script type="text/javascript" src="/assets/js/custom/games/game.js"></script>
 <script type="text/javascript" src="/assets/js/custom/games/GameMap.js"></script>
-<script type="text/javascript" src="/assets/js/custom/games/Board.js"></script>
+<script type="text/javascript" src="/assets/js/custom/games/Chat.js"></script>
 <script type="text/javascript" src="/assets/js/custom/games/Journal.js"></script>
+<script type="text/javascript" src="/assets/js/custom/games/Board.js"></script>
 <script type="text/javascript" src="/assets/js/custom/apps/draggable/Draggable.js"></script>
 <script>
     // * Game details * //

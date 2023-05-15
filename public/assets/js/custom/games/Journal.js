@@ -1,143 +1,324 @@
 class Journal {
     constructor(id, options = {}) {
         this.opt = options;
+        this.url = {
+            save: '',
+            get: '/app/games_ajax/get_journal_items/' + dbGame.game_id
+        }
+        this.folder = '/assets/media/games/' + dbGame.game_folder + '/players/';
         this.container = id;
         this.itemClass = id + '_item';
-        this.sheetsContainer = options.sheetsContainer;
+        this.sheetsContainer = 'draggable-modals_container';
         this.defaultIcon = '/assets/media/games/blank.png';
+        this.select = q('#charsheet_selected')[0];
         this.items = {
             list: {},
             length: 0
         }
         // Init journal
+        // this.init();
+        this.adminParent = q('#modal_journal')[0];
         this.init();
+    }
+
+    saveResults(data) {
+        // Iterate results
+        for (let item of data.results) {
+            let viewer = false;
+            let editor = false;
+            // Check if viewer
+            if (item.item_viewers) {
+                item.item_viewers = JSON.parse(item.item_viewers);
+                for (let i of item.item_viewers) {
+                    if (i == session.user_id) viewer = true;
+                }
+            }
+            // Check if editor
+            if (item.item_editors) {
+                item.item_editors = JSON.parse(item.item_editors);
+                for (let i of item.item_editors) {
+                    if (i == session.user_id) editor = true;
+                }
+            }
+            // Save if conditions are met
+            if (session.user_id === dbGame.game_creator || viewer || editor) {
+                // Save a DND sheet for each item
+                this.items.list[this.items.length] = new this.SheetDnD(this.sheetsContainer, {
+                    itemInfo: item,
+                    folder: this.folder,
+                });
+                this.items.length++;
+            }
+        }
+    }
+
+    formatJournalItems() {
+        this.chatSelect = (item) => {
+            if (!this.select) return;
+            this.select.innerHTML += '<option value="' + item.item_id + '">' + item.item_name + '</option>';
+        }
+        for (let i in this.items.list) {
+            let item = this.items.list[i].info;
+            // Journal list
+            this.journalList(item);
+            // Select for chat
+            if (item.item_type === 'character') this.chatSelect(item);
+        }
+    }
+
+    adminJournal = () => {
+        // * begin::Select Items * //
+        this.selectItem = q('#change_item')[0];
+        this.loadAdminItems = () => {
+            if (this.items.length > 0) {
+                this.selectItem.innerHTML = '';
+                for (let i in this.items.list) {
+                    let item = this.items.list[i].info;
+                    this.selectItem.innerHTML += '<option value="' + item.item_id + '">' + item.item_name + '</option>';
+                }
+                return;
+            }
+            this.selectItem.innerHTML = '<option value="-1" disabled selected>No journal items available</option>';
+        }
+        if (this.selectItem) this.loadAdminItems();
+        // * end::Select Items * //
+
+        // * begin::Check/Uncheck modal viewers/editors checkboxes * //
+        this.includePLayers = q('#include_players')[0];
+        this.itemType = q('#item_type')[0];
+        this.switchIncludePlayers = () => {
+            let can_see = $('.can_see-can_edit .can_see');
+            let can_edit = $('.can_see-can_edit .can_edit');
+            switch (this.itemType.value) {
+                case 'character':
+                    $('.player-can_see').prop('checked', false);
+                    can_see.hide();
+                    can_edit.show();
+                    break;
+                case 'handout':
+                    $('.player-can_edit').prop('checked', false);
+                    can_edit.hide();
+                    can_see.show();
+                    break;
+                default:
+                    can_see.hide();
+                    can_edit.hide();
+            }
+        }
+        if (this.includePLayers && this.itemType) {
+            this.switchIncludePlayers();
+            this.itemType.onchange = this.switchIncludePlayers;
+        }
+        // * end::Check/Uncheck modal viewers/editors checkboxes * //
+
+        // * begin::Empty modal * //
+        this.toggleCreateItem = q('#modal_journal-toggle')[0];
+        this.createItemBtn = q('#save_journal_item-btn')[0];
+        this.emptyJournalModal = () => {
+            q('#modal_journal .modal-header h4')[0].innerHTML = 'Add Journal Item';
+            this.createItemBtn.value = "";
+            $('#item_name').val("Character or Handout");
+            this.itemType.value = 'character';
+            this.switchIncludePlayers();
+            $('#modal_journal input[type=checkbox]').prop('checked', false);
+        }
+        if (this.toggleCreateItem && this.itemType) {
+            this.toggleCreateItem.click(() => {
+                this.emptyJournalModal();
+            });
+        }
+        // * end::Empty modal * //
+
+        // * begin::Fill modal * //
+        this.toggleEditItem = q('#edit_item-btn')[0];
+        this.loadViewersEditors = (item) => {
+            let viewers = item.item_viewers;
+            let editors = item.item_editors;
+            for (let i = 0; i < q('.can_see-can_edit').length; i++) {
+                let checked = false;
+                let canSeeCheckbox = q('.player-can_see')[i];
+                let canEditCheckbox = q('.player-can_edit')[i];
+                // Reset checkboxes
+                canSeeCheckbox.checked = checked;
+                canEditCheckbox.checked = checked;
+                if (viewers) {
+                    for (let v of viewers) {
+                        if (v == canSeeCheckbox.id.charAt(0)) checked = true;
+                    }
+                    canSeeCheckbox.checked = checked;
+                }
+                checked = false;
+                if (editors) {
+                    for (let e of editors) {
+                        if (e == canEditCheckbox.id.charAt(0)) checked = true;
+                    }
+                    canEditCheckbox.checked = checked;
+                }
+            }
+        }
+        this.fillJournalModal = () => {
+            // Search for item
+            let item = this.searchItem(this.selectItem.value);
+            // Return if item was not found
+            if (!item || item === {}) return;
+            // Change modal title
+            q('#modal_journal .modal-header h4')[0].innerHTML = 'Edit Journal Item';
+            // Put ID into save button
+            this.createItemBtn.value = item.info.item_id;
+            // Fill item data -> Name
+            q('#item_name')[0].value = item.info.item_name;
+            // Fill item data -> Type
+            this.itemType.value = item.info.item_type;
+            // Toggle visibility
+            this.switchIncludePlayers();
+            // Fill item data -> Viewers/Editors
+            if (q('.can_see-can_edit')[0]) this.loadViewersEditors(item.info);
+        }
+        if (this.toggleEditItem && this.selectItem && this.items.length > 0) {
+            this.toggleEditItem.removeClass('d-none');
+            this.toggleEditItem.removeEventListener('click', this.fillJournalModal);
+            this.toggleEditItem.click(() => {
+                this.fillJournalModal();
+            });
+        } else {
+            this.toggleEditItem.addClass('d-none');
+        }
+        // * end::Fill modal * //
+
+        // * begin::Create item * //
+        this.getJournalModalForm = () => {
+            let post = getForm('#modal_journal');
+            let item_id = this.createItemBtn.value
+            if (item_id && item_id !== "") {
+                post.item_id = item_id;
+            }
+            $('#modal_journal .error').hide();
+            let canSee = q('#include_players .player-can_see');
+            let canEdit = q('#include_players .player-can_edit');
+            let players = {};
+            [canSee, canEdit].forEach(obj => {
+                for (let o of obj) {
+                    if (o.checked) {
+                        players[o.id] = o.id.substring(2);
+                    }
+                }
+            });
+            if (Object.keys(players).length > 0) {
+                post.players = players;
+            }
+            console.log(post)
+            return post;
+        }
+        this.saveJournalItem = () => {
+            toggleProgressSpinner(true);
+            // Check if item id is saved -> This tells the difference between a new item and an update
+            ajax('/app/games_ajax/set_journal_item/' + dbGame.game_id, this.getJournalModalForm())
+                .done((data) => {
+                    console.log(data);
+                    if (data.response) {
+                        // Dismiss journal modal
+                        $('.modal_success_response').html(data.msg);
+                        $('#modal_success-toggle').click();
+                    } else if (data.msg) {
+                        $('#modal_journal .error').show();
+                    }
+                    toggleProgressSpinner(false);
+                }).fail((e) => {
+                console.log("Error: ", e.responseText);
+                toggleProgressSpinner(false);
+            });
+        }
+        if (this.createItemBtn) {
+            this.createItemBtn.click(() => {
+                this.saveJournalItem();
+            });
+        }
+        // * end::Create item * //
+
+        //* begin::Delete item *//
+        this.deleteItemBtn = q('#delete_item-btn')[0];
+        this.deleteJournalItem = () => {
+            ajax('/app/games_ajax/delete_journal_item/' + this.selectItem.value, this.getJournalModalForm())
+                .done((data) => {
+                    if (data.response) {
+                        // Reload journall
+                        this.reload();
+                        // Dismiss journal modal
+                        $('.modal_success_response').html(data.msg);
+                        $('#modal_success-toggle').click();
+                        return;
+                    }
+                    $('.modal_error_response').html(data.msg);
+                    $('#modal_error-toggle').click();
+                }).fail((e) => {
+                console.log("Error: ", e.responseText);
+            });
+        }
+        if (this.deleteItemBtn && this.items.length > 0) {
+            this.deleteItemBtn.removeClass('d-none');
+            this.deleteItemBtn.removeEventListener('click', this.deleteJournalItem);
+            this.deleteItemBtn.click(() => {
+                openConfirmation(this.deleteJournalItem);
+            });
+        } else {
+            this.deleteItemBtn.addClass('d-none');
+        }
+        //* end::Delete item *//
     }
 
     init() {
         // If ajax, init journal item creation from url
-        if (!(this.opt.ajax && this.opt.ajax.url)) {
-            this.error(this.opt.onError);
-            return;
-        }
-        if (!this.opt.ajax.method) this.opt.ajax.method = "get";
         // Get data through ajax
-        this.getJournalAjax().done((data) => {
+        ajax(this.url.get).done((data) => {
+            console.log(data);
             // Checck data is not null
             if (data.results && typeof data.results === 'object' && data.results.length > 0) {
-                // Iterate results
-                for (let item of data.results) {
-                    // Save id to for modal container
-                    let viewer = false;
-                    let editor = false;
-                    if (item.item_viewers) {
-                        item.item_viewers = JSON.parse(item.item_viewers);
-                        for (let i of item.item_viewers) {
-                            if (i == session.user_id) viewer = true;
-                        }
-                    }
-                    if (item.item_editors) {
-                        item.item_editors = JSON.parse(item.item_editors);
-                        for (let i of item.item_editors) {
-                            if (i == session.user_id) editor = true;
-                        }
-                    }
-
-                    if (session.user_id === dbGame.game_creator || viewer || editor) {
-                        // Save a DND sheet for each item
-                        this.items.list[this.items.length] = new this.SheetDnD(this.sheetsContainer, {
-                            itemInfo: item,
-                            folder: this.opt.folder,
-                        });
-                        this.items.length++;
-                    }
-                }
+                //* Save items into this.items.list *//
+                this.saveResults(data);
                 // Show list
-                this.formatJournalItems(this.items.list);
+                this.formatJournalItems();
             } else {
                 console.log("No journal items in this game yet");
             }
-            this.load(this.opt.onLoad, data);
+            //* Init journal for admin *//
+            if (this.adminParent) this.adminJournal();
+            this.opt.onLoad(data);
         }).fail((e) => {
-            console.log("Error: ", e);
+            //* Init journal for admin *//
+            if (this.adminParent) this.adminJournal();
+            console.log("Error: ", e.responseText);
         });
     }
 
-    getJournalAjax() {
-        return $.ajax({
-            type: this.opt.ajax.method,
-            url: this.opt.ajax.url,
-            dataType: 'json', // Comment this line for debugging,
-            async: true,
-            success: (data) => {
-                return data;
-            },
-            error: (e) => {
-                return e;
-            }
-        });
-    }
-
-    formatJournalItems(items) {
-        for (let i in items) {
-            let item = items[i].info;
-            // Check image data, if it does not exist, put a default one
-            let icon = !urlExists(this.opt.folder + item.item_icon)
-                ? this.defaultIcon
-                : this.opt.folder + item.item_icon;
-
-            // * HTML format * //
-            q('#' + this.container)[0].innerHTML += '' +
-                '<!--begin::Menu Item-->' +
-                ' <div class="menu-item ' + this.itemClass + '">' +
-                // Assign item ID to button for later accessing
-                '     <button type="button" class="btn menu-link col-12" value="' + item.item_id + '">' +
-                '         <!--begin::Symbol-->' +
-                '         <div class="me-2 symbol symbol-20px symbol-md-30px">' +
-                '             <span class="symbol-label circle item_icon-holder"' +
-                '                  style="background-image: url(' + icon + ');' +
-                '                      background-size: cover; background-position: center center;">' +
-                '             </span>' +
-                '         </div>' +
-                '         <!--end::Symbol-->' +
-                '         <span class="menu-title fw-bolder fs-7 text-gray-600 text-hover-dark">' + item.item_name + '</span>' +
-                '     </button>' +
-                ' </div>' +
-                ' <!--end::Menu Item-->';
-        }
+    journalList(item) {
+        // Check image data, if it does not exist, put a default one
+        let icon = !urlExists(this.folder + item.item_icon)
+            ? this.defaultIcon
+            : this.folder + item.item_icon;
+        q('#' + this.container)[0].innerHTML += '' +
+            '<!--begin::Menu Item-->' +
+            ' <div class="menu-item ' + this.itemClass + '">' +
+            // Assign item ID to button for later accessing
+            '     <button type="button" class="btn menu-link col-12" value="' + item.item_id + '">' +
+            '         <!--begin::Symbol-->' +
+            '         <div class="me-2 symbol symbol-20px symbol-md-30px">' +
+            '             <span class="symbol-label circle item_icon-holder"' +
+            '                  style="background-image: url(' + icon + ');' +
+            '                      background-size: cover; background-position: center center;">' +
+            '             </span>' +
+            '         </div>' +
+            '         <!--end::Symbol-->' +
+            '         <span class="menu-title fw-bolder fs-7 text-gray-600 text-hover-dark">' + item.item_name + '</span>' +
+            '     </button>' +
+            ' </div>' +
+            ' <!--end::Menu Item-->';
     }
 
     searchItem(id) {
         for (let i in this.items.list) {
-            if (this.items.list[i].info.item_id === id) {
+            if (this.items.list[i].info.item_id == id) {
                 return this.items.list[i];
             }
-        }
-        return false;
-    }
-
-
-    reload() {
-        $('.' + this.itemClass).remove();
-        q('#' + this.container)[0].innerHTML = '';
-        this.items = {
-            list: {},
-            length: 0,
-        }
-        // Begin again
-        this.init();
-    }
-
-    error(callback, e) {
-        if (callback) {
-            if (e) return callback(e);
-            return callback("You need to set an URL to do any AJAX call");
-        }
-        return false;
-    }
-
-    load(callback, data) {
-        if (callback && data) {
-            callback(data);
         }
         return false;
     }
@@ -269,157 +450,24 @@ class Journal {
             }
         }
     }
-}
 
-document.addEventListener('DOMContentLoaded', function(){
-    // * Journal intance * //
-    const journal = new Journal('journal', {
-        ajax: {
-            url: '/app/games_ajax/get_journal_items/' + dbGame.game_id, dataType: 'json',
-        },
-        sheetsContainer: 'draggable-modals_container',
-        folder: '/assets/media/games/' + dbGame.game_folder + '/players/',
-        onLoad: function (data) {
-            // Create sheets in
-            customSheets(data);
-            // If journal item creation exists in html means user is creator
-            if (q('#modal_journal-toggle').length > 0) {
-                adminJournal(data);
-            }
-
-        },
-        onError: function (e) {
-            console.log(e);
-            $('.modal_error_response').html(e);
-            $('#modal_error-toggle').click();
-        }
-    });
-
-    function adminJournal(data) {
-        // * Fill creator admin settings journal part * //
-        if (q('#change_item').length > 0) {
-            loadAdminItems();
-        }
-        // * Check and uncheck edits * //
-        if (q('#include_players').length > 0) {
-            switchIncludePlayers();
-            q('#item_type')[0].onchange = switchIncludePlayers;
-        }
-        // * Empty modal when add new journal item button is clicked * //
-        q('#modal_journal-toggle').click(emptyJournalModal);
-        // * Use modal to edit an item when clicked * //
-        q('#edit_item-btn')[0].click(fillJournalModal);
-        // * Add or edit journal item when save button clicked * //
-        q('#save_journal_item-btn')[0].click(saveJournalItem);
-        // * Delete item * //
-        q('#delete_item-btn').click(function () {
-            openConfirmation(deleteJournalItem);
-        });
-    }
-
-    function loadAdminItems() {
-        // Fill select
-        let changeItem = q('#change_item')[0];
-        if (journal.items.length > 0) {
-            changeItem.innerHTML = '';
-            for (let i in journal.items.list) {
-                let item = journal.items.list[i].info;
-                q('#change_item')[0].innerHTML += '<option value="' + item.item_id + '">' + item.item_name + '</option>';
-            }
-            return;
-        }
-        changeItem.innerHTML = '<option value="-1" disabled selected>No journal items available</option>';
-    }
-
-    function switchIncludePlayers() {
-        let can_see = $('.can_see-can_edit .can_see');
-        let can_edit = $('.can_see-can_edit .can_edit');
-        switch (q('#item_type')[0].value) {
-            case 'character':
-                $('.player-can_see').prop('checked', false);
-                can_see.hide();
-                can_edit.show();
-                break;
-            case 'handout':
-                $('.player-can_edit').prop('checked', false);
-                can_edit.hide();
-                can_see.show();
-                break;
-            default:
-                can_see.hide();
-                can_edit.hide();
-        }
-    }
-
-    function emptyJournalModal() {
-        $('#modal_journal .modal-header h4').html('Add Journal Item');
-        q('#save_journal_item-btn')[0].value = "";
-        $('#item_name').val("Character or Handout");
-        $('#item_type option[value="character"]').prop('selected', true);
-        $('#modal_journal input[type=checkbox]').prop('checked', false);
-    }
-
-    function fillJournalModal() {
-        $('#modal_journal .modal-header h4').html('Edit Journal Item');
-        let item = {};
-        // Search for item
-        for (let i in journal.items.list) {
-            let itemHolder = journal.items.list[i].info;
-            if (itemHolder.item_id === q('#change_item')[0].value) {
-                item = itemHolder;
-            }
-        }
-        // Return if item was not found
-        if (!item || item === {}) return;
-        // Put id into save button
-        q('#save_journal_item-btn')[0].value = item.item_id;
-        $('#item_name').val(item.item_name);
-        $('#item_type option[value="' + item.item_type + '"]').prop('selected', true);
-        switchIncludePlayers();
-        if (q('.can_see-can_edit').length > 0) {
-            let viewers = item.item_viewers;
-            let editors = item.item_editors;
-            for (let i = 0; i < q('.can_see-can_edit').length; i++) {
-                let checked = false;
-                let canSeeCheckbox = q('.player-can_see')[i];
-                let canEditCheckbox = q('.player-can_edit')[i];
-                // Reset checkboxes
-                canSeeCheckbox.checked = checked;
-                canEditCheckbox.checked = checked;
-                if (viewers) {
-                    for (let v of viewers) {
-                        if (v == canSeeCheckbox.id.charAt(0)) checked = true;
-                    }
-                    canSeeCheckbox.checked = checked;
-                }
-                checked = false;
-                if (editors) {
-                    for (let e of editors) {
-                        if (e == canEditCheckbox.id.charAt(0)) checked = true;
-                    }
-                    canEditCheckbox.checked = checked;
-                }
-            }
-        }
-        //$('#modal_journal input').prop('checked', false);
-    }
-
-    function customSheets(data) {
+    customSheets(data) {
         // Data received is all items for this game,
         // which is what we asked for through AJAX
         // Save button items from DOM
-        let itemsDOM = q('.' + journal.itemClass + ' button.menu-link');
+        let itemsDOM = q('.' + this.itemClass + ' button.menu-link');
         // Check data and items have the same length -> means they have been created accordingly
-        if (itemsDOM.length === journal.items.length) {
+        if (itemsDOM.length === this.items.length) {
             // Iterate items
             for (let itemDOM of itemsDOM) {
                 // Add a click listener to each item to create a new modal
-                itemDOM.click(setItemsClick);
+
+                //itemDOM.click(this.setItemsClick);
             }
         }
     }
 
-    const getSheetHTML = (info) => {
+    getSheetHTML = (info) => {
         return $.ajax({
             type: "post",
             url: "/app/games_ajax/sheet/" + info.item_id,
@@ -435,12 +483,12 @@ document.addEventListener('DOMContentLoaded', function(){
         });
     }
 
-    // This needs to change to reset all possible already opened items
-    function setItemsClick() {
+// This needs to change to reset all possible already opened items
+    setItemsClick() {
         // Get item info from Journal
         let item = false;
-        for (let i in journal.items.list) {
-            if (journal.items.list[i].info.item_id === this.value) item = journal.items.list[i];
+        for (let i in this.items.list) {
+            if (this.items.list[i].info.item_id === this.value) item = this.items.list[i];
         }
         if (item) {
             // Check if container doesn't exist already
@@ -482,11 +530,11 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     }
 
-    function listenToSheetChanges(modals) {
+    listenToSheetChanges(modals) {
         // * You need to reapply listeners to all opened items when you open a new one * //
         for (let modal of modals) {
             // Search for item
-            let item = journal.searchItem(modal.id.charAt(modal.id.length - 1));
+            let item = this.searchItem(modal.id.charAt(modal.id.length - 1));
             // Do not do further actions if item was not found
             if (!item) continue;
 
@@ -530,7 +578,7 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     }
 
-    function saveField(object, id) {
+    saveField(object, id) {
         let form = new FormData();
         let objName = object.getAttribute('name');
         let objVal = object.value;
@@ -555,10 +603,10 @@ document.addEventListener('DOMContentLoaded', function(){
                 data = JSON.parse(data);
                 console.log("saveField response", data);
                 if (data.response) {
-                    for (let i in journal.items.list) {
-                        if (journal.items.list[i].info.item_id === id) {
+                    for (let i in this.items.list) {
+                        if (this.items.list[i].info.item_id === id) {
                             for (let j in data.params) {
-                                journal.items.list[i].info[j] = data.params[j];
+                                this.items.list[i].info[j] = data.params[j];
                             }
                         }
                     }
@@ -571,7 +619,7 @@ document.addEventListener('DOMContentLoaded', function(){
         });
     }
 
-    function saveTable(t) {
+    saveTable(t) {
         let name = t.id.substring(0, t.id.length - 2);
         let id = t.id.substring(t.id.length - 1);
         let form = {item_id: id};
@@ -583,10 +631,10 @@ document.addEventListener('DOMContentLoaded', function(){
             dataType: "json",
             success: (data) => {
                 if (data.response) {
-                    for (let i in journal.items.list) {
-                        if (journal.items.list[i].info.item_id === id) {
+                    for (let i in this.items.list) {
+                        if (this.items.list[i].info.item_id === id) {
                             for (let j in data.params) {
-                                journal.items.list[i].info[j] = data.params[j];
+                                this.items.list[i].info[j] = data.params[j];
                             }
                         }
                     }
@@ -598,8 +646,8 @@ document.addEventListener('DOMContentLoaded', function(){
         });
     }
 
-    function getDataFromFields(inputs, item) {
-        let it = journal.searchItem(item.info.item_id);
+    getDataFromFields(inputs, item) {
+        let it = this.searchItem(item.info.item_id);
         for (let i of inputs) {
             let divName = i.getAttribute('name');
             this.scoreModifiers = () => {
@@ -767,13 +815,13 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     }
 
-    function setItemImage(item) {
+    setItemImage(item) {
         let iconInput = q('#' + item.draggableContainerId + ' .this-role-form-field[name="item_icon"]');
         iconInput.change(function () {
             saveField(this, item.info.item_id).done((data) => {
                 data = JSON.parse(data);
                 if (data.response) {
-                    journal.reload();
+                    this.reload();
                     readImageChange(this, q('#' + item.draggableContainerId + ' .item_icon-holder')[0]);
                     return;
                 }
@@ -783,12 +831,12 @@ document.addEventListener('DOMContentLoaded', function(){
         });
     }
 
-    function setInspiration(item) {
+    setInspiration(item) {
         const inspCont = q('#' + item.draggableContainerId + ' .inspiration')[0];
         const insp = q('#' + item.draggableContainerId + ' [name=inspiration]')[0];
         if (inspCont && insp) {
             function loadInsp() {
-                let it = journal.searchItem(item.info.item_id);
+                let it = this.searchItem(item.info.item_id);
                 if (it.info.info) {
                     let info = JSON.parse(it.info.info);
                     if (info.inspiration) {
@@ -811,7 +859,7 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     }
 
-    function setSkills(item) {
+    setSkills(item) {
         // These checkboxes will save if the character is proficient or expert in a skill
         let skillChecks = q('#' + item.draggableContainerId + ' .skill_prof');
         if (skillChecks) {
@@ -825,7 +873,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     }
 
-    function setClassGroup(item) {
+    setClassGroup(item) {
         let saveClassesBtn = q('#manage_class_' + item.info.item_id + ' button[name=save_classes]')[0];
         let classSelect = q('#manage_class_' + item.info.item_id + ' select[name=class]')[0];
         let subclass = q('#manage_class_' + item.info.item_id + ' input[name=subclass]')[0];
@@ -925,7 +973,7 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     }
 
-    function setHealth(item) {
+    setHealth(item) {
         const curhd = q('#' + item.draggableContainerId + ' input[name="cur_hd"]')[0];
         const deathSaves = q('#' + item.draggableContainerId + ' .death_saves');
         const deathSavesSuccess = q('#' + item.draggableContainerId + ' .death_saves.success');
@@ -933,7 +981,7 @@ document.addEventListener('DOMContentLoaded', function(){
         const exhaustionsChecks = q('#' + item.draggableContainerId + ' input.exhaustion');
         const conditionChecks = q('#' + item.draggableContainerId + ' .condition');
         this.hitDices = function () {
-            let it = journal.searchItem(item.info.item_id);
+            let it = this.searchItem(item.info.item_id);
             if (it.getLevel() < this.value) {
                 this.value = it.getLevel();
             }
@@ -985,7 +1033,7 @@ document.addEventListener('DOMContentLoaded', function(){
         if (conditionChecks) this.setConditions();
     }
 
-    function setTables(item) {
+    setTables(item) {
         this.buttons = [
             q('#atk_spells_btn' + item.info.item_id),
             q('#global_mods_btn' + item.info.item_id),
@@ -1067,7 +1115,7 @@ document.addEventListener('DOMContentLoaded', function(){
             return row;
         }
         this.attacks = (t) => {
-            const it = journal.searchItem(item.info.item_id);
+            const it = this.searchItem(item.info.item_id);
             let throwAtk = q('#' + t.id + ' button[name="throw_attack"]');
             if (throwAtk.length > 0) {
                 for (let i = 0; i < throwAtk.length; i++) {
@@ -1202,8 +1250,8 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     }
 
-    function setWeightCalcs(t, item) {
-        const it = journal.searchItem(item.info.item_id);
+    setWeightCalcs(t, item) {
+        const it = this.searchItem(item.info.item_id);
         let units = q('#' + t.id + ' input.units');
         let weights = q('#' + t.id + ' input.weight');
         if (units.length > 0 && units.length === weights.length) {
@@ -1226,7 +1274,7 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     }
 
-    function abiliyScoresSelect() {
+    abiliyScoresSelect() {
         return '<select class="this_field form-control form-select w-50px" aria-selected="-1">' +
             '<option value="-1" selected>NONE</option>' +
             '<option value="str">STR</option>' +
@@ -1238,7 +1286,7 @@ document.addEventListener('DOMContentLoaded', function(){
             '</select>';
     }
 
-    function rowAttacksSpells() {
+    rowAttacksSpells() {
         return '<!--begin::Menu Accordion-->' +
             '<div data-kt-menu-trigger="click" class="menu-item menu-accordion hover show">' +
             '    <!--begin:Menu link-->' +
@@ -1332,7 +1380,7 @@ document.addEventListener('DOMContentLoaded', function(){
             '<!--end::Menu Accordion-->';
     }
 
-    function rowGlobalModifiers() {
+    rowGlobalModifiers() {
         return '<!--begin::Menu Accordion-->' +
             '<div data-kt-menu-trigger="click" class="menu-item menu-accordion hover show">' +
             '    <!--begin:Menu link-->' +
@@ -1406,7 +1454,7 @@ document.addEventListener('DOMContentLoaded', function(){
             '<!--end::Menu Accordion-->';
     }
 
-    function rowBag() {
+    rowBag() {
         return '<!--begin::Row-->' +
             ' <div class="flex-row justify-content-between align-items-center border-bottom-1px-gray-300">' +
             '    <div>' +
@@ -1436,7 +1484,7 @@ document.addEventListener('DOMContentLoaded', function(){
             ' <!--end::Row-->';
     }
 
-    function rowCustomFeatures() {
+    rowCustomFeatures() {
         return '<!--begin::Menu Accordion-->' +
             '<div data-kt-menu-trigger="click" class="menu-item menu-accordion hover show">' +
             '    <!--begin:Menu link-->' +
@@ -1473,77 +1521,22 @@ document.addEventListener('DOMContentLoaded', function(){
             '<!--end::Menu Accordion-->';
     }
 
-    function getJournalModalForm() {
-        let post = getForm('#modal_journal');
-        let item_id = q('#save_journal_item-btn')[0].value
-        if (item_id && item_id !== "") {
-            post.item_id = item_id;
+    reload() {
+        $('.' + this.itemClass).remove();
+        q('#' + this.container)[0].innerHTML = '';
+        this.items = {
+            list: {},
+            length: 0,
         }
-        $('#modal_journal .error').hide();
-        let canSee = q('#include_players .player-can_see');
-        let canEdit = q('#include_players .player-can_edit');
-        let players = {};
-        [canSee, canEdit].forEach(obj => {
-            for (let o of obj) {
-                if (o.checked) {
-                    players[o.id] = o.id.substring(2);
-                }
-            }
-        });
-        if (Object.keys(players).length > 0) {
-            post.players = players;
-        }
-        return post;
+        // Begin again
+        this.init();
     }
 
-    function deleteJournalItem() {
-        $.ajax({
-            type: 'post',
-            url: '/app/games_ajax/delete_journal_item/' + q('#change_item')[0].value,
-            data: getJournalModalForm(),
-            dataType: 'json',
-            success: function (data) {
-                if (data.response) {
-                    // Reload journal
-                    journal.reload();
-                    // Dismiss journal modal
-                    $('.modal_success_response').html(data.msg);
-                    $('#modal_success-toggle').click();
-                    return;
-                }
-                $('.modal_error_response').html(data.msg);
-                $('#modal_error-toggle').click();
-            },
-            error: function (e) {
-                console.log("Error: ", e);
-            }
-        });
+    error(callback, e) {
+        if (callback) {
+            if (e) return callback(e);
+            return callback("You need to set an URL to do any AJAX call");
+        }
+        return false;
     }
-
-    function saveJournalItem() {
-        toggleProgressSpinner(true);
-        // Check if item id is saved -> This tells the difference between a new item and an update
-        $.ajax({
-            type: 'post',
-            url: '/app/games_ajax/set_journal_item/' + dbGame.game_id,
-            data: getJournalModalForm(),
-            dataType: 'json',
-            success: function (data) {
-                console.log(data)
-                if (data.response) {
-                    // Reload journal
-                    journal.reload();
-                    // Dismiss journal modal
-                    $('.modal_success_response').html(data.msg);
-                    $('#modal_success-toggle').click();
-                } else if (data.msg) {
-                    $('#modal_journal .error').show();
-                }
-            },
-            error: function (e) {
-                console.log("Error: ", e);
-            }
-        });
-        toggleProgressSpinner(false);
-    }
-});
+}

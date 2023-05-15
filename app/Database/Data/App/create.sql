@@ -56,6 +56,7 @@ CREATE TABLE game_chat(
 	chat_game_id INT UNSIGNED,
 	chat_sender VARCHAR(50),
 	chat_msg VARCHAR(500),
+	chat_icon VARCHAR(100),
 	chat_msg_type VARCHAR(50),
 	chat_datetime DATETIME DEFAULT NOW(),
 	FOREIGN KEY(chat_game_id) REFERENCES games(game_id)

@@ -4,12 +4,25 @@ $(document).ready(function () {
     updateSession();
 });
 
+function ajax(url, form = {}, type = 'post', processing = 'json') {
+    return $.ajax({
+        type: type,
+        url: url,
+        dataType: processing,
+        data: form,
+        success: (data) => {
+            return data;
+        },
+        error: (e) => {
+            console.log("Error:");
+            console.log(e.responseText);
+        }
+    });
+}
+
 function updateSession(callback = null) {
     $.ajax({
-        type: "get",
-        url: "/account/myprofile",
-        dataType: "json",
-        success: function (data) {
+        type: "get", url: "/account/myprofile", dataType: "json", success: function (data) {
             console.log("User logged: ", data);
             if (callback) callback(data);
         }
@@ -204,9 +217,7 @@ function spanPopup(popup) {
 
 function urlExists(url) {
     let http = $.ajax({
-        type: 'head',
-        url: url,
-        async: false
+        type: 'head', url: url, async: false
     });
     return http.status === 200;
 }

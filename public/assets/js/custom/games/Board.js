@@ -39,59 +39,6 @@ class Board {
     }
 
     /**
-     *
-     * @param querySelector
-     * @constructor
-     */
-    Chat = function (querySelector) {
-        this.record = document.querySelector(querySelector);
-        let now = new Date();
-        this.formatMessage = function (data = {}) {
-            let rollDice = data.msgType === 'rollDice'
-                ? '<span class="menu-title"><i>Rolling ' + data.rolling + data.dice + '</i></span>'
-                : '';
-            let itemsAlign = data.msgType === 'rollDice'
-                ? 'align-items-center'
-                : 'align-items-start px-2 pt-5';
-            let msgColor = data.msgType === 'error' ? 'text-danger' : '';
-            let avatar = data.src
-                ? '<!--begin::Symbol-->' +
-                '<div class="me-2 symbol symbol-20px symbol-md-30px">' +
-                '    <span class="symbol-label circle icon">' +
-                '    ' +// style="background: ' + data.src + '; background-size:cover;"
-                '    </span>' +
-                '</div>' +
-                '<!--end::Symbol-->'
-                : '';
-            this.record.innerHTML += '' +
-                '<!--begin::Menu Item-->' +
-                '<div class="menu-item py-3">' +
-                '   <div class="d-flex flex-row justify-content-between align-items-center gap-3">' +
-                '       <div class="d-flex flex-row justify-content-start align-items-center gap-3">' + avatar +
-                '           <div>' + data.sender + '</div>' +
-                '       </div>' +
-                '       <i>' + now.toLocaleDateString() + ' ' + now.toLocaleTimeString() + '</i>' +
-                '   </div>' +
-                '   <div class="d-flex flex-column justify-content-center gap-3 ' + itemsAlign + ' ' + msgColor + '">' + rollDice +
-                '       <div class="menu-title text-center">' + data.msg + '</div>' +
-                '   </div>' +
-                '</div>' +
-                '<!--end::Menu Item-->';
-        }
-        this.formatBasicRoll = (rolls) => {
-            let rollSum = 0;
-            let tooltip = '';
-            for (let r of rolls) {
-                rollSum += r;
-                tooltip += '<span>' + r + '</span>+';
-            }
-            tooltip = tooltip.substring(0, tooltip.length - 1);
-            return '<h5>' + rollSum + '</h5><em class="m-0 flex-row-wrap">(' + tooltip + ')</em>';
-        }
-
-    }
-
-    /**
      * Create dices objects
      * -----------------------------------------------------------------------------------------------------------------
      * @param buttons
@@ -113,3 +60,227 @@ class Board {
         return dicesObjects;
     }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    // * Board intance * //
+    const board = new Board('.btn.dice');
+    board.map = new GameMap('#this-game', {
+        folder: '/assets/media/games/' + dbGame.game_folder + '/layers/',
+        ajax: '/app/games_ajax/get_layers/' + dbGame.game_id,
+        select: '#change_layer',
+        game: dbGame
+    });
+
+    //* begin::Layers *//
+
+    function listenToNewMaps() {
+        this.lName = q('#layer_name')[0];
+        this.lImg = q('#add_map-input')[0];
+        this.lImgPreview = q('#add_layer-preview')[0];
+        this.btn = q('#add_layer-btn')[0];
+
+        this.lImg.onchange = () => {
+            // Change bg from holder
+            readImageChange(this.lImg, this.lImgPreview);
+        }
+
+        const newMap = () => {
+            if (this.lName.value !== '' && this.lImg.files.length > 0) {
+                let form = new FormData();
+                form.append('layer_img[]', this.lImg.files[0]);
+                form.append('layer_name', this.lName.value);
+                $.ajax({
+                    type: "post",
+                    url: "/app/games_ajax/add_map/" + dbGame.game_id,
+                    data: form,
+                    processData: false,
+                    contentType: false,
+                    success: (data) => {
+                        data = (JSON.parse(data)).data;
+                        let img = data.img;
+                        if (data.response) {
+                            // Reload map layers
+                            board.map.loadLayers();
+                            $('.modal_success_response').html('Map added correctly');
+                            $('#modal_success-toggle').click();
+                            return;
+                        }
+                        $('.modal_error_response').html(img);
+                        $('#modal_error-toggle').click();
+                    },
+                    error: (e) => {
+                        console.log("Error: ", e);
+                    }
+                });
+                return;
+            }
+            q('#add_layer-error').removeClass('d-none');
+        }
+
+        const selectMap = () => {
+            // Save selected map
+            let selectedMap = q('#change_layer')[0].value;
+            // Update selected map
+            $.ajax({
+                type: "get",
+                url: "/app/games_ajax/set_selected_layer/" + dbGame.game_id + "?layer_id=" + selectedMap,
+                dataType: "json",
+                success: (data) => {
+                    dbGame.game_layer_selected = selectedMap;
+                },
+                error: (e) => {
+                    console.log("Error: ", e);
+                }
+            });
+            // Change image in HTML
+            board.map.showLayer(board.map.layersFolder + board.map.layers[selectedMap].layer_bg);
+        }
+
+        const editMap = () => {
+            if (this.lName.value !== '') {
+                let form = new FormData();
+                if (this.lImg.files.length > 0) form.append('layer_img[]', this.lImg.files[0]);
+                form.append('layer_name', this.lName.value);
+                form.append('layer_id', q('#change_layer')[0].value);
+                $.ajax({
+                    type: "post",
+                    url: "/app/games_ajax/edit_layer/" + dbGame.game_id,
+                    data: form,
+                    processData: false,
+                    contentType: false,
+                    success: (data) => {
+                        data = (JSON.parse(data)).data;
+                        let img = data.img;
+                        if (data.response) {
+                            // Reload map layers
+                            $('.modal_success_response').html('Map updated');
+                            $('#modal_success-toggle').click();
+                            board.map.layers = {};
+                            board.map.loadLayers();
+                            return;
+                        }
+                        $('.modal_error_response').html(img);
+                        $('#modal_error-toggle').click();
+                    },
+                    error: (e) => {
+                        console.log("Error: ", e);
+                    }
+                });
+                return;
+            }
+            q('#add_layer-error').removeClass('d-none');
+        }
+
+        const deleteMap = () => {
+            $.ajax({
+                type: "get",
+                url: "/app/games_ajax/delete_layer/" + q('#change_layer')[0].value,
+                dataType: "json",
+                success: (data) => {
+                    board.map.loadLayers();
+                },
+                error: (e) => {
+                    console.log("Error: ", e);
+                }
+            });
+        }
+
+        this.btn.click(newMap);
+
+        // Select map on click
+        q('#select_layer-btn').click(selectMap);
+
+        // Delete layer on click
+        q('#delete_layer-btn').click(function () {
+            openConfirmation(deleteMap);
+        });
+
+        // Fill add modal on click
+        q('#edit_layer-btn').click((e) => {
+            q('#add_layer-modal .modal-header h4')[0].innerHTML = 'Edit Layer';
+            q('#layer_name')[0].value = $('#change_layer').find(':selected').text();
+            this.btn.removeEventListener('click', newMap);
+            this.btn.click(editMap);
+        });
+
+        // On modal closure
+        $('#add_layer-modal').on('hidden.bs.modal', () => {
+            q('#add_layer-modal .modal-header h4')[0].innerHTML = 'Add Layer';
+            // Reset fields and divs
+            this.lName.value = '';
+            this.lImg.value = '';
+            this.lImgPreview.style.backgroundImage = 'none';
+            q('#add_layer-error').addClass('d-none');
+            // Reset listeners
+            this.btn.removeEventListener('click', editMap);
+            this.btn.click(newMap);
+        });
+    }
+
+    if (dbGame.game_creator === session.user_id) listenToNewMaps();
+
+    //* end::Layers *//
+
+    //* begin::Journal *//
+
+    const journal = new Journal('journal',{
+        onLoad: function (data) {
+            console.log(data);
+        },
+        onError: function (e) {
+            console.log(e);
+            $('.modal_error_response').html(e);
+            $('#modal_error-toggle').click();
+        }
+    });
+
+    //* end::Journal *//
+
+    //* begin::Chat *//
+
+    const chat = new Chat('#chat_messages');
+    if (!chat.error) {
+        chat.getChat();
+        chat.from = () => {
+            let select = q('#charsheet_selected')[0];
+            if (select) {
+                if (!isNaN(select.value)) {
+                    let it = journal.searchItem(parseInt(select.value));
+                    if (it) {
+                        let icon = '/assets/media/games/blank.png';
+                        if (urlExists(it.folder + it.info.item_icon)) {
+                            icon = it.folder + it.info.item_icon;
+                        }
+                        return {icon: icon, name: it.info.item_name};
+                    }
+                }
+            }
+            return {icon: session.user_avatar, name: session.user_username}
+        }
+        chat.ChatBubble = '#chat';
+        //* Save basic rolls *// -> This is the navigation menu on top of the page (all the dices in black & white)
+        q('.btn.dice').click(function () {
+            this.text = () => {
+                let nDices = 1;
+                let input = q('#roll-' + this.value)[0];
+                if (input && input.value !== "" && !isNaN(input.value)) nDices = input.value;
+                return chat.formatBasicRoll(this.value, nDices, board.dices[this.value].roll(nDices));
+            }
+            let thisFrom = chat.from();
+            chat.saveChat({
+                icon: thisFrom.icon,
+                msg: this.text(),
+                sender: thisFrom.name,
+                msgType: "rollNavDice"
+            });
+        });
+        //* Next rolls to listen are the ones from the journal items *//
+        // -> Incomplete
+        //* Interval to get chat in real time *//
+        // setInterval(() => chat.getChat(), 1500);
+    } else {
+        console.log("Could not init chat: ", chat.error);
+    }
+
+    //* end::Chat *//
+});

@@ -66,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const board = new Board('.btn.dice');
     board.map = new GameMap('#this-game', {
         folder: '/assets/media/games/' + dbGame.game_folder + '/layers/',
-        ajax: '/app/games_ajax/get_layers/' + dbGame.game_id,
         select: '#change_layer',
         game: dbGame
     });
@@ -100,7 +99,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         let img = data.img;
                         if (data.response) {
                             // Reload map layers
-                            board.map.loadLayers();
                             $('.modal_success_response').html('Map added correctly');
                             $('#modal_success-toggle').click();
                             return;
@@ -114,26 +112,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
                 return;
             }
-            q('#add_layer-error').removeClass('d-none');
+            q('#add_layer-error')[0].removeClass('d-none');
         }
 
         const selectMap = () => {
             // Save selected map
             let selectedMap = q('#change_layer')[0].value;
             // Update selected map
-            $.ajax({
-                type: "get",
-                url: "/app/games_ajax/set_selected_layer/" + dbGame.game_id + "?layer_id=" + selectedMap,
-                dataType: "json",
-                success: (data) => {
-                    dbGame.game_layer_selected = selectedMap;
-                },
-                error: (e) => {
-                    console.log("Error: ", e);
-                }
-            });
+            ajax('/app/games_ajax/set_selected_layer/' + dbGame.game_id + '?layer_id=' + selectedMap);
             // Change image in HTML
-            board.map.showLayer(board.map.layersFolder + board.map.layers[selectedMap].layer_bg);
+            // board.map.showLayer(board.map.layersFolder + board.map.layers[selectedMap].layer_bg);
         }
 
         const editMap = () => {
@@ -142,9 +130,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (this.lImg.files.length > 0) form.append('layer_img[]', this.lImg.files[0]);
                 form.append('layer_name', this.lName.value);
                 form.append('layer_id', q('#change_layer')[0].value);
+
                 $.ajax({
                     type: "post",
-                    url: "/app/games_ajax/edit_layer/" + dbGame.game_id,
+                    url: '/app/games_ajax/edit_layer/' + dbGame.game_id,
                     data: form,
                     processData: false,
                     contentType: false,
@@ -155,8 +144,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             // Reload map layers
                             $('.modal_success_response').html('Map updated');
                             $('#modal_success-toggle').click();
-                            board.map.layers = {};
-                            board.map.loadLayers();
                             return;
                         }
                         $('.modal_error_response').html(img);
@@ -172,26 +159,16 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const deleteMap = () => {
-            $.ajax({
-                type: "get",
-                url: "/app/games_ajax/delete_layer/" + q('#change_layer')[0].value,
-                dataType: "json",
-                success: (data) => {
-                    board.map.loadLayers();
-                },
-                error: (e) => {
-                    console.log("Error: ", e);
-                }
-            });
+            ajax('/app/games_ajax/delete_layer/' + q('#change_layer')[0].value);
         }
 
         this.btn.click(newMap);
 
         // Select map on click
-        q('#select_layer-btn').click(selectMap);
+        q('#select_layer-btn')[0].click(selectMap);
 
         // Delete layer on click
-        q('#delete_layer-btn').click(function () {
+        q('#delete_layer-btn')[0].click(function () {
             openConfirmation(deleteMap);
         });
 
@@ -223,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //* begin::Journal *//
 
-    const journal = new Journal('journal',{
+    const journal = new Journal('journal', {
         onLoad: function (data) {
             console.log(data);
         },
@@ -240,7 +217,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const chat = new Chat('#chat_messages');
     if (!chat.error) {
-        chat.getChat();
         chat.from = () => {
             let select = q('#charsheet_selected')[0];
             if (select) {
@@ -271,16 +247,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 icon: thisFrom.icon,
                 msg: this.text(),
                 sender: thisFrom.name,
-                msgType: "rollNavDice"
+                msgType: "nav_dice"
             });
         });
         //* Next rolls to listen are the ones from the journal items *//
         // -> Incomplete
-        //* Interval to get chat in real time *//
-        // setInterval(() => chat.getChat(), 1500);
     } else {
         console.log("Could not init chat: ", chat.error);
     }
 
     //* end::Chat *//
+
+
+    thisShouldBeAWebSocket();
+
+    //* Interval to get page responses in "real" time *//
+    setInterval(thisShouldBeAWebSocket, 5000);
+
+    function thisShouldBeAWebSocket() {
+        chat.getChat();
+        journal.init();
+        board.map.loadLayers();
+        /*journal.getJournalAjax().done((data) => {
+            if (data.results && data.results.length === journal.items.length) {
+                if (!dataChanged(data)) return;
+                journal.reload();
+            }
+        });*/
+    }
 });

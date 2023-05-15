@@ -18,7 +18,40 @@ class Journal {
         // Init journal
         // this.init();
         this.adminParent = q('#modal_journal')[0];
-        this.init();
+    }
+
+    init() {
+        // If ajax, init journal item creation from url
+        // Get data through ajax
+        ajax(this.url.get).done((data) => {
+            // Checck data is not null
+            if (data.results && typeof data.results === 'object' && data.results.length > 0) {
+                if (data.results.length === this.items.length) {
+                    // Check if data inside fields changed
+                    console.log('No new items');
+                    return;
+                }
+                $('.' + this.itemClass).remove();
+                this.items = {
+                    list: {},
+                    length: 0
+                }
+                console.log('New items or deleted items');
+                //* Save items into this.items.list *//
+                this.saveResults(data);
+                // Show list
+                this.formatJournalItems();
+            } else {
+                console.log("No journal items in this game yet");
+            }
+            //* Init journal for admin *//
+            if (this.adminParent) this.adminJournal();
+            this.opt.onLoad(data);
+        }).fail((e) => {
+            //* Init journal for admin *//
+            if (this.adminParent) this.adminJournal();
+            console.log("Error: ", e.responseText);
+        });
     }
 
     saveResults(data) {
@@ -264,30 +297,6 @@ class Journal {
             this.deleteItemBtn.addClass('d-none');
         }
         //* end::Delete item *//
-    }
-
-    init() {
-        // If ajax, init journal item creation from url
-        // Get data through ajax
-        ajax(this.url.get).done((data) => {
-            console.log(data);
-            // Checck data is not null
-            if (data.results && typeof data.results === 'object' && data.results.length > 0) {
-                //* Save items into this.items.list *//
-                this.saveResults(data);
-                // Show list
-                this.formatJournalItems();
-            } else {
-                console.log("No journal items in this game yet");
-            }
-            //* Init journal for admin *//
-            if (this.adminParent) this.adminJournal();
-            this.opt.onLoad(data);
-        }).fail((e) => {
-            //* Init journal for admin *//
-            if (this.adminParent) this.adminJournal();
-            console.log("Error: ", e.responseText);
-        });
     }
 
     journalList(item) {
@@ -1519,24 +1528,5 @@ class Journal {
             '    </div>' +
             '</div>' +
             '<!--end::Menu Accordion-->';
-    }
-
-    reload() {
-        $('.' + this.itemClass).remove();
-        q('#' + this.container)[0].innerHTML = '';
-        this.items = {
-            list: {},
-            length: 0,
-        }
-        // Begin again
-        this.init();
-    }
-
-    error(callback, e) {
-        if (callback) {
-            if (e) return callback(e);
-            return callback("You need to set an URL to do any AJAX call");
-        }
-        return false;
     }
 }

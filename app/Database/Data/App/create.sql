@@ -109,7 +109,7 @@ CREATE TABLE invite_url(
 
 INSERT INTO users(user_username, user_avatar, user_fname, user_email, user_pwd, user_confirmed)
 VALUES
-	('effs', '/assets/media/avatars/1682490340.jpg', 'La Effy', 'epastor@gmail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
+	('effs', '/assets/media/avatars/1682490340.png', 'La Effy', 'epastor@gmail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
 	('marioe23', '/assets/media/avatars/blank.png', 'Mario Sancho', 'nore.zgz@mail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
 	('JL.ak.elBizco', '/assets/media/avatars/blank.png', 'Jose Luis El Bizco', 'com@com.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
 	('FF15', '/assets/media/avatars/blank.png', 'Fernando Fernandez', 'ffmail@email.f', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW());
@@ -125,31 +125,5 @@ UPDATE users SET user_rol='masteradmin' WHERE user_email='epastor@gmail.com';
 UPDATE users SET user_rol='admin' WHERE user_email='nore.zgz@mail.com';
 
 UPDATE users SET user_confirmed=NULL WHERE user_username='effy.elle';
-
-
-/* Things I still need
- *  - Image holder with hidden input
- *    ^ Raw ability scores container with raw 1d20 throws and ability score names
- *    ^ Saving throws container (ability scores with prof and modifications)
- *    ^ Skills container width proficiencies and modificators (form raw ability scores)
- *    ^ Level
- *    ^ Proficiency bonus calculated by level
- *    ^ Armor Class
- *    ^ Initiative (calculated by dex(?) dex?)
- *    ^ Walk speed
- *    ^ Hit points: maximum and current
- *    ^ Temporary hit points
- *    ^ Hit dice + CONS
- *    ^ Death saves
- *    ^ Exhaustion level
- *    ^ Spells and attacks -> interactable items/abilities
- *    ^ Global modifiers -> dmg, attack&spellcasting, AC
- *    ^ Bag -> non interactable items
- *    ^ Character traits? (Characteristics-> personality, ideals, bonds, flaws)
- *    ^ Other resources
- *    ^ Other abilities descriptions -> not spells and not castable or interactable just description
- *    ^ Character description -> appearance, backstory, allies&organizations, treasure
- *    ^ Spells
- */
  
- UPDATE game_journal SET classes='[]' WHERE item_id=1;
+UPDATE game_journal SET classes='[]' WHERE item_id=1;

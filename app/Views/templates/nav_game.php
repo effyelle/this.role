@@ -57,7 +57,7 @@
                                         <label for="charsheet_selected" class="form-label">
                                             Write as...</label>
                                         <select id="charsheet_selected"
-                                                class="form-control form-select form-control-solid this-role-form-field">
+                                                class="form-control form-select form-select-sm form-control-solid this-role-form-field">
                                             <option selected value="username">
                                                 <?= $_SESSION['user']['user_username'] ?>
                                             </option>

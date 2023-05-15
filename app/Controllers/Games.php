@@ -204,15 +204,6 @@ class Games extends BaseController
      ***************************** AJAX CALLS *****************************
      **********************************************************************/
 
-    function get_game_info($id): string
-    {
-        $data['response'] = false;
-        $game = $this->gamesmodel->get(['game_id' => $id]);
-        if ($game) $data['response'] = true;
-        $data['game'] = $game[0];
-        return json_encode($data);
-    }
-
     /**
      * Create a url to join a game
      *
@@ -500,6 +491,9 @@ class Games extends BaseController
     {
         $data['response'] = false;
         if ($data['layers'] = $this->layermodel->get(['layer_id_game' => $id])) {
+            if ($data['game'] = $this->gamesmodel->get(['game_id' => $id])) {
+                $data['game'] = $data['game'][0];
+            }
             $data['response'] = true;
         }
         return json_encode($data);

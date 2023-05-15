@@ -29,7 +29,7 @@ class Chat {
                             icon: this.from().icon,
                             msg: '<div class="text-start">' + this.chatText + '</div>',
                             sender: this.from().name,
-                            msgType: "rollNavDice"
+                            msgType: "bubble_chat"
                         }).done(() => {
                             this.chatText = '';
                             this.chatBubble.value = '';
@@ -62,13 +62,14 @@ class Chat {
     formatMessages() {
         if (this.messages.length > 0) {
             this.record.innerHTML = '';
-            for (let msg of this.messages) {
+            for (let m of this.messages) {
+                let text = m.chat_msg.replaceAll('>"', '>').replaceAll('"<', '<').replaceAll('\\n', '<br>');
                 this.formatMessage({
-                    icon: msg.chat_icon,
-                    date: msg.chat_datetime,
-                    sender: msg.chat_sender,
-                    text: msg.chat_msg,
-                    type: msg.chat_msg_type
+                    icon: m.chat_icon,
+                    date: m.chat_datetime,
+                    sender: m.chat_sender,
+                    text: text,
+                    type: m.chat_msg_type
                 });
             }
             return;
@@ -118,9 +119,7 @@ class Chat {
             if (data.response && data.msgs) {
                 if (this.messages.length !== data.msgs.length) {
                     this.messages = data.msgs;
-                    this.formatMessages();
                 }
-                return;
             }
             this.formatMessages();
         });

@@ -1,12 +1,13 @@
 class GameMap {
     constructor(id, options = {}) {
         this.container = q(id)[0];
-        this.layers = {};
         this.layersFolder = options.folder;
-        this.ajax = options.ajax;
-        this.select = q(options.select).length > 0 ? q(options.select)[0] : false;
+        this.select = q(options.select)[0];
+        this.url = {
+            get: '/app/games_ajax/get_layers/' + dbGame.game_id
+        }
         this.game = options.game;
-        this.loadLayers();
+        this.layers = {};
     }
 
     set Layers(layer) {
@@ -31,7 +32,7 @@ class GameMap {
     }
 
     loadLayers() {
-        this.loadAjax(this.ajax).done((data) => {
+        ajax(this.url.get).done((data) => {
             let layerBg = 'Empty!';
             // console.log("Data layers length = ", data.layers.length)
             // console.log("Client layers length = ", Object.keys(this.layers).length)
@@ -45,72 +46,77 @@ class GameMap {
                 this.layers = {};
                 return;
             }
-            // If data response true
+
+            let layersHaveChanged = function (dbLayers, thisLayers, dbGame, thisGame) {
+                // Check layers length changed (most obvious and easy change
+                if (dbLayers.length !== Object.keys(thisLayers).length) return true;
+                // Check if inner info has changed (name or image)
+                for (let layer of dbLayers) {
+                    let this_layer = thisLayers[layer.layer_id];
+                    if (!this_layer) return true;
+                    for (let i in layer) {
+                        if (layer[i] !== this_layer[i]) return true;
+                    }
+                }
+                // Lastly, check if selected layer has changed
+                return dbGame.game_layer_selected !== thisGame.game_layer_selected;
+            };
+
+            if (!layersHaveChanged(data.layers, this.layers, data.game, this.game)) return;
+
+            console.log('new data');
+            this.game = data.game;
             // Set layer selected false until proven true
             let layerSelected = false;
-            if (data.layers.length !== Object.keys(this.layers).length) {
-                // Reset container
-                this.container.style.backgroundImage = 'none';
-                this.container.style.transition = 'all 1s ease';
-                // Reset select if exists
-                if (this.select) this.select.innerHTML = '';
-                // Iterate layers (means user is the creator)
-                for (let i in data.layers) {
-                    // Save layer to client
-                    this.Layers = data.layers[i];
-                    // Check the selected layer still exists
-                    if (this.game.game_layer_selected &&
-                        this.game.game_layer_selected === data.layers[i].layer_id) {
-                        // Prove layer selected true
-                        layerSelected = true;
-                    }
-                    // If select exists (means user is the creator)
-                    if (this.select) {
-                        // Add layer to HTML as select option
-                        this.select.innerHTML +=
-                            '<!--begin::Option-->' +
-                            '<option value="' + data.layers[i].layer_id + '">' +
-                            '' + data.layers[i].layer_name + '' +
-                            '</option>' +
-                            '<!--end::Option-->';
-                    }
+            console.log('New or deleted layers');
+            // Reset container
+            this.container.style.backgroundImage = 'none';
+            this.container.style.transition = 'all 1s ease';
+            // Reset select if exists
+            if (this.select) this.select.innerHTML = '';
+            // Iterate layers (means user is the creator)
+            for (let i in data.layers) {
+                // Save layer to client
+                this.Layers = data.layers[i];
+                // Check the selected layer still exists
+                if (this.game.game_layer_selected &&
+                    this.game.game_layer_selected === data.layers[i].layer_id) {
+                    // Prove layer selected true
+                    layerSelected = true;
                 }
-                // Select a layer for the client
-                if (!layerSelected) {
-                    // Save the first layer if no layers are selected
-                    let firstLayer = this.layers[Object.keys(this.layers)[0]];
-                    // Set background to that layer
-                    this.showLayer(this.layersFolder + firstLayer.layer_bg);
-                    // If select exists (means user is the creator)
-                    if (this.select) {
-                        // Select the same first option
-                        $('#' + this.select.id + ' [value=' + firstLayer.layer_id + ']')
-                            .prop('selected', true);
-                    }
-                    return;
-                }
-                // Save layer background
+                // If select exists (means user is the creator)
                 if (this.select) {
-                    // Select the option from player selection
-                    $('#' + this.select.id + ' [value=' + this.game.game_layer_selected + ']')
+                    // Add layer to HTML as select option
+                    this.select.innerHTML +=
+                        '<!--begin::Option-->' +
+                        '<option value="' + data.layers[i].layer_id + '">' +
+                        '' + data.layers[i].layer_name + '' +
+                        '</option>' +
+                        '<!--end::Option-->';
+                }
+            }
+            // Select a layer for the client
+            if (!layerSelected) {
+                // Save the first layer if no layers are selected
+                let firstLayer = this.layers[Object.keys(this.layers)[0]];
+                // Set background to that layer
+                this.showLayer(this.layersFolder + firstLayer.layer_bg);
+                // If select exists (means user is the creator)
+                if (this.select) {
+                    // Select the same first option
+                    $('#' + this.select.id + ' [value=' + firstLayer.layer_id + ']')
                         .prop('selected', true);
                 }
-                // Set background
-                this.showLayer(this.layersFolder + this.layers[this.game.game_layer_selected].layer_bg);
+                return;
             }
-        });
-    }
-
-    loadAjax(url) {
-        return $.ajax({
-            type: "get",
-            url: url,
-            dataType: "json",
-            success: (data) => {
-                return data;
-            }, error: (e) => {
-                console.log("Error: ", e);
+            // Save layer background
+            if (this.select) {
+                // Select the option from player selection
+                $('#' + this.select.id + ' [value=' + this.game.game_layer_selected + ']')
+                    .prop('selected', true);
             }
+            // Set background
+            this.showLayer(this.layersFolder + this.layers[this.game.game_layer_selected].layer_bg);
         });
     }
 }

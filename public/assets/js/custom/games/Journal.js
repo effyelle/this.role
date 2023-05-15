@@ -106,6 +106,15 @@ class Journal {
         }
     }
 
+    searchItem(id) {
+        for (let i in this.items.list) {
+            if (this.items.list[i].info.item_id === id) {
+                return this.items.list[i];
+            }
+        }
+        return false;
+    }
+
 
     reload() {
         $('.' + this.itemClass).remove();

@@ -167,6 +167,7 @@ function initGame(dbGame, session) {
         });
     }
 
+    // This needs to change to reset all possible already opened items
     function setItemsClick() {
         // Get item info from Journal
         let item = false;
@@ -217,7 +218,7 @@ function initGame(dbGame, session) {
         // * You need to reapply listeners to all opened items when you open a new one * //
         for (let modal of modals) {
             // Search for item
-            let item = searchJournalItem(modal.id);
+            let item = journal.searchItem(modal.id.charAt(modal.id.length - 1));
             // Do not do further actions if item was not found
             if (!item) continue;
 
@@ -330,7 +331,7 @@ function initGame(dbGame, session) {
     }
 
     function getDataFromFields(inputs, item) {
-        let it = searchJournalItem(item.draggableContainerId);
+        let it = journal.searchItem(item.info.item_id);
         for (let i of inputs) {
             let divName = i.getAttribute('name');
             this.scoreModifiers = () => {
@@ -367,7 +368,7 @@ function initGame(dbGame, session) {
                 let skillName = divName.substring(11);
                 i.value = skills[skillName];
                 i.checked = i.value === "1" || i.value === "2";
-                i.toggleClass('expertise', i.value === "2");
+                i.classList.toggle('expertise', i.value === "2");
                 it.getProficiency();
                 if (skillTitle) {
                     skillTitle.innerHTML = toSentenceCase(skillName) + " +" + parseInt(i.value) * it.getProficiency();
@@ -519,7 +520,7 @@ function initGame(dbGame, session) {
         const insp = q('#' + item.draggableContainerId + ' [name=inspiration]')[0];
         if (inspCont && insp) {
             function loadInsp() {
-                let it = searchJournalItem(item.draggableContainerId);
+                let it = journal.searchItem(item.info.item_id);
                 if (it.info.info) {
                     let info = JSON.parse(it.info.info);
                     if (info.inspiration) {
@@ -664,7 +665,7 @@ function initGame(dbGame, session) {
         const exhaustionsChecks = q('#' + item.draggableContainerId + ' input.exhaustion');
         const conditionChecks = q('#' + item.draggableContainerId + ' .condition');
         this.hitDices = function () {
-            let it = searchJournalItem(item.draggableContainerId);
+            let it = journal.searchItem(item.info.item_id);
             if (it.getLevel() < this.value) {
                 this.value = it.getLevel();
             }
@@ -798,7 +799,7 @@ function initGame(dbGame, session) {
             return row;
         }
         this.attacks = (t) => {
-            const it = searchJournalItem(item.draggableContainerId);
+            const it = journal.searchItem(item.info.item_id);
             let throwAtk = q('#' + t.id + ' button[name="throw_attack"]');
             if (throwAtk.length > 0) {
                 for (let i = 0; i < throwAtk.length; i++) {
@@ -934,7 +935,7 @@ function initGame(dbGame, session) {
     }
 
     function setWeightCalcs(t, item) {
-        const it = searchJournalItem(item.draggableContainerId);
+        const it = journal.searchItem(item.info.item_id);
         let units = q('#' + t.id + ' input.units');
         let weights = q('#' + t.id + ' input.weight');
         if (units.length > 0 && units.length === weights.length) {
@@ -1204,15 +1205,6 @@ function initGame(dbGame, session) {
             '<!--end::Menu Accordion-->';
     }
 
-    function searchJournalItem(containerID) {
-        for (let i in journal.items.list) {
-            if (journal.items.list[i].draggableContainerId === containerID) {
-                return journal.items.list[i];
-            }
-        }
-        return false;
-    }
-
     function getJournalModalForm() {
         let post = getForm('#modal_journal');
         let item_id = q('#save_journal_item-btn')[0].value
@@ -1461,27 +1453,37 @@ function initGame(dbGame, session) {
 // ******* begin::Chat ******** //
 // **************************** //
 
-// * Chat object * //
+    // * Chat object * //
     const chat = new board.Chat('.chat-messages');
     getChat();
 
-// * Listen to dices buttons pressed * //
+    // * Listen to dices buttons pressed * //
     $('.btn.dice').click(function () {
+        let nDices = q('#roll-' + this.value)[0].value;
+        let rolls = board.dices[this.value].roll(nDices);
+        let roll = 0;
+        let tooltip = '';
+        for (let r of rolls) {
+            roll += r;
+            tooltip += roll + '+';
+        }
+        tooltip = tooltip.substring(0, tooltip.length - 2);
+        console.log(roll, tooltip)
         chat.formatMessage({
             src: "",
-            msg: board.dices[this.value].roll(),
+            msg: rolls,
             sender: $('#charsheet_selected').find(':selected').text(),
             msgType: "rollDice",
             dice: this.value,
             rolling: $('#roll-' + this.value).val()
         });
     });
-// * Chat textarea constant * //
+    // * Chat textarea constant * //
     const chatText = q('.chat-bubble textarea')[0];
-// * Chat textarea holder * //
+    // * Chat textarea holder * //
     let chatMessage = '';
 
-// * Listen to chat pressed keys * //
+    // * Listen to chat pressed keys * //
     chatText.addEventListener('keydown', function (e) {
         if (e.key === 'Backspace') {
             chatMessage = chatMessage.substring(0, chatMessage.length - 1);
@@ -1502,7 +1504,7 @@ function initGame(dbGame, session) {
         chatMessage += e.key;
     });
 
-// * Listen to send button in chat * //
+    // * Listen to send button in chat * //
     document.querySelector('.chat-bubble ~ div .btn').addEventListener('click', function () {
         setChat(chatMessage.trim(), $('#charsheet_selected').find(':selected').text(), "chatMessage");
     });

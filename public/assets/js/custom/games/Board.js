@@ -24,12 +24,17 @@ class Board {
      */
     Dice = function (sides) {
         this.sides = sides;
-        this.roll = function () {
-            let roll = Math.ceil(Math.random() * this.sides);
-            while (roll < 0 || roll > this.sides) {
-                roll = Math.ceil(Math.random() * this.sides);
+        this.roll = function (n) {
+            if (!n) n = 1;
+            let rolls = [];
+            for (let i = 0; i < n; i++) {
+                let roll = Math.round(Math.random() * this.sides);
+                while (roll < 0 || roll > this.sides) {
+                    roll = Math.round(Math.random() * this.sides);
+                }
+                rolls[i] = roll;
             }
-            return roll;
+            return rolls;
         }
     }
 

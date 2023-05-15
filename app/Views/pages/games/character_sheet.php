@@ -381,7 +381,6 @@
                                 </div>
                                 <!--end::Row - Info Legend-->
                             </div>
-                            <!--end::Row-->
                             <!--end::Skills-->
                             <!--begin::Health & Conditions-->
                             <div class="column this-outline p-3">

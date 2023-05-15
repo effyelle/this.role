@@ -9,8 +9,7 @@ if (isset($page)) {
         case 'games/details':
         case 'games/not_found':
         case 'games/join':
-        case 'profile':
-        case 'issues':
+        case 'user_profile/tabs_content':
         case 'about':
         case 'admin/users':
         case 'admin/games':

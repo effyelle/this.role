@@ -29,12 +29,12 @@ class SheetDnD
         return $this->$type($name);
     }
 
-    function handout(): array
+    function handout($name): array
     {
-        $this->info = [
-            "name" => ""
+        return [
+            'item_name' => $name,
+            'item_type' => 'handout'
         ];
-        return ['info' => $this->info];
     }
 
     function character($name): array|bool

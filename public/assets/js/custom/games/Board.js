@@ -29,7 +29,7 @@ class Board {
             let rolls = [];
             for (let i = 0; i < n; i++) {
                 let roll = Math.round(Math.random() * this.sides);
-                while (roll < 0 || roll > this.sides) {
+                while (roll <= 0 || roll > this.sides) {
                     roll = Math.round(Math.random() * this.sides);
                 }
                 rolls[i] = roll;
@@ -73,11 +73,22 @@ class Board {
                 '       <i>' + now.toLocaleDateString() + ' ' + now.toLocaleTimeString() + '</i>' +
                 '   </div>' +
                 '   <div class="d-flex flex-column justify-content-center gap-3 ' + itemsAlign + ' ' + msgColor + '">' + rollDice +
-                '       <span class="menu-title">' + data.msg + '</span>' +
+                '       <div class="menu-title text-center">' + data.msg + '</div>' +
                 '   </div>' +
                 '</div>' +
                 '<!--end::Menu Item-->';
         }
+        this.formatBasicRoll = (rolls) => {
+            let rollSum = 0;
+            let tooltip = '';
+            for (let r of rolls) {
+                rollSum += r;
+                tooltip += '<span>' + r + '</span>+';
+            }
+            tooltip = tooltip.substring(0, tooltip.length - 1);
+            return '<h5>' + rollSum + '</h5><em class="m-0 flex-row-wrap">(' + tooltip + ')</em>';
+        }
+
     }
 
     /**

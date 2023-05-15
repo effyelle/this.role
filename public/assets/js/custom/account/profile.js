@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     $('#avatar').change(function () {
-        readImageChange(this, $('.avatar-input-holder'));
+        readImageChange(this, q('#avatar_profile_holder')[0]);
     });
 
     /**
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function toggleProfileEditable(editable = false) {
         const editProfileBtn = $('#editProfile');
         $('.editable').toggleClass('show', editable);
-        $('#update-profile .this-role-form-field').prop('disabled', !editable);
+        $('#myprofile .this-role-form-field').prop('disabled', !editable);
         deactivateProfile.toggleClass('d-none', editable);
         resetPwdBtn.toggleClass('d-none', editable);
         $('#updateProfile').toggleClass('d-none', !editable);

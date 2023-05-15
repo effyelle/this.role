@@ -45,13 +45,13 @@ class App extends BaseController
 
     function myprofile(): string
     {
-        if (isset($_SESSION['user'])) return (new Account)->updateProfile();
+        if (isset($_SESSION['user'])) return (new Account)->profile_issues();
         return template('login', ['unlogged' => 'unlogged']);
     }
 
     function myissues(): string
     {
-        if (isset($_SESSION['user'])) return (new Account)->myIssues();
+        if (isset($_SESSION['user'])) return (new Account)->profile_issues('myissues');
         return template('login', ['unlogged' => 'unlogged']);
     }
 
@@ -91,6 +91,11 @@ class App extends BaseController
             if ($userRol === 'admin' || $userRol === 'masteradmin') return (new Admin())->$switch();
         }
         return $this->index();
+    }
+
+    function admin_ajax($route): void
+    {
+        if ($route) echo (new Admin())->$route();
     }
 
     function pwd_email(): string

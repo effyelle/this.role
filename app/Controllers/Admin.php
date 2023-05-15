@@ -53,16 +53,12 @@ class Admin extends BaseController
             ($new_data['user_rol'] !== $rol || $userToBeDeleted) && $activeAdmins === 1);
     }
 
-    /* *****************************************************************************************************************
-     * AJAX CALLS ******************************************************************************************************
-     ******************************************************************************************************************/
-
     /**
      * Update user from Admin side
      *
-     * @return void
+     * @return string
      */
-    public function update_user(): void
+    public function update_user(): string
     {
         // Save where for DB
         $where = ['user_id' => intval($_POST['user'])];
@@ -70,17 +66,28 @@ class Admin extends BaseController
         /////////////////////////////
         // Save old data from user //
         /////////////////////////////
-        $old_userdata = $this->usermodel->get(['user_id' => $where['user_id']])[0];
-
-        if ($_SESSION['user']['user_rol'] === 'admin' && $old_userdata['user_rol'] === 'masteradmin') {
-            echo json_encode(['response' => false, 'msg' => 'You cannot edit a Master Admin']);
-            return;
+        if ($old_userdata = $this->usermodel->get(['user_id' => $where['user_id']])) {
+            $old_userdata = $old_userdata[0];
+        }
+        // Return if not found
+        if (!$old_userdata) {
+            return json_encode(['response' => false, 'msg' => 'User not found']);
+        }
+        // Return if permission is invalid
+        if (!($_SESSION['user']['user_rol'] === 'masteradmin' || (
+                $_SESSION['user']['user_rol'] === 'admin' && (
+                    $old_userdata['user_rol'] === 'user' || $_SESSION['user']['user_id'] === $old_userdata['user_id']
+                )
+            )
+        )) {
+            return json_encode(['response' => false, 'msg' => 'You can only edit basic users or yourself.']);
         }
 
         $post = [];
         foreach ($_POST as $k => $v) {
-            $post[$k] = validate($v); // Clean and save $_POST variables
+            $post[$k] = trim($v);
         }
+        // Set default data if not set by post
         if (!isset($post['user_rol'])) $post['user_rol'] = $old_userdata['user_rol'];
         if (!isset($post['user_status'])) $post['user_status'] = $old_userdata['user_deleted'] === null ? 'active' : 'inactive';
 
@@ -122,18 +129,10 @@ class Admin extends BaseController
         //////////////////////////
         // Check status and rol //
         //////////////////////////
-        if (!($_SESSION['user']['user_rol'] === 'admin' && // False if the user updating data is admin and
-            ($post['user_status'] === 'inactive' && // is deleteting another user admin that is not himself
-                $old_userdata['user_rol'] === 'admin')
-        )) { // Set response if failure
-
-            if (!$this->canEditAdmin($old_userdata, $post)) {
-                $msgResponse['rol_status'] = 'This user is the last Admin,<br>promote another user to delete it or change its role';
-            }/* elseif (!$this->canEditAdmin($old_userdata, $post, 'masteradmin')) {
-                $msgResponse['rol_status'] = 'This user is the last Master Admin, <br>promote another user to delete it or change its role';
-            }*/
-        } else {
-            $msgResponse['rol_status'] = 'You cannot delete, promote or demote an Admin or a Master Admin';
+        if (!$this->canEditAdmin($old_userdata, $post)) {
+            return json_encode(['response' => false, 'msg' => 'This user is the last Admin,<br>promote another user to change its role or delete it']);
+        } elseif (!$this->canEditAdmin($old_userdata, $post, 'masteradmin')) {
+            return json_encode(['response' => false, 'msg' => 'This user is the last Master Admin, <br>promote another user change its role or to delete it']);
         }
 
         // Set rol and status if there was no failure response
@@ -154,11 +153,16 @@ class Admin extends BaseController
                     // Send confirmation email
                     // (new Account())->sendConfirmationEmail($data['email']);
                 }
-                echo json_encode(['response' => true, 'msg' => $msgResponse]);
-                return;
+                return json_encode(['response' => true, 'msg' => $msgResponse]);
             }
         }
+        return json_encode(['response' => false]);
+    }
 
-        echo json_encode(['response' => false]);
+    public function update_game(): string
+    {
+        $response = ['res' => false];
+
+        return json_encode($response);
     }
 }

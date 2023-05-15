@@ -130,83 +130,84 @@ class Account extends BaseController
     function updateProfile(): string
     {
         $error = '';
-        if (isset($_POST['fname'])) {
-            $newUsername = validate($_POST['username']);
-            $newFullName = validate($_POST['fname']);
-            $newEmail = validate($_POST['email']);
+        $newUsername = validate($_POST['username']);
+        $newFullName = validate($_POST['fname']);
+        $newEmail = validate($_POST['email']);
+        //
+        // Check if username and email are taken by another user
+        //
+        if ($newUsername !== '' && $newFullName !== '' && $newEmail !== '') {
+            // Save old email and old username to variables
+            $oldEmail = $_SESSION['user']['user_email'];
+            $oldUsername = $_SESSION['user']['user_username'];
+            if ( // Check if username or email are already taken
+                // Compare old username to new username
+                ($oldUsername !== $newUsername && $this->usermodel->get(['user_username' => $newUsername])) ||
+                // Compare old email to new email
+                ($oldEmail !== $newEmail && $this->usermodel->get(['user_email' => $newEmail]))
+            ) { // If one of them match, return an error
+                $error = 'The username or email are already in use.';
+            }
 
-            //
-            // Check if username and email are taken by another user
-            //
-            if ($newUsername !== '' && $newFullName !== '' && $newEmail !== '') {
-                // Save old email and old username to variables
-                $oldEmail = $_SESSION['user']['user_email'];
-                $oldUsername = $_SESSION['user']['user_username'];
-                if ( // Check if username or email are already taken
-                    // Compare old username to new username
-                    ($oldUsername !== $newUsername && $this->usermodel->get(['user_username' => $newUsername])) ||
-                    // Compare old email to new email
-                    ($oldEmail !== $newEmail && $this->usermodel->get(['user_email' => $newEmail]))
-                ) { // If one of them match, return an error
-                    return template('profile', ['error' => 'The username or email are already in use.']);
-                }
+            /* Begin::Filling up $data=[] */
 
-                /* Begin::Filling up $data=[] */
+            $data = [
+                'user_username' => $newUsername,
+                'user_fname' => $newFullName,
+                'user_email' => $newEmail
+            ];
+            // Unconfirm account if email was changed
+            if ($newEmail !== $oldEmail) $data['user_confirmed'] = null;
 
-                $data = [
-                    'user_username' => $newUsername,
-                    'user_fname' => $newFullName,
-                    'user_email' => $newEmail
-                ];
-                // Unconfirm account if email was changed
-                if ($newEmail !== $oldEmail) $data['user_confirmed'] = null;
-
-                if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === 0) {
-                    /* Begin::Upload new avatar */
-                    $img = upload_img('avatar', 'assets/media/avatars');
-                    if (preg_match('/[0-9]/', $img)) {
-                        $data['user_avatar'] = '/' . $img;
-                        $oldAvatar = $_SESSION['user']['user_avatar'];
-                        // Delete old file
-                        if ($oldAvatar !== $this->defaultAvatar && is_file(FCPATH . $oldAvatar)) {
-                            if (!unlink(FCPATH . $oldAvatar)) {
-                                $error = 'No se pudo borrar el avatar antiguo';
-                            }
+            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === 0) {
+                /* Begin::Upload new avatar */
+                $img = upload_img('avatar', 'assets/media/avatars');
+                if (preg_match('/[0-9]/', $img)) {
+                    $data['user_avatar'] = '/' . $img;
+                    $oldAvatar = $_SESSION['user']['user_avatar'];
+                    // Delete old file
+                    if ($oldAvatar !== $this->defaultAvatar && is_file(FCPATH . $oldAvatar)) {
+                        if (!unlink(FCPATH . $oldAvatar)) {
+                            $error = 'No se pudo borrar el avatar antiguo';
                         }
-                        // Return error if file was not uploaded
-                    } else return template('profile', ['error' => $img]);
-                    /* End::Upload new avatar */
-                }
+                    }
+                    // Return error if file was not uploaded
+                } else $error = $img;
+                /* End::Upload new avatar */
+            }
 
-                /* End::Filling up $data=[] */
+            /* End::Filling up $data=[] */
 
-                // Update user in Database
-                if ($this->usermodel->updt(
-                    $data, // data
-                    ['user_id' => $_SESSION['user']['user_id']] // where
-                // If successfull, update session
-                )) update_session($this->usermodel->get(['user_email' => $newEmail])[0]);
-                // Send confirmation account email if email was changed
-                if ($newEmail !== $oldEmail) {
-                    $email_response = $this->sendConfirmationEmail($newEmail, $newUsername);
-                    // Return error if email could not be sent
-                    $error = ($email_response === true)
-                        ? '<span class="fs-4">Your email was updated, an email has been sent for confirmation</span>'
-                        : ($email_response === false
-                            ? 'There was a problem adding the token'
-                            : 'Mail could not be sent');
-                }
-            } // Fields missing
-            else $error = 'Rellena todos los campos';
-        }
-        return template('profile', ['error' => $error]);
+            // Update user in Database
+            if ($this->usermodel->updt(
+                $data, // data
+                ['user_id' => $_SESSION['user']['user_id']] // where
+            // If successfull, update session
+            )) update_session($this->usermodel->get(['user_email' => $newEmail])[0]);
+            // Send confirmation account email if email was changed
+            if ($newEmail !== $oldEmail) {
+                $email_response = $this->sendConfirmationEmail($newEmail, $newUsername);
+                // Return error if email could not be sent
+                $error = ($email_response === true)
+                    ? '<span class="fs-4">Your email was updated, an email has been sent for confirmation</span>'
+                    : ($email_response === false
+                        ? 'There was a problem adding the token'
+                        : 'Mail could not be sent');
+            }
+        } // Fields missing
+        else $error = 'Rellena todos los campos';
+        return $error;
     }
 
-    function myIssues(): string
+    function profile_issues($tab = 'myprofile'): string
     {
-        $data = [];
+        $error = '';
+        if (isset($_POST['fname'])) {
+            $this->updateProfile();
+        }
+        $data = ['error' => $error, 'tab' => $tab];
         if ($issues = $this->issuesmodel->get(['issue_user' => $_SESSION['user']['user_username']])) $data['issues_list'] = $issues;
-        return template('issues', $data);
+        return template('user_profile/tabs_content', $data);
     }
 
     /**

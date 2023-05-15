@@ -85,7 +85,9 @@ function update_session($user): void
 
 function validate(string $str): string
 {
-    return htmlspecialchars(trim($str));
+    $str = trim($str);
+    if (preg_match('/script/', $str)) $str = '';
+    return $str;
 }
 
 function upload_img($formname, $target, $preferred_filename = null): string|bool

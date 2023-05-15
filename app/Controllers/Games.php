@@ -316,7 +316,7 @@ class Games extends BaseController
                 // Create DnD Sheet item
                 $t = new SheetDnD();
                 // Init data
-                $post = $t->__init(validate($itemName), validate($itemType));
+                $post = $t->__init($itemName, validate($itemType));
                 // Add editors and/or viewers
                 $post = $t->_edit_view($post);
                 $post = $t->_json_process($post);
@@ -365,9 +365,9 @@ class Games extends BaseController
     {
         $item = $this->journalmodel->get(['item_id' => $id], ['games' => 'game_id=item_id_game'])[0];
         return match ($_POST['item_type']) {
-            'character' => view('/pages/games/character_sheet', ['data' => $item]),
-            'handout' => view('/pages/games/handout_sheet', ['item' => $item]),
-            default => view('/pages/game/not_found_sheet'),
+            'character' => view('pages/games/DnD/character_sheet', ['data' => $item]),
+            'handout' => view('pages/games/DnD/handout_sheet', ['data' => $item]),
+            default => view('pages/game/not_found_sheet'),
         };
     }
 

@@ -31,8 +31,10 @@ class Draggable {
         this.pointers = document.querySelectorAll(p);
         this.zIndex = 2015;
         if (opt.zIndex) this.zIndex = opt.zIndex;
-        this.openers = null;
-        if (opt.open) this.openers = document.querySelectorAll(opt.open);
+        this.maximizers = null;
+        if (opt.max) this.maximizers = document.querySelectorAll(opt.max);
+        this.minimizers = null;
+        if (opt.min) this.minimizers = document.querySelectorAll(opt.min);
         this.closers = null;
         if (opt.close) this.closers = document.querySelectorAll(opt.close);
         this.pos = {};
@@ -68,20 +70,37 @@ class Draggable {
             this.pointers[i].ontouchstart = (e) => {
                 this.dragDown(this.containers[i], this.pointers[i], e);
             }
-            if (this.openers && this.openers.length === this.pointers.length) {
-                this.openers[i].onclick = (e) => {
-                    this.toggleTransition(this.containers[i], 'open');
+            if (this.maximizers && this.maximizers.length === this.pointers.length &&
+                this.minimizers && this.minimizers.length === this.pointers.length) {
+                this.maximizers[i].onclick = () => {
+                    this.toggleTransition(this.containers[i], this.pointers[i], 'maximize');
+                    this.maximizers[i].classList.add('d-none');
+                    this.minimizers[i].classList.remove('d-none');
                 }
-                this.openers[i].ontouchend = (e) => {
-                    this.toggleTransition(this.containers[i], 'open');
+                this.maximizers[i].ontouchend = () => {
+                    this.toggleTransition(this.containers[i], this.pointers[i], 'maximize');
+                    this.maximizers[i].classList.add('d-none');
+                    this.minimizers[i].classList.remove('d-none');
+                }
+                this.minimizers[i].onclick = () => {
+                    this.toggleTransition(this.containers[i], this.pointers[i], 'minimize');
+                    this.minimizers[i].classList.add('d-none');
+                    this.maximizers[i].classList.remove('d-none');
+                }
+                this.minimizers[i].ontouchend = () => {
+                    this.toggleTransition(this.containers[i], this.pointers[i], 'minimize');
+                    this.minimizers[i].classList.add('d-none');
+                    this.maximizers[i].classList.remove('d-none');
                 }
             }
             if (this.closers && this.closers.length === this.pointers.length) {
-                this.closers[i].onclick = (e) => {
-                    this.toggleTransition(this.containers[i], 'close');
+                this.closers[i].onclick = () => {
+                    this.pointers[i].remove();
+                    this.containers[i].remove();
                 }
-                this.closers[i].ontouchend = (e) => {
-                    this.toggleTransition(this.containers[i], 'close');
+                this.closers[i].ontouchend = () => {
+                    this.pointers[i].remove();
+                    this.containers[i].remove();
                 }
             }
         }
@@ -101,14 +120,22 @@ class Draggable {
         }
     }
 
-    toggleTransition = (c, mode) => {
-        c.style.transition = 'all 0.5s ease';
+    toggleTransition = (c, p, mode) => {
+        c.style.transition = 'all 0.3s ease';
         switch (mode) {
-            case 'open':
-                c.style.top = '1.5rem';
+            case 'maximize':
+                c.style.width = this.previousWidth + 'px';
+                c.style.height = this.previousHeight + 'px';
+                c.style.overflowY = 'auto';
+                c.style.resize = 'both';
                 break;
-            case 'close':
-                c.style.top = '100vh';
+            case 'minimize':
+                this.previousWidth = c.offsetWidth;
+                this.previousHeight = c.offsetHeight;
+                c.style.overflowY = 'hidden';
+                c.style.resize = 'none';
+                c.style.width = '250px';
+                c.style.height = p.offsetHeight + 'px';
                 break;
         }
         setTimeout(function () {
@@ -195,7 +222,6 @@ class Draggable {
      * This avoids the container from going outside the window
      */
     offLimits = (c) => {
-        return c.offsetTop - this.pos.y > window.innerHeight
-            || c.offsetLeft - this.pos.y > window.innerWidth;
+        return c.offsetTop - this.pos.y > window.innerHeight || c.offsetLeft - this.pos.y > window.innerWidth;
     }
 }

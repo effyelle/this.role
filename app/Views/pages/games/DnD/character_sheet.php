@@ -21,9 +21,11 @@
                     <!--Autofill-->
                 </div>
                 <div class="flex-row-wrap gap-5 align-items-end justify-content-end align-self-start">
-                    <button type="button" value="<?= $data['item_id'] ?? "" ?>"
-                            class="btn p-0 minmax-btn text-hover-dark">
-                        <i class="fa-solid fa-minus fs-3"></i>
+                    <button type="button" class="btn p-0 max-btn text-hover-dark d-none">
+                        <i class="fa-solid fa-window-maximize fs-3"></i>
+                    </button>
+                    <button type="button" class="btn p-0 min-btn text-hover-dark">
+                        <i class="fa-solid fa-window-minimize fs-3"></i>
                     </button>
                     <button type="button" value="<?= $data['item_id'] ?? "" ?>"
                             class="btn p-0 close_item-btn text-hover-dark">

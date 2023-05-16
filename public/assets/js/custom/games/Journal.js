@@ -32,21 +32,30 @@ class Journal {
         return ajax(this.url.get).done((data) => {
             // Checck data is not null
             if (data.results && typeof data.results === 'object' && data.results.length > 0) {
+                // If the length of both arrays is not the same, items have changed
+                // -> (Items have been added or deleted)
+                // If no new or deleted items, check if inner info has changed
                 if (data.results.length === Object.keys(this.items).length) {
-                    let itemsHaveChanged = false;
+                    // Run loop on results
                     for (let i in data.results) {
+                        // Save Database item
                         let dbItem = data.results[i];
+                        // Save its equal item from journal
                         let thisItem = this.items[i].info;
                         for (let j in dbItem) {
                             if (typeof thisItem[j] === 'object') thisItem[j] = JSON.stringify(thisItem[j]);
-                            if (dbItem[j] != thisItem[j] && !(dbItem[j] === null && thisItem[j] === 'null')) {
-                                console.log('Changed');
-                                itemsHaveChanged = true;
-                                break;
+                            // Compare their values
+                            if (dbItem[j] != thisItem[j] &&
+                                !(dbItem[j] === null && thisItem[j] === null) &&
+                                !(dbItem[j] === 'null' && thisItem[j] === 'null') &&
+                                !(dbItem[j] === null && thisItem[j] === 'null')) {
+                                // Save new values into this.items.info
+                                this.items[i].info[j] = dbItem[j];
                             }
                         }
                     }
-                    if (!itemsHaveChanged) return;
+                    console.log('No new data');
+                    return;
                 }
                 q('#' + this.container)[0].innerHTML = '';
                 this.items = {}
@@ -55,6 +64,8 @@ class Journal {
                 this.saveResults(data);
                 // Show list
                 this.formatJournalItems();
+                // Reactivate DOM items listeners
+                this.setItemsOpening();
             } else {
                 this.items = {}
                 console.log("No journal items in this game yet");
@@ -68,50 +79,6 @@ class Journal {
             //* Init journal for admin *//
             console.log("Error: ", e.responseText);
         });
-    }
-
-    saveResults(data) {
-        // Iterate results
-        for (let item of data.results) {
-            let viewer = false;
-            let editor = false;
-            // Check if viewer
-            if (item.item_viewers) {
-                item.item_viewers = JSON.parse(item.item_viewers);
-                for (let i of item.item_viewers) {
-                    if (i == session.user_id) viewer = true;
-                }
-            }
-            // Check if editor
-            if (item.item_editors) {
-                item.item_editors = JSON.parse(item.item_editors);
-                for (let i of item.item_editors) {
-                    if (i == session.user_id) editor = true;
-                }
-            }
-            // Save if conditions are met
-            if (session.user_id === dbGame.game_creator || viewer || editor) {
-                // Save a DND sheet for each item
-                this.items[Object.keys(this.items).length] = new this.SheetDnD(this.sheetsContainer, {
-                    itemInfo: item,
-                    folder: this.folder,
-                });
-            }
-        }
-    }
-
-    formatJournalItems() {
-        this.chatSelect = (item) => {
-            if (!this.select) return;
-            this.select.innerHTML += '<option value="' + item.item_id + '">' + item.item_name + '</option>';
-        }
-        for (let i in this.items) {
-            let item = this.items[i].info;
-            // Journal list
-            this.journalList(item);
-            // Select for chat
-            if (item.item_type === 'character') this.chatSelect(item);
-        }
     }
 
     loadAdminSelect() {
@@ -306,7 +273,51 @@ class Journal {
         //* end::Delete item *//
     }
 
-    journalList(item) {
+    saveResults(data) {
+        // Iterate results
+        for (let item of data.results) {
+            let viewer = false;
+            let editor = false;
+            // Check if viewer
+            if (item.item_viewers) {
+                item.item_viewers = JSON.parse(item.item_viewers);
+                for (let i of item.item_viewers) {
+                    if (i == session.user_id) viewer = true;
+                }
+            }
+            // Check if editor
+            if (item.item_editors) {
+                item.item_editors = JSON.parse(item.item_editors);
+                for (let i of item.item_editors) {
+                    if (i == session.user_id) editor = true;
+                }
+            }
+            // Save if conditions are met
+            if (session.user_id === dbGame.game_creator || viewer || editor) {
+                // Save a DND sheet for each item
+                this.items[Object.keys(this.items).length] = new this.SheetDnD(this.sheetsContainer, {
+                    itemInfo: item,
+                    folder: this.folder,
+                });
+            }
+        }
+    }
+
+    formatJournalItems() {
+        this.chatSelect = (item) => {
+            if (!this.select) return;
+            this.select.innerHTML += '<option value="' + item.item_id + '">' + item.item_name + '</option>';
+        }
+        for (let i in this.items) {
+            let item = this.items[i].info;
+            // Journal list
+            this.addItemBtnToList(item);
+            // Select for chat
+            if (item.item_type === 'character') this.chatSelect(item);
+        }
+    }
+
+    addItemBtnToList(item) {
         // Check image data, if it does not exist, put a default one
         let icon = !urlExists(this.folder + item.item_icon)
             ? this.defaultIcon
@@ -337,6 +348,42 @@ class Journal {
             }
         }
         return false;
+    }
+
+    setItemsOpening() {
+        // Save button items from DOM
+        this.itemsDOM = q('.' + this.itemClass + ' button.menu-link');
+        // Check data and items have the same length -> means they have been created accordingly
+        if (this.itemsDOM.length === Object.keys(this.items).length) {
+            // Iterate items
+            for (let itemDOM of this.itemsDOM) {
+                let item = this.searchItem(itemDOM.value);
+                // Add a click listener to each item to create a new modal
+                itemDOM.click(() => {
+                    console.log(itemDOM)
+                    // Get item info from Journal
+                    let item = this.searchItem(itemDOM.value);
+                    if (!item || item === {}) return;
+                    // Return if item has already been opened
+                    if (q('#' + item.draggableContainerId).length !== 0) return;
+                    ajax('/app/games_ajax/sheet/' + item.info.item_id, {item_type: item.info.item_type}, 'post', 'text').done((txt) => {
+                        item.openItem(txt);
+                        new Draggable('.' + item.draggableContainerClass, '.cursor-move', {
+                            max: '.max-btn',
+                            min: '.min-btn',
+                            close: '.close_item-btn'
+                        });
+                        const itemsOpened = q('.' + item.draggableContainerClass);
+                        console.log(itemsOpened);
+                        for (let itemOpened of itemsOpened) {
+                            console.log(itemOpened)
+                        }
+                    }).fail((e) => {
+                        console.log(e.responseText);
+                    });
+                });
+            }
+        }
     }
 
     SheetDnD = function (id, params = {}) {
@@ -467,82 +514,44 @@ class Journal {
         }
     }
 
-    customSheets(data) {
-        // Data received is all items for this game,
-        // which is what we asked for through AJAX
-        // Save button items from DOM
-        let itemsDOM = q('.' + this.itemClass + ' button.menu-link');
-        // Check data and items have the same length -> means they have been created accordingly
-        if (itemsDOM.length === Object.keys(this.items).length) {
-            // Iterate items
-            for (let itemDOM of itemsDOM) {
-                // Add a click listener to each item to create a new modal
-
-                //itemDOM.click(this.setItemsClick);
-            }
-        }
-    }
-
-    getSheetHTML = (info) => {
-        return $.ajax({
-            type: "post",
-            url: "/app/games_ajax/sheet/" + info.item_id,
-            data: {item_type: info.item_type},
-            dataType: "text",
-            success: (data) => {
-                return data;
-            },
-            error: (e) => {
-                console.log(e.responseText)
-                console.log("Error", e);
-            }
-        });
-    }
-
 // This needs to change to reset all possible already opened items
     setItemsClick() {
-        // Get item info from Journal
-        let item = false;
-        for (let i in this.items) {
-            if (this.items[i].info.item_id === this.value) item = this.items[i];
-        }
-        if (item) {
-            // Check if container doesn't exist already
-            if (q('#' + item.draggableContainerId).length === 0) {
-                // If not, create it
-                getSheetHTML(item.info).done((htmlText) => {
-                    item.openItem(htmlText);
-                    // Check it was created correctly
-                    if (q('#' + item.draggableContainerId).length !== 1) {
-                        // Return message error if length is not 1
-                        $('.modal_error_response').html('Item could not be opened');
-                        $('#modal_error-toggle').click();
-                    }
-                    // * Make items dragagble * //
-                    new Draggable('.journal_item_modal', '.journal_item_modal .cursor-move');
-                    // * Set other interactions * //
-                    // Save the necessary html objects to make sheet interactable
-                    let modals = q('.journal_item_modal');
-                    let bootsModal = q('.modal.manage_class_modal');
-                    let closeBtns = q('.journal_item_modal .close_item-btn');
-                    let cursorMove = q('.journal_item_modal .cursor-move');
-                    // * Check they have the correct lengths * //
-                    if (!(modals.length === closeBtns.length && closeBtns.length === cursorMove.length)) {
-                        return;
-                    }
+        // Check if container doesn't exist already
 
-                    // * Iterate through modals and buttons * //
-                    for (let i = 0; i < closeBtns.length; i++) {
-                        // * Add a close event * //
-                        closeBtns[i].click(() => {
-                            modals[i].remove();
-                            bootsModal[i].remove();
-                        });
-                    }
+        if (q('#' + item.draggableContainerId).length === 0) {
+            // If not, create it
+            getSheetHTML(item.info).done((htmlText) => {
+                item.openItem(htmlText);
+                // Check it was created correctly
+                if (q('#' + item.draggableContainerId).length !== 1) {
+                    // Return message error if length is not 1
+                    $('.modal_error_response').html('Item could not be opened');
+                    $('#modal_error-toggle').click();
+                }
+                // * Make items dragagble * //
+                new Draggable('.journal_item_modal', '.journal_item_modal .cursor-move');
+                // * Set other interactions * //
+                // Save the necessary html objects to make sheet interactable
+                let modals = q('.journal_item_modal');
+                let bootsModal = q('.modal.manage_class_modal');
+                let closeBtns = q('.journal_item_modal .close_item-btn');
+                let cursorMove = q('.journal_item_modal .cursor-move');
+                // * Check they have the correct lengths * //
+                if (!(modals.length === closeBtns.length && closeBtns.length === cursorMove.length)) {
+                    return;
+                }
 
-                    listenToSheetChanges(modals);
-                });
-            }
+                // * Iterate through modals and buttons * //
+                for (let i = 0; i < closeBtns.length; i++) {
+                    // * Add a close event * //
+                    closeBtns[i].click(() => {
+                        modals[i].remove();
+                        bootsModal[i].remove();
+                    });
+                }
+
+                listenToSheetChanges(modals);
+            });
         }
     }
 

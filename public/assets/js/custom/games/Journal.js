@@ -20,6 +20,7 @@ class Journal {
         this.createItemBtn = q('#save_journal_item-btn')[0];
         this.toggleEditItem = q('#edit_item-btn')[0];
         this.deleteItemBtn = q('#delete_item-btn')[0];
+        this.gameBoard = q('.this-game')[0];
         this.map = null;
         this.initJournal().done(() => {
             if (this.adminParent) this.adminJournal();
@@ -27,7 +28,39 @@ class Journal {
     }
 
     initJournal(board = null) {
-        if (board) this.map = board.map;
+        this.dataHasChanged = (data, board) => {
+            // Run loop on results
+            if (!this.items) return true;
+            for (let i in data.results) {
+                // Save Database item
+                let dbItem = data.results[i];
+                // Save its equal item from journal
+                let thisItem = this.items[i].info;
+                for (let j in dbItem) {
+                    if (typeof thisItem[j] === 'object') thisItem[j] = JSON.stringify(thisItem[j]);
+                    // Compare their values
+                    if (dbItem[j] != thisItem[j] &&
+                        !(dbItem[j] === null && thisItem[j] === null) &&
+                        !(dbItem[j] === 'null' && thisItem[j] === 'null') &&
+                        !(dbItem[j] === null && thisItem[j] === 'null')) {
+                        // Save new values into this.items.info
+                        this.items[i].info[j] = dbItem[j];
+                    }
+                }
+            }
+            // Check layers
+            if (board) {
+                if (!this.map || Object.keys(this.map).length !== Object.keys(board.map).length) {
+                    this.map = board.map;
+                    return true;
+                }
+                for (let i in this.map) {
+                    if (this.map[i] != board.map[i]) {
+                        return true;
+                    }
+                }
+            }
+        }
         // If ajax, init journal item creation from url
         // Get data through ajax
         return ajax(this.url.get).done((data) => {
@@ -37,26 +70,7 @@ class Journal {
                 // -> (Items have been added or deleted)
                 // If no new or deleted items, check if inner info has changed
                 if (data.results.length === Object.keys(this.items).length) {
-                    // Run loop on results
-                    for (let i in data.results) {
-                        // Save Database item
-                        let dbItem = data.results[i];
-                        // Save its equal item from journal
-                        let thisItem = this.items[i].info;
-                        for (let j in dbItem) {
-                            if (typeof thisItem[j] === 'object') thisItem[j] = JSON.stringify(thisItem[j]);
-                            // Compare their values
-                            if (dbItem[j] != thisItem[j] &&
-                                !(dbItem[j] === null && thisItem[j] === null) &&
-                                !(dbItem[j] === 'null' && thisItem[j] === 'null') &&
-                                !(dbItem[j] === null && thisItem[j] === 'null')) {
-                                // Save new values into this.items.info
-                                this.items[i].info[j] = dbItem[j];
-                            }
-                        }
-                    }
-                    console.log('No new data');
-                    return;
+                    if (!this.dataHasChanged(data, board)) return;
                 }
                 q('#' + this.container)[0].innerHTML = '';
                 this.items = {}
@@ -65,6 +79,8 @@ class Journal {
                 this.saveResults(data);
                 // Show list
                 this.formatJournalItems();
+                // Add tokens to layer
+                if (this.map) this.loadTokens();
                 // Reactivate DOM items listeners
                 this.setItemsOpening();
             } else {
@@ -318,6 +334,27 @@ class Journal {
         }
     }
 
+    loadTokens() {
+        // Erase all
+        for (let child of this.gameBoard.children) {
+            if (child.classList.contains('symbol')) child.remove();
+        }
+        if (!this.map.selectedLayer()) return;
+        const selectedLayer = this.map.layers[this.map.selectedLayer()];
+        let tokens = JSON.parse(selectedLayer.layer_tokens);
+        for (let i in tokens) {
+            let item = this.searchItem(i);
+            this.gameBoard.innerHTML += this.tokenFormatting(item);
+        }
+        this.tokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
+        for (let i in tokens) {
+            let item = this.searchItem(i);
+            let newToken = this.tokensDraggable.findContainer('token_' + item.info.item_id);
+            newToken.setAxis(parseInt(tokens[i].left) + newToken.offsetWidth, parseInt(tokens[i].top) + newToken.offsetHeight);
+        }
+        this.hearTokenThings();
+    }
+
     addItemBtnToList(item) {
         // Check image data, if it does not exist, put a default one
         q('#' + this.container)[0].innerHTML += '' +
@@ -358,6 +395,7 @@ class Journal {
                 let item = this.searchItem(itemOpenerBtn.value);
                 // Add a click listener to each item to create a new modal
                 itemOpenerBtn.click(() => {
+                    console.log(itemOpenerBtn)
                     this.setDraggableContainers(itemOpenerBtn);
                 });
                 itemOpenerBtn.addEventListener('drag', (e) => {
@@ -403,7 +441,7 @@ class Journal {
                 $('#modal_error-toggle').click();
                 return;
             }
-            new Draggable('.' + item.draggableContainerClass, '.cursor-move', {
+            this.journalDraggable = new Draggable('.' + item.draggableContainerClass, '.' + item.draggableContainerClass + ' .cursor-move', {
                 max: '.max-btn',
                 min: '.min-btn',
                 close: '.close_item-btn',
@@ -415,6 +453,13 @@ class Journal {
         });
     }
 
+    tokenFormatting = (item) => {
+        return '<div id="token_' + item.info.item_id + '" style="top: 100vh; left: 100vw;"' +
+            ' class="symbol symbol-50px circle position-absolute cursor-move">' +
+            '<span class="symbol-label circle" style="background-image: url(' + item.icon() + ')"></span>' +
+            '</div>';
+    }
+
     setDraggableTokens(e) {
         const offsetTop = 110; // Pixels
         const offsetStart = 374; // Pixels
@@ -422,38 +467,44 @@ class Journal {
             // Return if there is no layer selected
             if (!(this.map && this.map.selectedLayer())) return;
             let item = this.searchItem(e.target.value);
-            if (r.pageX > offsetStart && r.pageY > offsetTop) {
+            let layertokens = JSON.parse(this.map.layers[this.map.selectedLayer()].layer_tokens);
+            for (let i in layertokens) {
+                // If token already exists, do not ad another one
+                if (i === item.info.item_id) return;
+            }
 
-                // Check if token has already been added
+            if (r.pageX > offsetStart && r.pageY > offsetTop) {
+                // Check layer, if it has the token already
+                //
                 if (q('#token_' + item.info.item_id).length !== 0) return;
-                q('.this-game')[0]
-                    .innerHTML += '<div id="token_' + item.info.item_id + '" style="top: 1rem; left: 1rem;"' +
-                    ' class="symbol symbol-50px circle position-absolute cursor-move">' +
-                    '<span class="symbol-label circle" style="background-image: url(' + item.icon() + ')"></span>' +
-                    '</div>';
-                let tokens = new Draggable('.symbol.cursor-move');
-                this.hearTokenThings(tokens);
+                // Add token to game board
+                this.gameBoard.innerHTML += this.tokenFormatting(item);
+                this.tokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
+                let newToken = this.tokensDraggable.findContainer('token_' + item.info.item_id);
+                newToken.setAxis(r.pageX - offsetStart, r.pageY - offsetTop);
+                this.hearTokenThings();
             }
         }
     }
 
     saveToken(token) {
         let itemID = token.id.charAt(token.id.length - 1);
+        console.log(itemID)
         let post = {
             top: token.offsetTop,
             left: token.offsetLeft
         }
-        ajax('/app/games_ajax/save_token/' + itemID, post).done((data) => {
+        ajax('/app/games_ajax/save_token/' + this.map.selectedLayer(), {coords: post, item_id: itemID}).done((data) => {
             console.log(data)
         });
     }
 
-    hearTokenThings(tokens) {
-        for (let token of tokens.containers) {
+    hearTokenThings() {
+        for (let token of this.tokensDraggable.containers) {
             this.saveToken(token);
             token.addEventListener('mouseup', () => {
                 let tokenSelected = false;
-                if (!tokens.hasMoved) tokenSelected = true;
+                if (!this.tokensDraggable.hasMoved) tokenSelected = true;
                 this.saveToken(token);
 
                 //* Remove Token *//

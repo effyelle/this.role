@@ -43,6 +43,8 @@ class Draggable {
                 this.closeTargets[i] = document.querySelectorAll(opt.closeTargets[i]);
             }
         }
+        if (opt.x) this.x = opt.x;
+        if (opt.y) this.y = opt.y;
         this.pos = {};
         if (this.pointers.length > 0 && this.pointers.length === this.containers.length) {
             this.buildDraggable();
@@ -110,6 +112,10 @@ class Draggable {
                     this.close(i);
                 }
             }
+            this.containers[i].setAxis = (x, y) => {
+                this.containers[i].style.left = (x - this.containers[i].offsetWidth/2) + 'px';
+                this.containers[i].style.top = (y - this.containers[i].offsetHeight/2) + 'px';
+            }
         }
         /*
          * / * RESET COORDINATES ON PAGE RESIZE * / *
@@ -124,6 +130,12 @@ class Draggable {
                     c.style.left = '15px';
                 }
             }
+        }
+    }
+
+    findContainer(id) {
+        for (let c of this.containers) {
+            if (c.id === id) return c;
         }
     }
 

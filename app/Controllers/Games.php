@@ -575,6 +575,22 @@ class Games extends BaseController
 
     function save_token($id): string
     {
-        return json_encode(['id' => $id, 'post' => $_POST]);
+        $data = [
+            'response' => false,
+            'msg' => 'Missing data',
+        ];
+        if (isset($_POST['coords']) && isset($_POST['item_id'])) {
+            $data['msg'] = 'Layer could not be obtained';
+            $data['id']=$id;
+            if ($layer = $this->layermodel->get(['layer_id' => $id])) {
+                $layertokens = json_decode($layer[0]['layer_tokens'], true);
+                $layertokens[$_POST['item_id']] = $_POST['coords'];
+                $data['msg'] = 'Layer could not be updated';
+                if ($this->layermodel->updt(['layer_tokens' => json_encode($layertokens)], ['layer_id' => $id])) {
+                    $data = ['response' => true, 'msg' => null];
+                }
+            }
+        }
+        return json_encode($data);
     }
 }

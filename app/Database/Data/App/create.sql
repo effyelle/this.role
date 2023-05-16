@@ -37,7 +37,7 @@ CREATE TABLE games(
 	game_title VARCHAR(50),
 	game_details LONGTEXT,
 	game_icon VARCHAR(200),
-	game_layer_selected INT UNSIGNED,
+	game_layer_selected INT DEFAULT -1,
 	game_folder VARCHAR(200),
 	game_gallery JSON,
 	game_deleted DATETIME DEFAULT NULL,

@@ -32,9 +32,9 @@ class GameMap {
     }
 
     selectedLayer() {
-        if (this.game.game_layer_selected === null ||
-            this.game.game_layer_selected === 'null' ||
-            this.game.game_layer_selected == 0) return false;
+        if (this.game.game_layer_selected == null ||
+            this.game.game_layer_selected == 'null' ||
+            this.game.game_layer_selected == -1) return false;
         return this.game.game_layer_selected;
     }
 

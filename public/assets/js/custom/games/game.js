@@ -100,17 +100,21 @@ function initGame(dbGame, session) {
         const deleteMap = () => {
             // Select another or null if erasing selected layer
             console.log(this.adminSelect.value === board.map.selectedLayer())
-            if (this.adminSelect.value === board.map.selectedLayer()) {
+            console.log(this.adminSelect.value)
+            console.log(board.map.selectedLayer())
+            let selectedValue = this.adminSelect.value;
+            if (selectedValue === board.map.selectedLayer()) {
+                let anotherLayerFound = false;
                 for (let i in board.map.layers) {
                     let layer = board.map.layers[i];
                     if (layer.layer_id != board.map.selectedLayer()) {
                         selectMap(layer.layer_id);
-                        return;
+                        anotherLayerFound = true;
                     }
                 }
-                selectMap("null");
+                if (!anotherLayerFound) selectMap(-1);
             }
-            ajax('/app/games_ajax/delete_layer/' + this.adminSelect.value);
+            ajax('/app/games_ajax/delete_layer/' + selectedValue);
         }
 
         this.btn.click(newMap);

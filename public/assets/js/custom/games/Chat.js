@@ -48,14 +48,18 @@ class Chat {
         let tooltip = '';
         for (let r of rolls) {
             rollSum += r;
-            tooltip += r + '+';
+            console.log(r == dice.charAt(1))
+            tooltip += '<span class="' + (r == 1 ? 'text-danger' : (r == dice.charAt(1) ? 'text-primary' : 'text-muted')) + '">' + r + '</span> + ';
         }
-        tooltip = tooltip.substring(0, tooltip.length - 1);
-        return '<div class="flex-column justify-content-center align-items-center gap-1">' +
+        // title="(' + tooltip + ')" data-bs-toggle="tooltip" data-bs-trigger="hover"
+        // data-bs-dismiss="mouseout" data-bs-placement="right" data-bs-original-title="(' + tooltip + ')"
+        console.log(tooltip)
+        tooltip = tooltip.substring(0, tooltip.length - 3);
+        console.log(tooltip)
+        return '<div class="flex-column justify-content-center align-items-center gap-1 text-center">' +
             '<em>Rolling ' + n + dice + '</em>' +
-            '<a class="menu-link fw-bolder fs-4" title="(' + tooltip + ')" data-bs-toggle="tooltip" data-bs-trigger="hover"' +
-            ' data-bs-dismiss="mouseout" data-bs-placement="right" data-bs-original-title="(' + tooltip + ')">' + rollSum +
-            '</a>' +
+            '<a class="menu-link fw-bolder fs-4">' + rollSum + '</a>' +
+            '<em class="flex-row-wrap justify-content-center align-items-center gap-1 px-5">[ ' + tooltip + ' ]</em>' +
             '</div>';
     }
 
@@ -117,9 +121,8 @@ class Chat {
     getChat() {
         return ajax(this.url.get).done((data) => {
             if (data.response && data.msgs) {
-                if (this.messages.length !== data.msgs.length) {
-                    this.messages = data.msgs;
-                }
+                if (Object.keys(this.messages).length === data.msgs.length) return;
+                this.messages = data.msgs;
             }
             this.formatMessages();
         });

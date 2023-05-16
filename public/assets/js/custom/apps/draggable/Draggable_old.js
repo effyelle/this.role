@@ -12,35 +12,22 @@ class Draggable {
      * Receive two class identificators to init events for a NodeList of HTML elements.
      * Must receive it in the querySelectorAll format.
      *
-     * @param c (string) -Container to be moved
-     * @param p (string) -Element that triggers the movement
-     * @param opt (object) -You can set zIndex so that it fits your DOM
-     *
-     * - opt.zIndex (string) -> Sets a zIndex to work with
-     * - opt.open (string) -> Sets openers (HTML Objects) to click and show the draggable
-     * - ope.close (string) -> Sets closers (HTML Objects) to click and hide the draggable
+     * @param c -Container to be moved
+     * @param p -Element that triggers the movement
+     * @param options -You can set zIndex so that it fits your DOM.
      *
      * Add any other settings you might need in options and use them freely.
      *
      * If trigger element is not given, container itself will be the trigger
      */
-    constructor(c, p, opt = {}) {
-        this.error = 1;
+    constructor(c, p, options = {}) {
         if (!p) p = c;
         this.containers = document.querySelectorAll(c);
         this.pointers = document.querySelectorAll(p);
         this.zIndex = 2015;
-        if (opt.zIndex) this.zIndex = opt.zIndex;
-        this.openers = null;
-        if (opt.open) this.openers = document.querySelectorAll(opt.open);
-        this.closers = null;
-        if (opt.close) this.closers = document.querySelectorAll(opt.close);
+        if (options.zIndex) this.zIndex = options.zIndex;
         this.pos = {};
-        if (this.pointers.length > 0 && this.pointers.length === this.containers.length) {
-            this.buildDraggable();
-            return;
-        }
-        this.error = 0;
+        this.buildDraggable();
     }
 
     /**
@@ -68,22 +55,6 @@ class Draggable {
             this.pointers[i].ontouchstart = (e) => {
                 this.dragDown(this.containers[i], this.pointers[i], e);
             }
-            if (this.openers && this.openers.length === this.pointers.length) {
-                this.openers[i].onclick = (e) => {
-                    this.toggleTransition(this.containers[i], 'open');
-                }
-                this.openers[i].ontouchend = (e) => {
-                    this.toggleTransition(this.containers[i], 'open');
-                }
-            }
-            if (this.closers && this.closers.length === this.pointers.length) {
-                this.closers[i].onclick = (e) => {
-                    this.toggleTransition(this.containers[i], 'close');
-                }
-                this.closers[i].ontouchend = (e) => {
-                    this.toggleTransition(this.containers[i], 'close');
-                }
-            }
         }
         /*
          * / * RESET COORDINATES ON PAGE RESIZE * / *
@@ -99,21 +70,6 @@ class Draggable {
                 }
             }
         }
-    }
-
-    toggleTransition = (c, mode) => {
-        c.style.transition = 'all 0.5s ease';
-        switch (mode) {
-            case 'open':
-                c.style.top = '1.5rem';
-                break;
-            case 'close':
-                c.style.top = '100vh';
-                break;
-        }
-        setTimeout(function () {
-            c.style.transition = 'none';
-        }, 500);
     }
 
     zIndexSwitch = (c) => {

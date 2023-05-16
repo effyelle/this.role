@@ -72,14 +72,17 @@
 
                     <!--begin::Journal-->
                     <div id="journal_container" class="tab-pane fade">
-                        <div class="aside-footer d-flex flex-column py-3 px-5">
-                            <div id="journal" data-kt-menu="true"
-                                 class="menu menu-column menu-rounded fw-bold fs-7 gap-2 mt-3">
+                        <div class="aside-footer d-flex flex-column py-3">
+                            <div data-kt-menu="true"
+                                 class="menu menu-column menu-rounded fw-bold fs-7 gap-2 mt-3 px-5">
                                 <!--begin::Title-->
                                 <div class="menu-item">
                                     <span class="fs-5 text-dark">Welcome to your journal!</span>
                                 </div>
                                 <!--end::Title-->
+                                <!--begin::Journal JS-->
+                                <div id="journal" class="menu-item"></div>
+                                <!--end::Journal JS-->
                                 <!--begin::Separator-->
                                 <div class="menu-item">
                                     <div class="menu-content p-0">

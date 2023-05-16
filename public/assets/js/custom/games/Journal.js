@@ -11,45 +11,61 @@ class Journal {
         this.sheetsContainer = 'draggable-modals_container';
         this.defaultIcon = '/assets/media/games/blank.png';
         this.select = q('#charsheet_selected')[0];
-        this.items = {
-            list: {},
-            length: 0
-        }
+        this.items = {}
         // Init journal
-        // this.init();
         this.adminParent = q('#modal_journal')[0];
+        this.selectItem = q('#change_item')[0];
+        this.includePLayers = q('#include_players')[0];
+        this.itemType = q('#item_type')[0];
+        this.toggleCreateItem = q('#modal_journal-toggle')[0];
+        this.createItemBtn = q('#save_journal_item-btn')[0];
+        this.toggleEditItem = q('#edit_item-btn')[0];
+        this.deleteItemBtn = q('#delete_item-btn')[0];
+        this.initJournal().done(() => {
+            if (this.adminParent) this.adminJournal();
+        });
     }
 
-    init() {
+    initJournal() {
         // If ajax, init journal item creation from url
         // Get data through ajax
-        ajax(this.url.get).done((data) => {
+        return ajax(this.url.get).done((data) => {
             // Checck data is not null
             if (data.results && typeof data.results === 'object' && data.results.length > 0) {
-                if (data.results.length === this.items.length) {
-                    // Check if data inside fields changed
-                    console.log('No new items');
-                    return;
+                if (data.results.length === Object.keys(this.items).length) {
+                    let itemsHaveChanged = false;
+                    for (let i in data.results) {
+                        let dbItem = data.results[i];
+                        let thisItem = this.items[i].info;
+                        for (let j in dbItem) {
+                            if (typeof thisItem[j] === 'object') thisItem[j] = JSON.stringify(thisItem[j]);
+                            if (dbItem[j] != thisItem[j] && !(dbItem[j] === null && thisItem[j] === 'null')) {
+                                console.log('Changed');
+                                itemsHaveChanged = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!itemsHaveChanged) return;
                 }
-                $('.' + this.itemClass).remove();
-                this.items = {
-                    list: {},
-                    length: 0
-                }
+                q('#' + this.container)[0].innerHTML = '';
+                this.items = {}
                 console.log('New items or deleted items');
-                //* Save items into this.items.list *//
+                //* Save items into this.items *//
                 this.saveResults(data);
                 // Show list
                 this.formatJournalItems();
             } else {
+                this.items = {}
                 console.log("No journal items in this game yet");
             }
+            // Format admin select
+            if (this.adminParent) this.loadAdminSelect();
             //* Init journal for admin *//
-            if (this.adminParent) this.adminJournal();
             this.opt.onLoad(data);
+            return data;
         }).fail((e) => {
             //* Init journal for admin *//
-            if (this.adminParent) this.adminJournal();
             console.log("Error: ", e.responseText);
         });
     }
@@ -76,11 +92,10 @@ class Journal {
             // Save if conditions are met
             if (session.user_id === dbGame.game_creator || viewer || editor) {
                 // Save a DND sheet for each item
-                this.items.list[this.items.length] = new this.SheetDnD(this.sheetsContainer, {
+                this.items[Object.keys(this.items).length] = new this.SheetDnD(this.sheetsContainer, {
                     itemInfo: item,
                     folder: this.folder,
                 });
-                this.items.length++;
             }
         }
     }
@@ -90,8 +105,8 @@ class Journal {
             if (!this.select) return;
             this.select.innerHTML += '<option value="' + item.item_id + '">' + item.item_name + '</option>';
         }
-        for (let i in this.items.list) {
-            let item = this.items.list[i].info;
+        for (let i in this.items) {
+            let item = this.items[i].info;
             // Journal list
             this.journalList(item);
             // Select for chat
@@ -99,26 +114,32 @@ class Journal {
         }
     }
 
-    adminJournal = () => {
+    loadAdminSelect() {
         // * begin::Select Items * //
-        this.selectItem = q('#change_item')[0];
         this.loadAdminItems = () => {
-            if (this.items.length > 0) {
+            if (Object.keys(this.items).length > 0) {
                 this.selectItem.innerHTML = '';
-                for (let i in this.items.list) {
-                    let item = this.items.list[i].info;
+                for (let i in this.items) {
+                    let item = this.items[i].info;
                     this.selectItem.innerHTML += '<option value="' + item.item_id + '">' + item.item_name + '</option>';
                 }
+                // Show buttons
+                this.toggleEditItem.removeClass('d-none');
+                this.deleteItemBtn.removeClass('d-none');
                 return;
             }
             this.selectItem.innerHTML = '<option value="-1" disabled selected>No journal items available</option>';
+            // Hide buttons
+            console.log('here')
+            this.toggleEditItem.addClass('d-none');
+            this.deleteItemBtn.addClass('d-none');
         }
         if (this.selectItem) this.loadAdminItems();
         // * end::Select Items * //
+    }
 
+    adminJournal() {
         // * begin::Check/Uncheck modal viewers/editors checkboxes * //
-        this.includePLayers = q('#include_players')[0];
-        this.itemType = q('#item_type')[0];
         this.switchIncludePlayers = () => {
             let can_see = $('.can_see-can_edit .can_see');
             let can_edit = $('.can_see-can_edit .can_edit');
@@ -145,8 +166,6 @@ class Journal {
         // * end::Check/Uncheck modal viewers/editors checkboxes * //
 
         // * begin::Empty modal * //
-        this.toggleCreateItem = q('#modal_journal-toggle')[0];
-        this.createItemBtn = q('#save_journal_item-btn')[0];
         this.emptyJournalModal = () => {
             q('#modal_journal .modal-header h4')[0].innerHTML = 'Add Journal Item';
             this.createItemBtn.value = "";
@@ -163,7 +182,6 @@ class Journal {
         // * end::Empty modal * //
 
         // * begin::Fill modal * //
-        this.toggleEditItem = q('#edit_item-btn')[0];
         this.loadViewersEditors = (item) => {
             let viewers = item.item_viewers;
             let editors = item.item_editors;
@@ -207,14 +225,10 @@ class Journal {
             // Fill item data -> Viewers/Editors
             if (q('.can_see-can_edit')[0]) this.loadViewersEditors(item.info);
         }
-        if (this.toggleEditItem && this.selectItem && this.items.length > 0) {
-            this.toggleEditItem.removeClass('d-none');
-            this.toggleEditItem.removeEventListener('click', this.fillJournalModal);
+        if (this.toggleEditItem && this.selectItem && Object.keys(this.items).length > 0) {
             this.toggleEditItem.click(() => {
                 this.fillJournalModal();
             });
-        } else {
-            this.toggleEditItem.addClass('d-none');
         }
         // * end::Fill modal * //
 
@@ -269,13 +283,10 @@ class Journal {
         // * end::Create item * //
 
         //* begin::Delete item *//
-        this.deleteItemBtn = q('#delete_item-btn')[0];
         this.deleteJournalItem = () => {
             ajax('/app/games_ajax/delete_journal_item/' + this.selectItem.value, this.getJournalModalForm())
                 .done((data) => {
                     if (data.response) {
-                        // Reload journall
-                        this.reload();
                         // Dismiss journal modal
                         $('.modal_success_response').html(data.msg);
                         $('#modal_success-toggle').click();
@@ -287,14 +298,10 @@ class Journal {
                 console.log("Error: ", e.responseText);
             });
         }
-        if (this.deleteItemBtn && this.items.length > 0) {
-            this.deleteItemBtn.removeClass('d-none');
-            this.deleteItemBtn.removeEventListener('click', this.deleteJournalItem);
+        if (this.selectItem && this.deleteItemBtn && Object.keys(this.items).length > 0) {
             this.deleteItemBtn.click(() => {
                 openConfirmation(this.deleteJournalItem);
             });
-        } else {
-            this.deleteItemBtn.addClass('d-none');
         }
         //* end::Delete item *//
     }
@@ -324,9 +331,9 @@ class Journal {
     }
 
     searchItem(id) {
-        for (let i in this.items.list) {
-            if (this.items.list[i].info.item_id == id) {
-                return this.items.list[i];
+        for (let i in this.items) {
+            if (this.items[i].info.item_id == id) {
+                return this.items[i];
             }
         }
         return false;
@@ -466,7 +473,7 @@ class Journal {
         // Save button items from DOM
         let itemsDOM = q('.' + this.itemClass + ' button.menu-link');
         // Check data and items have the same length -> means they have been created accordingly
-        if (itemsDOM.length === this.items.length) {
+        if (itemsDOM.length === Object.keys(this.items).length) {
             // Iterate items
             for (let itemDOM of itemsDOM) {
                 // Add a click listener to each item to create a new modal
@@ -496,8 +503,8 @@ class Journal {
     setItemsClick() {
         // Get item info from Journal
         let item = false;
-        for (let i in this.items.list) {
-            if (this.items.list[i].info.item_id === this.value) item = this.items.list[i];
+        for (let i in this.items) {
+            if (this.items[i].info.item_id === this.value) item = this.items[i];
         }
         if (item) {
             // Check if container doesn't exist already
@@ -612,10 +619,10 @@ class Journal {
                 data = JSON.parse(data);
                 console.log("saveField response", data);
                 if (data.response) {
-                    for (let i in this.items.list) {
-                        if (this.items.list[i].info.item_id === id) {
+                    for (let i in this.items) {
+                        if (this.items[i].info.item_id === id) {
                             for (let j in data.params) {
-                                this.items.list[i].info[j] = data.params[j];
+                                this.items[i].info[j] = data.params[j];
                             }
                         }
                     }
@@ -640,10 +647,10 @@ class Journal {
             dataType: "json",
             success: (data) => {
                 if (data.response) {
-                    for (let i in this.items.list) {
-                        if (this.items.list[i].info.item_id === id) {
+                    for (let i in this.items) {
+                        if (this.items[i].info.item_id === id) {
                             for (let j in data.params) {
-                                this.items.list[i].info[j] = data.params[j];
+                                this.items[i].info[j] = data.params[j];
                             }
                         }
                     }

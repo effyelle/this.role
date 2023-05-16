@@ -44,8 +44,17 @@ class GameMap {
                 this.showLayer(this.layersFolder + layerBg);
                 // Reset layers
                 this.layers = {};
+                // Hide buttons
+                q('#edit_layer-btn')[0].addClass('d-none');
+                q('#delete_layer-btn')[0].addClass('d-none');
+                q('#select_layer-btn')[0].addClass('d-none');
                 return;
             }
+
+            // Show buttons
+            q('#edit_layer-btn')[0].removeClass('d-none');
+            q('#delete_layer-btn')[0].removeClass('d-none');
+            q('#select_layer-btn')[0].removeClass('d-none');
 
             let layersHaveChanged = function (dbLayers, thisLayers, dbGame, thisGame) {
                 // Check layers length changed (most obvious and easy change

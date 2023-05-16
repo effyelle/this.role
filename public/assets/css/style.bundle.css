@@ -12,7 +12,7 @@
     --bs-gray: #7E8299;
     --bs-gray-dark: #3F4254;
     --bs-gray-100: #faf7f5;
-    --bs-gray-200: #EFF2F5;
+    --bs-gray-200: #f5f3ef;
     --bs-gray-300: #E4E6EF;
     --bs-gray-400: #B5B5C3;
     --bs-gray-500: #A1A5B7;
@@ -2313,7 +2313,7 @@ progress {
     margin-bottom: 1rem;
     color: var(--bs-dark);
     vertical-align: top;
-    border-color: #eff2f5
+    border-color: #f5f3ef
 }
 
 .table > :not(caption) > * > * {
@@ -2595,7 +2595,7 @@ progress {
 
 .form-control:disabled,
 .form-control[readonly] {
-    background-color: #eff2f5;
+    background-color: #f5f3ef;
     opacity: 1
 }
 
@@ -2777,7 +2777,7 @@ textarea.form-control-lg {
 }
 
 .form-select:disabled {
-    background-color: #eff2f5
+    background-color: #f5f3ef
 }
 
 .form-select:-moz-focusring {
@@ -4583,7 +4583,7 @@ fieldset:disabled .btn {
 .dropdown-item:hover {
     color: #16192d;
     text-decoration: none;
-    background-color: #eff2f5
+    background-color: #f5f3ef
 }
 
 .dropdown-item.active,
@@ -4811,7 +4811,7 @@ fieldset:disabled .btn {
 }
 
 .nav-tabs {
-    border-bottom: 1px solid #eff2f5
+    border-bottom: 1px solid #f5f3ef
 }
 
 .nav-tabs .nav-link {
@@ -4824,7 +4824,7 @@ fieldset:disabled .btn {
 
 .nav-tabs .nav-link:focus,
 .nav-tabs .nav-link:hover {
-    border-color: #eff2f5 #eff2f5 #eff2f5;
+    border-color: #f5f3ef #f5f3ef #f5f3ef;
     isolation: isolate
 }
 
@@ -5472,7 +5472,7 @@ fieldset:disabled .btn {
     word-wrap: break-word;
     background-color: #fff;
     background-clip: border-box;
-    border: 1px solid #eff2f5;
+    border: 1px solid #f5f3ef;
     border-radius: .625rem;
     box-shadow: 0 0 20px 0 rgba(76, 87, 125, .02)
 }
@@ -5534,7 +5534,7 @@ fieldset:disabled .btn {
     padding: .5rem 1rem;
     margin-bottom: 0;
     background-color: #fff;
-    border-bottom: 1px solid #eff2f5
+    border-bottom: 1px solid #f5f3ef
 }
 
 .card-header:first-child {
@@ -5544,7 +5544,7 @@ fieldset:disabled .btn {
 .card-footer {
     padding: .5rem 1rem;
     background-color: #fff;
-    border-top: 1px solid #eff2f5
+    border-top: 1px solid #f5f3ef
 }
 
 .card-footer:last-child {
@@ -5667,7 +5667,7 @@ fieldset:disabled .btn {
 .accordion-button:not(.collapsed) {
     color: #34a795;
     background-color: #faf7f5;
-    box-shadow: inset 0 -1px 0 #eff2f5
+    box-shadow: inset 0 -1px 0 #f5f3ef
 }
 
 .accordion-button:not(.collapsed)::after {
@@ -5699,7 +5699,7 @@ fieldset:disabled .btn {
 
 .accordion-button:focus {
     z-index: 3;
-    border-color: #eff2f5;
+    border-color: #f5f3ef;
     outline: 0;
     box-shadow: none
 }
@@ -5710,7 +5710,7 @@ fieldset:disabled .btn {
 
 .accordion-item {
     background-color: #fff;
-    border: 1px solid #eff2f5
+    border: 1px solid #f5f3ef
 }
 
 .accordion-item:first-of-type {
@@ -6113,7 +6113,7 @@ fieldset:disabled .btn {
 
 .list-group-item-action:active {
     color: var(--bs-dark);
-    background-color: #eff2f5
+    background-color: #f5f3ef
 }
 
 .list-group-item {
@@ -6684,7 +6684,7 @@ fieldset:disabled .btn {
     align-items: center;
     justify-content: space-between;
     padding: 1.75rem 1.75rem;
-    border-bottom: 1px solid #eff2f5;
+    border-bottom: 1px solid #f5f3ef;
     border-top-left-radius: .475rem;
     border-top-right-radius: .475rem
 }
@@ -6712,7 +6712,7 @@ fieldset:disabled .btn {
     align-items: center;
     justify-content: flex-end;
     padding: 1.5rem;
-    border-top: 1px solid #eff2f5;
+    border-top: 1px solid #f5f3ef;
     border-bottom-right-radius: .475rem;
     border-bottom-left-radius: .475rem
 }
@@ -7961,7 +7961,7 @@ fieldset:disabled .btn {
 }
 
 .border {
-    border: 1px solid #eff2f5 !important
+    border: 1px solid #f5f3ef !important
 }
 
 .border-0 {
@@ -7969,7 +7969,7 @@ fieldset:disabled .btn {
 }
 
 .border-top {
-    border-top: 1px solid #eff2f5 !important
+    border-top: 1px solid #f5f3ef !important
 }
 
 .border-top-0 {
@@ -7977,7 +7977,7 @@ fieldset:disabled .btn {
 }
 
 .border-end {
-    border-right: 1px solid #eff2f5 !important
+    border-right: 1px solid #f5f3ef !important
 }
 
 .border-end-0 {
@@ -7985,7 +7985,7 @@ fieldset:disabled .btn {
 }
 
 .border-bottom {
-    border-bottom: 1px solid #eff2f5 !important
+    border-bottom: 1px solid #f5f3ef !important
 }
 
 .border-bottom-0 {
@@ -7993,7 +7993,7 @@ fieldset:disabled .btn {
 }
 
 .border-start {
-    border-left: 1px solid #eff2f5 !important
+    border-left: 1px solid #f5f3ef !important
 }
 
 .border-start-0 {
@@ -31645,10 +31645,10 @@ fieldset:disabled .btn {
     --bs-active-warning: #F1BC00;
     --bs-light-danger: #FFF5F8;
     --bs-active-danger: #D9214E;
-    --bs-light-dark: #EFF2F5;
+    --bs-light-dark: #f5f3ef;
     --bs-active-dark: #131628;
     --bs-gray-100: #faf7f5;
-    --bs-gray-200: #EFF2F5;
+    --bs-gray-200: #f5f3ef;
     --bs-gray-300: #E4E6EF;
     --bs-gray-400: #B5B5C3;
     --bs-gray-500: #A1A5B7;
@@ -31662,7 +31662,7 @@ fieldset:disabled .btn {
     --bs-lg: 992px;
     --bs-xl: 1200px;
     --bs-xxl: 1400px;
-    --bs-border-color: #EFF2F5;
+    --bs-border-color: #f5f3ef;
     --bs-border-dashed-color: #E4E6EF
 }
 
@@ -31703,7 +31703,7 @@ fieldset:disabled .btn {
 }
 
 .bg-light.hoverable:hover {
-    background-color: #eff2f5 !important
+    background-color: #f5f3ef !important
 }
 
 .bg-hover-light {
@@ -32048,7 +32048,7 @@ fieldset:disabled .btn {
 }
 
 .bg-light-dark {
-    background-color: #eff2f5 !important
+    background-color: #f5f3ef !important
 }
 
 .bg-light-dark.hoverable:hover {
@@ -32068,7 +32068,7 @@ fieldset:disabled .btn {
 }
 
 .bg-hover-light-dark:hover {
-    background-color: #eff2f5 !important
+    background-color: #f5f3ef !important
 }
 
 .bg-state-light-dark {
@@ -32077,7 +32077,7 @@ fieldset:disabled .btn {
 
 .bg-state-light-dark.active,
 .bg-state-light-dark:hover {
-    background-color: #eff2f5 !important
+    background-color: #f5f3ef !important
 }
 
 .bg-hover-dark {
@@ -32109,7 +32109,7 @@ fieldset:disabled .btn {
 }
 
 .bg-gray-200 {
-    background-color: #eff2f5
+    background-color: #f5f3ef
 }
 
 .bg-gray-300 {
@@ -32520,7 +32520,7 @@ fieldset:disabled .btn {
 }
 
 .border-gray-200 {
-    border-color: #eff2f5 !important
+    border-color: #f5f3ef !important
 }
 
 .border-gray-300 {
@@ -33863,7 +33863,7 @@ fieldset:disabled .btn {
 }
 
 .text-light-dark {
-    color: #eff2f5 !important
+    color: #f5f3ef !important
 }
 
 .text-hover-dark {
@@ -34091,7 +34091,7 @@ fieldset:disabled .btn {
 }
 
 .text-gray-200 {
-    color: #eff2f5 !important
+    color: #f5f3ef !important
 }
 
 .text-hover-gray-200 {
@@ -34104,17 +34104,17 @@ fieldset:disabled .btn {
 
 .text-hover-gray-200:hover {
     transition: color .2s ease, background-color .2s ease;
-    color: #eff2f5 !important
+    color: #f5f3ef !important
 }
 
 .text-hover-gray-200:hover i {
     transition: color .2s ease, background-color .2s ease;
-    color: #eff2f5 !important
+    color: #f5f3ef !important
 }
 
 .text-hover-gray-200:hover .svg-icon svg [fill]:not(.permanent):not(g) {
     transition: fill .3s ease;
-    fill: #eff2f5
+    fill: #f5f3ef
 }
 
 .text-hover-gray-200:hover .svg-icon svg:hover [fill]:not(.permanent):not(g) {
@@ -34131,17 +34131,17 @@ fieldset:disabled .btn {
 
 .text-active-gray-200.active {
     transition: color .2s ease, background-color .2s ease;
-    color: #eff2f5 !important
+    color: #f5f3ef !important
 }
 
 .text-active-gray-200.active i {
     transition: color .2s ease, background-color .2s ease;
-    color: #eff2f5 !important
+    color: #f5f3ef !important
 }
 
 .text-active-gray-200.active .svg-icon svg [fill]:not(.permanent):not(g) {
     transition: fill .3s ease;
-    fill: #eff2f5
+    fill: #f5f3ef
 }
 
 .text-active-gray-200.active .svg-icon svg:hover [fill]:not(.permanent):not(g) {
@@ -34750,7 +34750,7 @@ a:hover {
 .nav-line-tabs {
     border-bottom-width: 1px;
     border-bottom-style: solid;
-    border-bottom-color: #eff2f5
+    border-bottom-color: #f5f3ef
 }
 
 .nav-line-tabs .nav-item {
@@ -34835,7 +34835,7 @@ a:hover {
 
 .nav-group.nav-group-outline {
     background-color: transparent;
-    border: 1px solid #eff2f5
+    border: 1px solid #f5f3ef
 }
 
 .nav-group.nav-group-fluid {
@@ -34920,7 +34920,7 @@ a:hover {
 }
 
 .pagination.pagination-outline .page-link {
-    border: 1px solid #eff2f5
+    border: 1px solid #f5f3ef
 }
 
 .pagination.pagination-outline .page-item.active .page-link,
@@ -35114,7 +35114,7 @@ a:hover {
 .separator {
     display: block;
     height: 0;
-    border-bottom: 1px solid #eff2f5
+    border-bottom: 1px solid #f5f3ef
 }
 
 .separator.separator-dotted {
@@ -35138,7 +35138,7 @@ a:hover {
 .separator.separator-content::before {
     content: " ";
     width: 50%;
-    border-bottom: 1px solid #eff2f5
+    border-bottom: 1px solid #f5f3ef
 }
 
 .separator.separator-content::before {
@@ -35241,7 +35241,7 @@ a:hover {
     content: " ";
     border-radius: 50%;
     transition: all .3s ease;
-    background-color: #eff2f5;
+    background-color: #f5f3ef;
     height: 9px;
     width: 9px
 }
@@ -37365,20 +37365,20 @@ a:hover {
 }
 
 .menu-gray-200 .menu-item .menu-link {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .menu-gray-200 .menu-item .menu-link .menu-title {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .menu-gray-200 .menu-item .menu-link .menu-icon i {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .menu-gray-200 .menu-item .menu-link .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
     transition: fill .3s ease;
-    fill: #eff2f5
+    fill: #f5f3ef
 }
 
 .menu-gray-200 .menu-item .menu-link .menu-icon .svg-icon svg:hover [fill]:not(.permanent):not(g) {
@@ -37386,35 +37386,35 @@ a:hover {
 }
 
 .menu-gray-200 .menu-item .menu-link .menu-bullet .bullet {
-    background-color: #eff2f5
+    background-color: #f5f3ef
 }
 
 .menu-gray-200 .menu-item .menu-link .menu-arrow:after {
     background-repeat: no-repeat;
     background-position: center;
     background-color: transparent;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 9' fill='%23EFF2F5'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M2.06463 4.42111C1.96161 4.22088 1.9809 3.9637 2.12863 3.78597L5.12847 0.177181C5.31402 -0.046034 5.63049 -0.060261 5.83532 0.145404C6.04015 0.351069 6.05578 0.698744 5.87023 0.921959L3.19406 4.14137L5.84414 7.06417C6.03896 7.27904 6.03835 7.62686 5.84278 7.84105C5.64721 8.05524 5.33073 8.05469 5.13591 7.83982L2.14806 4.54449C2.1141 4.50704 2.08629 4.46541 2.06463 4.42111Z'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 9' fill='%23f5f3ef'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M2.06463 4.42111C1.96161 4.22088 1.9809 3.9637 2.12863 3.78597L5.12847 0.177181C5.31402 -0.046034 5.63049 -0.060261 5.83532 0.145404C6.04015 0.351069 6.05578 0.698744 5.87023 0.921959L3.19406 4.14137L5.84414 7.06417C6.03896 7.27904 6.03835 7.62686 5.84278 7.84105C5.64721 8.05524 5.33073 8.05469 5.13591 7.83982L2.14806 4.54449C2.1141 4.50704 2.08629 4.46541 2.06463 4.42111Z'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: center;
     background-color: transparent;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 9' fill='%23EFF2F5'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M5.93537 4.57889C6.03839 4.77912 6.0191 5.0363 5.87137 5.21403L2.87153 8.82282C2.68598 9.04603 2.36951 9.06026 2.16468 8.8546C1.95985 8.64893 1.94422 8.30126 2.12977 8.07804L4.80594 4.85863L2.15586 1.93583C1.96104 1.72096 1.96165 1.37314 2.15722 1.15895C2.35279 0.944757 2.66927 0.945311 2.86409 1.16018L5.85194 4.45551C5.8859 4.49296 5.91371 4.53459 5.93537 4.57889Z'/%3e%3c/svg%3e")
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 9' fill='%23f5f3ef'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M5.93537 4.57889C6.03839 4.77912 6.0191 5.0363 5.87137 5.21403L2.87153 8.82282C2.68598 9.04603 2.36951 9.06026 2.16468 8.8546C1.95985 8.64893 1.94422 8.30126 2.12977 8.07804L4.80594 4.85863L2.15586 1.93583C1.96104 1.72096 1.96165 1.37314 2.15722 1.15895C2.35279 0.944757 2.66927 0.945311 2.86409 1.16018L5.85194 4.45551C5.8859 4.49296 5.91371 4.53459 5.93537 4.57889Z'/%3e%3c/svg%3e")
 }
 
 .menu-title-gray-200 .menu-item .menu-link {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .menu-title-gray-200 .menu-item .menu-link .menu-title {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .menu-icon-gray-200 .menu-item .menu-link .menu-icon i {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .menu-icon-gray-200 .menu-item .menu-link .menu-icon .svg-icon svg [fill]:not(.permanent):not(g) {
     transition: fill .3s ease;
-    fill: #eff2f5
+    fill: #f5f3ef
 }
 
 .menu-icon-gray-200 .menu-item .menu-link .menu-icon .svg-icon svg:hover [fill]:not(.permanent):not(g) {
@@ -37422,18 +37422,18 @@ a:hover {
 }
 
 .menu-bullet-gray-200 .menu-item .menu-link .menu-bullet .bullet {
-    background-color: #eff2f5
+    background-color: #f5f3ef
 }
 
 .menu-arrow-gray-200 .menu-item .menu-link .menu-arrow:after {
     background-repeat: no-repeat;
     background-position: center;
     background-color: transparent;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 9' fill='%23EFF2F5'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M2.06463 4.42111C1.96161 4.22088 1.9809 3.9637 2.12863 3.78597L5.12847 0.177181C5.31402 -0.046034 5.63049 -0.060261 5.83532 0.145404C6.04015 0.351069 6.05578 0.698744 5.87023 0.921959L3.19406 4.14137L5.84414 7.06417C6.03896 7.27904 6.03835 7.62686 5.84278 7.84105C5.64721 8.05524 5.33073 8.05469 5.13591 7.83982L2.14806 4.54449C2.1141 4.50704 2.08629 4.46541 2.06463 4.42111Z'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 9' fill='%23f5f3ef'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M2.06463 4.42111C1.96161 4.22088 1.9809 3.9637 2.12863 3.78597L5.12847 0.177181C5.31402 -0.046034 5.63049 -0.060261 5.83532 0.145404C6.04015 0.351069 6.05578 0.698744 5.87023 0.921959L3.19406 4.14137L5.84414 7.06417C6.03896 7.27904 6.03835 7.62686 5.84278 7.84105C5.64721 8.05524 5.33073 8.05469 5.13591 7.83982L2.14806 4.54449C2.1141 4.50704 2.08629 4.46541 2.06463 4.42111Z'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: center;
     background-color: transparent;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 9' fill='%23EFF2F5'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M5.93537 4.57889C6.03839 4.77912 6.0191 5.0363 5.87137 5.21403L2.87153 8.82282C2.68598 9.04603 2.36951 9.06026 2.16468 8.8546C1.95985 8.64893 1.94422 8.30126 2.12977 8.07804L4.80594 4.85863L2.15586 1.93583C1.96104 1.72096 1.96165 1.37314 2.15722 1.15895C2.35279 0.944757 2.66927 0.945311 2.86409 1.16018L5.85194 4.45551C5.8859 4.49296 5.91371 4.53459 5.93537 4.57889Z'/%3e%3c/svg%3e")
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 9' fill='%23f5f3ef'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M5.93537 4.57889C6.03839 4.77912 6.0191 5.0363 5.87137 5.21403L2.87153 8.82282C2.68598 9.04603 2.36951 9.06026 2.16468 8.8546C1.95985 8.64893 1.94422 8.30126 2.12977 8.07804L4.80594 4.85863L2.15586 1.93583C1.96104 1.72096 1.96165 1.37314 2.15722 1.15895C2.35279 0.944757 2.66927 0.945311 2.86409 1.16018L5.85194 4.45551C5.8859 4.49296 5.91371 4.53459 5.93537 4.57889Z'/%3e%3c/svg%3e")
 }
 
 .menu-gray-300 .menu-item .menu-link {
@@ -39336,7 +39336,7 @@ a:hover {
     min-height: 70px;
     padding: 0 2.25rem;
     background-color: transparent;
-    border-bottom: 1px solid #eff2f5
+    border-bottom: 1px solid #f5f3ef
 }
 
 .card .card-header .card-title {
@@ -39428,7 +39428,7 @@ a:hover {
 .card .card-footer {
     padding: 2rem 2.25rem;
     background-color: transparent;
-    border-top: 1px solid #eff2f5
+    border-top: 1px solid #f5f3ef
 }
 
 .card .card-scroll {
@@ -39471,7 +39471,7 @@ a:hover {
 
 .card.card-bordered {
     box-shadow: none;
-    border: 1px solid #eff2f5
+    border: 1px solid #f5f3ef
 }
 
 .card.card-flush > .card-header {
@@ -40105,8 +40105,8 @@ a:hover {
 .btn.btn-light:hover:not(.btn-active),
 .show > .btn.btn-light {
     color: #7e8299;
-    border-color: #eff2f5;
-    background-color: #eff2f5 !important
+    border-color: #f5f3ef;
+    background-color: #f5f3ef !important
 }
 
 .btn-check:active + .btn.btn-light i,
@@ -41879,8 +41879,8 @@ a:hover {
 
 .btn.btn-light-dark {
     color: var(--bs-dark);
-    border-color: #eff2f5;
-    background-color: #eff2f5
+    border-color: #f5f3ef;
+    background-color: #f5f3ef
 }
 
 .btn.btn-light-dark i {
@@ -42030,8 +42030,8 @@ a:hover {
 .btn.btn-active-light-dark:hover:not(.btn-active),
 .show > .btn.btn-active-light-dark {
     color: var(--bs-dark);
-    border-color: #eff2f5;
-    background-color: #eff2f5 !important
+    border-color: #f5f3ef;
+    background-color: #f5f3ef !important
 }
 
 .btn-check:active + .btn.btn-active-light-dark i,
@@ -43778,16 +43778,16 @@ a:hover {
 }
 
 .btn.btn-color-gray-200 {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .btn.btn-color-gray-200 i {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .btn.btn-color-gray-200 .svg-icon svg [fill]:not(.permanent):not(g) {
     transition: fill .3s ease;
-    fill: #eff2f5
+    fill: #f5f3ef
 }
 
 .btn.btn-color-gray-200 .svg-icon svg:hover [fill]:not(.permanent):not(g) {
@@ -43795,7 +43795,7 @@ a:hover {
 }
 
 .btn.btn-color-gray-200.dropdown-toggle:after {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .btn-check:active + .btn.btn-active-color-gray-200,
@@ -43806,7 +43806,7 @@ a:hover {
 .btn.btn-active-color-gray-200:focus:not(.btn-active),
 .btn.btn-active-color-gray-200:hover:not(.btn-active),
 .show > .btn.btn-active-color-gray-200 {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .btn-check:active + .btn.btn-active-color-gray-200 i,
@@ -43817,7 +43817,7 @@ a:hover {
 .btn.btn-active-color-gray-200:focus:not(.btn-active) i,
 .btn.btn-active-color-gray-200:hover:not(.btn-active) i,
 .show > .btn.btn-active-color-gray-200 i {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .btn-check:active + .btn.btn-active-color-gray-200 .svg-icon svg [fill]:not(.permanent):not(g),
@@ -43829,7 +43829,7 @@ a:hover {
 .btn.btn-active-color-gray-200:hover:not(.btn-active) .svg-icon svg [fill]:not(.permanent):not(g),
 .show > .btn.btn-active-color-gray-200 .svg-icon svg [fill]:not(.permanent):not(g) {
     transition: fill .3s ease;
-    fill: #eff2f5
+    fill: #f5f3ef
 }
 
 .btn-check:active + .btn.btn-active-color-gray-200 .svg-icon svg:hover [fill]:not(.permanent):not(g),
@@ -43851,16 +43851,16 @@ a:hover {
 .btn.btn-active-color-gray-200:focus:not(.btn-active).dropdown-toggle:after,
 .btn.btn-active-color-gray-200:hover:not(.btn-active).dropdown-toggle:after,
 .show > .btn.btn-active-color-gray-200.dropdown-toggle:after {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .btn.btn-icon-gray-200 i {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .btn.btn-icon-gray-200 .svg-icon svg [fill]:not(.permanent):not(g) {
     transition: fill .3s ease;
-    fill: #eff2f5
+    fill: #f5f3ef
 }
 
 .btn.btn-icon-gray-200 .svg-icon svg:hover [fill]:not(.permanent):not(g) {
@@ -43868,7 +43868,7 @@ a:hover {
 }
 
 .btn.btn-icon-gray-200.dropdown-toggle:after {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .btn-check:active + .btn.btn-active-icon-gray-200 i,
@@ -43879,7 +43879,7 @@ a:hover {
 .btn.btn-active-icon-gray-200:focus:not(.btn-active) i,
 .btn.btn-active-icon-gray-200:hover:not(.btn-active) i,
 .show > .btn.btn-active-icon-gray-200 i {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .btn-check:active + .btn.btn-active-icon-gray-200 .svg-icon svg [fill]:not(.permanent):not(g),
@@ -43891,7 +43891,7 @@ a:hover {
 .btn.btn-active-icon-gray-200:hover:not(.btn-active) .svg-icon svg [fill]:not(.permanent):not(g),
 .show > .btn.btn-active-icon-gray-200 .svg-icon svg [fill]:not(.permanent):not(g) {
     transition: fill .3s ease;
-    fill: #eff2f5
+    fill: #f5f3ef
 }
 
 .btn-check:active + .btn.btn-active-icon-gray-200 .svg-icon svg:hover [fill]:not(.permanent):not(g),
@@ -43913,11 +43913,11 @@ a:hover {
 .btn.btn-active-icon-gray-200:focus:not(.btn-active).dropdown-toggle:after,
 .btn.btn-active-icon-gray-200:hover:not(.btn-active).dropdown-toggle:after,
 .show > .btn.btn-active-icon-gray-200.dropdown-toggle:after {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .btn.btn-text-gray-200 {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .btn-check:active + .btn.btn-active-text-gray-200,
@@ -43928,7 +43928,7 @@ a:hover {
 .btn.btn-active-text-gray-200:focus:not(.btn-active),
 .btn.btn-active-text-gray-200:hover:not(.btn-active),
 .show > .btn.btn-active-text-gray-200 {
-    color: #eff2f5
+    color: #f5f3ef
 }
 
 .btn.btn-color-gray-300 {
@@ -45990,13 +45990,13 @@ code:not([class*=language-]) {
 
 .form-check.form-check-solid .form-check-input {
     border: 0;
-    background-color: #eff2f5
+    background-color: #f5f3ef
 }
 
 .form-check.form-check-solid .form-check-input:active,
 .form-check.form-check-solid .form-check-input:focus {
     filter: none;
-    background-color: #eff2f5
+    background-color: #f5f3ef
 }
 
 .form-check.form-check-solid .form-check-input:checked {
@@ -46206,7 +46206,7 @@ code:not([class*=language-]) {
 .table.table-row-bordered tr {
     border-bottom-width: 1px;
     border-bottom-style: solid;
-    border-bottom-color: #eff2f5
+    border-bottom-color: #f5f3ef
 }
 
 .table.table-row-bordered tfoot td,
@@ -46217,7 +46217,7 @@ code:not([class*=language-]) {
 .table.table-row-dashed tr {
     border-bottom-width: 1px;
     border-bottom-style: dashed;
-    border-bottom-color: #eff2f5
+    border-bottom-color: #f5f3ef
 }
 
 .table.table-row-dashed tfoot td,
@@ -46230,7 +46230,7 @@ code:not([class*=language-]) {
 }
 
 .table.table-row-gray-200 tr {
-    border-bottom-color: #eff2f5
+    border-bottom-color: #f5f3ef
 }
 
 .table.table-row-gray-300 tr {
@@ -49149,7 +49149,7 @@ code:not([class*=language-]) {
 
 .popover-dark .popover-header {
     background-color: var(--bs-dark);
-    color: #eff2f5;
+    color: #f5f3ef;
     border-bottom-color: #3f4254
 }
 
@@ -53279,7 +53279,7 @@ code:not([class*=language-]) {
 
 .svg-icon.svg-icon-gray-200 svg [fill]:not(.permanent):not(g) {
     transition: fill .3s ease;
-    fill: #eff2f5
+    fill: #f5f3ef
 }
 
 .svg-icon.svg-icon-gray-200 svg:hover [fill]:not(.permanent):not(g) {
@@ -54548,7 +54548,7 @@ code:not([class*=language-]) {
 
 .badge-light-dark {
     color: var(--bs-dark);
-    background-color: #eff2f5
+    background-color: #f5f3ef
 }
 
 .indicator-progress {
@@ -54673,7 +54673,7 @@ code:not([class*=language-]) {
     span,
     ul {
         scrollbar-width: thin;
-        scrollbar-color: #eff2f5 transparent
+        scrollbar-color: #f5f3ef transparent
     }
 
     div::-webkit-scrollbar,
@@ -54692,7 +54692,7 @@ code:not([class*=language-]) {
     pre::-webkit-scrollbar-thumb,
     span::-webkit-scrollbar-thumb,
     ul::-webkit-scrollbar-thumb {
-        background-color: #eff2f5
+        background-color: #f5f3ef
     }
 
     div:hover,
@@ -54701,7 +54701,7 @@ code:not([class*=language-]) {
     pre:hover,
     span:hover,
     ul:hover {
-        scrollbar-color: #e9edf1 transparent
+        scrollbar-color: #f1efe9 transparent
     }
 
     div:hover::-webkit-scrollbar-thumb,
@@ -54710,7 +54710,7 @@ code:not([class*=language-]) {
     pre:hover::-webkit-scrollbar-thumb,
     span:hover::-webkit-scrollbar-thumb,
     ul:hover::-webkit-scrollbar-thumb {
-        background-color: #e9edf1
+        background-color: #f1efe9
     }
 }
 
@@ -55471,7 +55471,7 @@ label.rating-label:hover ~ .rating-label > .svg-icon svg:hover [fill]:not(.perma
 
 .explore-btn-secondary:hover {
     color: #3f4254;
-    background-color: #eff2f5
+    background-color: #f5f3ef
 }
 
 .explore-btn-outline {
@@ -55643,7 +55643,7 @@ label.rating-label:hover ~ .rating-label > .svg-icon svg:hover [fill]:not(.perma
     width: 3px;
     top: 0;
     bottom: 0;
-    background-color: #eff2f5
+    background-color: #f5f3ef
 }
 
 .timeline-label .timeline-item {
@@ -55686,7 +55686,7 @@ label.rating-label:hover ~ .rating-label > .svg-icon svg:hover [fill]:not(.perma
     border-radius: 100%;
     width: 6px;
     height: 6px;
-    background-color: #eff2f5
+    background-color: #f5f3ef
 }
 
 .timeline-label .timeline-content {
@@ -55708,7 +55708,7 @@ label.rating-label:hover ~ .rating-label > .svg-icon svg:hover [fill]:not(.perma
 }
 
 .item-border-hover:hover {
-    border: 1px solid #eff2f5;
+    border: 1px solid #f5f3ef;
     cursor: pointer;
     transition: color .2s ease, background-color .2s ease;
     background-color: rgba(245, 248, 250, .3)

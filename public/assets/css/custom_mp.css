@@ -236,24 +236,24 @@ body {
  */
 /* Width */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 12px !important;
 }
 
-/* Track */
-::-webkit-scrollbar-track, textarea::-webkit-scrollbar-track {
-    background: var(--this-role-lighter);
-    cursor: pointer;
+div::-webkit-scrollbar-track {
+    background-color: rgba(var(--this-role-light-rgb), 0.2);
 }
 
-/* Handle */
-::-webkit-scrollbar-thumb, textarea::-webkit-scrollbar-thumb {
-    background: var(--this-role-garnet);
-    cursor: pointer;
+*::-webkit-scrollbar-thumb {
+    border-radius: 0.125rem;
+    background: var(--this-role-light);
 }
 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover, textarea::-webkit-scrollbar-thumb:hover {
-    background: #9d1f66;
+*:hover::-webkit-scrollbar-thumb {
+    background: #f8f7f2;
+}
+
+*:hover::-webkit-scrollbar-thumb:hover {
+    background: #f1eee3;
 }
 
 .header {

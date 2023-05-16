@@ -25,7 +25,7 @@ class Draggable {
      * If trigger element is not given, container itself will be the trigger
      */
     constructor(c, p, opt = {}) {
-        this.error = 1;
+        this.error = true;
         if (!p) p = c;
         this.containers = document.querySelectorAll(c);
         this.pointers = document.querySelectorAll(p);
@@ -37,12 +37,19 @@ class Draggable {
         if (opt.min) this.minimizers = document.querySelectorAll(opt.min);
         this.closers = null;
         if (opt.close) this.closers = document.querySelectorAll(opt.close);
+        this.closeTargets = [];
+        if (opt.closeTargets) {
+            for (let i in opt.closeTargets) {
+                this.closeTargets[i] = document.querySelectorAll(opt.closeTargets[i]);
+            }
+        }
         this.pos = {};
         if (this.pointers.length > 0 && this.pointers.length === this.containers.length) {
             this.buildDraggable();
             return;
         }
-        this.error = 0;
+        this.error = false;
+        this.hasMoved = false;
     }
 
     /**
@@ -65,9 +72,11 @@ class Draggable {
             }
             // For the element which you move container from
             this.pointers[i].onmousedown = (e) => {
+                this.hasMoved = false;
                 this.dragDown(this.containers[i], this.pointers[i], e);
             }
             this.pointers[i].ontouchstart = (e) => {
+                this.hasMoved = false;
                 this.dragDown(this.containers[i], this.pointers[i], e);
             }
             if (this.maximizers && this.maximizers.length === this.pointers.length &&
@@ -95,12 +104,10 @@ class Draggable {
             }
             if (this.closers && this.closers.length === this.pointers.length) {
                 this.closers[i].onclick = () => {
-                    this.pointers[i].remove();
-                    this.containers[i].remove();
+                    this.close(i);
                 }
                 this.closers[i].ontouchend = () => {
-                    this.pointers[i].remove();
-                    this.containers[i].remove();
+                    this.close(i);
                 }
             }
         }
@@ -117,6 +124,17 @@ class Draggable {
                     c.style.left = '15px';
                 }
             }
+        }
+    }
+
+    close = (index) => {
+        if (this.closeTargets.length === 0) {
+            this.pointers[index].remove();
+            this.containers[index].remove();
+            return;
+        }
+        for (let i in this.closeTargets) {
+            this.closeTargets[i][index].remove();
         }
     }
 
@@ -207,6 +225,7 @@ class Draggable {
         // Move container
         c.style.top = posY + "px";
         c.style.left = posX + "px";
+        this.hasMoved = true;
     }
 
     removeListeners = (c, p, e) => {

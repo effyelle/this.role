@@ -31,8 +31,15 @@ class GameMap {
         q('.this-game-transition .empty-layers').removeClass('d-none');
     }
 
+    selectedLayer() {
+        if (this.game.game_layer_selected === null ||
+            this.game.game_layer_selected === 'null' ||
+            this.game.game_layer_selected == 0) return false;
+        return this.game.game_layer_selected;
+    }
+
     loadLayers() {
-        ajax(this.url.get).done((data) => {
+        return ajax(this.url.get).done((data) => {
             let layerBg = 'Empty!';
             // console.log("Data layers length = ", data.layers.length)
             // console.log("Client layers length = ", Object.keys(this.layers).length)
@@ -126,6 +133,7 @@ class GameMap {
             }
             // Set background
             this.showLayer(this.layersFolder + this.layers[this.game.game_layer_selected].layer_bg);
+            return data;
         });
     }
 }

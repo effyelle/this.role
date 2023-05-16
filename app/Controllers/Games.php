@@ -548,13 +548,12 @@ class Games extends BaseController
     function set_selected_layer($id): string
     {
         $data = ['response' => false];
+        $data['get'] = $_GET;
         if (isset($_GET['layer_id'])) {
-            if ($this->gamesmodel->updt(
+            $data['response'] = $this->gamesmodel->updt(
                 ['game_layer_selected' => $_GET['layer_id']],
                 ['game_id' => $id]
-            )) {
-                $data['response'] = true;
-            }
+            );
         }
         return json_encode($data);
     }
@@ -572,5 +571,10 @@ class Games extends BaseController
             $data['response'] = true;
         }
         return json_encode($data);
+    }
+
+    function save_token($id): string
+    {
+        return json_encode(['id' => $id, 'post' => $_POST]);
     }
 }

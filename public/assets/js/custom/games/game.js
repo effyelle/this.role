@@ -14,6 +14,7 @@ function initGame(dbGame, session) {
         this.lImg = q('#add_map-input')[0];
         this.lImgPreview = q('#add_layer-preview')[0];
         this.btn = q('#add_layer-btn')[0];
+        this.adminSelect = q('#change_layer')[0];
 
         this.lImg.onchange = () => {
             // Change bg from holder
@@ -33,14 +34,17 @@ function initGame(dbGame, session) {
                     contentType: false,
                     success: (data) => {
                         data = (JSON.parse(data)).data;
-                        let img = data.img;
+                        console.log(board.map.selectedLayer());
+                        if (!board.map.selectedLayer()) {
+                            selectMap(data.layers[0].layer_id);
+                        }
                         if (data.response) {
                             // Reload map layers
                             $('.modal_success_response').html('Map added correctly');
                             $('#modal_success-toggle').click();
                             return;
                         }
-                        $('.modal_error_response').html(img);
+                        $('.modal_error_response').html(data.img);
                         $('#modal_error-toggle').click();
                     },
                     error: (e) => {
@@ -52,11 +56,9 @@ function initGame(dbGame, session) {
             q('#add_layer-error')[0].removeClass('d-none');
         }
 
-        const selectMap = () => {
-            // Save selected map
-            let selectedMap = q('#change_layer')[0].value;
+        const selectMap = (id) => {
             // Update selected map
-            ajax('/app/games_ajax/set_selected_layer/' + dbGame.game_id + '?layer_id=' + selectedMap);
+            ajax('/app/games_ajax/set_selected_layer/' + dbGame.game_id + '?layer_id=' + id);
             // Change image in HTML
             // board.map.showLayer(board.map.layersFolder + board.map.layers[selectedMap].layer_bg);
         }
@@ -96,13 +98,27 @@ function initGame(dbGame, session) {
         }
 
         const deleteMap = () => {
-            ajax('/app/games_ajax/delete_layer/' + q('#change_layer')[0].value);
+            // Select another or null if erasing selected layer
+            console.log(this.adminSelect.value === board.map.selectedLayer())
+            if (this.adminSelect.value === board.map.selectedLayer()) {
+                for (let i in board.map.layers) {
+                    let layer = board.map.layers[i];
+                    if (layer.layer_id != board.map.selectedLayer()) {
+                        selectMap(layer.layer_id);
+                        return;
+                    }
+                }
+                selectMap("null");
+            }
+            ajax('/app/games_ajax/delete_layer/' + this.adminSelect.value);
         }
 
         this.btn.click(newMap);
 
         // Select map on click
-        q('#select_layer-btn')[0].click(selectMap);
+        q('#select_layer-btn')[0].click(() => {
+            selectMap(this.adminSelect.value);
+        });
 
         // Delete layer on click
         q('#delete_layer-btn')[0].click(function () {
@@ -199,12 +215,13 @@ function initGame(dbGame, session) {
     thisShouldBeAWebSocket();
 
     //* Interval to get page responses in "real" time *//
-    setInterval(thisShouldBeAWebSocket, 5000);
+    // setInterval(thisShouldBeAWebSocket, 5000);
 
     function thisShouldBeAWebSocket() {
         chat.getChat();
-        journal.initJournal();
-        board.map.loadLayers();
+        board.map.loadLayers().done(() => {
+            journal.initJournal(board);
+        });
         /*journal.getJournalAjax().done((data) => {
             if (data.results && data.results.length === journal.items.length) {
                 if (!dataChanged(data)) return;

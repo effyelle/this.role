@@ -90,6 +90,7 @@ CREATE TABLE game_layers(
 	layer_name VARCHAR(50),
 	layer_id_game INT UNSIGNED,
 	layer_bg TEXT,
+	layer_tokens JSON DEFAULT '[]',
 	FOREIGN KEY (layer_id_game) REFERENCES games(game_id)
 );
 

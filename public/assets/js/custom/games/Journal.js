@@ -19,8 +19,6 @@ class Journal {
         this.createItemBtn = q('#save_journal_item-btn')[0];
         this.toggleEditItem = q('#edit_item-btn')[0];
         this.deleteItemBtn = q('#delete_item-btn')[0];
-        this.gameBoard = q('.this-game')[0];
-        this.gameBoardImage = q('#this-game')[0];
         this.adminParent = q('#modal_journal')[0];
         // Format admin select
         if (this.adminParent) {
@@ -366,33 +364,6 @@ class Journal {
             // * Set health -> hit dices related to class above
             // * Set tables ? -> Abilities
         }
-    }
-
-    setDraggableContainers(btn) {
-        // Get item info from Journal
-        let item = this.searchItem(btn.value);
-        if (!item || item === {}) return;
-        // Return if item has already been opened
-        if (q('#' + item.draggableContainerId).length !== 0) return;
-        return ajax('/app/games_ajax/sheet/' + item.info.item_id, {item_type: item.info.item_type}, 'post', 'text').done((txt) => {
-            item.openItem(txt);
-            // Check it was created correctly
-            if (q('#' + item.draggableContainerId).length !== 1) {
-                // Return message error if length is not 1
-                $('.modal_error_response').html('Item could not be opened');
-                $('#modal_error-toggle').click();
-                return;
-            }
-            this.journalDraggable = new Draggable('.' + item.draggableContainerClass, '.' + item.draggableContainerClass + ' .cursor-move', {
-                max: '.max-btn',
-                min: '.min-btn',
-                close: '.close_item-btn',
-                closeTargets: ['.draggable_close']
-            });
-            this.listenToOpenedItems(item);
-        }).fail((e) => {
-            console.log(e.responseText);
-        });
     }
 
     SheetDnD = function (id, params = {}) {

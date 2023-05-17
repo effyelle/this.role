@@ -94,9 +94,6 @@ function initGame() {
 
         const deleteMap = () => {
             // Select another or null if erasing selected layer
-            console.log(this.adminSelect.value === board.map.selectedLayer())
-            console.log(this.adminSelect.value)
-            console.log(board.map.selectedLayer())
             let selectedValue = this.adminSelect.value;
             if (selectedValue === board.map.selectedLayer()) {
                 let anotherLayerFound = false;
@@ -158,12 +155,13 @@ function initGame() {
     thisShouldBeAWebSocket();
 
     //* Interval to get page responses in "real" time *//
-    // setInterval(thisShouldBeAWebSocket, 5000);
+    setInterval(thisShouldBeAWebSocket, 250000);
 
     function thisShouldBeAWebSocket() {
         board.chat.getChat();
         board.map.loadLayers().done(() => {
             board.journal.initJournal(board).done(() => {
+                board.loadTokens();
                 board.setItemsOpening();
             });
         });

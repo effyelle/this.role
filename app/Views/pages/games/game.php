@@ -150,8 +150,8 @@
 <script type="text/javascript" src="/assets/js/custom/apps/draggable/Draggable.js"></script>
 <script>
     // * Game details * //
-    const dbGame =<?php echo json_encode($game ?? []) ?>;
-    const session =<?php echo json_encode($_SESSION['user'] ?? []) ?>;
+    let dbGame =<?php echo json_encode($game ?? []) ?>;
+    let session =<?php echo json_encode($_SESSION['user'] ?? []) ?>;
     document.addEventListener('DOMContentLoaded', function () {
         if (dbGame !== [] && dbGame.game_id) {
             // Pass game details to set board, chat and journal

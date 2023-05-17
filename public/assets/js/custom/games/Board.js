@@ -128,11 +128,89 @@ class Board {
             for (let itemOpenerBtn of itemOpenersButtons) {
                 // Add a click listener to each item to create a new modal
                 itemOpenerBtn.click(() => {
-                    this.journal.setDraggableContainers(itemOpenerBtn);
+                    this.setDraggableItemSheets(itemOpenerBtn);
                 });
                 itemOpenerBtn.addEventListener('drag', (e) => {
-                    this.map.setDraggableTokens(e, itemOpenerBtn);
+                    this.setDraggableTokens(e);
                 });
+            }
+        }
+    }
+
+    setDraggableItemSheets(btn) {
+        // Get item info from Journal
+        let item = this.journal.searchItem(btn.value);
+        if (!item || item === {}) return;
+        // Return if item has already been opened
+        if (q('#' + item.draggableContainerId).length !== 0) return;
+        return ajax('/app/games_ajax/sheet/' + item.info.item_id, {item_type: item.info.item_type}, 'post', 'text').done((txt) => {
+            item.openItem(txt);
+            // Check it was created correctly
+            if (q('#' + item.draggableContainerId).length !== 1) {
+                // Return message error if length is not 1
+                $('.modal_error_response').html('Item could not be opened');
+                $('#modal_error-toggle').click();
+                return;
+            }
+            this.journal.journalDraggable = new Draggable('.' + item.draggableContainerClass, '.' + item.draggableContainerClass + ' .cursor-move', {
+                max: '.max-btn',
+                min: '.min-btn',
+                close: '.close_item-btn',
+                closeTargets: ['.draggable_close']
+            });
+            this.journal.listenToOpenedItems(item);
+        }).fail((e) => {
+            console.log(e.responseText);
+        });
+    }
+
+    loadTokens() {
+        if (!(this.map.gameBoard)) return;
+        // Erase all
+        for (let child of this.map.gameBoard.children) {
+            if (child.classList.contains('symbol')) child.remove();
+        }
+        if (!(this.map.selectedLayer() && this.journal.items)) return;
+        const selectedLayer = this.map.layers[this.map.selectedLayer()];
+        let tokens = JSON.parse(selectedLayer.layer_tokens);
+        for (let i in tokens) {
+            let item = this.journal.searchItem(i);
+            this.map.gameBoard.innerHTML += this.map.tokenFormatting(item);
+        }
+        this.map.tokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
+        for (let i in tokens) {
+            let item = this.journal.searchItem(i);
+            let newToken = this.map.tokensDraggable.findContainer('token_' + item.info.item_id);
+            newToken.setAxis(parseInt(tokens[i].left) + newToken.offsetWidth, parseInt(tokens[i].top) + newToken.offsetHeight);
+        }
+        this.map.hearTokenThings();
+    }
+
+    setDraggableTokens(ondragEvt) {
+        let btn = ondragEvt.target;
+        btn.ondragend = (dragendEvt) => {
+            // Return if there is no layer selected
+            if (!(this.map && this.map.selectedLayer() && this.map.layers)) return;
+            // Serach item
+            let item = this.journal.searchItem(btn.value);
+            let layertokens = JSON.parse(this.map.layers[this.map.selectedLayer()].layer_tokens);
+            // Check layer, if it has the token already
+            for (let i in layertokens) {
+                // If token already exists, do not ad another one
+                if (i === item.info.item_id) return;
+            }
+
+            if (dragendEvt.pageX > this.map.offsetStart && dragendEvt.pageY > this.map.offsetTop) {
+                // Double check token has not already been added
+                if (q('#token_' + item.info.item_id).length !== 0) return;
+                // If game board div is not found return
+                if (!this.map.gameBoard) return;
+                // Add token to game board
+                this.map.gameBoard.innerHTML += this.map.tokenFormatting(item);
+                this.map.tokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
+                let newToken = this.map.tokensDraggable.findContainer('token_' + item.info.item_id);
+                newToken.setAxis(dragendEvt.pageX - this.map.offsetStart, dragendEvt.pageY - this.map.offsetTop);
+                this.map.hearTokenThings();
             }
         }
     }

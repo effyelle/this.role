@@ -176,7 +176,7 @@ class GameMap {
 
     tokenFormatting = (item) => {
         return '<div id="token_' + item.info.item_id + '" style="top: 100vh; left: 100vw;"' +
-            ' class="symbol symbol-50px circle position-absolute cursor-move">' +
+            ' class="symbol symbol-75px circle position-absolute cursor-move">' +
             '<span class="symbol-label circle" style="background-image: url(' + item.icon() + ')"></span>' +
             '</div>';
     }

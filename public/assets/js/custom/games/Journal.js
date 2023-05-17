@@ -27,6 +27,135 @@ class Journal {
         }
     }
 
+    SheetDnD = function (id, params = {}) {
+        this.info = params.itemInfo;
+        // Add container for saving future modals
+        this.modalsContainer = id;
+        this.draggableContainerId = 'draggable_' + this.info.item_id;
+        this.draggableContainerClass = 'journal_item_modal';
+        this.folder = params.folder;
+        this.icon = () => {
+            let icon = this.folder + this.info.item_icon;
+            if (urlExists(icon)) return icon;
+            return '/assets/media/games/blank.png';
+        }
+        this.openItem = async (htmlText) => {
+            q('#' + this.modalsContainer)[0].innerHTML += htmlText;
+            const iconHolder = q('#' + this.draggableContainerId + ' .item_icon-holder');
+            if (iconHolder.length > 0) {
+                iconHolder[0].style.backgroundImage = 'url("' + this.icon() + '")';
+            }
+        }
+        this.getLevel = () => {
+            let lvl = 0;
+            if (this.info.classes) {
+                const classes = JSON.parse(this.info.classes);
+                for (let i in classes) {
+                    let c = classes[i];
+                    if (c.lvl && c.lvl !== "" && c.lvl !== "0" && !isNaN(c.lvl)) {
+                        lvl += parseInt(c.lvl);
+                    }
+                }
+            }
+            return lvl !== 0 ? lvl : 1;
+        }
+        this.getClassArmor = () => {
+            // Base armor starts in 10
+            let this_ac = 10;
+            // Check character sheet is correctly filled
+            let dex = this.getRawScoreModifier('dex');
+            let con = this.getRawScoreModifier('con');
+            let main_class = this.getMainClass();
+            if (dex && main_class) {
+                let armor = this.info.bag.armor && this.info.bag.armor.equiped ? this.info.bag.armor.val : 0;
+                // This is yet to write
+                let heavyArmor = false;
+                let shield = 0;
+                let custom_mods = 0;
+                // Then you add: DEX modifier, armor modifier, shield
+                // Always add custom modifiers
+                this_ac += parseInt(custom_mods);
+                // Add constitution modifier if it is a barbarian or a monk while not wearing any armor
+                if (con && main_class.class.match(/barbarian|monk/) && !armor && !shield) {
+                    this_ac += con;
+                }
+                // Add dexterity modifier if not wearing heavy armor
+                if (!armor && !heavyArmor) {
+                    this_ac += dex;
+                }
+                // Otherwise add armor and shield
+                this_ac += parseInt(armor) + parseInt(shield);
+            }
+            return this_ac;
+        }
+        this.getProficiency = () => {
+            // Starts in +2 and adds +1 for every 4 levels until level 20
+            return Math.ceil(this.getLevel() / 4) + 1;
+        }
+        this.getMainClass = () => {
+            if (this.info.classes) {
+                let classes = JSON.parse(this.info.classes)
+                if (classes) {
+                    for (let c of classes) {
+                        if (c.is_main) return c;
+                    }
+                }
+            }
+            return false;
+        }
+        this.getScore = (score) => {
+            if (this.info.ability_scores) {
+                const scores = JSON.parse(this.info.ability_scores);
+                for (let i in scores) {
+                    if (i.match(score)) {
+                        return scores[i];
+                    }
+                }
+            }
+            return false;
+        }
+        this.getRawScoreModifier = (score) => {
+            if (this.info.ability_scores) {
+                const scores = JSON.parse(this.info.ability_scores);
+                let modifier = 0;
+                for (let i in scores) {
+                    if (i.match(score)) {
+                        return Math.floor((parseInt(scores[i].score) - 10) / 2);
+                    }
+                }
+                return modifier;
+            }
+            return false;
+        }
+        this.getProfScoreModifier = (score) => {
+            if (this.info.ability_scores) {
+                const scores = JSON.parse(this.info.ability_scores);
+                let modifier = 0;
+                for (let i in scores) {
+                    if (i.match(score)) {
+                        return Math.floor((parseInt(scores[i].score) - 10) / 2) +
+                            (scores[i].is_prof === "1" ? this.getProficiency() : 0) + '';
+                    }
+                }
+                return modifier;
+            }
+            return false;
+        }
+        this.getInitTierBreaker = () => {
+            // Add init modifiers (?)
+            const tierBreaker = 1.045;
+            let dex = this.getRawScoreModifier('dex');
+            if (!dex) dex = 0;
+            return dex * tierBreaker;
+        }
+        this.getCarryingCapacity = () => {
+            if (this.info.ability_scores) {
+                const str = JSON.parse(this.info.ability_scores).str.score;
+                return parseFloat(str) * 6.80389;
+            }
+        }
+    }
+
     initJournal(board = null) {
         this.dataHasChanged = (data) => {
             if (data.results.length !== Object.keys(this.items).length) return true;
@@ -351,12 +480,16 @@ class Journal {
         this.itemsOpened = q('.' + item.draggableContainerClass);
         //* Rerun opened items to add listeners *//
         for (let itemOpened of this.itemsOpened) {
+            console.log(itemOpened)
             let id = itemOpened.id.charAt(itemOpened.id.length - 1);
             let this_item = this.searchItem(id);
             // Go to next opened draggable DOM item if journal item is not found
             if (!this_item || this_item === {}) continue;
+            console.log(item);
             // Fill from data base and listen to changes to save that data
-            // * Set image
+            //* begin::Image change *//
+            this.setItemImage(item);
+            //* end::Image change *//
             // * Set inspiration
             // * Set Spellcasting ability-> Spell Save DC -> Spell attack bonus
             // * Set skills
@@ -366,133 +499,21 @@ class Journal {
         }
     }
 
-    SheetDnD = function (id, params = {}) {
-        this.info = params.itemInfo;
-        // Add container for saving future modals
-        this.modalsContainer = id;
-        this.draggableContainerId = 'draggable_' + this.info.item_id;
-        this.draggableContainerClass = 'journal_item_modal';
-        this.folder = params.folder;
-        this.icon = () => {
-            let icon = this.folder + this.info.item_icon;
-            if (urlExists(icon)) return icon;
-            return '/assets/media/games/blank.png';
-        }
-        this.openItem = async (htmlText) => {
-            q('#' + this.modalsContainer)[0].innerHTML += htmlText;
-            const iconHolder = q('#' + this.draggableContainerId + ' .item_icon-holder');
-            if (iconHolder.length > 0) {
-                iconHolder[0].style.backgroundImage = 'url("' + this.icon() + '")';
-            }
-        }
-        this.getLevel = () => {
-            let lvl = 0;
-            if (this.info.classes) {
-                const classes = JSON.parse(this.info.classes);
-                for (let i in classes) {
-                    let c = classes[i];
-                    if (c.lvl && c.lvl !== "" && c.lvl !== "0" && !isNaN(c.lvl)) {
-                        lvl += parseInt(c.lvl);
-                    }
+    setItemImage(item) {
+        console.log(item)
+        const iconInput = q('#' + item.draggableContainerId + ' .this-role-form-field[name="item_icon"]')[0];
+        const iconHolder = q('#' + item.draggableContainerId + ' .item_icon-holder')[0];
+        iconInput.change(() => {
+            this.saveField(iconInput, item.info.item_id).done((data) => {
+                data = JSON.parse(data);
+                if (data.response) {
+                    readImageChange(iconInput, iconHolder);
+                    return;
                 }
-            }
-            return lvl !== 0 ? lvl : 1;
-        }
-        this.getClassArmor = () => {
-            // Base armor starts in 10
-            let this_ac = 10;
-            // Check character sheet is correctly filled
-            let dex = this.getRawScoreModifier('dex');
-            let con = this.getRawScoreModifier('con');
-            let main_class = this.getMainClass();
-            if (dex && main_class) {
-                let armor = this.info.bag.armor && this.info.bag.armor.equiped ? this.info.bag.armor.val : 0;
-                // This is yet to write
-                let heavyArmor = false;
-                let shield = 0;
-                let custom_mods = 0;
-                // Then you add: DEX modifier, armor modifier, shield
-                // Always add custom modifiers
-                this_ac += parseInt(custom_mods);
-                // Add constitution modifier if it is a barbarian or a monk while not wearing any armor
-                if (con && main_class.class.match(/barbarian|monk/) && !armor && !shield) {
-                    this_ac += con;
-                }
-                // Add dexterity modifier if not wearing heavy armor
-                if (!armor && !heavyArmor) {
-                    this_ac += dex;
-                }
-                // Otherwise add armor and shield
-                this_ac += parseInt(armor) + parseInt(shield);
-            }
-            return this_ac;
-        }
-        this.getProficiency = () => {
-            // Starts in +2 and adds +1 for every 4 levels until level 20
-            return Math.ceil(this.getLevel() / 4) + 1;
-        }
-        this.getMainClass = () => {
-            if (this.info.classes) {
-                let classes = JSON.parse(this.info.classes)
-                if (classes) {
-                    for (let c of classes) {
-                        if (c.is_main) return c;
-                    }
-                }
-            }
-            return false;
-        }
-        this.getScore = (score) => {
-            if (this.info.ability_scores) {
-                const scores = JSON.parse(this.info.ability_scores);
-                for (let i in scores) {
-                    if (i.match(score)) {
-                        return scores[i];
-                    }
-                }
-            }
-            return false;
-        }
-        this.getRawScoreModifier = (score) => {
-            if (this.info.ability_scores) {
-                const scores = JSON.parse(this.info.ability_scores);
-                let modifier = 0;
-                for (let i in scores) {
-                    if (i.match(score)) {
-                        return Math.floor((parseInt(scores[i].score) - 10) / 2);
-                    }
-                }
-                return modifier;
-            }
-            return false;
-        }
-        this.getProfScoreModifier = (score) => {
-            if (this.info.ability_scores) {
-                const scores = JSON.parse(this.info.ability_scores);
-                let modifier = 0;
-                for (let i in scores) {
-                    if (i.match(score)) {
-                        return Math.floor((parseInt(scores[i].score) - 10) / 2) +
-                            (scores[i].is_prof === "1" ? this.getProficiency() : 0) + '';
-                    }
-                }
-                return modifier;
-            }
-            return false;
-        }
-        this.getInitTierBreaker = () => {
-            // Add init modifiers (?)
-            const tierBreaker = 1.045;
-            let dex = this.getRawScoreModifier('dex');
-            if (!dex) dex = 0;
-            return dex * tierBreaker;
-        }
-        this.getCarryingCapacity = () => {
-            if (this.info.ability_scores) {
-                const str = JSON.parse(this.info.ability_scores).str.score;
-                return parseFloat(str) * 6.80389;
-            }
-        }
+                $('.modal_error_response').html('Image could not be uploaded');
+                $('#modal_error-toggle').click();
+            });
+        });
     }
 
 // This needs to change to reset all possible already opened items
@@ -522,9 +543,6 @@ class Journal {
                 });
             });
             //* end::General Inputs change *//
-            //* begin::Image change *//
-            setItemImage(item);
-            //* end::Image change *//
             //* begin::Inspiration *//
             setInspiration(item);
             //* end::Inspiration *//
@@ -780,22 +798,6 @@ class Journal {
                 } //* end::Select *//
             }
         }
-    }
-
-    setItemImage(item) {
-        let iconInput = q('#' + item.draggableContainerId + ' .this-role-form-field[name="item_icon"]');
-        iconInput.change(function () {
-            saveField(this, item.info.item_id).done((data) => {
-                data = JSON.parse(data);
-                if (data.response) {
-                    this.reload();
-                    readImageChange(this, q('#' + item.draggableContainerId + ' .item_icon-holder')[0]);
-                    return;
-                }
-                $('.modal_error_response').html('Image could not be uploaded');
-                $('#modal_error-toggle').click();
-            });
-        });
     }
 
     setInspiration(item) {

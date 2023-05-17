@@ -56,21 +56,25 @@ class Board {
         }
         this.chat.ChatBubble = '#chat';
         //* Save basic rolls *// -> This is the navigation menu on top of the page (all the dices in black & white)
-        q('.btn.dice').click(function () {
-            this.text = () => {
-                let nDices = 1;
-                let input = q('#roll-' + this.value)[0];
-                if (input && input.value !== "" && !isNaN(input.value)) nDices = input.value;
-                return this.chat.formatBasicRoll(this.value, nDices, board.dices[this.value].roll(nDices));
-            }
-            let thisFrom = this.chat.from();
-            this.chat.saveChat({
-                icon: thisFrom.icon,
-                msg: this.text(),
-                sender: thisFrom.name,
-                msgType: "nav_dice"
+        this.diceButtons = q('.btn.dice');
+        for (let btn of this.diceButtons) {
+            btn.click(() => {
+                this.text = () => {
+                    let nDices = 1;
+                    let input = q('#roll-' + btn.value)[0];
+                    if (input && input.value !== "" && !isNaN(input.value)) nDices = input.value;
+                    return this.chat.formatBasicRoll(btn.value, nDices, this.dices[btn.value].roll(nDices));
+                }
+                console.log(this.dices)
+                let thisFrom = this.chat.from();
+                this.chat.saveChat({
+                    icon: thisFrom.icon,
+                    msg: this.text(),
+                    sender: thisFrom.name,
+                    msgType: "nav_dice"
+                });
             });
-        });
+        }
         //* Next rolls to listen are the ones from the journal items *//
         // -> Incomplete
     }
@@ -181,9 +185,11 @@ class Board {
         for (let i in tokens) {
             let item = this.journal.searchItem(i);
             let newToken = this.map.tokensDraggable.findContainer('token_' + item.info.item_id);
-            newToken.setAxis(parseInt(tokens[i].left) + newToken.offsetWidth, parseInt(tokens[i].top) + newToken.offsetHeight);
+            newToken.setAxis(parseInt(tokens[i].left) + newToken.offsetWidth / 2, parseInt(tokens[i].top) + newToken.offsetHeight / 2);
         }
         this.map.hearTokenThings();
+        this.map.container = q('#' + this.map.container.id)[0];
+        this.map.listenToMapZoom();
     }
 
     setDraggableTokens(ondragEvt) {

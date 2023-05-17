@@ -185,11 +185,11 @@ class Board {
         for (let i in tokens) {
             let item = this.journal.searchItem(i);
             let newToken = this.map.tokensDraggable.findContainer('token_' + item.info.item_id);
-            newToken.setAxis(parseInt(tokens[i].left) + newToken.offsetWidth / 2, parseInt(tokens[i].top) + newToken.offsetHeight / 2);
+            newToken.setAxis(tokens[i].left, tokens[i].top);
         }
         this.map.hearTokenThings();
         this.map.container = q('#' + this.map.container.id)[0];
-        this.map.listenToMapZoom();
+        // this.map.setMapListeners();
     }
 
     setDraggableTokens(ondragEvt) {
@@ -215,7 +215,8 @@ class Board {
                 this.map.gameBoard.innerHTML += this.map.tokenFormatting(item);
                 this.map.tokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
                 let newToken = this.map.tokensDraggable.findContainer('token_' + item.info.item_id);
-                newToken.setAxis(dragendEvt.pageX - this.map.offsetStart, dragendEvt.pageY - this.map.offsetTop);
+                const coords = this.map.getPixels(dragendEvt, newToken);
+                newToken.setAxis(coords.x + 'px', coords.y + 'px');
                 this.map.hearTokenThings();
             }
         }

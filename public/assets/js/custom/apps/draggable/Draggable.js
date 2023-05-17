@@ -113,8 +113,8 @@ class Draggable {
                 }
             }
             this.containers[i].setAxis = (x, y) => {
-                this.containers[i].style.left = (x - this.containers[i].offsetWidth/2) + 'px';
-                this.containers[i].style.top = (y - this.containers[i].offsetHeight/2) + 'px';
+                this.containers[i].style.left = x;
+                this.containers[i].style.top = y;
             }
         }
         /*

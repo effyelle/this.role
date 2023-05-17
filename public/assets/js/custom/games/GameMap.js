@@ -1,21 +1,51 @@
 class GameMap {
     constructor() {
-        this.container = q('#this-game')[0];
+        this.gameBoard = q('.this-game')[0]; // this is the superior one
+        this.container = q('#this_game')[0];
+        this.tokenC = q('#tokens_container')[0];
         this.layersFolder = '/assets/media/games/' + dbGame.game_folder + '/layers/';
         this.select = q('#change_layer')[0];
         this.url = {
             get: '/app/games_ajax/get_layers/' + dbGame.game_id
         }
         this.layers = {};
-        this.journalList = q('#journal')[0];
         this.offsetTop = 110; // Pixels
         this.offsetStart = 374; // Pixels
-        this.gameBoard = q('.this-game')[0];
-        this.gameBoardImage = q('#this-game')[0];
     }
 
     set Layers(layer) {
         this.layers[layer.layer_id] = layer;
+    }
+
+    setMapListeners() {
+        const zoom = (e) => {
+            let w = this.container.style.width;
+            let measure = function (msrStr) {
+                console.log(msrStr)
+                for (let i = 0; i < msrStr.length; i++) {
+                    // continue searching if character is not empty and is a number
+                    if (msrStr.charAt(i) !== '' && !isNaN(msrStr.charAt(i))) continue;
+                    // Return measurements
+                    return {
+                        size: parseFloat(msrStr.substring(0, i)),
+                        name: msrStr.substring(i),
+                    }
+                }
+            }
+            let msrW = measure(w);
+            msrW.size = msrW.size - (parseFloat(e.deltaY) / 10 * 5);
+            this.container.style.width = msrW.size + msrW.name;
+            console.log(e.deltaY)
+            console.log(e.clientX)
+            console.log(e.clientY)
+        }
+        this.container.removeEventListener('wheel', zoom);
+        this.container.addEventListener('wheel', zoom);
+        const rightClick = (e) => {
+            console.log(e);
+        }
+        this.container.removeEventListener('contextmenu', rightClick);
+        this.container.addEventListener('contextmenu', rightClick);
     }
 
     mapHasChanged(dbLayers, thisLayers) {
@@ -32,85 +62,20 @@ class GameMap {
         return false;
     };
 
-    listenToMapZoom() {
-        console.log('set zoom')
-        const zoom = (e) => {
-            console.log(this)
-            console.log(e.deltaY)
-            console.log(e.clientX)
-            console.log(e.clientY)
-        }
-        if (this.gameBoardImage) {
-            this.gameBoardImage.removeEventListener('wheel', zoom);
-            this.gameBoardImage.addEventListener('wheel', zoom);
-        }
-    }
-
-    tokenFormatting = (item) => {
-        return '<div id="token_' + item.info.item_id + '" style="top: 100vh; left: 100vw;"' +
-            ' class="symbol symbol-50px circle position-absolute cursor-move">' +
-            '<span class="symbol-label circle" style="background-image: url(' + item.icon() + ')"></span>' +
-            '</div>';
-    }
-
-    saveToken(token) {
-        let itemID = token.id.charAt(token.id.length - 1);
-        console.log(itemID)
-        let post = {
-            top: token.offsetTop,
-            left: token.offsetLeft
-        }
-        ajax('/app/games_ajax/save_token/' + this.selectedLayer(), {coords: post, item_id: itemID}).done((data) => {
-            console.log(data)
-        });
-    }
-
-    deleteToken(token) {
-        let itemID = token.id.charAt(token.id.length - 1);
-        return ajax('/app/games_ajax/delete_token/' + this.selectedLayer(), {item_id: itemID});
-    }
-
-    hearTokenThings() {
-        for (let token of this.tokensDraggable.containers) {
-            this.saveToken(token);
-            token.addEventListener('mouseup', () => {
-                // Define if token has been selected
-                let tokenSelected = !this.tokensDraggable.hasMoved;
-                // Save token if it moved
-                if (!tokenSelected) this.saveToken(token);
-                //* begin::Open item AC & health *//
-                //* end::Open item AC & health *//
-                //* begin::Remove token listener *//
-                if (!tokenSelected) {
-                    document.onkeyup = null;
-                    return;
-                }
-                document.onkeyup = (e) => {
-                    if (e.key === 'Delete') {
-                        token.remove();
-                        // this.deleteToken(token).done((data) => {console.log(data);});
-                    }
-                }
-                //* end::Remove token listener *//
-            });
-        }
-    }
-
     showLayer(urlImg) {
-        q('.this-game-transition .empty-layers').addClass('d-none');
         q('.this-game-transition .spinner-border').addClass('d-none');
+        q('.this-game-transition .empty-layers').addClass('d-none');
         if (urlExists(urlImg)) {
-            this.container.style.backgroundImage = "url('" + urlImg + "')";
-            this.container.style.backgroundRepeat = 'no-repeat';
-            this.container.style.backgroundSize = 'contain';
-            this.container.style.backgroundPosition = 'center center';
-            this.container.style.transition = 'all 1s ease';
+            this.container.src = urlImg;
+            this.container.style.width = this.gameBoard.offsetWidth + 'px';
+            this.container.removeClass('d-none');
             return;
         }
-        this.container.style.backgroundImage = 'none';
+        this.container.addClass('d-none');
         this.container.style.transition = 'all 1s ease';
-        q('.this-game-transition .empty-layers')[0].innerHTML =
-            'You have added no layers yet or old image was not found';
+        q('.this-game-transition .empty-layers')[0]
+            .innerHTML = 'You have added no layers yet or old image was not found';
+        q('.this-game-transition .spinner-border').removeClass('d-none');
         q('.this-game-transition .empty-layers').removeClass('d-none');
     }
 
@@ -149,13 +114,16 @@ class GameMap {
             // Return if no data has changed
             if (!this.mapHasChanged(data.layers, this.layers)
                 && data.game.game_layer_selected === dbGame.game_layer_selected) return;
+            // Return if container is not found
+            if (!this.container) return;
+
             // Refill game data
             dbGame = data.game;
             // Set layer selected false until proven true
             let layerSelected = false;
-            console.log('New or deleted layers');
+
             // Reset container
-            this.container.style.backgroundImage = 'none';
+            this.container.src = 'none';
             this.container.style.transition = 'all 1s ease';
             // Reset select if exists
             if (this.select) this.select.innerHTML = '';
@@ -204,5 +172,73 @@ class GameMap {
             this.showLayer(this.layersFolder + this.layers[dbGame.game_layer_selected].layer_bg);
             return data;
         });
+    }
+
+    tokenFormatting = (item) => {
+        return '<div id="token_' + item.info.item_id + '" style="top: 100vh; left: 100vw;"' +
+            ' class="symbol symbol-50px circle position-absolute cursor-move">' +
+            '<span class="symbol-label circle" style="background-image: url(' + item.icon() + ')"></span>' +
+            '</div>';
+    }
+
+    saveToken(token) {
+        let itemID = token.id.charAt(token.id.length - 1);
+        let post = {
+            top: token.style.top,
+            left: token.style.left
+        }
+        ajax('/app/games_ajax/save_token/' + this.selectedLayer(), {coords: post, item_id: itemID}).done((data) => {
+            console.log(data);
+        });
+    }
+
+    deleteToken(token) {
+        let itemID = token.id.charAt(token.id.length - 1);
+        return ajax('/app/games_ajax/delete_token/' + this.selectedLayer(), {item_id: itemID});
+    }
+
+    getPercentage(e, c) {
+        let boardW = this.gameBoard.offsetWidth //  100% of width
+        let boardH = this.gameBoard.offsetHeight // 100% of height
+        let pointerX = e.pageX - this.offsetStart - c.offsetWidth / 2;
+        let pointerY = e.pageY - this.offsetTop - c.offsetHeight / 2;
+        return {x: pointerX / boardW * 100, y: pointerY / boardH * 100}
+    }
+
+    getPixels(e, c) {
+        let pointerX = e.pageX - this.offsetStart - c.offsetWidth / 2;
+        let pointerY = e.pageY - this.offsetTop - c.offsetHeight / 2;
+        return {x: pointerX, y: pointerY}
+    }
+
+    hearTokenThings() {
+        for (let token of this.tokensDraggable.containers) {
+            this.saveToken(token);
+            token.addEventListener('mouseup', (event) => {
+                // Define if token has been selected
+                let tokenSelected = !this.tokensDraggable.hasMoved;
+                // Save token if it moved
+                const coords = this.getPixels(event, token);
+                token.style.left = coords.x + 'px';
+                token.style.top = coords.y + 'px';
+                if (!tokenSelected) this.saveToken(token);
+                //* begin::Open item AC & health *//
+                //* end::Open item AC & health *//
+                //* begin::Remove token listener *//
+                if (!tokenSelected) {
+                    document.onkeyup = null;
+                    return;
+                }
+                document.onkeyup = (e) => {
+                    if (e.key === 'Delete') {
+                        token.remove();
+                        this.deleteToken(token).done((data) => {
+                            console.log(data);
+                        });
+                    }
+                }
+                //* end::Remove token listener *//
+            });
+        }
     }
 }

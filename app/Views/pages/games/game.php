@@ -1,9 +1,11 @@
 <div class="this-game w-100 h-100 bg-white position-relative overflow-hidden">
-    <div id="this-game" class="position-absolute top-0 start-0 this-game-layer" style="width: 100%;height: 100%;"></div>
+    <img id="this_game" style="width: 100%;top: 0;left: 0;" draggable="false"
+         class="position-absolute this-game-layer d-none" alt="Map Layer"/>
     <span class="this-game-transition w-100 h-100 flex-row justify-content-center align-items-center bg-gray-100">
         <span class="empty-layers d-none fs-4 text-center text-primary"></span>
         <span class="spinner-border align-middle ms-2"></span>
     </span>
+    <div id="tokens_container"></div>
 </div>
 <?php if (isset($game) && isset($_SESSION['user']) && $_SESSION['user']['user_id'] === $game['game_creator']): ?>
 

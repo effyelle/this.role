@@ -24,7 +24,7 @@ class Chat {
                 // If Enter without Shift, prevent textarea line break and save message
                 if (!e.shiftKey) {
                     e.preventDefault();
-                    if (this.from) {
+                    if (this.from && this.chatText !== '') {
                         this.saveChat({
                             icon: this.from().icon,
                             msg: '<div class="text-start">' + this.chatText + '</div>',

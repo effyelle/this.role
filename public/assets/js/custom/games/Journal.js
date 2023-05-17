@@ -12,7 +12,6 @@ class Journal {
         this.select = q('#charsheet_selected')[0];
         this.items = {}
         // Init journal
-        this.adminParent = q('#modal_journal')[0];
         this.selectItem = q('#change_item')[0];
         this.includePLayers = q('#include_players')[0];
         this.itemType = q('#item_type')[0];
@@ -21,14 +20,18 @@ class Journal {
         this.toggleEditItem = q('#edit_item-btn')[0];
         this.deleteItemBtn = q('#delete_item-btn')[0];
         this.gameBoard = q('.this-game')[0];
-        this.map = null;
-        this.initJournal().done(() => {
-            if (this.adminParent) this.adminJournal();
-        });
+        this.gameBoardImage = q('#this-game')[0];
+        this.adminParent = q('#modal_journal')[0];
+        // Format admin select
+        if (this.adminParent) {
+            this.loadAdminSelect();
+            this.adminJournal();
+        }
     }
 
     initJournal(board = null) {
-        this.dataHasChanged = (data, board) => {
+        this.dataHasChanged = (data) => {
+            if (data.results.length !== Object.keys(this.items).length) return true;
             // Run loop on results
             if (!this.items) return true;
             for (let i in data.results) {
@@ -44,22 +47,11 @@ class Journal {
                         !(dbItem[j] === 'null' && thisItem[j] === 'null') &&
                         !(dbItem[j] === null && thisItem[j] === 'null')) {
                         // Save new values into this.items.info
-                        this.items[i].info[j] = dbItem[j];
-                    }
-                }
-            }
-            // Check layers
-            if (board) {
-                if (!this.map || Object.keys(this.map).length !== Object.keys(board.map).length) {
-                    this.map = board.map;
-                    return true;
-                }
-                for (let i in this.map) {
-                    if (this.map[i] != board.map[i]) {
                         return true;
                     }
                 }
             }
+            return false;
         }
         // If ajax, init journal item creation from url
         // Get data through ajax
@@ -69,29 +61,17 @@ class Journal {
                 // If the length of both arrays is not the same, items have changed
                 // -> (Items have been added or deleted)
                 // If no new or deleted items, check if inner info has changed
-                if (data.results.length === Object.keys(this.items).length) {
-                    if (!this.dataHasChanged(data, board)) return;
+                if (this.dataHasChanged(data)) {
+                    q('#' + this.container)[0].innerHTML = '';
+                    this.items = {}
+                    //* Save items into this.items *//
+                    this.saveResults(data);
+                    // Show list
+                    this.formatJournalItems();
+                    // Load admin select
+                    if (this.adminParent) this.loadAdminSelect();
                 }
-                q('#' + this.container)[0].innerHTML = '';
-                this.items = {}
-                console.log('New items or deleted items');
-                //* Save items into this.items *//
-                this.saveResults(data);
-                // Show list
-                this.formatJournalItems();
-                // Add tokens to layer
-                if (this.map) this.loadTokens();
-                // Reactivate DOM items listeners
-                this.setItemsOpening();
-            } else {
-                this.items = {}
-                console.log("No journal items in this game yet");
-            }
-            // Format admin select
-            if (this.adminParent) this.loadAdminSelect();
-            //* Init journal for admin *//
-            this.opt.onLoad(data);
-            return data;
+            } else this.items = {}
         }).fail((e) => {
             //* Init journal for admin *//
             console.log("Error: ", e.responseText);
@@ -114,12 +94,53 @@ class Journal {
             }
             this.selectItem.innerHTML = '<option value="-1" disabled selected>No journal items available</option>';
             // Hide buttons
-            console.log('here')
             this.toggleEditItem.addClass('d-none');
             this.deleteItemBtn.addClass('d-none');
         }
         if (this.selectItem) this.loadAdminItems();
         // * end::Select Items * //
+
+        // * begin::Empty modal * //
+        this.emptyJournalModal = () => {
+            q('#modal_journal .modal-header h4')[0].innerHTML = 'Add Journal Item';
+            this.createItemBtn.value = "";
+            $('#item_name').val("Character or Handout");
+            this.itemType.value = 'character';
+            this.switchIncludePlayers();
+            $('#modal_journal input[type=checkbox]').prop('checked', false);
+        }
+        if (this.toggleCreateItem && this.itemType) {
+            this.toggleCreateItem.click(() => {
+                this.emptyJournalModal();
+            });
+        }
+        // * end::Empty modal * //
+
+        // * begin::Fill modal * //
+        this.fillJournalModal = () => {
+            // Search for item
+            let item = this.searchItem(this.selectItem.value);
+            // Return if item was not found
+            if (!item || item === {}) return;
+            // Change modal title
+            q('#modal_journal .modal-header h4')[0].innerHTML = 'Edit Journal Item';
+            // Put ID into save button
+            this.createItemBtn.value = item.info.item_id;
+            // Fill item data -> Name
+            q('#item_name')[0].value = item.info.item_name;
+            // Fill item data -> Type
+            this.itemType.value = item.info.item_type;
+            // Toggle visibility
+            this.switchIncludePlayers();
+            // Fill item data -> Viewers/Editors
+            if (q('.can_see-can_edit')[0]) this.loadViewersEditors(item.info);
+        }
+        if (this.toggleEditItem && this.selectItem && Object.keys(this.items).length > 0) {
+            this.toggleEditItem.click(() => {
+                this.fillJournalModal();
+            });
+        }
+        // * end::Fill modal * //
     }
 
     adminJournal() {
@@ -149,23 +170,6 @@ class Journal {
         }
         // * end::Check/Uncheck modal viewers/editors checkboxes * //
 
-        // * begin::Empty modal * //
-        this.emptyJournalModal = () => {
-            q('#modal_journal .modal-header h4')[0].innerHTML = 'Add Journal Item';
-            this.createItemBtn.value = "";
-            $('#item_name').val("Character or Handout");
-            this.itemType.value = 'character';
-            this.switchIncludePlayers();
-            $('#modal_journal input[type=checkbox]').prop('checked', false);
-        }
-        if (this.toggleCreateItem && this.itemType) {
-            this.toggleCreateItem.click(() => {
-                this.emptyJournalModal();
-            });
-        }
-        // * end::Empty modal * //
-
-        // * begin::Fill modal * //
         this.loadViewersEditors = (item) => {
             let viewers = item.item_viewers;
             let editors = item.item_editors;
@@ -191,30 +195,6 @@ class Journal {
                 }
             }
         }
-        this.fillJournalModal = () => {
-            // Search for item
-            let item = this.searchItem(this.selectItem.value);
-            // Return if item was not found
-            if (!item || item === {}) return;
-            // Change modal title
-            q('#modal_journal .modal-header h4')[0].innerHTML = 'Edit Journal Item';
-            // Put ID into save button
-            this.createItemBtn.value = item.info.item_id;
-            // Fill item data -> Name
-            q('#item_name')[0].value = item.info.item_name;
-            // Fill item data -> Type
-            this.itemType.value = item.info.item_type;
-            // Toggle visibility
-            this.switchIncludePlayers();
-            // Fill item data -> Viewers/Editors
-            if (q('.can_see-can_edit')[0]) this.loadViewersEditors(item.info);
-        }
-        if (this.toggleEditItem && this.selectItem && Object.keys(this.items).length > 0) {
-            this.toggleEditItem.click(() => {
-                this.fillJournalModal();
-            });
-        }
-        // * end::Fill modal * //
 
         // * begin::Create item * //
         this.getJournalModalForm = () => {
@@ -325,34 +305,16 @@ class Journal {
             if (!this.select) return;
             this.select.innerHTML += '<option value="' + item.item_id + '">' + item.item_name + '</option>';
         }
+        // Reset select HTML
+        if (this.select) this.select.innerHTML = '<option selected value="username">' + session.user_username + '</option>';
+        // Rerun items
         for (let i in this.items) {
             let item = this.items[i];
             // Journal list
             this.addItemBtnToList(item);
             // Select for chat
-            if (item.info.item_type === 'character') this.chatSelect(item);
+            if (item.info.item_type === 'character') this.chatSelect(item.info);
         }
-    }
-
-    loadTokens() {
-        // Erase all
-        for (let child of this.gameBoard.children) {
-            if (child.classList.contains('symbol')) child.remove();
-        }
-        if (!this.map.selectedLayer()) return;
-        const selectedLayer = this.map.layers[this.map.selectedLayer()];
-        let tokens = JSON.parse(selectedLayer.layer_tokens);
-        for (let i in tokens) {
-            let item = this.searchItem(i);
-            this.gameBoard.innerHTML += this.tokenFormatting(item);
-        }
-        this.tokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
-        for (let i in tokens) {
-            let item = this.searchItem(i);
-            let newToken = this.tokensDraggable.findContainer('token_' + item.info.item_id);
-            newToken.setAxis(parseInt(tokens[i].left) + newToken.offsetWidth, parseInt(tokens[i].top) + newToken.offsetHeight);
-        }
-        this.hearTokenThings();
     }
 
     addItemBtnToList(item) {
@@ -383,26 +345,6 @@ class Journal {
             }
         }
         return false;
-    }
-
-    setItemsOpening() {
-        // Save button items from DOM
-        this.itemOpenersButtons = q('.' + this.itemClass + ' button.menu-link');
-        // Check data and items have the same length -> means they have been created accordingly
-        if (this.itemOpenersButtons.length === Object.keys(this.items).length) {
-            // Iterate items
-            for (let itemOpenerBtn of this.itemOpenersButtons) {
-                let item = this.searchItem(itemOpenerBtn.value);
-                // Add a click listener to each item to create a new modal
-                itemOpenerBtn.click(() => {
-                    console.log(itemOpenerBtn)
-                    this.setDraggableContainers(itemOpenerBtn);
-                });
-                itemOpenerBtn.addEventListener('drag', (e) => {
-                    this.setDraggableTokens(e, itemOpenerBtn);
-                });
-            }
-        }
     }
 
     listenToOpenedItems(item) {
@@ -451,72 +393,6 @@ class Journal {
         }).fail((e) => {
             console.log(e.responseText);
         });
-    }
-
-    tokenFormatting = (item) => {
-        return '<div id="token_' + item.info.item_id + '" style="top: 100vh; left: 100vw;"' +
-            ' class="symbol symbol-50px circle position-absolute cursor-move">' +
-            '<span class="symbol-label circle" style="background-image: url(' + item.icon() + ')"></span>' +
-            '</div>';
-    }
-
-    setDraggableTokens(e) {
-        const offsetTop = 110; // Pixels
-        const offsetStart = 374; // Pixels
-        e.target.ondragend = (r) => {
-            // Return if there is no layer selected
-            if (!(this.map && this.map.selectedLayer())) return;
-            let item = this.searchItem(e.target.value);
-            let layertokens = JSON.parse(this.map.layers[this.map.selectedLayer()].layer_tokens);
-            for (let i in layertokens) {
-                // If token already exists, do not ad another one
-                if (i === item.info.item_id) return;
-            }
-
-            if (r.pageX > offsetStart && r.pageY > offsetTop) {
-                // Check layer, if it has the token already
-                //
-                if (q('#token_' + item.info.item_id).length !== 0) return;
-                // Add token to game board
-                this.gameBoard.innerHTML += this.tokenFormatting(item);
-                this.tokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
-                let newToken = this.tokensDraggable.findContainer('token_' + item.info.item_id);
-                newToken.setAxis(r.pageX - offsetStart, r.pageY - offsetTop);
-                this.hearTokenThings();
-            }
-        }
-    }
-
-    saveToken(token) {
-        let itemID = token.id.charAt(token.id.length - 1);
-        console.log(itemID)
-        let post = {
-            top: token.offsetTop,
-            left: token.offsetLeft
-        }
-        ajax('/app/games_ajax/save_token/' + this.map.selectedLayer(), {coords: post, item_id: itemID}).done((data) => {
-            console.log(data)
-        });
-    }
-
-    hearTokenThings() {
-        for (let token of this.tokensDraggable.containers) {
-            this.saveToken(token);
-            token.addEventListener('mouseup', () => {
-                let tokenSelected = false;
-                if (!this.tokensDraggable.hasMoved) tokenSelected = true;
-                this.saveToken(token);
-
-                //* Remove Token *//
-                if (!tokenSelected) {
-                    document.onkeyup = null;
-                    return;
-                }
-                document.onkeyup = (e) => {
-                    if (e.key === 'Delete') token.remove();
-                }
-            });
-        }
     }
 
     SheetDnD = function (id, params = {}) {

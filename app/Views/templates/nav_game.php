@@ -58,9 +58,6 @@
                                             Write as...</label>
                                         <select id="charsheet_selected"
                                                 class="form-control form-select form-select-sm form-control-solid this-role-form-field">
-                                            <option selected value="username">
-                                                <?= $_SESSION['user']['user_username'] ?>
-                                            </option>
                                         </select>
                                     </div>
                                     <button class="btn btn-garnet text-white px-3 py-2">Send</button>

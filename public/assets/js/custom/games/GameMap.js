@@ -1,17 +1,130 @@
 class GameMap {
-    constructor(id, options = {}) {
-        this.container = q(id)[0];
-        this.layersFolder = options.folder;
-        this.select = q(options.select)[0];
+    constructor() {
+        this.container = q('#this-game')[0];
+        this.layersFolder = '/assets/media/games/' + dbGame.game_folder + '/layers/';
+        this.select = q('#change_layer')[0];
         this.url = {
             get: '/app/games_ajax/get_layers/' + dbGame.game_id
         }
-        this.game = options.game;
+        this.game = dbGame;
         this.layers = {};
+        this.journalList = q('#journal')[0];
     }
 
     set Layers(layer) {
         this.layers[layer.layer_id] = layer;
+    }
+
+    mapHasChanged = (board) => {
+        // Check layers
+        if (board) {
+            if (!this.map || Object.keys(this.map).length !== Object.keys(board.map).length) return true;
+            for (let i in this.map) {
+                if (this.map[i] != board.map[i]) this.map = board.map;
+            }
+        }
+        return false;
+    }
+
+    listenToMapZoom() {
+        console.log('set zoom')
+        const zoom = (e) => {
+            console.log(this)
+            console.log(e.deltaY)
+            console.log(e.clientX)
+            console.log(e.clientY)
+        }
+        if (this.gameBoardImage) {
+            this.gameBoardImage.removeEventListener('wheel', zoom);
+            this.gameBoardImage.addEventListener('wheel', zoom);
+        }
+    }
+
+    loadTokens() {
+        // Erase all
+        for (let child of this.gameBoard.children) {
+            if (child.classList.contains('symbol')) child.remove();
+        }
+        if (!this.map.selectedLayer()) return;
+        const selectedLayer = this.map.layers[this.map.selectedLayer()];
+        let tokens = JSON.parse(selectedLayer.layer_tokens);
+        for (let i in tokens) {
+            let item = this.searchItem(i);
+            this.gameBoard.innerHTML += this.tokenFormatting(item);
+        }
+        this.tokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
+        for (let i in tokens) {
+            let item = this.searchItem(i);
+            let newToken = this.tokensDraggable.findContainer('token_' + item.info.item_id);
+            newToken.setAxis(parseInt(tokens[i].left) + newToken.offsetWidth, parseInt(tokens[i].top) + newToken.offsetHeight);
+        }
+        this.hearTokenThings();
+    }
+
+    tokenFormatting = (item) => {
+        return '<div id="token_' + item.info.item_id + '" style="top: 100vh; left: 100vw;"' +
+            ' class="symbol symbol-50px circle position-absolute cursor-move">' +
+            '<span class="symbol-label circle" style="background-image: url(' + item.icon() + ')"></span>' +
+            '</div>';
+    }
+
+    setDraggableTokens(e) {
+        const offsetTop = 110; // Pixels
+        const offsetStart = 374; // Pixels
+        e.target.ondragend = (r) => {
+            // Return if there is no layer selected
+            if (!(this.map && this.map.selectedLayer())) return;
+            let item = this.searchItem(e.target.value);
+            let layertokens = JSON.parse(this.map.layers[this.map.selectedLayer()].layer_tokens);
+            for (let i in layertokens) {
+                // If token already exists, do not ad another one
+                if (i === item.info.item_id) return;
+            }
+
+            if (r.pageX > offsetStart && r.pageY > offsetTop) {
+                // Check layer, if it has the token already
+                //
+                if (q('#token_' + item.info.item_id).length !== 0) return;
+                // Add token to game board
+                this.gameBoard.innerHTML += this.tokenFormatting(item);
+                this.tokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
+                let newToken = this.tokensDraggable.findContainer('token_' + item.info.item_id);
+                newToken.setAxis(r.pageX - offsetStart, r.pageY - offsetTop);
+                this.hearTokenThings();
+            }
+        }
+    }
+
+    saveToken(token) {
+        let itemID = token.id.charAt(token.id.length - 1);
+        console.log(itemID)
+        let post = {
+            top: token.offsetTop,
+            left: token.offsetLeft
+        }
+        ajax('/app/games_ajax/save_token/' + this.map.selectedLayer(), {coords: post, item_id: itemID}).done((data) => {
+            console.log(data)
+        });
+    }
+
+    hearTokenThings() {
+        for (let token of this.tokensDraggable.containers) {
+            this.saveToken(token);
+            token.addEventListener('mouseup', () => {
+                let tokenSelected = false;
+                if (!this.tokensDraggable.hasMoved) tokenSelected = true;
+                this.saveToken(token);
+
+                //* Remove Token *//
+                if (!tokenSelected) {
+                    document.onkeyup = null;
+                    return;
+                }
+                document.onkeyup = (e) => {
+                    if (e.key === 'Delete') token.remove();
+                }
+            });
+        }
     }
 
     showLayer(urlImg) {
@@ -19,7 +132,8 @@ class GameMap {
         q('.this-game-transition .spinner-border').addClass('d-none');
         if (urlExists(urlImg)) {
             this.container.style.backgroundImage = "url('" + urlImg + "')";
-            this.container.style.backgroundSize = 'cover';
+            this.container.style.backgroundRepeat = 'no-repeat';
+            this.container.style.backgroundSize = 'contain';
             this.container.style.backgroundPosition = 'center center';
             this.container.style.transition = 'all 1s ease';
             return;

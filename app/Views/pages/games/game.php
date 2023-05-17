@@ -1,5 +1,5 @@
 <div class="this-game w-100 h-100 bg-white position-relative overflow-hidden">
-    <div id="this-game" class="position-absolute h-100 w-100 top-0 start-0 this-game-layer"></div>
+    <div id="this-game" class="position-absolute top-0 start-0 this-game-layer" style="width: 100%;height: 100%;"></div>
     <span class="this-game-transition w-100 h-100 flex-row justify-content-center align-items-center bg-gray-100">
         <span class="empty-layers d-none fs-4 text-center text-primary"></span>
         <span class="spinner-border align-middle ms-2"></span>
@@ -16,7 +16,7 @@
                 </div>
                 <div class="modal-body">
                     <!--begin:Menu item-->
-                    <form method="post" enctype="multipart/form-data" id="add_map" action="/daigual" class="menu-item">
+                    <div class="menu-item">
                         <div class="form-control-solid mb-5">
                             <label for="layer_name" class="menu-link required">Layer Name</label>
                             <input type="text" id="layer_name" name="layer_name"
@@ -35,7 +35,7 @@
                                 <span class="symbol-label" id="add_layer-preview"></span>
                             </div>
                         </div>
-                    </form>
+                    </div>
                     <div id="add_layer-error" class="fs-4 text-danger text-center w-100 d-none">
                         Please fill all data.
                     </div>
@@ -155,7 +155,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         if (dbGame !== [] && dbGame.game_id) {
             // Pass game details to set board, chat and journal
-            initGame(dbGame, session);
+            initGame();
         }
     });
 </script>

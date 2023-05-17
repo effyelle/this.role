@@ -1,11 +1,6 @@
-function initGame(dbGame, session) {
+function initGame() {
     // * Board intance * //
     const board = new Board('.btn.dice');
-    board.map = new GameMap('#this-game', {
-        folder: '/assets/media/games/' + dbGame.game_folder + '/layers/',
-        select: '#change_layer',
-        game: dbGame
-    });
 
     //* begin::Map Layers *//
 
@@ -155,63 +150,7 @@ function initGame(dbGame, session) {
 
     //* end::Map Layers *//
 
-    //* begin::Journal *//
-
-    const journal = new Journal('journal', {
-        onLoad: function (data) {
-            console.log(data);
-        },
-        onError: function (e) {
-            console.log(e);
-            $('.modal_error_response').html(e);
-            $('#modal_error-toggle').click();
-        }
-    });
-
-    //* end::Journal *//
-
     //* begin::Chat *//
-
-    const chat = new Chat('#chat_messages');
-    if (!chat.error) {
-        chat.from = () => {
-            let select = q('#charsheet_selected')[0];
-            if (select) {
-                if (!isNaN(select.value)) {
-                    let it = journal.searchItem(parseInt(select.value));
-                    if (it) {
-                        let icon = '/assets/media/games/blank.png';
-                        if (urlExists(it.folder + it.info.item_icon)) {
-                            icon = it.folder + it.info.item_icon;
-                        }
-                        return {icon: icon, name: it.info.item_name};
-                    }
-                }
-            }
-            return {icon: session.user_avatar, name: session.user_username}
-        }
-        chat.ChatBubble = '#chat';
-        //* Save basic rolls *// -> This is the navigation menu on top of the page (all the dices in black & white)
-        q('.btn.dice').click(function () {
-            this.text = () => {
-                let nDices = 1;
-                let input = q('#roll-' + this.value)[0];
-                if (input && input.value !== "" && !isNaN(input.value)) nDices = input.value;
-                return chat.formatBasicRoll(this.value, nDices, board.dices[this.value].roll(nDices));
-            }
-            let thisFrom = chat.from();
-            chat.saveChat({
-                icon: thisFrom.icon,
-                msg: this.text(),
-                sender: thisFrom.name,
-                msgType: "nav_dice"
-            });
-        });
-        //* Next rolls to listen are the ones from the journal items *//
-        // -> Incomplete
-    } else {
-        console.log("Could not init chat: ", chat.error);
-    }
 
     //* end::Chat *//
 
@@ -222,9 +161,11 @@ function initGame(dbGame, session) {
     // setInterval(thisShouldBeAWebSocket, 5000);
 
     function thisShouldBeAWebSocket() {
-        chat.getChat();
+        board.chat.getChat();
         board.map.loadLayers().done(() => {
-            journal.initJournal(board);
+            board.journal.initJournal(board).done(() => {
+                board.setItemsOpening();
+            });
         });
         /*journal.getJournalAjax().done((data) => {
             if (data.results && data.results.length === journal.items.length) {

@@ -54,13 +54,13 @@
                                 </div>
                                 <div class="d-flex flex-row justify-content-between align-items-center mt-5">
                                     <div class="select-charsheets">
-                                        <label for="charsheet_selected" class="form-label">
+                                        <label for="charsheet_selected" class="form-label d-none">
                                             Write as...</label>
                                         <select id="charsheet_selected"
                                                 class="form-control form-select form-select-sm form-control-solid this-role-form-field">
                                         </select>
                                     </div>
-                                    <button class="btn btn-garnet text-white px-3 py-2">Send</button>
+                                    <button id="chat_send" class="btn btn-garnet text-white px-3 py-2">Send</button>
                                 </div>
                             </div>
                         </div>

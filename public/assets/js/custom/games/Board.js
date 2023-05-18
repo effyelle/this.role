@@ -6,8 +6,8 @@ class Board {
      * @param options
      */
     constructor(dicesClass, options = {}) {
-        this.dicesBtns = document.querySelectorAll(dicesClass);
-        this.dices = this.createDices(this.dicesBtns);
+        this.diceButtons = q(dicesClass);
+        this.CreateDices = this.diceButtons;
         this.dices.isDiceFormat = function (roll) {
             let split = roll.split('d');
             return split.length === 2 && split[0] !== "" && split[1] !== "" && !isNaN(split[0]) && !isNaN(split[1]);
@@ -38,11 +38,10 @@ class Board {
     }
 
     setChat() {
-        this.chat.from = () => {
-            let select = q('#charsheet_selected')[0];
-            if (select) {
-                if (!isNaN(select.value)) {
-                    let it = this.journal.searchItem(parseInt(select.value));
+        this.chat.From = () => {
+            if (this.chat.select) {
+                if (!isNaN(this.chat.select.value)) {
+                    let it = this.journal.searchItem(parseInt(this.chat.select.value));
                     if (it) {
                         let icon = '/assets/media/games/blank.png';
                         if (urlExists(it.folder + it.info.item_icon)) {
@@ -54,9 +53,9 @@ class Board {
             }
             return {icon: session.user_avatar, name: session.user_username}
         }
+        this.chat.Select = '#charsheet_selected';
         this.chat.ChatBubble = '#chat';
         //* Save basic rolls *// -> This is the navigation menu on top of the page (all the dices in black & white)
-        this.diceButtons = q('.btn.dice');
         for (let btn of this.diceButtons) {
             btn.click(() => {
                 this.text = () => {
@@ -105,9 +104,8 @@ class Board {
      * Create dices objects
      * -----------------------------------------------------------------------------------------------------------------
      * @param buttons
-     * @returns {{}}
      */
-    createDices(buttons) {
+    set CreateDices(buttons) {
         let dicesSides = {};
         for (let i = 0; i < buttons.length; i++) {
             let btn = buttons[i];
@@ -120,7 +118,7 @@ class Board {
         for (let i in dicesSides) {
             dicesObjects[i] = new this.Dice(dicesSides[i]);
         }
-        return dicesObjects;
+        this.dices = dicesObjects;
     }
 
     setItemsOpening() {

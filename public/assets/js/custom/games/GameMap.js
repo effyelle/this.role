@@ -62,6 +62,10 @@ class GameMap {
         return false;
     };
 
+    set MapChanged(bool) {
+        this.changed = bool;
+    }
+
     showLayer(urlImg) {
         q('.this-game-transition .spinner-border').addClass('d-none');
         q('.this-game-transition .empty-layers').addClass('d-none');
@@ -113,7 +117,11 @@ class GameMap {
 
             // Return if no data has changed
             if (!this.mapHasChanged(data.layers, this.layers)
-                && data.game.game_layer_selected === dbGame.game_layer_selected) return;
+                && data.game.game_layer_selected === dbGame.game_layer_selected) {
+                this.MapChanged = false;
+                return;
+            }
+            this.MapChanged = true;
             // Return if container is not found
             if (!this.container) return;
 
@@ -213,7 +221,6 @@ class GameMap {
 
     hearTokenThings() {
         for (let token of this.tokensDraggable.containers) {
-            this.saveToken(token);
             token.addEventListener('mouseup', (event) => {
                 // Define if token has been selected
                 let tokenSelected = !this.tokensDraggable.hasMoved;

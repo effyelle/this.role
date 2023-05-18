@@ -129,14 +129,24 @@ class Board {
             // Iterate items
             for (let itemOpenerBtn of itemOpenersButtons) {
                 // Add a click listener to each item to create a new modal
-                itemOpenerBtn.click(() => {
-                    this.setDraggableItemSheets(itemOpenerBtn);
-                });
-                itemOpenerBtn.addEventListener('drag', (e) => {
-                    this.setDraggableTokens(e);
-                });
+                if (this.journal.changed) {
+                    itemOpenerBtn.addEventListener('click', () => {
+                        this.setDraggableItemSheets(itemOpenerBtn);
+                    });
+                }
+                if (this.map.changed) {
+                    itemOpenerBtn.addEventListener('drag', (e) => {
+                        this.setDraggableTokens(e);
+                    });
+                }
             }
         }
+    }
+
+    loadItemsFields() {
+        // Load what
+        if (this.journal.journalDraggable) console.log(this.journal.journalDraggable);
+        this.journal.getFieldsData();
     }
 
     setDraggableItemSheets(btn) {
@@ -144,7 +154,9 @@ class Board {
         let item = this.journal.searchItem(btn.value);
         if (!item || item === {}) return;
         // Return if item has already been opened
+        console.log(q('#' + item.draggableContainerId))
         if (q('#' + item.draggableContainerId).length !== 0) return;
+        console.log(q('#' + item.draggableContainerId))
         return ajax('/app/games_ajax/sheet/' + item.info.item_id, {item_type: item.info.item_type}, 'post', 'text').done((txt) => {
             item.openItem(txt);
             // Check it was created correctly
@@ -154,7 +166,7 @@ class Board {
                 $('#modal_error-toggle').click();
                 return;
             }
-            this.journal.journalDraggable = new Draggable('.' + item.draggableContainerClass, '.' + item.draggableContainerClass + ' .cursor-move', {
+            this.journal.JournalDraggable = new Draggable('.' + item.draggableContainerClass, '.' + item.draggableContainerClass + ' .cursor-move', {
                 max: '.max-btn',
                 min: '.min-btn',
                 close: '.close_item-btn',
@@ -215,8 +227,15 @@ class Board {
                 let newToken = this.map.tokensDraggable.findContainer('token_' + item.info.item_id);
                 const coords = this.map.getPixels(dragendEvt, newToken);
                 newToken.setAxis(coords.x + 'px', coords.y + 'px');
+                this.map.saveToken(newToken);
                 this.map.hearTokenThings();
             }
         }
+    }
+
+    reload() {
+        if (this.map.changed) this.loadTokens();
+        if (this.journal.changed) this.loadItemsFields();
+        this.setItemsOpening();
     }
 }

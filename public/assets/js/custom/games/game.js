@@ -155,14 +155,13 @@ function initGame() {
     thisShouldBeAWebSocket();
 
     //* Interval to get page responses in "real" time *//
-    setInterval(thisShouldBeAWebSocket, 250000);
+    setInterval(thisShouldBeAWebSocket, 5000);
 
     function thisShouldBeAWebSocket() {
         board.chat.getChat();
         board.map.loadLayers().done(() => {
             board.journal.initJournal(board).done(() => {
-                board.loadTokens();
-                board.setItemsOpening();
+                board.reload();
             });
         });
         /*journal.getJournalAjax().done((data) => {

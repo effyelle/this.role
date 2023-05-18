@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div class="modal-body">
-                    <div class="flex-column align-content-center align-items-center justify-content-start">
+                    <div class="flex-column align-content-start align-items-start justify-content-start tab-content">
                         <!--begin::Tabs-->
                         <ul class="nav nav-tabs w-100 pt-2 justify-content-start fs-7">
                             <li class="nav-item">
@@ -46,11 +46,18 @@
                                     <span>Character</span>
                                 </a>
                             </li>
-                            <li class="nav-item d-none">
+                            <li class="nav-item">
                                 <a class="nav-link py-2 px-3" data-bs-toggle="tab"
                                    href="#draggable_<?= $data['item_id'] ?? "" ?>-spells">
                                     <i class="fa fa-book f-lg text-this-role-light"></i>
                                     <span>Spells</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link py-2 px-3" data-bs-toggle="tab"
+                                   href="#draggable_<?= $data['item_id'] ?? "" ?>-settings">
+                                    <i class="fa fa-gear f-lg text-this-role-light"></i>
+                                    <span></span>
                                 </a>
                             </li>
                         </ul>
@@ -58,7 +65,6 @@
                         <!--begin::Character content-->
                         <div id="draggable_<?= $data['item_id'] ?? "" ?>-character"
                              class="py-8 px-2 tab-pane fade show active">
-                            <button value="10" id="<?= $data['item_id'] ?? "" ?>" class="d-none this-item-id"></button>
                             <div class="flex-row-wrap gap-5 justify-content-start align-items-stretch">
                                 <!--begin::Basic info-->
                                 <div class="column this-outline">
@@ -163,19 +169,6 @@
                                             <!--end::Col (Character Origin Details)-->
                                         </div>
                                         <!--end::Row-->
-                                        <!--begin::Row - Class Management-->
-                                        <div class="column flex-column justify-self-end form-control-solid mb-5 w-100">
-                                            <div class="form-control-solid ms-auto">
-                                                <button type="button" id="new_main" name="new_main"
-                                                        data-bs-target="#manage_class_<?= $data['item_id'] ?>"
-                                                        data-bs-toggle="modal"
-                                                        class="btn btn-sm btn-primary p-1 px-2 save_class">
-                                                    <i class="fa-solid fa-save ms-1"></i>
-                                                    Manage character classes
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <!--end::Row - Class Management-->
                                         <!--begin::Row - Combat (general)-->
                                         <div class="flex-row-wrap justify-content-center align-items-center gap-3 mt-3 mb-6">
                                             <!--begin::Class Armor (CA)-->
@@ -245,7 +238,7 @@
                                                             <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
                                                                 <button type="button"
                                                                         class="btn p-0 combat-item_title text-hover-primary">
-                                                                    <?= strtoupper($score['fname']); // Name in CAPS                                                                                                      ?>
+                                                                    <?= strtoupper($score['fname']); // Name in CAPS                                                                                                                             ?>
                                                                 </button>
                                                                 <label for="this_score_<?= $short; ?>"
                                                                        class="fs-3">0</label>
@@ -401,7 +394,7 @@
                                                     </div>
                                                     <button type="button"
                                                             class="btn btn-sm p-0 text-hover-danger fs-9 fw-bolder">
-                                                        DEATH SAVE
+                                                        DEATH SAVES
                                                     </button>
                                                 </div>
                                                 <!--end::Row - Death Saves-->
@@ -432,7 +425,7 @@
                                                     <!--begin::Blinded-->
                                                     <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
                                                         <input type="checkbox" id="this_cond_<?= $n ?>"
-                                                               name="this_cond_<?= $n ?>" <?= $c === "1" ? "checked" : "" ?>
+                                                               name="this_cond_<?= $n ?>"
                                                                class="form-control form-check-input warning condition"/>
                                                         <label for="this_cond_<?= $n ?>" type="button"
                                                                class="btn p-0 text-hover-primary fs-8 skill">
@@ -585,76 +578,109 @@
                         <!--begin::Spells content-->
                         <div id="draggable_<?= $data['item_id'] ?>-spells" class="py-8 px-2 tab-pane fade"></div>
                         <!--end::Spells content-->
-
+                        <!--begin::Settings content-->
+                        <div id="draggable_<?= $data['item_id'] ?? "" ?>-settings"
+                             class="py-8 px-2 tab-pane fade">
+                            <div class="flex-row-wrap gap-5 justify-content-start align-items-start">
+                                <!--begin::Class management-->
+                                <div class="column this-outline p-3">
+                                    <div class="flex-row-wrap justify-content-between gap-3">
+                                        <!--begin::Title-->
+                                        <div class="fs-3 p-3">
+                                            Manage <span data-from="item_name"> </span>'s classes
+                                        </div>
+                                        <!--end::Title-->
+                                        <!--begin::Add class button-->
+                                        <button type="button" class="btn btn-sm p-2">
+                                            <span>Add class</span>
+                                            <i class="fa fa-plus-circle ms-1 fs-3 text-primary"></i>
+                                        </button>
+                                        <!--end::Add class button-->
+                                    </div>
+                                    <!--begin::Row Classes groups container-->
+                                    <div class="flex-column class_groups_container">
+                                        <!--begin::Row Class group-->
+                                        <div class="class_group flex-column justify-content-between gap-3 border-top-1px-gray-300 py-3">
+                                            <!--begin::Col Class, level, subclass-->
+                                            <div class="flex-row-wrap form-control-solid align-items-center gap-2">
+                                                <!--begin::Col Class-->
+                                                <label for="class">Class</label>
+                                                <select id="class" name="class" aria-selected="-1"
+                                                        class="px-3 ms-3 form-control form-control-sm">
+                                                    <option value="-1" disabled selected>Select one</option>
+                                                    <?php if ($classes) {
+                                                        foreach ($classes as $class) { ?>
+                                                            <option value="<?= strtolower($class['class']); ?>">
+                                                                <?= strtosentence($class['class']); ?>
+                                                            </option>
+                                                        <?php }
+                                                    } ?>
+                                                </select>
+                                                <!--end::Col Class-->
+                                                <!--begin::Col Level-->
+                                                <div class="flex-row-column form-control-solid ms-3">
+                                                    <label for="lvl">Level</label>
+                                                    <input type="number" id="lvl" name="lvl" value="1"
+                                                           style="width: 40px;" placeholder="1"
+                                                           class="form-control ms-2 text-end"/>
+                                                </div>
+                                                <!--end::Col Level-->
+                                                <!--begin::Col Subclass-->
+                                                <div class="flex-row-wrap form-control-solid ms-3 align-items-end">
+                                                    <label for="">Subclass</label>
+                                                    <input type="text" name="subclass" placeholder="Circle of Hellfire"
+                                                           id="" value="" class="form-control ms-2 px-2"/>
+                                                </div>
+                                                <!--end::Col Subclass-->
+                                            </div>
+                                            <!--end::Col Class, level, subclass-->
+                                            <!--begin::Col Buttons-->
+                                            <div class="flex-row align-self-start align-items-end">
+                                                <button type="button" id="" name="save_class" tabindex="-1"
+                                                        class="btn btn-sm btn-danger p-1 fs-8">
+                                                    <!--begin::Indicator label-->
+                                                    <span class="indicator-label ps-1">
+                                                        Delete class
+                                                        <i class="fa-solid fa-trash ms-1 fs-8"></i>
+                                                    </span>
+                                                    <!--end::Indicator label-->
+                                                    <!--begin::Indicator progress-->
+                                                    <span class="indicator-progress">
+                                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                                    </span>
+                                                    <!--end::Indicator progress-->
+                                                </button>
+                                            </div>
+                                            <!--end::Col Buttons-->
+                                        </div>
+                                        <!--end::Row Class group-->
+                                        <div class="flex-row justify-content-end border-top-1px-gray-300 pt-3">
+                                            <button type="button" id="" name="save_class" tabindex="-1"
+                                                    class="btn btn-sm btn-primary p-2">
+                                                <!--begin::Indicator label-->
+                                                <span class="indicator-label">
+                                                        <i class="fa-solid fa-save ms-1"></i>
+                                                    </span>
+                                                <!--end::Indicator label-->
+                                                <!--begin::Indicator progress-->
+                                                <span class="indicator-progress">
+                                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                                    </span>
+                                                <!--end::Indicator progress-->
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!--end::Row Classes groups container-->
+                                </div>
+                                <!--end::Class management-->
+                            </div>
+                        </div>
+                        <!--end::Settings content-->
                     </div>
                 </div>
             </div>
         </div>
         <!--end::Draggable item-->
-        <!--begin::Modal-->
-        <div class="modal fade manage_class_modal" tabindex="-1" id="manage_class_<?= $data['item_id'] ?>">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4>Manage <span data-from="item_name"> </span>'s classes</h4>
-                    </div>
-                    <div class="modal-body">
-                        <!--begin:Menu item-->
-                        <div class="flex-row form-control-solid align-items-center">
-                            <label for="class">Class</label>
-                            <select id="class" name="class" aria-selected="-1"
-                                    class="px-3 ms-3 form-control form-control-sm">
-                                <option value="-1" disabled selected>Select one</option>
-                                <?php if ($classes) {
-                                    foreach ($classes as $class) { ?>
-                                        <option value="<?= strtolower($class['class']); ?>">
-                                            <?= strtosentence($class['class']); ?>
-                                        </option>
-                                    <?php }
-                                } ?>
-                            </select>
-                            <!--begin::Row Level-->
-                            <div class="flex-row form-control-solid ms-3 w-100px">
-                                <label for="lvl">Level</label>
-                                <input type="number" id="lvl" name="lvl" value="1"
-                                       class="form-control this-role-form-field ms-3 text-end"/>
-                            </div>
-                            <!--end::Row Level-->
-                        </div>
-                        <div class="flex-row form-control-solid align-items-center mt-5 gap-3">
-                            <!--begin::Row Subclass-->
-                            <div class="flex-row form-control-solid col-12">
-                                <label for="subclass">Subclass</label>
-                                <input type="text" id="subclass" name="subclass" value=""
-                                       class="form-control this-role-form-field ms-3"/>
-                            </div>
-                            <!--end::Row Subclass-->
-                        </div>
-                        <div id="add_layer-error" class="fs-4 text-danger text-center w-100 d-none">
-                            Error message here !!!
-                        </div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-sm btn-dark dismiss_btn" data-bs-dismiss="modal"
-                                tabindex="0">
-                            Cancel
-                        </button>
-                        <button type="button" id="" name="save_classes" tabindex="-1"
-                                class="btn btn-sm btn btn-primary">
-                            <!--begin::Indicator label-->
-                            <span class="indicator-label">Save</span>
-                            <!--end::Indicator label-->
-                            <!--begin::Indicator progress-->
-                            <span class="indicator-progress">Please wait...
-                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                        </span>
-                            <!--end::Indicator progress-->
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--end::Modal-->
     </div>
 
 <?php } ?>

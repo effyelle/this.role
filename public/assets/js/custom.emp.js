@@ -60,6 +60,7 @@ const q = function (t) {
     let el = document.querySelectorAll(t);
     el.click = function (callback) {
         for (let i = 0; i < el.length; i++) {
+            el[i].removeEventListener('click', callback);
             el[i].addEventListener('click', callback);
         }
     };
@@ -94,6 +95,7 @@ const q = function (t) {
     }
     for (let i = 0; i < el.length; i++) {
         el[i].click = (callback) => {
+            el[i].removeEventListener('click', callback);
             el[i].addEventListener('click', callback);
         }
         el[i].blur = (callback) => {

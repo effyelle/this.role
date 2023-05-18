@@ -27,6 +27,10 @@ class Journal {
         }
     }
 
+    set JournalDraggable(draggables) {
+        this.journalDraggable = draggables;
+    }
+
     SheetDnD = function (id, params = {}) {
         this.info = params.itemInfo;
         // Add container for saving future modals
@@ -156,6 +160,10 @@ class Journal {
         }
     }
 
+    set JournalChanged(bool) {
+        this.changed = bool;
+    }
+
     initJournal(board = null) {
         this.dataHasChanged = (data) => {
             if (data.results.length !== Object.keys(this.items).length) return true;
@@ -184,11 +192,14 @@ class Journal {
         // Get data through ajax
         return ajax(this.url.get).done((data) => {
             // Checck data is not null
+            this.JournalChanged = true;
             if (data.results && typeof data.results === 'object' && data.results.length > 0) {
                 // If the length of both arrays is not the same, items have changed
                 // -> (Items have been added or deleted)
                 // If no new or deleted items, check if inner info has changed
+                this.JournalChanged = false;
                 if (this.dataHasChanged(data)) {
+                    this.JournalChanged = true;
                     q('#' + this.container)[0].innerHTML = '';
                     this.items = {}
                     //* Save items into this.items *//
@@ -480,155 +491,49 @@ class Journal {
         this.itemsOpened = q('.' + item.draggableContainerClass);
         //* Rerun opened items to add listeners *//
         for (let itemOpened of this.itemsOpened) {
-            console.log(itemOpened)
             let id = itemOpened.id.charAt(itemOpened.id.length - 1);
             let this_item = this.searchItem(id);
             // Go to next opened draggable DOM item if journal item is not found
             if (!this_item || this_item === {}) continue;
-            console.log(item);
+            //* HERE LOAD ITEM INFO *//
+            // this.getDataFromFields()
+
             // Fill from data base and listen to changes to save that data
-            //* begin::Image change *//
-            this.setItemImage(item);
-            //* end::Image change *//
-            // * Set inspiration
-            // * Set Spellcasting ability-> Spell Save DC -> Spell attack bonus
-            // * Set skills
-            // * Set class and all that it affects
-            // * Set health -> hit dices related to class above
-            // * Set tables ? -> Abilities
+            this.FieldListeners = this_item;
         }
     }
 
-    setItemImage(item) {
-        console.log(item)
-        const iconInput = q('#' + item.draggableContainerId + ' .this-role-form-field[name="item_icon"]')[0];
-        const iconHolder = q('#' + item.draggableContainerId + ' .item_icon-holder')[0];
-        iconInput.change(() => {
-            this.saveField(iconInput, item.info.item_id).done((data) => {
-                data = JSON.parse(data);
-                if (data.response) {
-                    readImageChange(iconInput, iconHolder);
-                    return;
-                }
-                $('.modal_error_response').html('Image could not be uploaded');
-                $('#modal_error-toggle').click();
-            });
-        });
+    set FieldListeners(it) {
+        //* begin::Input type text fields *//
+        this.BlurFields = it;
+        //* end::Input type text fields *//
+        //* begin::Image change *//
+        this.ItemImage = it;
+        //* end::Image change *//
+        //* begin::Inspiration *//
+        this.Inspiration = it;
+        //* end::Inspiration *//
+        //* begin::Ability score proficiencies *//
+        this.ScoreProfs = it;
+        //* end::Ability score proficienciess *//
+        //* begin::Skills *//
+        this.Skills = it;
+        //* end::Skills *//
+        //* begin::Health group *//
+        this.HealthGroup = it;
+        //* end::Health group *//
+        //* begin::Table *//
+        this.Tables = it;
+        //* end::Table *//
+
+        // * Set class and all that it affects
+        // * Set health -> hit dices related to class above
+        // * Set tables ? -> Abilities
+        // * Set Spellcasting ability-> Spell Save DC -> Spell attack bonus
     }
 
-// This needs to change to reset all possible already opened items
-
-    listenToSheetChanges(modals) {
-        // * You need to reapply listeners to all opened items when you open a new one * //
-        for (let modal of modals) {
-            // Search for item
-            let item = this.searchItem(modal.id.charAt(modal.id.length - 1));
-            // Do not do further actions if item was not found
-            if (!item) continue;
-
-            let this_draggable_fields = q('#' + item.draggableContainerId + ' .this-role-form-field');
-            let this_mngclasses_fields = q('#manage_class_' + item.info.item_id + ' .this-role-form-field');
-            //* begin::General Inputs change *//
-            [this_draggable_fields, this_mngclasses_fields].forEach(this_fields => {
-                getDataFromFields(this_fields, item);
-                // Save on field lost of focus
-                this_fields.blur(function () {
-                    saveField(this, item.info.item_id).done(() => {
-                        getDataFromFields(this_fields, item);
-                        // Get skill proficiencies
-                        getDataFromFields(q('#' + item.draggableContainerId + ' input.skill_prof'), item);
-                        // Get hit dices
-                        getDataFromFields(q('#' + item.draggableContainerId + ' select[name="this_hit_dices"]'), item);
-                    });
-                });
-            });
-            //* end::General Inputs change *//
-            //* begin::Inspiration *//
-            setInspiration(item);
-            //* end::Inspiration *//
-            //* begin::Skill proficiencies *//
-            setSkills(item);
-            //* end::Skill proficiencies *//
-            //* begin::Class *//
-            // Has to be called AFTER the general filling
-            setClassGroup(item);
-            //* end::Class *//
-            //* begin::Health Container *//
-            setHealth(item);
-            //* end::Health Container *//
-            //* begin::Table content creation *//
-            // -> This includes attacks & spells, global modifiers, tools & custom skills, and the bag
-            setTables(item);
-            //* end::Table content creation *//
-        }
-    }
-
-    saveField(object, id) {
-        let form = new FormData();
-        let objName = object.getAttribute('name');
-        let objVal = object.value;
-        if (objName === 'item_icon') {
-            objName = 'item_icon[]';
-            objVal = object.files[0];
-        }
-        if (objName.match(/this_prof/)) {
-            objVal = object.checked ? "1" : "0";
-        }
-        form.append(objName, objVal);
-        form.append('item_id', id);
-        console.log('saveField objName= ', objName);
-        console.log('saveField objVal= ', objVal)
-        return $.ajax({
-            type: "post",
-            url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
-            data: form,
-            processData: false,
-            contentType: false,
-            success: (data) => {
-                data = JSON.parse(data);
-                console.log("saveField response", data);
-                if (data.response) {
-                    for (let i in this.items) {
-                        if (this.items[i].info.item_id === id) {
-                            for (let j in data.params) {
-                                this.items[i].info[j] = data.params[j];
-                            }
-                        }
-                    }
-                }
-                return data;
-            },
-            error: (e) => {
-                console.log(e);
-            }
-        });
-    }
-
-    saveTable(t) {
-        let name = t.id.substring(0, t.id.length - 2);
-        let id = t.id.substring(t.id.length - 1);
-        let form = {item_id: id};
-        form[name] = t.innerHTML;
-        return $.ajax({
-            type: "post",
-            url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
-            data: form,
-            dataType: "json",
-            success: (data) => {
-                if (data.response) {
-                    for (let i in this.items) {
-                        if (this.items[i].info.item_id === id) {
-                            for (let j in data.params) {
-                                this.items[i].info[j] = data.params[j];
-                            }
-                        }
-                    }
-                }
-                return data;
-            }, error: (e) => {
-                console.log(e.responseText);
-            }
-        });
+    getFieldsData() {
+        console.log()
     }
 
     getDataFromFields(inputs, item) {
@@ -800,12 +705,39 @@ class Journal {
         }
     }
 
-    setInspiration(item) {
-        const inspCont = q('#' + item.draggableContainerId + ' .inspiration')[0];
-        const insp = q('#' + item.draggableContainerId + ' [name=inspiration]')[0];
+    set BlurFields(it) {
+        this.inputFields = q('#' + it.draggableContainerId + ' input.this-role-form-field');
+        this.textAreas = q('#' + it.draggableContainerId + ' textarea.this-role-form-field');
+        [this.inputFields, this.textAreas].forEach(field => {
+            for (let f of field) {
+                f.blur(() => {
+                    this.saveField(f, it.info.item_id);
+                });
+            }
+        });
+    }
+
+    set ItemImage(it) {
+        const iconInput = q('#' + it.draggableContainerId + ' .this-role-form-field[name="item_icon"]')[0];
+        const iconHolder = q('#' + it.draggableContainerId + ' .item_icon-holder')[0];
+        iconInput.change(() => {
+            this.saveField(iconInput, it.info.item_id).done((data) => {
+                data = JSON.parse(data);
+                if (data.response) {
+                    readImageChange(iconInput, iconHolder);
+                    return;
+                }
+                $('.modal_error_response').html('Image could not be uploaded');
+                $('#modal_error-toggle').click();
+            });
+        });
+    }
+
+    set Inspiration(it) {
+        const inspCont = q('#' + it.draggableContainerId + ' .inspiration')[0];
+        const insp = q('#' + it.draggableContainerId + ' [name=inspiration]')[0];
         if (inspCont && insp) {
-            function loadInsp() {
-                let it = this.searchItem(item.info.item_id);
+            const loadInsp = () => {
                 if (it.info.info) {
                     let info = JSON.parse(it.info.info);
                     if (info.inspiration) {
@@ -820,26 +752,384 @@ class Journal {
                     insp.value = "0";
                 }
             }
-
             loadInsp();
-            inspCont.click(function () {
-                saveField(insp, item.info.item_id).done(loadInsp);
+            inspCont.click(() => {
+                this.saveField(insp, it.info.item_id).done(loadInsp);
             });
         }
     }
 
-    setSkills(item) {
-        // These checkboxes will save if the character is proficient or expert in a skill
-        let skillChecks = q('#' + item.draggableContainerId + ' .skill_prof');
-        if (skillChecks) {
-            getDataFromFields(skillChecks, item);
-            skillChecks.click(function () {
-                saveField(this, item.info.item_id).done(() => {
-                    getDataFromFields(skillChecks, item);
-                });
+    set ScoreProfs(it) {
+        this.scoreProfs = q('#' + it.draggableContainerId + ' input.score_prof');
+        // this.getDataFromFields(this.scoreProfs, item);
+        for (let score of this.scoreProfs) {
+            score.click(() => {
+                this.saveField(score, it.info.item_id);
             });
         }
+    }
 
+    set Skills(it) {
+        // These checkboxes will save if the character is proficient or expert in a skill
+        this.skillChecks = q('#' + it.draggableContainerId + ' .skill_prof');
+        for (let skillCheck of this.skillChecks) {
+            skillCheck.click(() => {
+                this.saveField(skillCheck, it.info.item_id);
+            });
+        }
+    }
+
+    set HealthGroup(it) {
+        this.deathSavesSuccess = q('#' + it.draggableContainerId + ' .death_saves.success');
+        this.deathSavesFailure = q('#' + it.draggableContainerId + ' .death_saves.danger');
+        this.exhaustionsChecks = q('#' + it.draggableContainerId + ' input.exhaustion');
+        this.conditionChecks = q('#' + it.draggableContainerId + ' .condition');
+        const checks = [this.deathSavesSuccess, this.deathSavesFailure, this.exhaustionsChecks, this.conditionChecks];
+        for (let checkGroup of checks) {
+            for (let check of checkGroup) {
+                check.click(() => {
+                    if (!check.classList.contains('condition')) {
+                        let valueHolder = parseInt(check.value);
+                        let limit = check.checked || (check.nextElementSibling && check.nextElementSibling.checked) ? valueHolder : valueHolder - 1;
+                        check.value = limit;
+                        for (let i = 0; i < limit; i++) {
+                            checkGroup[i].checked = true;
+                        }
+                        this.saveField(check, it.info.item_id).done(() => {
+                            check.value = valueHolder;
+                        });
+                        return;
+                    }
+                    check.value = check.checked ? "1" : "0";
+                    this.saveField(check, it.info.item_id);
+                });
+            }
+        }
+    }
+
+    set Tables(it) {
+        this.characterTableButtons = [
+            q('#atk_spells_btn' + it.info.item_id),
+            q('#global_mods_btn' + it.info.item_id),
+            q('#tools_custskills_btn' + it.info.item_id),
+            q('#bag_btn' + it.info.item_id),
+            q('#other_feats_btn' + it.info.item_id)
+        ]
+        this.accordionMenus = (t) => {
+            let menus = q('#' + t.id + ' .menu-item.menu-accordion');
+            for (let m of menus) {
+                m.click((e) => {
+                    let btn = false;
+                    for (let child of m.children[0].children) {
+                        if (child.nodeName === "BUTTON") {
+                            btn = child;
+                        }
+                    }
+                    if (e.target === btn || e.target === btn.children[0]) {
+                        m.toggleClass('hover');
+                        m.toggleClass('show');
+                        this.saveTable(t);
+                    }
+                });
+            }
+        }
+        this.createNewRow = (t) => {
+            // Attacks and spells
+            if (t.classList.contains('attacks_spells_table')) {
+                t.innerHTML += this.rowAttacksSpells();
+            } // Global modifiers
+            else if (t.classList.contains('global_modifiers_table')) {
+                t.innerHTML += this.rowGlobalModifiers();
+            } // Bag
+            else if (t.classList.contains('bag_table')) {
+                t.innerHTML += this.rowBag();
+            } // Other features
+            else if (t.classList.contains('other_feats_table')) {
+                // Div to fill ????
+                t.innerHTML += this.rowCustomFeatures();
+            }
+        }
+        this.setSaveTableFields = (t) => {
+            let fields = q('#' + it.draggableContainerId + ' #' + t.id + ' .this_field');
+            for (let f of fields) {
+                if (f.nextElementSibling) {
+                    if (f.getAttribute('type') === "checkbox") {
+                        if (f.nextElementSibling.innerHTML === "1") {
+                            f.checked = true;
+                            f.value = "1";
+                        } else {
+                            f.checked = false;
+                            f.value = "0";
+                        }
+                    }
+                    f.value = f.nextElementSibling.innerHTML;
+                }
+                this.setWeightCalcs(t, it);
+                f.blur(() => {
+                    if (f.nextElementSibling) {
+                        if (f.getAttribute('type') === "checkbox") {
+                            if (f.checked) f.value = "1";
+                            else f.value = "0";
+                        }
+                        f.nextElementSibling.innerHTML = this.value;
+                    }
+                    this.saveTable(t);
+                    this.setWeightCalcs(t, it);
+                });
+            }
+        }
+        this.searchRow = (div) => {
+            let row = div;
+            while (row.parentElement && !row.parentElement.classList.contains('this_table')) {
+                row = row.parentElement;
+            }
+            return row;
+        }
+        this.attacks = (t) => {
+            const item = this.searchItem(it.info.item_id);
+            let throwAtk = q('#' + t.id + ' button[name="throw_attack"]');
+            if (throwAtk.length > 0) {
+                for (let i = 0; i < throwAtk.length; i++) {
+                    let name = throwAtk[i].children[0];
+                    let attack = throwAtk[i].children[1];
+                    let dmg_n_type = throwAtk[i].children[2];
+                    if (name && attack && dmg_n_type) {
+                        /*let row = this.searchRow(throwAtk[0]);
+                        console.log(row);
+                        let nameInput = q('#' + t.id + ' input[placeholder="Name"]')[i];
+                        if (nameInput) name.innerHTML = nameInput.value;
+                        let atkModifiers = q('#' + t.id + ' .menu-sub-accordion .attack_mods .this_field');
+                        let savingThrows = q('#' + t.id + ' .menu-sub-accordion .saving_throw .this_field');
+                        let dmgModifiers = q('#' + t.id + ' .menu-sub-accordion .dmg_mods .this_field');
+                        console.log(atkModifiers);
+                        console.log(savingThrows);
+                        console.log(dmgModifiers);
+                        if (savingThrows.length === 3 && atkModifiers.length === 3 && dmgModifiers.length === 4) {
+                            // * begin::ATTACK * //
+                            attack.innerHTML = '';
+                            let atkScoreMod = atkModifiers[0].value;
+                            atkScoreMod = atkScoreMod !== "-1" ? item.getRawScoreModifier(atkScoreMod) : 0;
+                            let otherAtkMod = atkModifiers[1].value;
+                            otherAtkMod = !(otherAtkMod !== "" && otherAtkMod !== "0" && (!isNaN(otherAtkMod) || board.dices.isDiceFormat(otherAtkMod)))
+                                ? 0 : otherAtkMod;
+                            let prof = atkModifiers[2].value;
+                            prof = prof !== "0" ? item.getProficiency() : 0;
+                            let totalAttackModifier = (atkScoreMod + prof) + (!isNaN(otherAtkMod) ? parseInt(otherAtkMod) : " +" + otherAtkMod);
+                            attack.innerHTML += totalAttackModifier === 0 ? "" : 'Atk +' + totalAttackModifier;
+                            // * end::ATTACK * //
+
+                            // * begin::SAVING THROW * //
+                            let saveScoreMod = savingThrows[0].value;
+                            saveScoreMod = saveScoreMod === "-1" ? ""
+                                : saveScoreMod.toUpperCase();
+                            let vsDC = savingThrows[1].value;
+                            vsDC = saveScoreMod === "" ? ""
+                                : (vsDC !== "-1" ? " vs DC" + (8 + parseInt(item.getProfScoreModifier(vsDC))) : "");
+                            // Example: Saving Throw: CON vs DC16
+                            let totalSave = saveScoreMod !== "" ? "Saving Throw: " + saveScoreMod + vsDC : "";
+                            // * end::SAVING THROW * //
+
+                            // * begin::DAMAGE * //
+                            let plainDmg = dmgModifiers[0].value;
+                            plainDmg = plainDmg === "" ? ""
+                                : (!(!isNaN(plainDmg) || board.dices.isDiceFormat(plainDmg))
+                                    ? "Not a number or a valid roll dice" : " +" + plainDmg);
+                            console.log(plainDmg);
+                            let dmgScoreMod = dmgModifiers[1].value;
+                            dmgScoreMod = dmgScoreMod === "-1" ? "" : " +" + item.getRawScoreModifier(dmgScoreMod);
+                            let otherMod = dmgModifiers[2].value;
+                            otherMod = !(otherMod !== "" && otherMod !== "0" && (!isNaN(otherMod) || board.dices.isDiceFormat(otherMod)))
+                                ? "" : " +" + otherMod;
+                            let totalDamageModifier = plainDmg + dmgScoreMod + otherMod;
+                            let dmgType = dmgModifiers[3].value;
+                            dmg_n_type.innerHTML = "Dmg" + totalDamageModifier;
+                            // * END::DAMAGE * //
+                            throwAtk[i].click(function () {
+                                console.log(totalAttackModifier);
+                                console.log(totalSave);
+                                console.log(totalDamageModifier);
+                            });
+                        }*/
+                    }
+                }
+            }
+        }
+        this.setTableHeaders = (t) => {
+            // Attacks and spells
+            if (t.classList.contains('attacks_spells_table')) {
+                this.attacks(t);
+            } // Global modifiers
+            else if (t.classList.contains('global_modifiers_table')) {
+            } // Bag
+            else if (t.classList.contains('bag_table')) {
+            } // Other features
+            else if (t.classList.contains('other_feats_table')) {
+                //t.innerHTML += rowCustomFeatures();
+            }
+        }
+        this.setRowDeletes = (t) => {
+            let delBtns = q('#' + t.id + ' .delete_row');
+            for (let btn of delBtns) {
+                btn.click(() => {
+                    let row = this.searchRow(btn);
+                    console.log(t)
+                    row.remove();
+                    console.log(t)
+                    this.saveTable(t);
+                });
+            }
+        }
+
+        for (let btn of this.characterTableButtons) {
+            if (btn[0] && btn[0].parentNode.nextElementSibling) {
+                let table = btn[0].parentNode.nextElementSibling;
+                // Get table name
+                let tableName = table.id.substring(0, table.id.length - 2);
+                // If bag and empty, set header
+                if (tableName === 'bag' && it.info.bag === '') {
+                    table.innerHTML = '<!--begin::Head-->' +
+                        '<div class="flex-row justify-content-between text-gray-700 fw-bolder text-capitalize border-bottom-1px-gray-300">' +
+                        '    <div class="w-50px">UNITS</div>' +
+                        '    <div class="col-6">ITEM NAME</div>' +
+                        '    <div class="w-50px text-end">WEIGHT</div>' +
+                        '    <div class="delete-row w-25px"></div>' +
+                        '</div>' +
+                        '<!--end::Head-->';
+                }
+                // Fill table with info
+                //* FIRST LOAD WHEN OPENING ITEM MODAL *//
+                table.innerHTML += it.info[tableName];
+                //* NOW accordions have been potentially loaded, set them *//
+                this.accordionMenus(table);
+                //* Fill fields that are empty and set on blur listener to save them *//
+                this.setSaveTableFields(table);
+                //* Fill each header with ability info *//
+                this.setTableHeaders(table);
+                //* Set listeners to erase items *//
+                this.setRowDeletes(table);
+                // Set listener to save fields
+                btn[0].click(() => {
+                    this.createNewRow(table);
+                    this.accordionMenus(table);
+                    this.setSaveTableFields(table);
+                    this.setTableHeaders(table);
+                    this.setRowDeletes(table);
+                });
+            }
+        }
+    }
+
+    listenToSheetChanges(modals) {
+        // * You need to reapply listeners to all opened items when you open a new one * //
+        for (let modal of modals) {
+            // Search for item
+            let item = this.searchItem(modal.id.charAt(modal.id.length - 1));
+            // Do not do further actions if item was not found
+            if (!item) continue;
+
+            let this_draggable_fields = q('#' + item.draggableContainerId + ' .this-role-form-field');
+            let this_mngclasses_fields = q('#manage_class_' + item.info.item_id + ' .this-role-form-field');
+            //* begin::General Inputs change *//
+            [this_draggable_fields, this_mngclasses_fields].forEach(this_fields => {
+                getDataFromFields(this_fields, item);
+                // Save on field lost of focus
+                this_fields.blur(function () {
+                    saveField(this, item.info.item_id).done(() => {
+                        getDataFromFields(this_fields, item);
+                        // Get skill proficiencies
+                        getDataFromFields(q('#' + item.draggableContainerId + ' input.skill_prof'), item);
+                        // Get hit dices
+                        getDataFromFields(q('#' + item.draggableContainerId + ' select[name="this_hit_dices"]'), item);
+                    });
+                });
+            });
+            //* end::General Inputs change *//
+            //* begin::Inspiration *//
+            setInspiration(item);
+            //* end::Inspiration *//
+            //* begin::Skill proficiencies *//
+            setSkills(item);
+            //* end::Skill proficiencies *//
+            //* begin::Class *//
+            // Has to be called AFTER the general filling
+            setClassGroup(item);
+            //* end::Class *//
+            //* begin::Health Container *//
+            setHealth(item);
+            //* end::Health Container *//
+            //* begin::Table content creation *//
+            // -> This includes attacks & spells, global modifiers, tools & custom skills, and the bag
+            setTables(item);
+            //* end::Table content creation *//
+        }
+    }
+
+    saveField(object, id) {
+        let form = new FormData();
+        let objName = object.getAttribute('name');
+        let objVal = object.value;
+        if (objName === 'item_icon') {
+            objName = 'item_icon[]';
+            objVal = object.files[0];
+        }
+        if (objName.match(/this_prof/)) {
+            objVal = object.checked ? "1" : "0";
+        }
+        form.append(objName, objVal);
+        form.append('item_id', id);
+        console.log('saveField objName= ', objName);
+        console.log('saveField objVal= ', objVal)
+        return $.ajax({
+            type: "post",
+            url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
+            data: form,
+            processData: false,
+            contentType: false,
+            success: (data) => {
+                data = JSON.parse(data);
+                console.log("saveField response", data);
+                if (data.response) {
+                    for (let i in this.items) {
+                        if (this.items[i].info.item_id === id) {
+                            for (let j in data.params) {
+                                this.items[i].info[j] = data.params[j];
+                            }
+                        }
+                    }
+                }
+                return data;
+            },
+            error: (e) => {
+                console.log(e);
+            }
+        });
+    }
+
+    saveTable(t) {
+        let name = t.id.substring(0, t.id.length - 2);
+        let id = t.id.substring(t.id.length - 1);
+        let form = {item_id: id};
+        form[name] = t.innerHTML;
+        return $.ajax({
+            type: "post",
+            url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
+            data: form,
+            dataType: "json",
+            success: (data) => {
+                if (data.response) {
+                    for (let i in this.items) {
+                        if (this.items[i].info.item_id === id) {
+                            for (let j in data.params) {
+                                this.items[i].info[j] = data.params[j];
+                            }
+                        }
+                    }
+                }
+                return data;
+            }, error: (e) => {
+                console.log(e.responseText);
+            }
+        });
     }
 
     setClassGroup(item) {
@@ -1002,223 +1292,6 @@ class Journal {
         if (conditionChecks) this.setConditions();
     }
 
-    setTables(item) {
-        this.buttons = [
-            q('#atk_spells_btn' + item.info.item_id),
-            q('#global_mods_btn' + item.info.item_id),
-            q('#tools_custskills_btn' + item.info.item_id),
-            q('#bag_btn' + item.info.item_id),
-            q('#other_feats_btn' + item.info.item_id)
-        ]
-        this.accordionMenus = (t) => {
-            let menus = q('#' + t.id + ' .menu-item.menu-accordion');
-            for (let m of menus) {
-                m.click(function (e) {
-                    let btn = false;
-                    for (let child of m.children[0].children) {
-                        if (child.nodeName === "BUTTON") {
-                            btn = child;
-                        }
-                    }
-
-                    if (e.target === btn || e.target === btn.children[0]) {
-                        m.toggleClass('hover');
-                        m.toggleClass('show');
-                        saveTable(t);
-                    }
-                });
-            }
-        }
-        this.createNewRow = (t) => {
-            // Attacks and spells
-            if (t.classList.contains('attacks_spells_table')) {
-                t.innerHTML += rowAttacksSpells();
-            } // Global modifiers
-            else if (t.classList.contains('global_modifiers_table')) {
-                t.innerHTML += rowGlobalModifiers();
-            } // Bag
-            else if (t.classList.contains('bag_table')) {
-                t.innerHTML += rowBag();
-            } // Other features
-            else if (t.classList.contains('other_feats_table')) {
-                // Div to fill ????
-                t.innerHTML += rowCustomFeatures();
-            }
-        }
-        this.setSaveTableFields = (t) => {
-            let fields = q('#' + item.draggableContainerId + ' #' + t.id + ' .this_field');
-            for (let f of fields) {
-                if (f) {
-                    if (f.nextElementSibling) {
-                        if (f.getAttribute('type') === "checkbox") {
-                            if (f.nextElementSibling.innerHTML === "1") {
-                                f.checked = true;
-                                f.value = "1";
-                            } else {
-                                f.checked = false;
-                                f.value = "0";
-                            }
-                        }
-                        f.value = f.nextElementSibling.innerHTML;
-                    }
-                    setWeightCalcs(t, item);
-                    f.blur(function () {
-                        if (this.nextElementSibling) {
-                            if (this.getAttribute('type') === "checkbox") {
-                                if (this.checked) this.value = "1";
-                                else this.value = "0";
-                            }
-                            this.nextElementSibling.innerHTML = this.value;
-                        }
-                        saveTable(t);
-                        setWeightCalcs(t, item);
-                    });
-                }
-            }
-        }
-        this.searchRow = (div) => {
-            let row = div;
-            while (row.parentElement && !row.parentElement.classList.contains('this_table')) {
-                row = row.parentElement;
-            }
-            return row;
-        }
-        this.attacks = (t) => {
-            const it = this.searchItem(item.info.item_id);
-            let throwAtk = q('#' + t.id + ' button[name="throw_attack"]');
-            if (throwAtk.length > 0) {
-                for (let i = 0; i < throwAtk.length; i++) {
-                    let name = throwAtk[i].children[0];
-                    let attack = throwAtk[i].children[1];
-                    let dmg_n_type = throwAtk[i].children[2];
-                    if (name && attack && dmg_n_type) {
-                        let row = this.searchRow(throwAtk[0]);
-                        console.log(row);
-                        let nameInput = q('#' + t.id + ' input[placeholder="Name"]')[i];
-                        if (nameInput) name.innerHTML = nameInput.value;
-                        let atkModifiers = q('#' + t.id + ' .menu-sub-accordion .attack_mods .this_field');
-                        let savingThrows = q('#' + t.id + ' .menu-sub-accordion .saving_throw .this_field');
-                        let dmgModifiers = q('#' + t.id + ' .menu-sub-accordion .dmg_mods .this_field');
-                        console.log(atkModifiers)
-                        console.log(savingThrows)
-                        console.log(dmgModifiers)
-                        if (savingThrows.length === 3 && atkModifiers.length === 3 && dmgModifiers.length === 4) {
-                            //* begin::ATTACK *//
-                            attack.innerHTML = '';
-                            let atkScoreMod = atkModifiers[0].value;
-                            atkScoreMod = atkScoreMod !== "-1" ? it.getRawScoreModifier(atkScoreMod) : 0;
-                            let otherAtkMod = atkModifiers[1].value;
-                            otherAtkMod = !(otherAtkMod !== "" && otherAtkMod !== "0" && (!isNaN(otherAtkMod) || board.dices.isDiceFormat(otherAtkMod)))
-                                ? 0 : otherAtkMod;
-                            let prof = atkModifiers[2].value;
-                            prof = prof !== "0" ? it.getProficiency() : 0;
-                            let totalAttackModifier = (atkScoreMod + prof) + (!isNaN(otherAtkMod) ? parseInt(otherAtkMod) : " +" + otherAtkMod);
-                            attack.innerHTML += totalAttackModifier === 0 ? "" : 'Atk +' + totalAttackModifier;
-                            //* end::ATTACK *//
-
-                            //* begin::SAVING THROW *//
-                            let saveScoreMod = savingThrows[0].value;
-                            saveScoreMod = saveScoreMod === "-1" ? ""
-                                : saveScoreMod.toUpperCase();
-                            let vsDC = savingThrows[1].value;
-                            vsDC = saveScoreMod === "" ? ""
-                                : (vsDC !== "-1" ? " vs DC" + (8 + parseInt(it.getProfScoreModifier(vsDC))) : "");
-                            // Example: Saving Throw: CON vs DC16
-                            let totalSave = saveScoreMod !== "" ? "Saving Throw: " + saveScoreMod + vsDC : "";
-                            //* end::SAVING THROW *//
-
-                            //* begin::DAMAGE *//
-                            let plainDmg = dmgModifiers[0].value;
-                            plainDmg = plainDmg === "" ? ""
-                                : (!(!isNaN(plainDmg) || board.dices.isDiceFormat(plainDmg))
-                                    ? "Not a number or a valid roll dice" : " +" + plainDmg);
-                            console.log(plainDmg);
-                            let dmgScoreMod = dmgModifiers[1].value;
-                            dmgScoreMod = dmgScoreMod === "-1" ? "" : " +" + it.getRawScoreModifier(dmgScoreMod);
-                            let otherMod = dmgModifiers[2].value;
-                            otherMod = !(otherMod !== "" && otherMod !== "0" && (!isNaN(otherMod) || board.dices.isDiceFormat(otherMod)))
-                                ? "" : " +" + otherMod;
-                            let totalDamageModifier = plainDmg + dmgScoreMod + otherMod;
-                            let dmgType = dmgModifiers[3].value;
-                            dmg_n_type.innerHTML = "Dmg" + totalDamageModifier;
-                            //* END::DAMAGE *//
-                            throwAtk[i].click(function () {
-                                console.log(totalAttackModifier);
-                                console.log(totalSave);
-                                console.log(totalDamageModifier);
-                            });
-                        }
-                    }
-                }
-            }
-        }
-        this.setTableHeaders = (t) => {
-            // Attacks and spells
-            if (t.classList.contains('attacks_spells_table')) {
-                this.attacks(t);
-            } // Global modifiers
-            else if (t.classList.contains('global_modifiers_table')) {
-            } // Bag
-            else if (t.classList.contains('bag_table')) {
-            } // Other features
-            else if (t.classList.contains('other_feats_table')) {
-                //t.innerHTML += rowCustomFeatures();
-            }
-        }
-        this.setRowDeletes = (t) => {
-            let delBtns = q('#' + t.id + ' .delete_row');
-            if (delBtns.length > 0) {
-                for (let btn of delBtns) {
-                    btn.click(() => {
-                        let row = this.searchRow(btn);
-                        row.remove();
-                        saveTable(t);
-                    });
-                }
-            }
-        }
-
-        for (let btn of this.buttons) {
-            if (btn[0] && btn[0].parentNode.nextElementSibling) {
-                let table = btn[0].parentNode.nextElementSibling;
-                if (table) {
-                    // Get table name
-                    let tableName = table.id.substring(0, table.id.length - 2);
-                    // If bag and empty, set header
-                    if (tableName === 'bag' && item.info.bag === '') {
-                        table.innerHTML = '<!--begin::Head-->' +
-                            '<div class="flex-row justify-content-between text-gray-700 fw-bolder text-capitalize border-bottom-1px-gray-300">' +
-                            '    <div class="w-50px">UNITS</div>' +
-                            '    <div class="col-6">ITEM NAME</div>' +
-                            '    <div class="w-50px text-end">WEIGHT</div>' +
-                            '    <div class="delete-row w-25px"></div>' +
-                            '</div>' +
-                            '<!--end::Head-->';
-                    }
-                    // Fill table with info
-                    //* FIRST LOAD WHEN OPENING ITEM MODAL *//
-                    table.innerHTML += item.info[tableName];
-                    //* NOW accordions have been potentially loaded, set them *//
-                    this.accordionMenus(table);
-                    //* Fill fields that are empty and set on blur listener to save them *//
-                    this.setSaveTableFields(table);
-                    //* Fill each header with ability info *//
-                    this.setTableHeaders(table);
-                    //* Set listeners to erase items *//
-                    this.setRowDeletes(table);
-                    // Set listener to save fields
-                    btn[0].click(() => {
-                        this.createNewRow(table);
-                        this.accordionMenus(table);
-                        this.setSaveTableFields(table);
-                        this.setTableHeaders(table);
-                        this.setRowDeletes(table);
-                    });
-                }
-            }
-        }
-    }
-
     setWeightCalcs(t, item) {
         const it = this.searchItem(item.info.item_id);
         let units = q('#' + t.id + ' input.units');
@@ -1283,7 +1356,7 @@ class Journal {
             '        <div class="menu-item border-bottom-1px-gray-300 pb-2">' +
             '           <div class="flex-row align-items-center justify-content-start gap-2 attack_mods">' +
             '               <span class="fw-bolder">Attack:</span>' +
-            '               ' + abiliyScoresSelect() +
+            '               ' + this.abiliyScoresSelect() +
             '               <span class="d-none"></span>' +
             '               + <input type="text" placeholder="0"' +
             '                      class="this_field form-control w-25px"/>' +
@@ -1302,7 +1375,7 @@ class Journal {
             '                    <input type="text" placeholder="1d6"' +
             '                         class="this_field form-control w-25px"/>' +
             '                    <span class="d-none"></span>' +
-            '                    + ' + abiliyScoresSelect() +
+            '                    + ' + this.abiliyScoresSelect() +
             '                    <span class="d-none"></span>' +
             '                    + <input type="text" placeholder="0"' +
             '                         class="this_field form-control w-20px"/>' +
@@ -1322,10 +1395,10 @@ class Journal {
             '            <div class="flex-column saving_throw">' +
             '                <div class="flex-row align-items-center justify-content-start gap-2">' +
             '                <span class="fw-bolder">Saving Throw:</span>' +
-            '                ' + abiliyScoresSelect() +
+            '                ' + this.abiliyScoresSelect() +
             '                    <span class="d-none"></span>' +
             '                    <label class="fs-9 text-uppercase fw-bolder"> vs dc</label>' +
-            '                ' + abiliyScoresSelect() +
+            '                ' + this.abiliyScoresSelect() +
             '                    <span class="d-none"></span>' +
             '                </div>' +
             '                <div class="flex-row align-items-center justify-content-start gap-2">' +

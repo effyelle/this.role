@@ -576,6 +576,10 @@ input.form-control.this-role-form-field[disabled] {
     border-bottom: 1px solid #e4e6ef;
 }
 
+.border-top-1px-gray-300 {
+    border-top: 1px solid #e4e6ef;
+}
+
 .icon-success, .icon-error {
     display: flex;
     align-items: center;

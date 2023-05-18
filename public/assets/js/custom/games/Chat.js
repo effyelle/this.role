@@ -12,7 +12,32 @@ class Chat {
         }
     }
 
+    set From(f) {
+        this.from = f;
+    }
+
+    set Select(query) {
+        this.select = q(query)[0];
+    }
+
+    set SaveBtn(query) {
+        this.saveBtn = q(query)[0];
+    }
+
     set ChatBubble(query) {
+        this.save = () => {
+            if (this.from && this.chatText !== '') {
+                this.saveChat({
+                    icon: this.from().icon,
+                    msg: '<div class="text-start">' + this.chatText + '</div>',
+                    sender: this.from().name,
+                    msgType: "bubble_chat"
+                }).done(() => {
+                    this.chatText = '';
+                    this.chatBubble.value = '';
+                });
+            }
+        }
         this.chatBubble = q(query)[0];
         this.chatBubble.addEventListener('keyup', (e) => {
             if (e.key === 'Backspace') {
@@ -24,22 +49,16 @@ class Chat {
                 // If Enter without Shift, prevent textarea line break and save message
                 if (!e.shiftKey) {
                     e.preventDefault();
-                    if (this.from && this.chatText !== '') {
-                        this.saveChat({
-                            icon: this.from().icon,
-                            msg: '<div class="text-start">' + this.chatText + '</div>',
-                            sender: this.from().name,
-                            msgType: "bubble_chat"
-                        }).done(() => {
-                            this.chatText = '';
-                            this.chatBubble.value = '';
-                        });
-                        return;
-                    }
+                    this.save();
+                    return;
                 }
             }
             // Save key if not the previous ones
             this.chatText = JSON.stringify(this.chatBubble.value + e.key);
+        });
+        this.SaveBtn = '#chat_send';
+        if (this.saveBtn) this.saveBtn.click(() => {
+            this.save();
         });
     }
 
@@ -48,14 +67,13 @@ class Chat {
         let tooltip = '';
         for (let r of rolls) {
             rollSum += r;
-            console.log(r == dice.charAt(1))
-            tooltip += '<span class="' + (r == 1 ? 'text-danger' : (r == dice.charAt(1) ? 'text-primary' : 'text-muted')) + '">' + r + '</span> + ';
+            tooltip += '<span class="' +
+                (r == 1 ? 'text-danger' : (r == dice.charAt(1) ? 'text-primary' : 'text-muted'))
+                + '">' + r + '</span> + ';
         }
         // title="(' + tooltip + ')" data-bs-toggle="tooltip" data-bs-trigger="hover"
         // data-bs-dismiss="mouseout" data-bs-placement="right" data-bs-original-title="(' + tooltip + ')"
-        console.log(tooltip)
         tooltip = tooltip.substring(0, tooltip.length - 3);
-        console.log(tooltip)
         return '<div class="flex-column justify-content-center align-items-center gap-1 text-center">' +
             '<em>Rolling ' + n + dice + '</em>' +
             '<a class="menu-link fw-bolder fs-4">' + rollSum + '</a>' +

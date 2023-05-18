@@ -375,7 +375,7 @@ class Games extends BaseController
         )[0];
         $targetFolder = $this->mediaGames . $item['game_folder'] . '/players/';
         // Delete old file
-        if (is_file($targetFolder . $item['item_icon'])) unlink($targetFolder . $item['item_icon']);
+        // if (is_file($targetFolder . $item['item_icon'])) unlink($targetFolder . $item['item_icon']);
         // * Upload new file * //
         // Save new name
         $newName = time();

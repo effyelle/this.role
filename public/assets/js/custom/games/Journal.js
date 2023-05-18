@@ -485,6 +485,14 @@ class Journal {
         return false;
     }
 
+    getHealthGroup(it) {
+        this.deathSavesSuccess = q('#' + it.draggableContainerId + ' .death_saves.success');
+        this.deathSavesFailure = q('#' + it.draggableContainerId + ' .death_saves.danger');
+        this.exhaustionsChecks = q('#' + it.draggableContainerId + ' input.exhaustion');
+        this.conditionChecks = q('#' + it.draggableContainerId + ' .condition');
+        return [this.deathSavesSuccess, this.deathSavesFailure, this.exhaustionsChecks, this.conditionChecks];
+    }
+
     listenToOpenedItems(item) {
         // After we add a new item inside a DOM element, all DOM element inside have their identities changed.
         // This means that all previous listeners for these divs have been lost.
@@ -503,192 +511,22 @@ class Journal {
         }
     }
 
-    set FieldListeners(it) {
-        //* begin::Input type text fields *//
-        this.BlurFields = it;
-        //* end::Input type text fields *//
-        //* begin::Image change *//
-        this.ItemImage = it;
-        //* end::Image change *//
-        //* begin::Inspiration *//
-        this.Inspiration = it;
-        //* end::Inspiration *//
-        //* begin::Ability score proficiencies *//
-        this.ScoreProfs = it;
-        //* end::Ability score proficienciess *//
-        //* begin::Skills *//
-        this.Skills = it;
-        //* end::Skills *//
-        //* begin::Health group *//
-        this.HealthGroup = it;
-        //* end::Health group *//
-        //* begin::Table *//
-        this.Tables = it;
-        //* end::Table *//
-
-        // * Set class and all that it affects
-        // * Set health -> hit dices related to class above
-        // * Set tables ? -> Abilities
-        // * Set Spellcasting ability-> Spell Save DC -> Spell attack bonus
-    }
-
     fillDraggable(it) {
         this.fillDataFrom(it);
         this.fillBlurFields(it);
-        this.fillOthers(it);
-    }
-
-    getDataFromFields(inputs, item) {
-        let it = this.searchItem(item.info.item_id);
-        for (let i of inputs) {
-            let divName = i.getAttribute('name');
-            this.scoreModifiers = () => {
-                let scoreName = divName.substring(11);
-                let sc = it.getScore(scoreName);
-                i.value = sc.score;
-                let check = q('#' + it.draggableContainerId + ' [name="this_prof_' + scoreName + '"]')[0];
-                if (check) check.checked = sc.is_prof === "1";
-                let label = q('#' + it.draggableContainerId + ' label[for="' + divName + '"')[0];
-                let rawScoreModifier = it.getRawScoreModifier(scoreName);
-                if (rawScoreModifier || rawScoreModifier == 0 && label) {
-                    label.innerHTML = rawScoreModifier;
-                }
-            }
-            this.scoreProfBonuses = () => {
-                let label = q('#' + it.draggableContainerId + ' label[for="' + divName + '"')[0];
-                if (label) {
-                    label.innerHTML = i.checked ? '+' + it.getProficiency() : "+0";
-                }
-            }
-            this.savingThrows = () => {
-                let score = divName.substring(10);
-                let check = q('#' + it.draggableContainerId + ' [name="this_prof_' + score + '"]')[0];
-                let profScoreModifier = check && check.checked ? it.getProfScoreModifier(score) : it.getRawScoreModifier(score);
-                if (profScoreModifier) {
-                    i.value = profScoreModifier;
-                    i.innerHTML = 'SAVING THROW' + (profScoreModifier >= 0 ? '+' : '') + profScoreModifier;
-                }
-            }
-            this.skills = () => {
-                // These titles are also the buttons to roll a skill dice
-                let skillTitle = q('#' + it.draggableContainerId + ' .skill_prof[name="' + divName + '"] ~ button')[0];
-                const skills = JSON.parse(it.info.skill_proficiencies);
-                let skillName = divName.substring(11);
-                i.value = skills[skillName];
-                i.checked = i.value === "1" || i.value === "2";
-                i.classList.toggle('expertise', i.value === "2");
-                it.getProficiency();
-                if (skillTitle) {
-                    skillTitle.innerHTML = toSentenceCase(skillName) + " +" + parseInt(i.value) * it.getProficiency();
-                }
-            }
-            this.hp = () => {
-                // Set total hit dices
-                const level = it.getLevel();
-                let totalHitDices = q('#' + it.draggableContainerId + ' .total_hd')[0];
-                if (totalHitDices) totalHitDices.innerHTML = level;
-                // Save hit points and hit dices info
-                const itemHealth = JSON.parse(it.info.health);
-                if (itemHealth && itemHealth.hit_points) {
-                    i.value = itemHealth.hit_points[divName];
-                }
-                if (divName.match(/_hd/)) {
-                    if (i.value > level) {
-                        i.value = level;
-                    }
-                }
-            }
-            this.hitDices = () => {
-                const classes = JSON.parse(it.info.classes);
-                let hitDices = [];
-                for (let c of classes) {
-                    if (c.is_main || c.is_multiclass) {
-                        if (!hitDices[c.hit_dice]) {
-                            hitDices[c.hit_dice] = c.hit_dice;
-                        }
-                    }
-                }
-                if (hitDices) {
-                    i.innerHTML = '';
-                    for (let h in hitDices) {
-                        i.innerHTML += '<option value="' + h + '">' + h + '</option>'
-                    }
-                } else {
-                    i.innerHTML = '<option value="-1" disabled selected>Select a class</option>';
-                }
-            }
-            this.exh = () => {
-                const exhaustion = JSON.parse(it.info.health).conditions.exhaustion;
-                if (exhaustion) {
-                    i.checked = i.value <= exhaustion.lvl;
-                    let exhaustionEffects = q('#' + it.draggableContainerId + ' .exhaustion_effects')[0];
-                    exhaustionEffects.toggleClass('d-none', exhaustion.lvl == 0);
-                    if (exhaustionEffects && i.checked) {
-                        exhaustionEffects.innerHTML += "<br/> - " + exhaustion[i.value];
-                    }
-                }
-            }
-            this.deathSaves = () => {
-                const dSaves = JSON.parse(it.info.health).death_saves;
-                let split = divName.split('_');
-                let type = split[split.length - 1];
-                i.checked = i.value <= dSaves[type];
-            }
-            this.conditions = () => {
-                const conds = JSON.parse(it.info.health).conditions;
-                let split = divName.split('_');
-                let type = split[split.length - 1];
-                i.checked = conds[type] === "1";
-            }
-            if (divName && divName !== '') {
-                //* begin::Score Modifiers *//
-                if (divName.match(/this_score/)) {
-                    this.scoreModifiers()
-                } //* end::Score Modifiers *//
-                //* begin::Score proficiency bonuses *//
-                else if (divName.match(/this_prof/)) {
-                    this.scoreProfBonuses(divName);
-                } // * end::Score proficiency bonuses * //
-                // * begin::Saving Throws * //
-                else if (divName.match(/this_save/)) {
-                    this.savingThrows();
-                } // * end::Saving Throws * //
-                else if (divName.match(/this_skill/)) {
-                    this.skills();
-                }
-                //* begin::Hit points *//
-                else if (divName.match(/_hp|_hd/)) {
-                    this.hp();
-                }//* end::Hit points *//
-                //* begin::Hit dices select *//
-                else if (divName.match(/this_hit_dices/)) {
-                    this.hitDices();
-                }//* end::Hit dices select *//
-                //* begin::Exhaustion *//
-                else if (divName.match(/exhaustion/)) {
-                    this.exh();
-                } //* end::Exhaustion *//
-                //* begin::Death Saves *//
-                else if (divName.match(/death_save/)) {
-                    this.deathSaves();
-                } //* end::Death Saves *//
-                //* begin::Conditions *//
-                else if (divName.match(/this_cond/)) {
-                    this.conditions();
-                } //* end::Conditions *//
-                //* begin::Select *//
-                else if (i.nodeName === 'SELECT') {
-                    i.value = (i.getAttribute('aria-selected'));
-                } //* end::Select *//
-            }
-        }
+        this.fillInspiration(it);
+        this.fillAbilityScores(it);
+        this.fillSkills(it);
+        this.fillHealth(it);
+        // Missing: table row titles ?
+        // Class list
+        // Hit dices select
     }
 
     fillBlurFields(it) {
         this.inputFields = q('#' + it.draggableContainerId + ' input.this-role-form-field');
         this.textAreas = q('#' + it.draggableContainerId + ' textarea.this-role-form-field');
         [this.inputFields, this.textAreas].forEach(fields => {
-            console.log(fields)
             for (let f of fields) {
                 let divName = f.getAttribute('name');
                 if (divName.match(/item_icon/)) {
@@ -705,15 +543,102 @@ class Journal {
                 else if (divName.match(/_hd|_hp/)) {
                     f.value = JSON.parse(it.info.health).hit_points[divName];
                 } else {
-                    console.log(divName)
-                    console.log(it.info[divName])
                     f.value = it.info[divName];
                 }
             }
         });
     }
 
-    fillOthers(it) {
+    fillInspiration(it) {
+        const insp = q('#' + it.draggableContainerId + ' [name=inspiration]')[0];
+        if (it.info.info) {
+            insp.value = JSON.parse(it.info.info).inspiration;
+            if (insp.value === "1") {
+                insp.children[0].style.backgroundImage = 'url("/assets/media/games/journal/insp.png")';
+                return;
+            }
+            insp.children[0].style.backgroundImage = 'none';
+        }
+    }
+
+    fillAbilityScores(it) {
+        const scoreProficiencyCheckboxes = q('#' + it.draggableContainerId + ' input.score_prof');
+        const abilityScores = JSON.parse(it.info.ability_scores);
+        for (let score of scoreProficiencyCheckboxes) {
+            // * begin::PROFICIENCY CHECKBOX * //
+            let split = score.getAttribute('name').split('_');
+            let scoreName = split[split.length - 1];
+            let scoreVal = abilityScores[scoreName].is_prof;
+            score.checked = scoreVal === "1";
+            // * end::PROFICIENCY CHECKBOX * //
+            // * begin::PROFICIENCY LABEL * //
+            const profLabel = q('#' + it.draggableContainerId + ' label[for="this_prof_' + scoreName + '"]')[0];
+            profLabel.innerHTML = score.checked ? '+' + it.getProficiency() : '+0';
+            // * end::PROFICIENCY LABEL * //
+            // raw score modifier
+            let rawScore = it.getRawScoreModifier(scoreName);
+            rawScore = (rawScore >= 0 ? '+' : '') + rawScore;
+            // proficiency plus score modifier
+            let profScore = it.getProfScoreModifier(scoreName);
+            profScore = (profScore >= 0 ? '+' : '') + profScore;
+            // * begin::SCORE MODIFIERS * //
+            let rawModifierLabel = q('#' + it.draggableContainerId + ' label[for="this_score_' + scoreName + '"]')[0];
+            if (rawModifierLabel) rawModifierLabel.innerHTML = rawScore;
+            let profModifierButton = q('#' + it.draggableContainerId + ' button[name="this_save_' + scoreName + '"]')[0];
+            if (profModifierButton) profModifierButton.innerHTML = 'SAVING THROW ' + (score.checked ? profScore : rawScore);
+            // * end::SCORE MODIFIERS * //
+        }
+    }
+
+    fillSkills(it) {
+        const skillsCheckboxes = q('#' + it.draggableContainerId + ' .skill_prof');
+        const skillProficiencies = JSON.parse(it.info.skill_proficiencies);
+        for (let skill of skillsCheckboxes) {
+            let split = skill.getAttribute('name').split('_');
+            let skillName = split[split.length - 1];
+            let skillVal = skillProficiencies[skillName];
+            skill.value = skillVal;
+            skill.checked = skillVal === "1" || skillVal === "2";
+            skill.classList.toggle('expertise', skillVal === "2");
+        }
+    }
+
+    fillHealth(it) {
+        const checks = this.getHealthGroup(it);
+        const health = JSON.parse(it.info.health);
+        let exhaustionEffects = q('#' + it.draggableContainerId + ' .exhaustion_effects')[0];
+        if (health.conditions.exhaustion.lvl === "0") {
+            exhaustionEffects.innerHTML = '';
+        } else {
+            exhaustionEffects.innerHTML = '<b>Exhaustion effects:</b>';
+        }
+        for (let checkGroup of checks) {
+            for (let check of checkGroup) {
+                // Death saves
+                if (check.classList.contains('death_saves')) {
+                    const death_saves = health.death_saves;
+                    // Successes
+                    if (check.classList.contains('success')) {
+                        check.checked = check.value <= death_saves.successes;
+                    } // Failures
+                    else if (check.classList.contains('danger')) {
+                        check.checked = check.value <= death_saves.failures;
+                    }
+                } // Exhaustion
+                else if (check.classList.contains('exhaustion')) {
+                    const exhaustion = health.conditions.exhaustion;
+                    check.checked = check.value <= exhaustion.lvl;
+                    if (check.checked)
+                        exhaustionEffects.innerHTML += "<br/> - " + exhaustion[check.value];
+                } // Conditions
+                else if (check.classList.contains('condition')) {
+                    const conditions = health.conditions;
+                    let split = check.getAttribute('name').split('_');
+                    let conditionName = split[split.length - 1];
+                    check.checked = conditions[conditionName] === "1";
+                }
+            }
+        }
     }
 
     fillDataFrom(it) {
@@ -741,6 +666,38 @@ class Journal {
                 el.innerHTML = this.getFields();
             }
         }
+    }
+
+    set FieldListeners(it) {
+        //* begin::Input type text fields *//
+        this.BlurFields = it;
+        //* end::Input type text fields *//
+        //* begin::Image change *//
+        this.ItemImage = it;
+        //* end::Image change *//
+        //* begin::Inspiration *//
+        this.Inspiration = it;
+        //* end::Inspiration *//
+        //* begin::Ability score proficiencies *//
+        this.ScoreProfs = it;
+        //* end::Ability score proficienciess *//
+        //* begin::Skills *//
+        this.Skills = it;
+        //* end::Skills *//
+        //* begin::Health group *//
+        this.HealthGroup = it;
+        //* end::Health group *//
+        //* begin::Table *//
+        this.Tables = it;
+        //* end::Table *//
+
+        // * Set class adding
+
+        // * Set hit dices SELECT
+
+        // * Set tables ? -> Abilities
+
+        // * Set Spellcasting ability-> Spell Save DC -> Spell attack bonus
     }
 
     set BlurFields(it) {
@@ -771,24 +728,8 @@ class Journal {
         const inspCont = q('#' + it.draggableContainerId + ' .inspiration')[0];
         const insp = q('#' + it.draggableContainerId + ' [name=inspiration]')[0];
         if (inspCont && insp) {
-            const loadInsp = () => {
-                if (it.info.info) {
-                    let info = JSON.parse(it.info.info);
-                    if (info.inspiration) {
-                        insp.value = info.inspiration;
-                        if (insp.value === "1") {
-                            insp.children[0].style.backgroundImage = 'url("/assets/media/games/journal/insp.png")';
-                            return;
-                        }
-                        insp.children[0].style.backgroundImage = 'none';
-                        return;
-                    }
-                    insp.value = "0";
-                }
-            }
-            loadInsp();
             inspCont.click(() => {
-                this.saveField(insp, it.info.item_id).done(loadInsp);
+                this.saveField(insp, it.info.item_id);
             });
         }
     }
@@ -806,31 +747,45 @@ class Journal {
     set Skills(it) {
         // These checkboxes will save if the character is proficient or expert in a skill
         this.skillChecks = q('#' + it.draggableContainerId + ' .skill_prof');
+        const getSkillValue = (skill) => {
+            let wasNotProficient = skill.checked === false;
+            let wasProficient = skill.checked && !skill.classList.contains('expertise');
+            return wasNotProficient ? "1" : (wasProficient ? "2" : "0");
+        }
         for (let skillCheck of this.skillChecks) {
             skillCheck.click(() => {
-                this.saveField(skillCheck, it.info.item_id);
+                let newVal = skillCheck.value === "0" ? "1" : (skillCheck.value === "1" ? "2" : "0");
+                skillCheck.checked = newVal !== "0";
+                skillCheck.classList.toggle('expertise', newVal === "2");
+                this.saveField(skillCheck, it.info.item_id).done(() => {
+                    skillCheck.value = newVal;
+                });
             });
         }
     }
 
     set HealthGroup(it) {
-        this.deathSavesSuccess = q('#' + it.draggableContainerId + ' .death_saves.success');
-        this.deathSavesFailure = q('#' + it.draggableContainerId + ' .death_saves.danger');
-        this.exhaustionsChecks = q('#' + it.draggableContainerId + ' input.exhaustion');
-        this.conditionChecks = q('#' + it.draggableContainerId + ' .condition');
-        const checks = [this.deathSavesSuccess, this.deathSavesFailure, this.exhaustionsChecks, this.conditionChecks];
+        const checks = this.getHealthGroup(it);
         for (let checkGroup of checks) {
             for (let check of checkGroup) {
                 check.click(() => {
                     if (!check.classList.contains('condition')) {
-                        let valueHolder = parseInt(check.value);
-                        let limit = check.checked || (check.nextElementSibling && check.nextElementSibling.checked) ? valueHolder : valueHolder - 1;
-                        check.value = limit;
-                        for (let i = 0; i < limit; i++) {
-                            checkGroup[i].checked = true;
+
+                        // If check is checked means that's the new value
+                        // If not, the new value is the previous or 0
+
+                        let valHolder = check.value;
+                        let newVal = check.checked
+                            ? valHolder
+                            : (check.previousElementSibling && check.previousElementSibling.classList.contains('exhaustion')
+                                ? check.previousElementSibling.value
+                                : "0");
+                        check.value = newVal;
+                        for (let i = 0; i < checkGroup.length; i++) {
+                            checkGroup[i].checked = newVal > i;
                         }
                         this.saveField(check, it.info.item_id).done(() => {
-                            check.value = valueHolder;
+                            check.value = valHolder;
                         });
                         return;
                     }
@@ -1053,51 +1008,6 @@ class Journal {
         }
     }
 
-    listenToSheetChanges(modals) {
-        // * You need to reapply listeners to all opened items when you open a new one * //
-        for (let modal of modals) {
-            // Search for item
-            let item = this.searchItem(modal.id.charAt(modal.id.length - 1));
-            // Do not do further actions if item was not found
-            if (!item) continue;
-
-            let this_draggable_fields = q('#' + item.draggableContainerId + ' .this-role-form-field');
-            let this_mngclasses_fields = q('#manage_class_' + item.info.item_id + ' .this-role-form-field');
-            //* begin::General Inputs change *//
-            [this_draggable_fields, this_mngclasses_fields].forEach(this_fields => {
-                getDataFromFields(this_fields, item);
-                // Save on field lost of focus
-                this_fields.blur(function () {
-                    saveField(this, item.info.item_id).done(() => {
-                        getDataFromFields(this_fields, item);
-                        // Get skill proficiencies
-                        getDataFromFields(q('#' + item.draggableContainerId + ' input.skill_prof'), item);
-                        // Get hit dices
-                        getDataFromFields(q('#' + item.draggableContainerId + ' select[name="this_hit_dices"]'), item);
-                    });
-                });
-            });
-            //* end::General Inputs change *//
-            //* begin::Inspiration *//
-            setInspiration(item);
-            //* end::Inspiration *//
-            //* begin::Skill proficiencies *//
-            setSkills(item);
-            //* end::Skill proficiencies *//
-            //* begin::Class *//
-            // Has to be called AFTER the general filling
-            setClassGroup(item);
-            //* end::Class *//
-            //* begin::Health Container *//
-            setHealth(item);
-            //* end::Health Container *//
-            //* begin::Table content creation *//
-            // -> This includes attacks & spells, global modifiers, tools & custom skills, and the bag
-            setTables(item);
-            //* end::Table content creation *//
-        }
-    }
-
     saveField(object, id) {
         let form = new FormData();
         let objName = object.getAttribute('name');
@@ -1166,164 +1076,211 @@ class Journal {
         });
     }
 
-    setClassGroup(item) {
-        let saveClassesBtn = q('#manage_class_' + item.info.item_id + ' button[name=save_classes]')[0];
-        let classSelect = q('#manage_class_' + item.info.item_id + ' select[name=class]')[0];
-        let subclass = q('#manage_class_' + item.info.item_id + ' input[name=subclass]')[0];
-        let classLvl = q('#manage_class_' + item.info.item_id + ' input[name=lvl]')[0];
-        let scoreProfs = q('#' + item.draggableContainerId + ' input.score_prof');
-        if (classSelect && subclass && classLvl && saveClassesBtn && scoreProfs) {
-            // Get select values
-            let c = findClass();
-            selectClass(c);
-            classSelect.onchange = function () {
-                let c = findClass(this.value);
-                selectClass(c);
-                // Set atributes to related inputs
-                // This must always happen onchange
-                subclass.setAttribute('name', 'subclass_' + this.value);
-                classLvl.setAttribute('name', 'lvl_' + this.value);
+    getDataFromFields(inputs, item) {
+        let it = this.searchItem(item.info.item_id);
+        for (let i of inputs) {
+            let divName = i.getAttribute('name');
+            this.scoreModifiers = () => {
+                let scoreName = divName.substring(11);
+                let sc = it.getScore(scoreName);
+                i.value = sc.score;
+                let check = q('#' + it.draggableContainerId + ' [name="this_prof_' + scoreName + '"]')[0];
+                if (check) check.checked = sc.is_prof === "1";
+                let label = q('#' + it.draggableContainerId + ' label[for="' + divName + '"')[0];
+                let rawScoreModifier = it.getRawScoreModifier(scoreName);
+                if (rawScoreModifier || rawScoreModifier == 0 && label) {
+                    label.innerHTML = rawScoreModifier;
+                }
             }
-            saveClassesBtn.click(function () {
-                console.log(this)
-                saveClassesBtn.value = classSelect.value;
-                saveField(saveClassesBtn, item.info.item_id).done((data) => {
-                    let c = findClass();
-                    // Load saving throws
-                    saveClassSavingThrows(c, item);
-                    // Load hit dices
-                    let selectHitDice = q('#' + item.draggableContainerId + ' select[name="this_hit_dices"]');
-                    if (selectHitDice) getDataFromFields(selectHitDice, item);
-                });
-            });
-            getDataFromFields(scoreProfs, item);
-            scoreProfs.click(function () {
-                saveField(this, item.info.item_id).done(() => {
-                    getDataFromFields(scoreProfs, item);
-                });
-            });
-        }
-
-        function findClass(name) {
-            let classes = JSON.parse(item.info.classes);
-            if (classes && classes.length > 0) {
-                for (let i in classes) {
-                    let c = classes[i];
-                    if (name) {
-                        if (c.class.match(name)) {
-                            return c;
-                        }
-                    } else if (c.is_main) {
-                        return c;
+            this.scoreProfBonuses = () => {
+                let label = q('#' + it.draggableContainerId + ' label[for="' + divName + '"')[0];
+                if (label) {
+                    label.innerHTML = i.checked ? '+' + it.getProficiency() : "+0";
+                }
+            }
+            this.savingThrows = () => {
+                let score = divName.substring(10);
+                let check = q('#' + it.draggableContainerId + ' [name="this_prof_' + score + '"]')[0];
+                let profScoreModifier = check && check.checked ? it.getProfScoreModifier(score) : it.getRawScoreModifier(score);
+                if (profScoreModifier) {
+                    i.value = profScoreModifier;
+                    i.innerHTML = 'SAVING THROW' + (profScoreModifier >= 0 ? '+' : '') + profScoreModifier;
+                }
+            }
+            this.skills = () => {
+                // These titles are also the buttons to roll a skill dice
+                let skillTitle = q('#' + it.draggableContainerId + ' .skill_prof[name="' + divName + '"] ~ button')[0];
+                const skills = JSON.parse(it.info.skill_proficiencies);
+                let skillName = divName.substring(11);
+                i.value = skills[skillName];
+                i.checked = i.value === "1" || i.value === "2";
+                i.classList.toggle('expertise', i.value === "2");
+                it.getProficiency();
+                if (skillTitle) {
+                    skillTitle.innerHTML = toSentenceCase(skillName) + " +" + parseInt(i.value) * it.getProficiency();
+                }
+            }
+            this.hp = () => {
+                // Set total hit dices
+                const level = it.getLevel();
+                let totalHitDices = q('#' + it.draggableContainerId + ' .total_hd')[0];
+                if (totalHitDices) totalHitDices.innerHTML = level;
+                // Save hit points and hit dices info
+                const itemHealth = JSON.parse(it.info.health);
+                if (itemHealth && itemHealth.hit_points) {
+                    i.value = itemHealth.hit_points[divName];
+                }
+                if (divName.match(/_hd/)) {
+                    if (i.value > level) {
+                        i.value = level;
                     }
                 }
-                return null;
             }
-        }
-
-        function selectClass(c) {
-            if (!c) {
-                classSelect.value = "-1";
-                subclass.setAttribute("name", "");
-                classLvl.setAttribute("name", "");
-                subclass.value = "";
-                classLvl.value = "";
-                return;
-            }
-            // Set class
-            classSelect.value = c.class;
-            // Set atributes to related inputs
-            subclass.setAttribute('name', 'subclass_' + c.class);
-            classLvl.setAttribute('name', 'lvl_' + c.class);
-            // Fill data from class if exists
-            subclass.value = c.subclass;
-            classLvl.value = c.lvl;
-        }
-
-        function saveClassSavingThrows(c, item) {
-            let saves = false;
-            if (c && c.saves) {
-                saves = c.saves.split(',');
-                // Check the found ones
-                for (let i of scoreProfs) {
-                    i.checked = false;
-                }
-                for (let s of saves) {
-                    for (let i of scoreProfs) {
-                        // If statement is necessary for it would erase the previous ones
-                        if (i.id.match(s)) {
-                            i.checked = true;
+            this.hitDices = () => {
+                const classes = JSON.parse(it.info.classes);
+                let hitDices = [];
+                for (let c of classes) {
+                    if (c.is_main || c.is_multiclass) {
+                        if (!hitDices[c.hit_dice]) {
+                            hitDices[c.hit_dice] = c.hit_dice;
                         }
                     }
-                    for (let i of scoreProfs) {
-                        saveField(i, item.info.item_id).done(() => {
-                            getDataFromFields(scoreProfs, item);
-                        });
+                }
+                if (hitDices) {
+                    i.innerHTML = '';
+                    for (let h in hitDices) {
+                        i.innerHTML += '<option value="' + h + '">' + h + '</option>'
+                    }
+                } else {
+                    i.innerHTML = '<option value="-1" disabled selected>Select a class</option>';
+                }
+            }
+            this.exh = () => {
+                const exhaustion = JSON.parse(it.info.health).conditions.exhaustion;
+                if (exhaustion) {
+                    i.checked = i.value <= exhaustion.lvl;
+                    let exhaustionEffects = q('#' + it.draggableContainerId + ' .exhaustion_effects')[0];
+                    exhaustionEffects.toggleClass('d-none', exhaustion.lvl == 0);
+                    if (exhaustionEffects && i.checked) {
+                        exhaustionEffects.innerHTML += "<br/> - " + exhaustion[i.value];
                     }
                 }
             }
-            return saves;
+            this.deathSaves = () => {
+                const dSaves = JSON.parse(it.info.health).death_saves;
+                let split = divName.split('_');
+                let type = split[split.length - 1];
+                i.checked = i.value <= dSaves[type];
+            }
+            this.conditions = () => {
+                const conds = JSON.parse(it.info.health).conditions;
+                let split = divName.split('_');
+                let type = split[split.length - 1];
+                i.checked = conds[type] === "1";
+            }
+            if (divName && divName !== '') {
+                //* begin::Score Modifiers *//
+                if (divName.match(/this_score/)) {
+                    this.scoreModifiers()
+                } //* end::Score Modifiers *//
+                //* begin::Score proficiency bonuses *//
+                else if (divName.match(/this_prof/)) {
+                    this.scoreProfBonuses(divName);
+                } // * end::Score proficiency bonuses * //
+                // * begin::Saving Throws * //
+                else if (divName.match(/this_save/)) {
+                    this.savingThrows();
+                } // * end::Saving Throws * //
+                else if (divName.match(/this_skill/)) {
+                    this.skills();
+                }
+                //* begin::Hit points *//
+                else if (divName.match(/_hp|_hd/)) {
+                    this.hp();
+                }//* end::Hit points *//
+                //* begin::Hit dices select *//
+                else if (divName.match(/this_hit_dices/)) {
+                    this.hitDices();
+                }//* end::Hit dices select *//
+                //* begin::Exhaustion *//
+                else if (divName.match(/exhaustion/)) {
+                    this.exh();
+                } //* end::Exhaustion *//
+                //* begin::Death Saves *//
+                else if (divName.match(/death_save/)) {
+                    this.deathSaves();
+                } //* end::Death Saves *//
+                //* begin::Conditions *//
+                else if (divName.match(/this_cond/)) {
+                    this.conditions();
+                } //* end::Conditions *//
+                //* begin::Select *//
+                else if (i.nodeName === 'SELECT') {
+                    i.value = (i.getAttribute('aria-selected'));
+                } //* end::Select *//
+            }
         }
     }
 
-    setHealth(item) {
-        const curhd = q('#' + item.draggableContainerId + ' input[name="cur_hd"]')[0];
-        const deathSaves = q('#' + item.draggableContainerId + ' .death_saves');
-        const deathSavesSuccess = q('#' + item.draggableContainerId + ' .death_saves.success');
-        const deathSavesFailure = q('#' + item.draggableContainerId + ' .death_saves.danger');
-        const exhaustionsChecks = q('#' + item.draggableContainerId + ' input.exhaustion');
-        const conditionChecks = q('#' + item.draggableContainerId + ' .condition');
-        this.hitDices = function () {
-            let it = this.searchItem(item.info.item_id);
-            if (it.getLevel() < this.value) {
-                this.value = it.getLevel();
-            }
-        }
-        this.set_checks = function () {
-            let exhaustionEffects = q('#' + item.draggableContainerId + ' .exhaustion_effects')[0];
-            if (exhaustionEffects) exhaustionEffects.innerHTML = '<b>Exhaustion effects:</b>';
-            const checks = [deathSavesSuccess, deathSavesFailure, exhaustionsChecks];
-            for (let c of checks) {
-                getDataFromFields(c, item);
-                c.click(function () {
-                    let valueHolder = parseInt(this.value);
-                    let limit = this.checked || (this.nextElementSibling && this.nextElementSibling.checked) ? valueHolder : valueHolder - 1;
-                    this.value = limit;
-                    for (let i = 0; i < limit; i++) {
-                        c[i].checked = true;
+    findClass(name) {
+        let classes = JSON.parse(item.info.classes);
+        if (classes && classes.length > 0) {
+            for (let i in classes) {
+                let c = classes[i];
+                if (name) {
+                    if (c.class.match(name)) {
+                        return c;
                     }
-                    saveField(this, item.info.item_id).done(() => {
-                        this.value = valueHolder;
-                        if (exhaustionEffects && this.getAttribute('name').match(/_exh/)) {
-                            exhaustionEffects.innerHTML = '<b>Exhaustion effects:</b>';
-                        }
-                        getDataFromFields(c, item);
+                } else if (c.is_main) {
+                    return c;
+                }
+            }
+            return null;
+        }
+    }
+
+    selectClass(c) {
+        if (!c) {
+            classSelect.value = "-1";
+            subclass.setAttribute("name", "");
+            classLvl.setAttribute("name", "");
+            subclass.value = "";
+            classLvl.value = "";
+            return;
+        }
+        // Set class
+        classSelect.value = c.class;
+        // Set atributes to related inputs
+        subclass.setAttribute('name', 'subclass_' + c.class);
+        classLvl.setAttribute('name', 'lvl_' + c.class);
+        // Fill data from class if exists
+        subclass.value = c.subclass;
+        classLvl.value = c.lvl;
+    }
+
+    saveClassSavingThrows(c, item) {
+        let saves = false;
+        if (c && c.saves) {
+            saves = c.saves.split(',');
+            // Check the found ones
+            for (let i of scoreProfs) {
+                i.checked = false;
+            }
+            for (let s of saves) {
+                for (let i of scoreProfs) {
+                    // If statement is necessary for it would erase the previous ones
+                    if (i.id.match(s)) {
+                        i.checked = true;
+                    }
+                }
+                for (let i of scoreProfs) {
+                    saveField(i, item.info.item_id).done(() => {
+                        getDataFromFields(scoreProfs, item);
                     });
-                });
+                }
             }
         }
-        this.setConditions = function () {
-            getDataFromFields(conditionChecks, item);
-            conditionChecks.click(function () {
-                this.value = this.checked ? "1" : "0";
-                saveField(this, item.info.item_id).done(() => {
-                    // do things?
-                    getDataFromFields(conditionChecks, item);
-                });
-            });
-        }
-        //* Current hit dices cannot be more than the available levels *//
-        if (curhd) {
-            curhd.onchange = this.hitDices;
-            curhd.onkeyup = this.hitDices;
-        }
-        // Available hit dices must match the classes available for character
-        const selectHitDice = q('#' + item.draggableContainerId + ' select[name="this_hit_dices"]');
-        if (selectHitDice) getDataFromFields(selectHitDice, item);
-        //* Death saves *//
-        if (deathSaves && exhaustionsChecks) this.set_checks();
-        //* Conditions *//
-        if (conditionChecks) this.setConditions();
+        return saves;
     }
 
     setWeightCalcs(t, item) {

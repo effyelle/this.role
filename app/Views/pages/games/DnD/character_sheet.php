@@ -414,7 +414,7 @@
                                                            class="form-control form-check-input exhaustion <?= $i < 3 ? 'warning' : 'danger'; ?> m-0"/>
                                                 <?php } ?>
                                             </div>
-                                            <span class="ps-5 exhaustion_effects fs-8 d-none col-12"><b>Exhaustion effects:</b></span>
+                                            <span class="ps-5 exhaustion_effects fs-8 col-12"></span>
                                         </div>
                                         <!--end::Row - Exhaustion-->
                                         <div class="fs-3 p-3 pb-0 w-100">Conditions</div>

@@ -1057,8 +1057,8 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 }
 
 .scores-container .combat-item:not(.combat-item-sm) {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
 }
 
 .combat-item-sm {
@@ -1081,6 +1081,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 
 .combat-item_title {
     font-size: 9px !important;
+    font-weight: 600 !important;
     text-transform: capitalize;
 }
 

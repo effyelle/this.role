@@ -45,9 +45,9 @@ class Journal {
         }
         this.openItem = async (htmlText) => {
             q('#' + this.modalsContainer)[0].innerHTML += htmlText;
-            const iconHolder = q('#' + this.draggableContainerId + ' .item_icon-holder');
-            if (iconHolder.length > 0) {
-                iconHolder[0].style.backgroundImage = 'url("' + this.icon() + '")';
+            this.iconHolder = q('#' + this.draggableContainerId + ' .item_icon-holder');
+            if (this.iconHolder.length > 0) {
+                this.iconHolder[0].style.backgroundImage = 'url("' + this.icon() + '")';
             }
         }
         this.getLevel = () => {
@@ -532,8 +532,10 @@ class Journal {
         // * Set Spellcasting ability-> Spell Save DC -> Spell attack bonus
     }
 
-    getFieldsData() {
-        console.log()
+    fillDraggable(it) {
+        this.fillDataFrom(it);
+        this.fillBlurFields(it);
+        this.fillOthers(it);
     }
 
     getDataFromFields(inputs, item) {
@@ -638,29 +640,6 @@ class Journal {
                 let type = split[split.length - 1];
                 i.checked = conds[type] === "1";
             }
-            this.getGenericFields = () => {
-                switch (divName) {
-                    case 'xp':
-                        return it.getLevel(i.value);
-                    case 'this-ac':
-                        return it.getClassArmor();
-                    case 'this-prof':
-                        // This is the proficiency bonus main square
-                        return it.getProficiency();
-                    case 'this_init':
-                        return it.getInitTierBreaker();
-                    default:
-                        return i.value;
-                }
-            }
-
-            let data_from_sheet = q('#' + it.draggableContainerId + ' [data-from="' + divName + '"]');
-            let data_from_mngclass_modal = q('#manage_class_' + it.info.item_id + ' [data-from="' + divName + '"]');
-            [data_from_sheet, data_from_mngclass_modal].forEach(data_from => {
-                for (let el of data_from) {
-                    el.innerHTML = this.getGenericFields();
-                }
-            });
             if (divName && divName !== '') {
                 //* begin::Score Modifiers *//
                 if (divName.match(/this_score/)) {
@@ -705,6 +684,65 @@ class Journal {
         }
     }
 
+    fillBlurFields(it) {
+        this.inputFields = q('#' + it.draggableContainerId + ' input.this-role-form-field');
+        this.textAreas = q('#' + it.draggableContainerId + ' textarea.this-role-form-field');
+        [this.inputFields, this.textAreas].forEach(fields => {
+            console.log(fields)
+            for (let f of fields) {
+                let divName = f.getAttribute('name');
+                if (divName.match(/item_icon/)) {
+                    it.iconHolder = q('#' + it.draggableContainerId + ' .item_icon-holder');
+                    if (it.iconHolder[0]) it.iconHolder[0].style.backgroundImage = 'url("' + it.icon() + '")';
+                } // it.info.info
+                else if (divName.match(/race|background|walkspeed/)) {
+                    f.value = JSON.parse(it.info.info)[divName];
+                } // it.ability_scores
+                else if (divName.match(/this_score/)) {
+                    let split = divName.split('_');
+                    f.value = JSON.parse(it.info.ability_scores)[split[split.length - 1]].score;
+                } // it.health
+                else if (divName.match(/_hd|_hp/)) {
+                    f.value = JSON.parse(it.info.health).hit_points[divName];
+                } else {
+                    console.log(divName)
+                    console.log(it.info[divName])
+                    f.value = it.info[divName];
+                }
+            }
+        });
+    }
+
+    fillOthers(it) {
+    }
+
+    fillDataFrom(it) {
+        for (let i of this.inputFields) {
+            let divName = i.getAttribute('name');
+            this.getFields = () => {
+                switch (divName) {
+                    case 'xp':
+                        return it.getLevel(i.value);
+                    case 'this-ac':
+                        return it.getClassArmor();
+                    case 'this-prof':
+                        // This is the proficiency bonus main square
+                        return it.getProficiency();
+                    case 'this_init':
+                        return '+' + it.getInitTierBreaker();
+                    case 'cur_hd':
+                        return it.getLevel();
+                    default:
+                        return i.value;
+                }
+            }
+            let data_from_sheet = q('#' + it.draggableContainerId + ' [data-from="' + divName + '"]');
+            for (let el of data_from_sheet) {
+                el.innerHTML = this.getFields();
+            }
+        }
+    }
+
     set BlurFields(it) {
         this.inputFields = q('#' + it.draggableContainerId + ' input.this-role-form-field');
         this.textAreas = q('#' + it.draggableContainerId + ' textarea.this-role-form-field');
@@ -719,14 +757,10 @@ class Journal {
 
     set ItemImage(it) {
         const iconInput = q('#' + it.draggableContainerId + ' .this-role-form-field[name="item_icon"]')[0];
-        const iconHolder = q('#' + it.draggableContainerId + ' .item_icon-holder')[0];
         iconInput.change(() => {
             this.saveField(iconInput, it.info.item_id).done((data) => {
                 data = JSON.parse(data);
-                if (data.response) {
-                    readImageChange(iconInput, iconHolder);
-                    return;
-                }
+                if (data.response) return;
                 $('.modal_error_response').html('Image could not be uploaded');
                 $('#modal_error-toggle').click();
             });

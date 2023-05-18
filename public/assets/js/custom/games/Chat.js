@@ -94,6 +94,7 @@ class Chat {
                     type: m.chat_msg_type
                 });
             }
+            this.record.scrollTop = this.record.scrollHeight;
             return;
         }
         this.formatMessage();

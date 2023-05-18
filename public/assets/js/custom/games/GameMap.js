@@ -17,6 +17,10 @@ class GameMap {
         this.layers[layer.layer_id] = layer;
     }
 
+    set TokensDraggable(draggable) {
+        this.tokensDraggable = draggable;
+    }
+
     setMapListeners() {
         const zoom = (e) => {
             let w = this.container.style.width;

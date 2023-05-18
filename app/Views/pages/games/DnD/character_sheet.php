@@ -238,7 +238,7 @@
                                                             <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
                                                                 <button type="button"
                                                                         class="btn p-0 combat-item_title text-hover-primary">
-                                                                    <?= strtoupper($score['fname']); // Name in CAPS                                                                                                                             ?>
+                                                                    <?= strtoupper($score['fname']); // Name in CAPS                                                                                                                              ?>
                                                                 </button>
                                                                 <label for="this_score_<?= $short; ?>"
                                                                        class="fs-3">0</label>
@@ -348,7 +348,7 @@
                                                     <div class="flex-column justify-content-center align-items-center">
                                                         <div class="this-outline bg-white flex-row justify-content-center align-items-center col-10 gap-1 position-relative mt--10px fs-8">
                                                             <span class="">Total</span>
-                                                            <span class="total_hd">1</span>
+                                                            <span class="total_hd" data-from="cur_hd">1</span>
                                                         </div>
                                                         <label for="cur_hd" class="fs-8">Current</label>
                                                         <input type="number" id="cur_hd" name="cur_hd" value="1"

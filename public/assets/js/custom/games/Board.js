@@ -145,8 +145,15 @@ class Board {
 
     loadItemsFields() {
         // Load what
-        if (this.journal.journalDraggable) console.log(this.journal.journalDraggable);
-        this.journal.getFieldsData();
+        if (this.journal.journalDraggable && this.journal.journalDraggable.containers) {
+            const draggables = this.journal.journalDraggable.containers;
+            for (let draggable of draggables) {
+                let itemID = draggable.id.substring(draggable.id.length - 1);
+                let it = this.journal.searchItem(itemID);
+                this.journal.fillDraggable(it);
+            }
+        }
+        console.log(this.journal.items)
     }
 
     setDraggableItemSheets(btn) {
@@ -154,9 +161,7 @@ class Board {
         let item = this.journal.searchItem(btn.value);
         if (!item || item === {}) return;
         // Return if item has already been opened
-        console.log(q('#' + item.draggableContainerId))
         if (q('#' + item.draggableContainerId).length !== 0) return;
-        console.log(q('#' + item.draggableContainerId))
         return ajax('/app/games_ajax/sheet/' + item.info.item_id, {item_type: item.info.item_type}, 'post', 'text').done((txt) => {
             item.openItem(txt);
             // Check it was created correctly
@@ -191,7 +196,7 @@ class Board {
             let item = this.journal.searchItem(i);
             this.map.gameBoard.innerHTML += this.map.tokenFormatting(item);
         }
-        this.map.tokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
+        this.map.TokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
         for (let i in tokens) {
             let item = this.journal.searchItem(i);
             let newToken = this.map.tokensDraggable.findContainer('token_' + item.info.item_id);
@@ -234,8 +239,8 @@ class Board {
     }
 
     reload() {
-        if (this.map.changed) this.loadTokens();
-        if (this.journal.changed) this.loadItemsFields();
+        this.loadTokens();
+        this.loadItemsFields();
         this.setItemsOpening();
     }
 }

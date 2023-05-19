@@ -64,7 +64,6 @@ class Board {
                     if (input && input.value !== "" && !isNaN(input.value)) nDices = input.value;
                     return this.chat.formatBasicRoll(btn.value, nDices, this.dices[btn.value].roll(nDices));
                 }
-                console.log(this.dices)
                 let thisFrom = this.chat.from();
                 this.chat.saveChat({
                     icon: thisFrom.icon,
@@ -121,7 +120,7 @@ class Board {
         this.dices = dicesObjects;
     }
 
-    setItemsOpening() {
+    setItems() {
         // Save button items from DOM
         const itemOpenersButtons = q('.' + this.journal.itemClass + ' button.menu-link');
         // Check data and items have the same length -> means they have been created accordingly
@@ -130,11 +129,13 @@ class Board {
             for (let itemOpenerBtn of itemOpenersButtons) {
                 // Add a click listener to each item to create a new modal
                 if (this.journal.changed) {
+                    this.loadItemsFields();
                     itemOpenerBtn.addEventListener('click', () => {
                         this.setDraggableItemSheets(itemOpenerBtn);
                     });
                 }
                 if (this.map.changed) {
+                    this.loadTokens();
                     itemOpenerBtn.addEventListener('drag', (e) => {
                         this.setDraggableTokens(e);
                     });
@@ -148,12 +149,17 @@ class Board {
         if (this.journal.journalDraggable && this.journal.journalDraggable.containers) {
             const draggables = this.journal.journalDraggable.containers;
             for (let draggable of draggables) {
+                console.log(draggable)
+                if (!draggable) return;
                 let itemID = draggable.id.substring(draggable.id.length - 1);
                 let it = this.journal.searchItem(itemID);
+                if (!it) {
+                    draggable.remove();
+                    continue;
+                }
                 this.journal.fillDraggable(it);
             }
         }
-        console.log(this.journal.items)
     }
 
     setDraggableItemSheets(btn) {
@@ -177,7 +183,24 @@ class Board {
                 close: '.close_item-btn',
                 closeTargets: ['.draggable_close']
             });
+            // * IMPORTANT * //
+            // /  /  Make it so journal.draggables reset after one closed  /  / //
+            let closers = this.journal.journalDraggable.closers;
+            for (let i = 0; i < closers.length; i++) {
+                closers[i].addEventListener('click', () => {
+                    this.journal.JournalDraggable = new Draggable('.' + item.draggableContainerClass, '.' + item.draggableContainerClass + ' .cursor-move', {
+                        max: '.max-btn',
+                        min: '.min-btn',
+                        close: '.close_item-btn',
+                        closeTargets: ['.draggable_close']
+                    });
+                });
+            }
+            // Load data
+            this.loadItemsFields();
+            // Set listeners
             this.journal.listenToOpenedItems(item);
+            this.hearDicesThrows();
         }).fail((e) => {
             console.log(e.responseText);
         });
@@ -238,9 +261,42 @@ class Board {
         }
     }
 
-    reload() {
-        this.loadTokens();
-        this.loadItemsFields();
-        this.setItemsOpening();
+    hearDicesThrows() {
+        if (this.journal.items && Object.keys(this.journal.items).length > 0) {
+            for (let i in this.journal.items) {
+                let item = this.journal.items[i];
+                this.skillThrows(item);
+            }
+        }
+    }
+
+    skillThrows(it) {
+        this.skillChecks = q('#' + it.draggableContainerId + ' .skill_prof');
+        for (let skill of this.skillChecks) {
+            let btn = skill.nextElementSibling;
+            btn.click(() => {
+                this.text = () => {
+                    let skillName = skill.getAttribute('name').substring(11);
+                    let skillScore = it.getSkill(skillName).score;
+                    let raw = this.dices['d20'].roll(1)[0];
+                    let modifier = it.getSkillProficiency(skillName)
+                    let roll = raw + modifier;
+                    let display = 'Rolling 1d20+' + modifier + '(' + skillScore + ')=' + raw + (modifier >= 0 ? '+' : '') + modifier;
+                    return this.chat.formatRoll({
+                        name: getTitle(skillName),
+                        roll: roll,
+                        modifier: modifier,
+                        display: '<span class="text-muted">' + display + '</span>'
+                    });
+                }
+                let thisFrom = this.chat.from();
+                this.chat.saveChat({
+                    icon: thisFrom.icon,
+                    msg: this.text(),
+                    sender: thisFrom.name,
+                    msgType: "nav_dice"
+                });
+            });
+        }
     }
 }

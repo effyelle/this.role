@@ -2,6 +2,9 @@
   "item_name": "",
   "item_type": "",
   "info": {
+    "class": "",
+    "subclass": "",
+    "lvl": "",
     "background": "",
     "inspiration": "0",
     "race": "",
@@ -13,125 +16,6 @@
       "flaws": ""
     }
   },
-  "classes": [
-    {
-      "class": "artificer",
-      "subclass": "",
-      "lvl": "",
-      "saves": "con,int",
-      "is_main": false,
-      "is_multiclass": false,
-      "hit_dice": "1d10"
-    },
-    {
-      "class": "barbarian",
-      "subclass": "",
-      "lvl": "",
-      "saves": "str,con",
-      "is_main": false,
-      "is_multiclass": false,
-      "hit_dice": "1d12"
-    },
-    {
-      "class": "bard",
-      "subclass": "",
-      "lvl": "",
-      "saves": "dex,cha",
-      "is_main": false,
-      "is_multiclass": false,
-      "hit_dice": "1d8"
-    },
-    {
-      "class": "cleric",
-      "subclass": "",
-      "lvl": "",
-      "saves": "wis,cha",
-      "is_main": false,
-      "is_multiclass": false,
-      "hit_dice": "1d8"
-    },
-    {
-      "class": "druid",
-      "subclass": "",
-      "lvl": "",
-      "saves": "int,wis",
-      "is_main": false,
-      "is_multiclass": false,
-      "hit_dice": "1d8"
-    },
-    {
-      "class": "fighter",
-      "subclass": "",
-      "lvl": "",
-      "saves": "str,con",
-      "is_main": false,
-      "is_multiclass": false,
-      "hit_dice": "1d10"
-    },
-    {
-      "class": "monk",
-      "subclass": "",
-      "lvl": "",
-      "saves": "str,dex",
-      "is_main": false,
-      "is_multiclass": false,
-      "hit_dice": "1d8"
-    },
-    {
-      "class": "paladin",
-      "subclass": "",
-      "lvl": "",
-      "saves": "wis,cha",
-      "is_main": false,
-      "is_multiclass": false,
-      "hit_dice": "1d10"
-    },
-    {
-      "class": "ranger",
-      "subclass": "",
-      "lvl": "",
-      "saves": "str,dex",
-      "is_main": false,
-      "is_multiclass": false,
-      "hit_dice": "1d10"
-    },
-    {
-      "class": "rogue",
-      "subclass": "",
-      "lvl": "",
-      "saves": "dex,int",
-      "is_main": false,
-      "is_multiclass": false,
-      "hit_dice": "1d8"
-    },
-    {
-      "class": "sorcerer",
-      "subclass": "",
-      "lvl": "",
-      "saves": "con,cha",
-      "is_main": false,
-      "is_multiclass": false,
-      "hit_dice": "1d6"
-    },
-    {
-      "class": "warlock",
-      "subclass": "",
-      "lvl": "",
-      "saves": "wis,cha",
-      "is_main": false,
-      "is_multiclass": false,
-      "hit_dice": "1d8"
-    },
-    {
-      "class": "wizard",
-      "subclass": "",
-      "lvl": "",
-      "saves": "int,wis",
-      "is_main": false,
-      "is_multiclass": false,
-      "hit_dice": "1d6"
-    }
-  ],
   "xp": "0",
   "ability_scores": {
     "str": {
@@ -166,23 +50,74 @@
     }
   },
   "skill_proficiencies": {
-    "acrobatics": "0",
-    "arcana": "0",
-    "athletics": "0",
-    "deception": "0",
-    "insight": "0",
-    "intimidation": "0",
-    "investigation": "0",
-    "history": "0",
-    "medicine": "0",
-    "nature": "0",
-    "perception": "0",
-    "performance": "0",
-    "persuasion": "0",
-    "religion": "0",
-    "sleigh_of_hand": "0",
-    "stealth": "0",
-    "survival": "0"
+    "acrobatics": {
+      "is_prof": "0",
+      "score": "dex"
+    },
+    "arcana": {
+      "is_prof": "0",
+      "score": "int"
+    },
+    "athletics": {
+      "is_prof": "0",
+      "score": "str"
+    },
+    "deception": {
+      "is_prof": "0",
+      "score": "cha"
+    },
+    "history": {
+      "is_prof": "0",
+      "score": "int"
+    },
+    "insight": {
+      "is_prof": "0",
+      "score": "wis"
+    },
+    "intimidation": {
+      "is_prof": "0",
+      "score": "cha"
+    },
+    "investigation": {
+      "is_prof": "0",
+      "score": "int"
+    },
+    "medicine": {
+      "is_prof": "0",
+      "score": "wis"
+    },
+    "nature": {
+      "is_prof": "0",
+      "score": "int"
+    },
+    "perception": {
+      "is_prof": "0",
+      "score": "wis"
+    },
+    "performance": {
+      "is_prof": "0",
+      "score": "cha"
+    },
+    "persuasion": {
+      "is_prof": "0",
+      "score": "cha"
+    },
+    "religion": {
+      "is_prof": "0",
+      "score": "int"
+    },
+    "sleight_of_hand": {
+      "is_prof": "0",
+      "score": "dex"
+    },
+    "stealth": {
+      "is_prof": "0",
+      "score": "dex"
+    },
+    "survival": {
+      "is_prof": "0",
+      "score": "wis"
+    }
   },
   "health": {
     "hit_points": {

@@ -143,6 +143,8 @@ class Draggable {
         if (this.closeTargets.length === 0) {
             this.pointers[index].remove();
             this.containers[index].remove();
+            this.pointers[index] = null;
+            this.containers[index] = null;
             return;
         }
         for (let i in this.closeTargets) {

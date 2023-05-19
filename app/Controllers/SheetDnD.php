@@ -95,7 +95,7 @@ class SheetDnD
             case 'custom_features':
                 return [$k => $v];
             //* begin::Info **//
-            case (bool)preg_match('/race|background|walkspeed|inspiration/', $k):
+            case (bool)preg_match('/class|subclass|lvl|race|background|walkspeed|inspiration/', $k):
                 $info = json_decode($item['info'], true);
                 if ($info) {
                     if ($k === 'inspiration') $v = $info['inspiration'] === "0" ? "1" : "0";
@@ -104,12 +104,12 @@ class SheetDnD
                 }
                 break;
             //* end::Info **//
-            //* begin::Classes **//
-            case (bool)preg_match('/class|subclass|lvl|save_classes/', $k):
+            /*// * begin::Classes * //
+            case (bool)preg_match('/_subclass|_lvl|_main/', $k):
                 $classes = json_decode($item['classes'], true);
                 if ($classes) return ['classes' => $this->getClasses($classes, $k, $v)];
                 break;
-            //* end::Classes *//
+            // * end::Classes * //*/
             //* begin::Ability Scores **//
             case (bool)preg_match('/this_prof|this_score/', $k):
                 $scores = json_decode($item['ability_scores'], true);
@@ -146,41 +146,16 @@ class SheetDnD
 
     function getClasses(array $classes, string $k, string $v): array
     {
-        $main = function ($classes): bool|array {
-            foreach ($classes as $c) {
-                if (isset($c['is_main']) && $c['is_main']) {
-                    return $c;
-                }
-            }
-            return false;
-        };
         for ($i = 0; $i < count($classes); $i++) {
             $c = $classes[$i];
             // Find the class that matches the key or the value of post field
-            if (str_contains($k, $c['class']) || str_contains($v, $c['class'])) {
+            if (str_contains($k, $c['class'])) {
                 // Set the class as main if there is no main
-                if (!$main($classes)) {
-                    $classes[$i]['is_main'] = true;
-                }
-                // If there is a main and this class is not it, set it as subclass
-                if ($main($classes) && $main($classes) !== $c) {
-                    $classes[$i]['is_multiclass'] = true;
-                }
-                if (preg_match('/subclass|lvl/', $k)) {
-                    $classes[$i][explode('_', $k)[0]] = $v;
-                    if (str_contains($k, 'lvl') && ($v === "" || $v === "0")) {
-                        // Erase as class if level is zero or empty
-                        $classes[$i]['is_main'] = false;
-                        $classes[$i]['is_multiclass'] = false;
-                    }
-                } elseif ($k === 'new_main') {
-                    // Remove main
-                    for ($j = 0; $j < count($classes); $j++) {
-                        $classes[$j]['is_main'] = false;
-                    }
-                    // Set new main
-                    $classes[$i]['is_multiclass'] = false;
-                    $classes[$i]['is_main'] = true;
+                if (preg_match('/_subclass|_lvl/', $k)) {
+                    $classes[$i][explode('_', $k)[1]] = $v;
+                } elseif (str_contains($k, '_main')) {
+                    $classes[$i][explode('_', $k)[1]] = $v;
+                    if ($v === "0") $classes[$i]['multiclass'] = "1";
                 }
             }
         }
@@ -202,7 +177,7 @@ class SheetDnD
     {
         foreach ($skills as $name => $skill) {
             if (str_contains($k, $name)) {
-                $skills[$name] = $v === "0" ? "1" : ($v === "1" ? "2" : "0");
+                $skills[$name]['is_prof'] = $v === "0" ? "1" : ($v === "1" ? "2" : "0");
             }
         }
         return $skills;

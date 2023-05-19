@@ -71,7 +71,6 @@ CREATE TABLE game_journal(
 	item_viewers JSON DEFAULT '[]', -- ID users
 	item_editors JSON DEFAULT '[]', -- ID users
 	info JSON,
-	classes JSON,
 	xp INT,
 	ability_scores JSON,
 	skill_proficiencies JSON,

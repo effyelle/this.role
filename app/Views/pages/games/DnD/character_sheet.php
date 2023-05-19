@@ -1,6 +1,5 @@
 <?php if (isset($data)) {
     $info = json_decode($data['info'], true);
-    $classes = json_decode($data['classes'], true);
     $xp = $data['xp'];
     $scores = json_decode($data['ability_scores'], true);
     $skill_proficiencies = json_decode($data['skill_proficiencies'], true);
@@ -122,21 +121,32 @@
                                             <div class="flex-column justify-content-start align-items-stretch max-w-200px">
                                                 <!--begin::Row-->
                                                 <div class="row justify-content-evenly">
-                                                    <!--begin::Row Classes deploy-->
-                                                    <div class="column flex-column form-control-solid mb-5">
+                                                    <!--begin::Row Class-->
+                                                    <div class="flex-row form-control-solid mb-5">
                                                         <label for="class">Class</label>
-                                                        <em>
-                                                            <?php $classlist = "";
-                                                            foreach ($classes as $class) {
-                                                                if ($class['is_main'] || $class['is_multiclass']) {
-                                                                    $classlist .= strtosentence($class['class']) . " level " . $class['lvl'] . ", " . $class['subclass'] . "<br/>";
-                                                                }
-                                                            }
-                                                            if ($classlist !== "") echo substr($classlist, 0, strlen($classlist) - 5);
-                                                            else echo 'You haven\'t added any classes yet.'; ?>
-                                                        </em>
+                                                        <input type="text" name="class"
+                                                               placeholder="Warlock"
+                                                               id="" value=""
+                                                               class="form-control this-role-form-field ms-3"/>
                                                     </div>
-                                                    <!--end::Row Classes deploy-->
+                                                    <!--end::Row Class-->
+                                                    <!--begin::Row Subclass-->
+                                                    <div class="flex-row form-control-solid mb-5">
+                                                        <label for="">Subclass</label>
+                                                        <input type="text" name="subclass"
+                                                               placeholder="Circle of Hellfire"
+                                                               id="" value=""
+                                                               class="form-control this-role-form-field ms-3"/>
+                                                    </div>
+                                                    <!--end::Row Subclass-->
+                                                    <!--begin::Row Level-->
+                                                    <div class="flex-row form-control-solid mb-5">
+                                                        <label for="lvl">Level</label>
+                                                        <input type="number" id="lvl" name="lvl" value="1"
+                                                               style="width: 40px;" placeholder="1"
+                                                               class="form-control this-role-form-field ms-3"/>
+                                                    </div>
+                                                    <!--end::Row Level-->
                                                     <!--begin::Row Race-->
                                                     <div class="flex-row form-control-solid mb-5">
                                                         <label for="race">Race</label>
@@ -154,12 +164,12 @@
                                                     </div>
                                                     <!--end::Row Background-->
                                                     <!--begin::Row XP-->
-                                                    <div class="row justify-content-start row-cols-2 mb-5">
+                                                    <div class="flex-row form-control-solid mb-5">
                                                         <div class="flex-row form-control-solid">
                                                             <label for="xp">XP</label>
                                                             <input type="number" id="xp" name="xp"
                                                                    value="<?= $data['xp'] ?? '0' ?>"
-                                                                   class="form-control this-role-form-field ms-3 w-75"/>
+                                                                   class="form-control this-role-form-field ms-3"/>
                                                         </div>
                                                     </div>
                                                     <!--end::Row XP-->
@@ -169,13 +179,41 @@
                                             <!--end::Col (Character Origin Details)-->
                                         </div>
                                         <!--end::Row-->
+                                        <!--begin::Row Spellcasting modifiers-->
+                                        <div class="flex-row-wrap justify-content-center align-items-center gap-3 my-3">
+                                            <!--begin::Select spellcasting modifier-->
+                                            <div class="form-control-solid flex-column gap-3">
+                                                <select id="spellcasting_ability"
+                                                        class="this-outline form-select form-select-sm">
+                                                    <option value="-1">None</option>
+                                                    <?php foreach ($scores as $short => $score) { ?>
+                                                        <option value="<?= $short; ?>"><?= ucfirst($score['fname']); ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                                <label for="spellcasting_ability" class="combat-item_title">
+                                                    SPELLCASTING ABILITY</label>
+                                            </div>
+                                            <div class="flex-column justify-content-center align-items-center gap-3">
+                                                <span type="text" data-from="spellcasting_ability"
+                                                      class="combat-item_content py-2 px-3 this-outline">+0</span>
+                                                <label for="spell_save_dc" class="combat-item_title">
+                                                    SPELL SAVE DC</label>
+                                            </div>
+                                            <div class="flex-column justify-content-center align-items-center gap-3">
+                                                <span type="text" data-from="spellcasting_ability"
+                                                      class="combat-item_content py-2 px-3 this-outline">+0</span>
+                                                <label for="spell_atk_bonus" class="combat-item_title">
+                                                    SPELL ATK BONUS</label>
+                                            </div>
+                                        </div>
+                                        <!--end::Row Spellcasting modifiers-->
                                         <!--begin::Row - Combat (general)-->
                                         <div class="flex-row-wrap justify-content-center align-items-center gap-3 mt-3 mb-6">
                                             <!--begin::Class Armor (CA)-->
                                             <div class="this-ca combat-item">
                                                 <div class="flex-column justify-content-center align-items-center">
-                                                <span type="text" data-from="this-ac"
-                                                      class="combat-item_content">10</span>
+                                                    <span type="text" data-from="this-ac"
+                                                          class="combat-item_content">10</span>
                                                     <label for="this-ac" class="combat-item_title">AC</label>
                                                     <input type="text" id="this-ac" name="this-ac"
                                                            class="d-none this-role-form-field"/>
@@ -185,8 +223,8 @@
                                             <!--begin::Initiative bonus-->
                                             <div class="this-outline combat-item">
                                                 <div class="flex-column justify-content-center align-items-center">
-                                                <span type="text" data-from="this_init"
-                                                      class="combat-item_content">+0</span>
+                                                    <span type="text" data-from="this_init"
+                                                          class="combat-item_content">+0</span>
                                                     <input type="text" id="this_init" name="this_init"
                                                            class="d-none this-role-form-field"/>
                                                     <label for="this_init" class="combat-item_title">INITIATIVE</label>
@@ -238,7 +276,7 @@
                                                             <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
                                                                 <button type="button"
                                                                         class="btn p-0 combat-item_title text-hover-primary">
-                                                                    <?= strtoupper($score['fname']); // Name in CAPS                                                                                                                              ?>
+                                                                    <?= strtoupper($score['fname']); // Name in CAPS                                                                                                                                                       ?>
                                                                 </button>
                                                                 <label for="this_score_<?= $short; ?>"
                                                                        class="fs-3">0</label>
@@ -292,7 +330,7 @@
                                             <!--begin::<?= $title; ?>-->
                                             <div class="flex-row align-items-center justify-content-start form-control-solid form-check gap-2">
                                                 <input type="checkbox" id="this_skill_<?= $name ?>"
-                                                       name="this_skill_<?= $name ?>" value="<?= $skill_details ?>"
+                                                       name="this_skill_<?= $name ?>"
                                                        class="form-control form-check-input skill_prof"/>
                                                 <button type="button"
                                                         class="btn p-0 text-hover-primary fs-8 <?= $name ?>">
@@ -360,6 +398,10 @@
                                                             </button>
                                                             <select id="" name="this_hit_dices"
                                                                     class="col-6 border-0 bg-transparent">
+                                                                <?php $dices = ['1d6', '1d8', '1d10', '1d12'];
+                                                                foreach ($dices as $dice) { ?>
+                                                                    <option value="<?= $dice; ?>"><?= $dice; ?></option>
+                                                                <?php } ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -578,104 +620,6 @@
                         <!--begin::Spells content-->
                         <div id="draggable_<?= $data['item_id'] ?>-spells" class="py-8 px-2 tab-pane fade"></div>
                         <!--end::Spells content-->
-                        <!--begin::Settings content-->
-                        <div id="draggable_<?= $data['item_id'] ?? "" ?>-settings"
-                             class="py-8 px-2 tab-pane fade">
-                            <div class="flex-row-wrap gap-5 justify-content-start align-items-start">
-                                <!--begin::Class management-->
-                                <div class="column this-outline p-3">
-                                    <div class="flex-row-wrap justify-content-between gap-3">
-                                        <!--begin::Title-->
-                                        <div class="fs-3 p-3">
-                                            Manage <span data-from="item_name"> </span>'s classes
-                                        </div>
-                                        <!--end::Title-->
-                                        <!--begin::Add class button-->
-                                        <button type="button" class="btn btn-sm p-2">
-                                            <span>Add class</span>
-                                            <i class="fa fa-plus-circle ms-1 fs-3 text-primary"></i>
-                                        </button>
-                                        <!--end::Add class button-->
-                                    </div>
-                                    <!--begin::Row Classes groups container-->
-                                    <div class="flex-column class_groups_container">
-                                        <!--begin::Row Class group-->
-                                        <div class="class_group flex-column justify-content-between gap-3 border-top-1px-gray-300 py-3">
-                                            <!--begin::Col Class, level, subclass-->
-                                            <div class="flex-row-wrap form-control-solid align-items-center gap-2">
-                                                <!--begin::Col Class-->
-                                                <label for="class">Class</label>
-                                                <select id="class" name="class" aria-selected="-1"
-                                                        class="px-3 ms-3 form-control form-control-sm">
-                                                    <option value="-1" disabled selected>Select one</option>
-                                                    <?php if ($classes) {
-                                                        foreach ($classes as $class) { ?>
-                                                            <option value="<?= strtolower($class['class']); ?>">
-                                                                <?= strtosentence($class['class']); ?>
-                                                            </option>
-                                                        <?php }
-                                                    } ?>
-                                                </select>
-                                                <!--end::Col Class-->
-                                                <!--begin::Col Level-->
-                                                <div class="flex-row-column form-control-solid ms-3">
-                                                    <label for="lvl">Level</label>
-                                                    <input type="number" id="lvl" name="lvl" value="1"
-                                                           style="width: 40px;" placeholder="1"
-                                                           class="form-control ms-2 text-end"/>
-                                                </div>
-                                                <!--end::Col Level-->
-                                                <!--begin::Col Subclass-->
-                                                <div class="flex-row-wrap form-control-solid ms-3 align-items-end">
-                                                    <label for="">Subclass</label>
-                                                    <input type="text" name="subclass" placeholder="Circle of Hellfire"
-                                                           id="" value="" class="form-control ms-2 px-2"/>
-                                                </div>
-                                                <!--end::Col Subclass-->
-                                            </div>
-                                            <!--end::Col Class, level, subclass-->
-                                            <!--begin::Col Buttons-->
-                                            <div class="flex-row align-self-start align-items-end">
-                                                <button type="button" id="" name="save_class" tabindex="-1"
-                                                        class="btn btn-sm btn-danger p-1 fs-8">
-                                                    <!--begin::Indicator label-->
-                                                    <span class="indicator-label ps-1">
-                                                        Delete class
-                                                        <i class="fa-solid fa-trash ms-1 fs-8"></i>
-                                                    </span>
-                                                    <!--end::Indicator label-->
-                                                    <!--begin::Indicator progress-->
-                                                    <span class="indicator-progress">
-                                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                                                    </span>
-                                                    <!--end::Indicator progress-->
-                                                </button>
-                                            </div>
-                                            <!--end::Col Buttons-->
-                                        </div>
-                                        <!--end::Row Class group-->
-                                        <div class="flex-row justify-content-end border-top-1px-gray-300 pt-3">
-                                            <button type="button" id="" name="save_class" tabindex="-1"
-                                                    class="btn btn-sm btn-primary p-2">
-                                                <!--begin::Indicator label-->
-                                                <span class="indicator-label">
-                                                        <i class="fa-solid fa-save ms-1"></i>
-                                                    </span>
-                                                <!--end::Indicator label-->
-                                                <!--begin::Indicator progress-->
-                                                <span class="indicator-progress">
-                                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                                                    </span>
-                                                <!--end::Indicator progress-->
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <!--end::Row Classes groups container-->
-                                </div>
-                                <!--end::Class management-->
-                            </div>
-                        </div>
-                        <!--end::Settings content-->
                     </div>
                 </div>
             </div>

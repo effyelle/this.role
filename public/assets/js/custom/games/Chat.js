@@ -81,6 +81,14 @@ class Chat {
             '</div>';
     }
 
+    formatRoll = (opt = {}) => {
+        return '<div class="flex-column justify-content-center align-items-center gap-1 text-center">' +
+            '<em>' + opt.name + '('+opt.modifier+')</em>' +
+            '<a class="menu-link fw-bolder fs-4">' + opt.roll + '</a>' +
+            '<em class="flex-row-wrap justify-content-center align-items-center gap-1 px-5">[ ' + opt.display + ' ]</em>' +
+            '</div>';
+    }
+
     formatMessages() {
         if (this.messages.length > 0) {
             this.record.innerHTML = '';

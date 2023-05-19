@@ -83,7 +83,7 @@ class GameMap {
         this.container.style.transition = 'all 1s ease';
         q('.this-game-transition .empty-layers')[0]
             .innerHTML = 'You have added no layers yet or old image was not found';
-        q('.this-game-transition .spinner-border').removeClass('d-none');
+        q('.this-game-transition .spinner-border').addClass('d-none');
         q('.this-game-transition .empty-layers').removeClass('d-none');
     }
 

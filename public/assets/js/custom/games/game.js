@@ -29,7 +29,6 @@ function initGame() {
                     contentType: false,
                     success: (data) => {
                         data = (JSON.parse(data)).data;
-                        console.log(board.map.selectedLayer());
                         if (!board.map.selectedLayer()) {
                             selectMap(data.layers[0].layer_id);
                         }
@@ -155,13 +154,14 @@ function initGame() {
     thisShouldBeAWebSocket();
 
     //* Interval to get page responses in "real" time *//
-    setInterval(thisShouldBeAWebSocket, 5000);
+    setInterval(thisShouldBeAWebSocket, 500);
 
     function thisShouldBeAWebSocket() {
         board.chat.getChat();
+        board.journal.Chat = board.chat;
         board.map.loadLayers().done(() => {
             board.journal.initJournal(board).done(() => {
-                board.reload();
+                board.setItems();
             });
         });
         /*journal.getJournalAjax().done((data) => {

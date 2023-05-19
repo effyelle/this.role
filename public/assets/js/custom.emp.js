@@ -210,6 +210,15 @@ function toSentenceCase(str) {
     return str;
 }
 
+function getTitle(str) {
+    let title = '';
+    let split = str.split('_');
+    for (let s of split) {
+        title += toSentenceCase(s) + ' ';
+    }
+    return title;
+}
+
 function spanPopup(popup) {
     popup.classList.add('show');
     setTimeout(function () {

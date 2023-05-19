@@ -149,7 +149,6 @@ class Board {
         if (this.journal.journalDraggable && this.journal.journalDraggable.containers) {
             const draggables = this.journal.journalDraggable.containers;
             for (let draggable of draggables) {
-                console.log(draggable)
                 if (!draggable) return;
                 let itemID = draggable.id.substring(draggable.id.length - 1);
                 let it = this.journal.searchItem(itemID);
@@ -265,34 +264,110 @@ class Board {
         if (this.journal.items && Object.keys(this.journal.items).length > 0) {
             for (let i in this.journal.items) {
                 let item = this.journal.items[i];
+                this.initiativeThrow(item);
+                this.savingThrows(item);
                 this.skillThrows(item);
             }
         }
     }
 
-    skillThrows(it) {
-        this.skillChecks = q('#' + it.draggableContainerId + ' .skill_prof');
-        for (let skill of this.skillChecks) {
-            let btn = skill.nextElementSibling;
-            btn.click(() => {
-                this.text = () => {
-                    let skillName = skill.getAttribute('name').substring(11);
-                    let skillScore = it.getSkill(skillName).score;
-                    let raw = this.dices['d20'].roll(1)[0];
-                    let modifier = it.getSkillProficiency(skillName)
-                    let roll = raw + modifier;
-                    let display = 'Rolling 1d20+' + modifier + '(' + skillScore + ')=' + raw + (modifier >= 0 ? '+' : '') + modifier;
-                    return this.chat.formatRoll({
-                        name: getTitle(skillName),
-                        roll: roll,
-                        modifier: modifier,
-                        display: '<span class="text-muted">' + display + '</span>'
-                    });
-                }
+    initiativeThrow(it) {
+        const initLabel = q('#' + it.draggableContainerId + ' label[for=this_init]')[0];
+        const text = (it) => {
+            let raw = this.dices['d20'].roll(1)[0];
+            let initTierBreaker = it.getInitTierBreaker();
+            let roll = raw + initTierBreaker;
+            let display = 'Rolling 1d20' + (initTierBreaker >= 0 ? '+' : '') + initTierBreaker + '(dex)=' + raw + (initTierBreaker >= 0 ? '+' : '') + initTierBreaker;
+            return this.chat.formatRoll({
+                name: 'Initiative',
+                roll: '<span class="' + (raw === 1 ? 'text-danger' : (raw === 20 ? 'text-primary' : '')) + '"> ' + roll + '</span>',
+                modifier: initTierBreaker,
+                display: '<span class="text-muted">' + display + '</span>'
+            });
+
+        };
+        initLabel.click(() => {
+            let item = this.journal.searchItem(it.info.item_id);
+            let thisFrom = this.chat.from();
+            this.chat.saveChat({
+                icon: thisFrom.icon,
+                msg: text(item),
+                sender: thisFrom.name,
+                msgType: "nav_dice"
+            });
+        });
+    }
+
+    savingThrows(it) {
+        const text = (it, scoreName, isProf, save) => {
+            let raw = this.dices['d20'].roll(1)[0];
+            let scoreFName = it.getScore(scoreName).fname;
+            let scoreModifier = isProf ? it.getProfScoreModifier(scoreName) : it.getRawScoreModifier(scoreName);
+            let roll = raw + scoreModifier;
+            let display = 'Rolling 1d20' + (scoreModifier >= 0 ? '+' : '') + scoreModifier + '(' + scoreName + ')=' + raw + (scoreModifier >= 0 ? '+' : '') + scoreModifier;
+            return this.chat.formatRoll({
+                name: getTitle(scoreFName) + (save ? ' Saving Throw ' : ' (Plain) '),
+                roll: '<span class="' + (raw === 1 ? 'text-danger' : (raw === 20 ? 'text-primary' : '')) + '"> ' + roll + '</span>',
+                modifier: scoreModifier,
+                display: '<span class="text-muted">' + display + '</span>'
+            });
+        }
+        let scoreProfChecks = q('#' + it.draggableContainerId + ' .score_prof');
+        for (let score of scoreProfChecks) {
+            let split = score.getAttribute('name').split('_');
+            let scoreName = split[split.length - 1];
+            // Raw ability throws
+            let rawBtn = q('#' + it.draggableContainerId + ' label[for="this_score_' + scoreName + '"]')[0].previousElementSibling;
+            rawBtn.addEventListener('click', () => {
+                let item = this.journal.searchItem(it.info.item_id);
                 let thisFrom = this.chat.from();
                 this.chat.saveChat({
                     icon: thisFrom.icon,
-                    msg: this.text(),
+                    msg: text(item, scoreName, false, false),
+                    sender: thisFrom.name,
+                    msgType: "nav_dice"
+                });
+            });
+            // Saving throws (+prof)
+            let saveBtn = q('#' + it.draggableContainerId + ' button[name="this_save_' + scoreName + '"]')[0];
+            saveBtn.click(() => {
+                let item = this.journal.searchItem(it.info.item_id);
+                let thisFrom = this.chat.from();
+                this.chat.saveChat({
+                    icon: thisFrom.icon,
+                    msg: text(item, scoreName, score.checked, true),
+                    sender: thisFrom.name,
+                    msgType: "nav_dice"
+                });
+            });
+        }
+    }
+
+    skillThrows(it) {
+        this.skillChecks = q('#' + it.draggableContainerId + ' .skill_prof');
+        const text = (it, skill) => {
+            let skillName = skill.getAttribute('name').substring(11);
+            let skillScore = it.getSkill(skillName).score;
+            let raw = this.dices['d20'].roll(1)[0];
+            let modifier = it.getSkillProficiency(skillName)
+            let roll = raw + modifier;
+            let display = 'Rolling 1d20' + (modifier >= 0 ? '+' : '') + modifier + '(' + skillScore + ')=' +
+                raw + (modifier >= 0 ? '+' : '') + modifier;
+            return this.chat.formatRoll({
+                name: getTitle(skillName),
+                roll: '<span class="' + (raw === 1 ? 'text-danger' : (raw === 20 ? 'text-primary' : '')) + '"> ' + roll + '</span>',
+                modifier: modifier,
+                display: '<span class="text-muted">' + display + '</span>'
+            });
+        }
+        for (let skill of this.skillChecks) {
+            let btn = skill.nextElementSibling;
+            btn.click(() => {
+                let item = this.journal.searchItem(it.info.item_id);
+                let thisFrom = this.chat.from();
+                this.chat.saveChat({
+                    icon: thisFrom.icon,
+                    msg: text(item, skill),
                     sender: thisFrom.name,
                     msgType: "nav_dice"
                 });

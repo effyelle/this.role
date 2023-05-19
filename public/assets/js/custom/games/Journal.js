@@ -128,7 +128,7 @@ class Journal {
                 let modifier = 0;
                 for (let i in scores) {
                     if (i.match(score)) {
-                        return Math.floor((parseInt(scores[i].score) - 10) / 2) + (scores[i].is_prof === "1" ? this.getProficiency() : 0) + '';
+                        return Math.floor((parseInt(scores[i].score) - 10) / 2) + (scores[i].is_prof === "1" ? this.getProficiency() : 0);
                     }
                 }
                 return modifier;
@@ -676,7 +676,7 @@ class Journal {
                         // This is the proficiency bonus main square
                         return it.getProficiency();
                     case 'this_init':
-                        return '+' + it.getInitTierBreaker();
+                        return (it.getInitTierBreaker() >= 0 ? '+' : '') + it.getInitTierBreaker();
                     case 'cur_hd':
                         it.getLevel()
                         return it.getLevel();

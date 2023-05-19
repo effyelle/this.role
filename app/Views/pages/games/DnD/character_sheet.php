@@ -227,7 +227,10 @@
                                                           class="combat-item_content">+0</span>
                                                     <input type="text" id="this_init" name="this_init"
                                                            class="d-none this-role-form-field"/>
-                                                    <label for="this_init" class="combat-item_title">INITIATIVE</label>
+                                                    <label for="this_init"
+                                                           class="combat-item_title cursor-pointer text-hover-primary">
+                                                        INITIATIVE
+                                                    </label>
                                                 </div>
                                             </div>
                                             <!--end::Initiative bonus-->
@@ -276,7 +279,7 @@
                                                             <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
                                                                 <button type="button"
                                                                         class="btn p-0 combat-item_title text-hover-primary">
-                                                                    <?= strtoupper($score['fname']); // Name in CAPS                                                                                                                                                       ?>
+                                                                    <?= strtoupper($score['fname']); // Name in CAPS                                                                                                                                                        ?>
                                                                 </button>
                                                                 <label for="this_score_<?= $short; ?>"
                                                                        class="fs-3">0</label>

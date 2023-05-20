@@ -265,6 +265,8 @@ class Board {
                 this.initiativeThrow(item);
                 this.savingThrows(item);
                 this.skillThrows(item);
+                this.hitDiceThrow(item);
+                this.deathSaveThrow(item);
             }
         }
     }
@@ -277,11 +279,12 @@ class Board {
             let initTierBreaker = it.getInitTierBreaker();
             // Round to 3 decimals, otherwise sometimes it goes cray cray
             let roll = Math.round((raw + initTierBreaker) * 1000) / 1000;
-            let display = 'Rolling 1d20' + (initTierBreaker >= 0 ? '+' : '') + initTierBreaker + '(dex)=' + raw + (initTierBreaker >= 0 ? '+' : '') + initTierBreaker;
+            let symbol = initTierBreaker >= 0 ? '+' : '';
+            let display = 'Rolling 1d20' + symbol + initTierBreaker + '(dex) = ' + raw + symbol + initTierBreaker;
             return this.chat.formatRoll({
                 name: 'Initiative',
-                roll: '<span class="' + (raw === 1 ? 'text-danger' : (raw === 20 ? 'text-primary' : '')) + '"> ' + roll + '</span>',
                 modifier: initTierBreaker,
+                roll: '<span class="' + (raw === 1 ? 'text-danger' : (raw === 20 ? 'text-primary' : '')) + '"> ' + roll + '</span>',
                 display: '<span class="text-muted">' + display + '</span>'
             });
 
@@ -305,11 +308,12 @@ class Board {
             let scoreFName = it.getScore(scoreName).fname;
             let scoreModifier = isProf ? it.getProfScoreModifier(scoreName) : it.getRawScoreModifier(scoreName);
             let roll = raw + scoreModifier;
-            let display = 'Rolling 1d20' + (scoreModifier >= 0 ? '+' : '') + scoreModifier + '(' + scoreName + ')=' + raw + (scoreModifier >= 0 ? '+' : '') + scoreModifier;
+            let symbol = (scoreModifier >= 0 ? '+' : '');
+            let display = 'Rolling 1d20' + symbol + scoreModifier + '(' + scoreName + ') = ' + raw + symbol + scoreModifier;
             return this.chat.formatRoll({
                 name: getTitle(scoreFName) + (save ? ' Saving Throw ' : ' (Plain) '),
-                roll: '<span class="' + (raw === 1 ? 'text-danger' : (raw === 20 ? 'text-primary' : '')) + '"> ' + roll + '</span>',
                 modifier: scoreModifier,
+                roll: '<span class="' + (raw === 1 ? 'text-danger' : (raw === 20 ? 'text-primary' : '')) + '"> ' + roll + '</span>',
                 display: '<span class="text-muted">' + display + '</span>'
             });
         }
@@ -351,12 +355,12 @@ class Board {
             let raw = this.dices['d20'].roll(1)[0];
             let modifier = it.getSkillProficiency(skillName)
             let roll = raw + modifier;
-            let display = 'Rolling 1d20' + (modifier >= 0 ? '+' : '') + modifier + '(' + skillScore + ')=' +
-                raw + (modifier >= 0 ? '+' : '') + modifier;
+            let symbol = modifier >= 0 ? '+' : '';
+            let display = 'Rolling 1d20' + symbol + modifier + '(' + skillScore + ') = ' + raw + symbol + modifier;
             return this.chat.formatRoll({
                 name: getTitle(skillName),
-                roll: '<span class="' + (raw === 1 ? 'text-danger' : (raw === 20 ? 'text-primary' : '')) + '"> ' + roll + '</span>',
                 modifier: modifier,
+                roll: '<span class="' + (raw === 1 ? 'text-danger' : (raw === 20 ? 'text-primary' : '')) + '"> ' + roll + '</span>',
                 display: '<span class="text-muted">' + display + '</span>'
             });
         }
@@ -368,6 +372,85 @@ class Board {
                 this.chat.saveChat({
                     icon: thisFrom.icon,
                     msg: text(item, skill),
+                    sender: thisFrom.name,
+                    msgType: "nav_dice"
+                });
+            });
+        }
+    }
+
+    hitDiceThrow(it) {
+        const hitDiceBtns = q('#' + it.draggableContainerId + ' button[name=this_hit_dice_btn]');
+        const text = (dice, it) => {
+            let raw = this.dices[dice].roll(1)[0];
+            let modifier = it.getRawScoreModifier('con');
+            let symbol = modifier >= 0 ? '+' : '';
+            return this.chat.formatRoll({
+                name: 'Hit dice',
+                modifier: '1' + dice + '+' + modifier,
+                roll: '<span class="' + (raw === 1 ? 'text-danger' : (raw === 20 ? 'text-primary' : '')) + '"> ' + (raw + modifier) + '</span>',
+                display: '<span class="text-muted">Rolling 1' + dice + symbol + modifier + '(con) = ' + raw + symbol + modifier + '</span>'
+            });
+        }
+        for (let btn of hitDiceBtns) {
+            btn.click(() => {
+                it = this.journal.searchItem(it.info.item_id);
+                let thisFrom = this.chat.from();
+                this.chat.saveChat({
+                    icon: thisFrom.icon,
+                    msg: text(btn.value, it),
+                    sender: thisFrom.name,
+                    msgType: "nav_dice"
+                });
+            });
+        }
+    }
+
+    deathSaveThrow(it) {
+        const deathSaveBtns = q('#' + it.draggableContainerId + ' button[name=death_saving_throw]');
+        const text = (it) => {
+            let raw = this.dices['d20'].roll(1)[0];
+            let checkings = raw === 20 || raw === 1 ? 2 : 1;
+            if (raw > 10) {
+                const deathSavesSuccess = q('#' + it.draggableContainerId + ' .death_saves.success');
+                for (let success of deathSavesSuccess) {
+                    if (!success.checked) {
+                        success.checked = true;
+                        this.journal.saveField(success, it.info.item_id);
+                        checkings--;
+                        if (!success.nextElementSibling) {
+                            alert("Gz! You survived!");
+                        }
+                        if (checkings === 0) break;
+                    }
+                }
+            } else {
+                const deathSavesFailure = q('#' + it.draggableContainerId + ' .death_saves.danger');
+                for (let fail of deathSavesFailure) {
+                    if (!fail.checked) {
+                        fail.checked = true;
+                        this.journal.saveField(fail, it.info.item_id);
+                        checkings--;
+                        if (!fail.nextElementSibling) {
+                            alert("I hope you have a cleric or a druid on your party...");
+                        }
+                        if (checkings === 0) break;
+                    }
+                }
+            }
+            return this.chat.formatRoll({
+                name: 'Death save',
+                roll: '<span class="' + (raw === 1 ? 'text-danger' : (raw === 20 ? 'text-primary' : '')) + '"> ' + raw + '</span>',
+                display: '<span class="text-muted">Rolling 1d20 = ' + raw + (raw > 10 ? ' (success)' : ' (failure)') + '</span>'
+            });
+        }
+        for (let dsBtn of deathSaveBtns) {
+            dsBtn.click(() => {
+                it = this.journal.searchItem(it.info.item_id);
+                let thisFrom = this.chat.from();
+                this.chat.saveChat({
+                    icon: thisFrom.icon,
+                    msg: text(it),
                     sender: thisFrom.name,
                     msgType: "nav_dice"
                 });

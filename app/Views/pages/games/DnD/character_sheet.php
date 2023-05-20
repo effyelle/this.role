@@ -41,8 +41,15 @@
                             <li class="nav-item">
                                 <a class="nav-link py-2 px-3 active" data-bs-toggle="tab"
                                    href="#draggable_<?= $data['item_id'] ?? "" ?>-character">
-                                    <i class="fa fa-dragon f-lg text-this-role-light"></i>
+                                    <i class="fa fa-dice f-lg text-this-role-light"></i>
                                     <span>Character</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link py-2 px-3" data-bs-toggle="tab"
+                                   href="#draggable_<?= $data['item_id'] ?? "" ?>-atks_modifiers">
+                                    <i class="fa fa-dragon f-lg text-this-role-light"></i>
+                                    <span>Bag, Attacks & Modifiers</span>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -50,13 +57,6 @@
                                    href="#draggable_<?= $data['item_id'] ?? "" ?>-backstory_notes">
                                     <i class="fa fa-book f-lg text-this-role-light"></i>
                                     <span>Backstory & Notes</span>
-                                </a>
-                            </li>
-                            <li class="nav-item d-none">
-                                <a class="nav-link py-2 px-3" data-bs-toggle="tab"
-                                   href="#draggable_<?= $data['item_id'] ?? "" ?>-settings">
-                                    <i class="fa fa-gear f-lg text-this-role-light"></i>
-                                    <span></span>
                                 </a>
                             </li>
                         </ul>
@@ -193,69 +193,76 @@
                                                 <label for="spellcasting_ability" class="combat-item_title">
                                                     SPELLCASTING ABILITY</label>
                                             </div>
-                                            <div class="flex-column justify-content-center align-items-center gap-3">
+                                            <div class="flex-row justify-content-center align-items-center">
+                                                <div class="flex-column justify-content-center align-items-center gap-3">
                                                 <span type="text" id="spell_save_dc"
                                                       class="combat-item_content py-2 px-3 this-outline">+0</span>
-                                                <label for="spell_save_dc" class="combat-item_title">
-                                                    SPELL SAVE DC</label>
-                                            </div>
-                                            <div class="flex-column justify-content-center align-items-center gap-3">
+                                                    <label for="spell_save_dc" class="combat-item_title">
+                                                        SPELL SAVE DC</label>
+                                                </div>
+                                                <div class="flex-column justify-content-center align-items-center gap-3">
                                                 <span type="text" id="spell_atk_bonus"
                                                       class="combat-item_content py-2 px-3 this-outline">+0</span>
-                                                <label for="spell_atk_bonus" class="combat-item_title">
-                                                    SPELL ATK BONUS</label>
+                                                    <label for="spell_atk_bonus" class="combat-item_title">
+                                                        SPELL ATK BONUS</label>
+                                                </div>
                                             </div>
                                         </div>
                                         <!--end::Row Spellcasting modifiers-->
                                         <!--begin::Row - Combat (general)-->
                                         <div class="flex-row-wrap justify-content-center align-items-center gap-3 mt-3 mb-6">
-                                            <!--begin::Class Armor (CA)-->
-                                            <div class="this-ca combat-item">
-                                                <div class="flex-column justify-content-center align-items-center">
+                                            <div class="flex-row justify-content-center align-items-center">
+                                                <!--begin::Class Armor (CA)-->
+                                                <div class="this-ca combat-item">
+                                                    <div class="flex-column justify-content-center align-items-center">
                                                     <span type="text" data-from="this-ac"
                                                           class="combat-item_content">10</span>
-                                                    <label for="this-ac" class="combat-item_title">AC</label>
-                                                    <input type="text" id="this-ac" name="this-ac"
-                                                           class="d-none this-role-form-field"/>
+                                                        <label for="this-ac" class="combat-item_title">AC</label>
+                                                        <input type="text" id="this-ac" name="this-ac"
+                                                               class="d-none this-role-form-field"/>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <!--end::Class Armor (CA)-->
-                                            <!--begin::Initiative bonus-->
-                                            <div class="this-outline combat-item">
-                                                <div class="flex-column justify-content-center align-items-center">
+                                                <!--end::Class Armor (CA)-->
+                                                <!--begin::Initiative bonus-->
+                                                <div class="this-outline combat-item">
+                                                    <div class="flex-column justify-content-center align-items-center">
                                                     <span type="text" data-from="this_init"
                                                           class="combat-item_content">+0</span>
-                                                    <input type="text" id="this_init" name="this_init"
-                                                           class="d-none this-role-form-field"/>
-                                                    <label for="this_init"
-                                                           class="combat-item_title cursor-pointer text-hover-primary">
-                                                        INITIATIVE
-                                                    </label>
+                                                        <input type="text" id="this_init" name="this_init"
+                                                               class="d-none this-role-form-field"/>
+                                                        <label for="this_init"
+                                                               class="combat-item_title cursor-pointer text-hover-primary">
+                                                            INITIATIVE
+                                                        </label>
+                                                    </div>
                                                 </div>
+                                                <!--end::Initiative bonus-->
                                             </div>
-                                            <!--end::Initiative bonus-->
-                                            <!--begin::Speed-->
-                                            <div class="this-outline combat-item">
-                                                <div class="flex-column justify-content-center align-items-center">
-                                                    <input type="text" id="walkspeed" name="walkspeed"
-                                                           value="<?= $info['walkspeed'] ?? "0" ?>"
-                                                           class="combat-item_content this-role-form-field"/>
-                                                    <label for="walkspeed" class="combat-item_title">WALK SPEED</label>
+                                            <div class="flex-row justify-content-center align-items-center">
+                                                <!--begin::Speed-->
+                                                <div class="this-outline combat-item">
+                                                    <div class="flex-column justify-content-center align-items-center">
+                                                        <input type="text" id="walkspeed" name="walkspeed"
+                                                               value="<?= $info['walkspeed'] ?? "0" ?>"
+                                                               class="combat-item_content this-role-form-field"/>
+                                                        <label for="walkspeed" class="combat-item_title">WALK
+                                                            SPEED</label>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <!--end::Speed-->
-                                            <!--begin::Proficiency bonus-->
-                                            <div class="this-outline combat-item">
-                                                <div class="flex-column justify-content-center align-items-center">
+                                                <!--end::Speed-->
+                                                <!--begin::Proficiency bonus-->
+                                                <div class="this-outline combat-item">
+                                                    <div class="flex-column justify-content-center align-items-center">
                                                 <span type="text" class="combat-item_content">
                                                     +<span data-from="this-prof">+0</span>
                                                 </span>
-                                                    <input type="text" id="this-prof" name="this-prof" value="0"
-                                                           class="d-none this-role-form-field"/>
-                                                    <label for="this-prof" class="combat-item_title">PROF</label>
+                                                        <input type="text" id="this-prof" name="this-prof" value="0"
+                                                               class="d-none this-role-form-field"/>
+                                                        <label for="this-prof" class="combat-item_title">PROF</label>
+                                                    </div>
                                                 </div>
+                                                <!--end::Proficiency bonus-->
                                             </div>
-                                            <!--end::Proficiency bonus-->
                                         </div>
                                         <!--end::Row - Combat (general)-->
                                     </div>
@@ -269,7 +276,7 @@
                                     <div class="flex-row-wrap justify-content-center">
                                         <!--begin::Ability scores-->
                                         <div class="flex-column justify-content-between p-3 scores-container">
-                                            <div class="flex-row-wrap row-cols-2 max-w-200px">
+                                            <div class="flex-row-wrap max-w-200px">
                                                 <?php foreach ($scores as $short => $score) { ?>
                                                     <!--begin::Col-->
                                                     <div class="flex-column justify-content-end align-items-center">
@@ -279,7 +286,7 @@
                                                             <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
                                                                 <button type="button"
                                                                         class="btn p-0 combat-item_title text-hover-primary">
-                                                                    <?= strtoupper($score['fname']); // Name in CAPS                                                                                                                                                           ?>
+                                                                    <?= strtoupper($score['fname']); // Name in CAPS                                                                                                                                                              ?>
                                                                 </button>
                                                                 <label for="this_score_<?= $short; ?>"
                                                                        class="fs-3">0</label>
@@ -358,7 +365,7 @@
                                 <!--end::Skills-->
                                 <!--begin::Health & Conditions-->
                                 <div class="column this-outline p-3">
-                                    <div class="flex-column w-300px justify-content-center align-items-center gap-3">
+                                    <div class="flex-column justify-content-center align-items-center gap-3">
                                         <div class="fs-3 p-3 pb-0 w-100">Health</div>
                                         <!--begin::Row - Hit Points-->
                                         <div class="position-relative w-180px h-125px p-3">
@@ -384,7 +391,7 @@
                                         <!--begin::Row-->
                                         <div class="flex-row-wrap justify-content-evenly align-items-center">
                                             <!--begin::Col - Hit dices-->
-                                            <div class="column col-6">
+                                            <div class="position-relative w-180px h-125px p-3">
                                                 <div class="hit_points this-outline form-control-solid">
                                                     <div class="flex-column justify-content-center align-items-center">
                                                         <div class="this-outline bg-white flex-row justify-content-center align-items-center col-10 gap-1 position-relative mt--10px fs-8">
@@ -395,15 +402,15 @@
                                                         <input type="number" id="cur_hd" name="cur_hd" value="1"
                                                                class="combat-item_content this-hp this-role-form-field w-50 fs-4 ms-3"/>
                                                         <div class="flex-row w-100 gap-1 fs-8 this-outline bg-white position-relative mt-3">
-                                                            <button type="button" name=""
+                                                            <button type="button" name="this_hit_dice_btn"
                                                                     class="btn btn-sm p-0 text-hover-primary col-5">
                                                                 Hit dice
                                                             </button>
-                                                            <select id="" name="this_hit_dices"
+                                                            <select id="" name="this_hit_dice"
                                                                     class="col-6 border-0 bg-transparent">
                                                                 <?php $dices = ['1d6', '1d8', '1d10', '1d12'];
                                                                 foreach ($dices as $dice) { ?>
-                                                                    <option value="<?= $dice; ?>"><?= $dice; ?></option>
+                                                                    <option value="<?= substr($dice, 1); ?>"><?= $dice; ?></option>
                                                                 <?php } ?>
                                                             </select>
                                                         </div>
@@ -412,9 +419,13 @@
                                             </div>
                                             <!--end::Col - Hit dices-->
                                             <!--begin::Col-->
-                                            <div class="column col-5">
+                                            <div class="column">
                                                 <!--begin::Row - Death Saves-->
-                                                <div class="flex-column align-items-start justify-content-center gap-2 ms-3 fs-9">
+                                                <div class="flex-column align-items-center justify-content-center gap-2 ms-3 fs-9">
+                                                    <button type="button" name="death_saving_throw"
+                                                            class="btn btn-sm p-0 text-hover-danger fs-9 fw-bolder">
+                                                        DEATH SAVES
+                                                    </button>
                                                     <div class="flex-row justify-content-between gap-3 text-center col-12">
                                                         <span class="text-uppercase">SUCCESSES</span>
                                                         <div class="flex-row gap-2">
@@ -437,10 +448,6 @@
                                                             <?php } ?>
                                                         </div>
                                                     </div>
-                                                    <button type="button"
-                                                            class="btn btn-sm p-0 text-hover-danger fs-9 fw-bolder">
-                                                        DEATH SAVES
-                                                    </button>
                                                 </div>
                                                 <!--end::Row - Death Saves-->
                                             </div>
@@ -448,7 +455,7 @@
                                         </div>
                                         <!--end::Row-->
                                         <!--begin::Row - Exhaustion-->
-                                        <div class="flex-column justify-content-center align-items-center text-start mt-5 col-12">
+                                        <div class="flex-column justify-content-center align-items-center text-start col-12">
                                             <div class="flex-row justify-content-center align-items-center form-control-solid form-check p-0 gap-1 col-12">
                                                 <label for="this_exhaustion" class="fs-9 fw-bolder me-2">
                                                     EXHAUSTION
@@ -485,6 +492,46 @@
                                     </div>
                                 </div>
                                 <!--begin::Health & Conditions-->
+                            </div>
+                        </div>
+                        <!--end::Character content-->
+                        <!--begin::Spells & Attacks & Modifiers-->
+                        <div id="draggable_<?= $data['item_id'] ?? "" ?>-atks_modifiers"
+                             class="py-8 px-2 tab-pane fade w-100">
+                            <div class="flex-row-wrap gap-5 justify-content-start align-items-stretch">
+                                <!--begin::Bag-->
+                                <div class="column this-outline p-3">
+                                    <!--begin::Title-->
+                                    <div class="flex-row justify-content-between align-items-center w-100">
+                                        <label for="" class="fs-3 p-3">Bag</label>
+                                        <button class="btn btn-sm" id="bag_btn<?= $data['item_id']; ?>">
+                                            <i class="fa-solid fa-plus fa-xl text-dark"></i>
+                                        </button>
+                                    </div>
+                                    <!--end::Title-->
+                                    <!--begin::Table-->
+                                    <div id="bag_<?= $data['item_id']; ?>" data-kt-menu="true"
+                                         class="menu menu-column menu-rounded fs-8 px-3 bag_table this_table">
+                                    </div>
+                                    <!--end::Table-->
+                                    <!--begin::Footer-->
+                                    <div class="px-3 fs-8 text-gray-700 fw-bolder text-capitalize mt-3">
+                                        <div class="flex-row align-items-center justify-content-between w-100">
+                                            <div>TOTAL WEIGHT</div>
+                                            <div class="col-2 ps-5 text-center">
+                                                <span class="total_weight me-1"> 0 </span>kg
+                                            </div>
+                                        </div>
+                                        <div class="flex-row align-items-center justify-content-between w-100">
+                                            <div>OVERWEIGHT</div>
+                                            <div class="col-2 ps-5 text-center">
+                                                <span class="overweight me-1"> 0 </span>kg
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end::Footer-->
+                                </div>
+                                <!--end::Bag-->
                                 <!--begin::Attacks & Spells-->
                                 <div class="column this-outline p-3">
                                     <!--begin::Title-->
@@ -545,39 +592,6 @@
                                     <!--end::Table-->
                                 </div>
                                 <!--end::Tools & Custom Skills-->
-                                <!--begin::Bag-->
-                                <div class="column this-outline p-3">
-                                    <!--begin::Title-->
-                                    <div class="flex-row justify-content-between align-items-center w-100">
-                                        <label for="" class="fs-3 p-3">Bag</label>
-                                        <button class="btn btn-sm" id="bag_btn<?= $data['item_id']; ?>">
-                                            <i class="fa-solid fa-plus fa-xl text-dark"></i>
-                                        </button>
-                                    </div>
-                                    <!--end::Title-->
-                                    <!--begin::Table-->
-                                    <div id="bag_<?= $data['item_id']; ?>" data-kt-menu="true"
-                                         class="menu menu-column menu-rounded fs-8 px-3 bag_table this_table">
-                                    </div>
-                                    <!--end::Table-->
-                                    <!--begin::Footer-->
-                                    <div class="px-3 fs-8 text-gray-700 fw-bolder text-capitalize mt-3">
-                                        <div class="flex-row align-items-center justify-content-between w-100">
-                                            <div>TOTAL WEIGHT</div>
-                                            <div class="col-2 ps-5 text-center">
-                                                <span class="total_weight me-1"> 0 </span>kg
-                                            </div>
-                                        </div>
-                                        <div class="flex-row align-items-center justify-content-between w-100">
-                                            <div>OVERWEIGHT</div>
-                                            <div class="col-2 ps-5 text-center">
-                                                <span class="overweight me-1"> 0 </span>kg
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--end::Footer-->
-                                </div>
-                                <!--end::Bag-->
                                 <!--begin::Other Features-->
                                 <div class="column this-outline p-3">
                                     <!--begin::Title-->
@@ -598,7 +612,7 @@
                                 <!--end::Other Features-->
                             </div>
                         </div>
-                        <!--end::Character content-->
+                        <!--end::Spells & Attacks & Modifiers-->
                         <!--begin::Backstory & Notes content-->
                         <div id="draggable_<?= $data['item_id'] ?? "" ?>-backstory_notes"
                              class="py-8 px-2 tab-pane fade w-100">

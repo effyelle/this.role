@@ -32,7 +32,6 @@ class Journal {
     }
 
     set JournalDraggable(draggables) {
-        console.log(draggables)
         this.journalDraggable = draggables;
     }
 
@@ -592,7 +591,6 @@ class Journal {
         const spellSaveDC = q('#' + it.draggableContainerId + ' #spell_save_dc')[0];
         const spellAtkBonus = q('#' + it.draggableContainerId + ' #spell_atk_bonus')[0];
         const spellcasting = it.getSpellModifiers();
-        console.log(spellcasting)
         spellAbilitySelect.value = spellcasting.selected;
         spellSaveDC.innerHTML = spellcasting.spellSave;
         spellAtkBonus.innerHTML = (spellcasting.spellAtkBonus >= 0 ? '+' : '') + spellcasting.spellAtkBonus;
@@ -685,6 +683,11 @@ class Journal {
                 }
             }
         }
+        // * Hit dice select & button * //
+        const hitDiceButton = q('#' + it.draggableContainerId + ' button[name=this_hit_dice_btn]')[0];
+        const hitDiceSelect = q('#' + it.draggableContainerId + ' select[name=this_hit_dice]')[0];
+        hitDiceSelect.value = health.hit_points.this_hit_dice;
+        hitDiceButton.value = health.hit_points.this_hit_dice;
     }
 
     fillDataFrom(it) {
@@ -850,9 +853,7 @@ class Journal {
     set Spellcasting(it) {
         const spellAbilitySelect = q('#' + it.draggableContainerId + ' #spellcasting_ability')[0];
         spellAbilitySelect.onchange = () => {
-            this.saveField(spellAbilitySelect, it.info.item_id).done((data) => {
-                console.log(data);
-            });
+            this.saveField(spellAbilitySelect, it.info.item_id);
         }
     }
 
@@ -886,12 +887,20 @@ class Journal {
         const checks = this.getHealthGroup(it);
         for (let checkGroup of checks) {
             for (let check of checkGroup) {
-                check.click(() => {
+                check.onchange = () => {
+                    console.log('e')
+                }
+                check.click((e) => {
+                    e.preventDefault();
                     if (!check.classList.contains('condition')) {
                         // If check is checked means that's the new value
                         // If not, the new value is the previous or 0
                         let valHolder = check.value;
-                        let newVal = check.checked ? valHolder : (check.previousElementSibling && check.previousElementSibling.classList.contains('exhaustion') ? check.previousElementSibling.value : "0");
+                        let newVal = check.checked
+                            ? valHolder
+                            : (check.previousElementSibling && check.previousElementSibling.classList.contains('exhaustion')
+                                ? check.previousElementSibling.value
+                                : "0");
                         check.value = newVal;
                         for (let i = 0; i < checkGroup.length; i++) {
                             checkGroup[i].checked = newVal > i;
@@ -915,6 +924,13 @@ class Journal {
                 if (curHitDice.value < 0) curHitDice.value = 0;
                 if (curHitDice.value > it.getLevel()) curHitDice.value = it.getLevel();
             }
+        }
+        // * Hit dice throw & select * //
+        const hitDiceButton = q('#' + it.draggableContainerId + ' button[name=this_hit_dice_btn]')[0];
+        const hitDiceSelect = q('#' + it.draggableContainerId + ' select[name=this_hit_dice]')[0];
+        hitDiceSelect.onchange = () => {
+            hitDiceButton.value = hitDiceSelect.value;
+            this.saveField(hitDiceSelect, it.info.item_id);
         }
     }
 

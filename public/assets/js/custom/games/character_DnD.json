@@ -122,6 +122,7 @@
   },
   "health": {
     "hit_points": {
+      "this_hit_dice": "d6",
       "cur_hp": "0",
       "total_hp": "0",
       "temp_hp": "0",

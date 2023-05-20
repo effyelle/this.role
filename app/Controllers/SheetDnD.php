@@ -122,7 +122,7 @@ class SheetDnD
                 if ($skills) return ['skill_proficiencies' => $this->getSkills($skills, $k, $v)];
                 break;
             //* end::Skill Proficiencies **//
-            case (bool)preg_match('/_hp|_hd/', $k):
+            case (bool)preg_match('/_hp|_hd|this_hit_dice/', $k):
                 $health = json_decode($item['health'], true);
                 if ($health) {
                     $health['hit_points'][$k] = $v;

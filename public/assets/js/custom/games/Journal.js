@@ -147,6 +147,21 @@ class Journal {
                 return Math.round(parseFloat(str) * 6.80389 * 100) / 100; // in KG
             }
         }
+        this.getSpellModifiers = () => {
+            const thisInfo = JSON.parse(this.info.info);
+            let spellcasting = {
+                selected: "none",
+                spellSave: 8 + this.getProficiency(),
+                spellAtkBonus: this.getProficiency(),
+            };
+            if (thisInfo.spellcasting && thisInfo.spellcasting !== 'none') {
+                spellcasting.selected = thisInfo.spellcasting;
+                spellcasting.spellSave += this.getRawScoreModifier(thisInfo.spellcasting);
+                spellcasting.spellAtkBonus += this.getRawScoreModifier(thisInfo.spellcasting);
+            }
+            return spellcasting;
+        }
+
     }
 
     set JournalChanged(bool) {
@@ -494,9 +509,11 @@ class Journal {
         if (it.info.item_type !== 'character') return;
         this.fillBlurFields(it);
         this.fillInspiration(it);
+        this.fillSpellcasting(it);
         this.fillAbilityScores(it);
         this.fillSkills(it);
         this.fillHealth(it);
+        // this.fillClasses(it);
         // Missing: table row titles ?
         // Class list
         // Hit dices select
@@ -568,6 +585,17 @@ class Journal {
             }
             insp.children[0].style.backgroundImage = 'none';
         }
+    }
+
+    fillSpellcasting(it) {
+        const spellAbilitySelect = q('#' + it.draggableContainerId + ' #spellcasting_ability')[0];
+        const spellSaveDC = q('#' + it.draggableContainerId + ' #spell_save_dc')[0];
+        const spellAtkBonus = q('#' + it.draggableContainerId + ' #spell_atk_bonus')[0];
+        const spellcasting = it.getSpellModifiers();
+        console.log(spellcasting)
+        spellAbilitySelect.value = spellcasting.selected;
+        spellSaveDC.innerHTML = spellcasting.spellSave;
+        spellAtkBonus.innerHTML = (spellcasting.spellAtkBonus >= 0 ? '+' : '') + spellcasting.spellAtkBonus;
     }
 
     fillAbilityScores(it) {
@@ -820,7 +848,12 @@ class Journal {
     }
 
     set Spellcasting(it) {
-        const spellAbilitySelect = q('#' + it.draggableContainerId + ' ')
+        const spellAbilitySelect = q('#' + it.draggableContainerId + ' #spellcasting_ability')[0];
+        spellAbilitySelect.onchange = () => {
+            this.saveField(spellAbilitySelect, it.info.item_id).done((data) => {
+                console.log(data);
+            });
+        }
     }
 
     set ScoreProfs(it) {
@@ -886,7 +919,13 @@ class Journal {
     }
 
     set Tables(it) {
-        this.characterTableButtons = [q('#atk_spells_btn' + it.info.item_id), q('#global_mods_btn' + it.info.item_id), q('#tools_custskills_btn' + it.info.item_id), q('#bag_btn' + it.info.item_id), q('#other_feats_btn' + it.info.item_id)]
+        this.characterTableButtons = [
+            q('#atk_spells_btn' + it.info.item_id),
+            q('#global_mods_btn' + it.info.item_id),
+            q('#tools_custskills_btn' + it.info.item_id),
+            q('#bag_btn' + it.info.item_id),
+            q('#other_feats_btn' + it.info.item_id)
+        ];
         this.accordionMenus = (t) => {
             let menus = q('#' + t.id + ' .menu-item.menu-accordion');
             for (let m of menus) {

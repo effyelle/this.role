@@ -47,12 +47,12 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link py-2 px-3" data-bs-toggle="tab"
-                                   href="#draggable_<?= $data['item_id'] ?? "" ?>-spells">
+                                   href="#draggable_<?= $data['item_id'] ?? "" ?>-backstory_notes">
                                     <i class="fa fa-book f-lg text-this-role-light"></i>
-                                    <span>Spells</span>
+                                    <span>Backstory & Notes</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item d-none">
                                 <a class="nav-link py-2 px-3" data-bs-toggle="tab"
                                    href="#draggable_<?= $data['item_id'] ?? "" ?>-settings">
                                     <i class="fa fa-gear f-lg text-this-role-light"></i>
@@ -183,9 +183,9 @@
                                         <div class="flex-row-wrap justify-content-center align-items-center gap-3 my-3">
                                             <!--begin::Select spellcasting modifier-->
                                             <div class="form-control-solid flex-column gap-3">
-                                                <select id="spellcasting_ability" name="spellcasting_ability"
+                                                <select id="spellcasting_ability" name="spellcasting"
                                                         class="this-outline form-select form-select-sm">
-                                                    <option value="-1">None</option>
+                                                    <option value="none">None</option>
                                                     <?php foreach ($scores as $short => $score) { ?>
                                                         <option value="<?= $short; ?>"><?= ucfirst($score['fname']); ?></option>
                                                     <?php } ?>
@@ -194,13 +194,13 @@
                                                     SPELLCASTING ABILITY</label>
                                             </div>
                                             <div class="flex-column justify-content-center align-items-center gap-3">
-                                                <span type="text" data-from="spellcasting_ability" id="spell_save_dc"
+                                                <span type="text" id="spell_save_dc"
                                                       class="combat-item_content py-2 px-3 this-outline">+0</span>
                                                 <label for="spell_save_dc" class="combat-item_title">
                                                     SPELL SAVE DC</label>
                                             </div>
                                             <div class="flex-column justify-content-center align-items-center gap-3">
-                                                <span type="text" data-from="spellcasting_ability" id="spell_atk_bonus"
+                                                <span type="text" id="spell_atk_bonus"
                                                       class="combat-item_content py-2 px-3 this-outline">+0</span>
                                                 <label for="spell_atk_bonus" class="combat-item_title">
                                                     SPELL ATK BONUS</label>
@@ -279,7 +279,7 @@
                                                             <div class="this-outline combat-item flex-column align-items-center justify-content-center position-absolute top-15px">
                                                                 <button type="button"
                                                                         class="btn p-0 combat-item_title text-hover-primary">
-                                                                    <?= strtoupper($score['fname']); // Name in CAPS                                                                                                                                                        ?>
+                                                                    <?= strtoupper($score['fname']); // Name in CAPS                                                                                                                                                           ?>
                                                                 </button>
                                                                 <label for="this_score_<?= $short; ?>"
                                                                        class="fs-3">0</label>
@@ -596,13 +596,20 @@
                                     <!--end::Table-->
                                 </div>
                                 <!--end::Other Features-->
+                            </div>
+                        </div>
+                        <!--end::Character content-->
+                        <!--begin::Backstory & Notes content-->
+                        <div id="draggable_<?= $data['item_id'] ?? "" ?>-backstory_notes"
+                             class="py-8 px-2 tab-pane fade w-100">
+                            <div class="flex-row-wrap gap-5 justify-content-start align-items-stretch">
                                 <!--begin::Treasures & Notes-->
-                                <div class="column this-outline p-3 w-100" style="overflow-y: scroll">
+                                <div class="column this-outline p-3 w-100">
                                     <label for="notes" class="fs-3 p-3 border-bottom border-1 border-gray-300 w-100">
                                         Treasures, Notes & Alliances</label>
                                     <div class="p-3">
-                            <textarea rows="10" id="notes" name="notes" style="resize: none;"
-                                      class="w-100 form-control this-role-form-field border-0"></textarea>
+                                        <textarea rows="10" id="notes" name="notes"
+                                                  class="w-100 form-control this-role-form-field border-0"></textarea>
                                     </div>
                                 </div>
                                 <!--end::Treasures & Notes-->
@@ -612,17 +619,14 @@
                                            class="fs-3 p-3 border-bottom border-1 border-gray-300 w-100">
                                         Backstory</label>
                                     <div class="p-3">
-                            <textarea rows="10" id="backstory" name="backstory" style="resize: none;"
-                                      class="w-100 form-control this-role-form-field border-0"></textarea>
+                                        <textarea rows="10" id="backstory" name="backstory"
+                                                  class="w-100 form-control this-role-form-field border-0"></textarea>
                                     </div>
                                 </div>
                                 <!--end::Backstory-->
                             </div>
                         </div>
-                        <!--end::Character content-->
-                        <!--begin::Spells content-->
-                        <div id="draggable_<?= $data['item_id'] ?>-spells" class="py-8 px-2 tab-pane fade"></div>
-                        <!--end::Spells content-->
+                        <!--end::Backstory & Notes content-->
                     </div>
                 </div>
             </div>

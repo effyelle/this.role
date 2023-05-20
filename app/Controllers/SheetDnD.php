@@ -95,7 +95,7 @@ class SheetDnD
             case 'custom_features':
                 return [$k => $v];
             //* begin::Info **//
-            case (bool)preg_match('/class|subclass|lvl|race|background|walkspeed|inspiration/', $k):
+            case (bool)preg_match('/class|subclass|lvl|race|background|walkspeed|inspiration|spellcasting/', $k):
                 $info = json_decode($item['info'], true);
                 if ($info) {
                     if ($k === 'inspiration') $v = $info['inspiration'] === "0" ? "1" : "0";

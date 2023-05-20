@@ -124,22 +124,20 @@ class Board {
         // Save button items from DOM
         const itemOpenersButtons = q('.' + this.journal.itemClass + ' button.menu-link');
         // Check data and items have the same length -> means they have been created accordingly
-        if (itemOpenersButtons.length === Object.keys(this.journal.items).length) {
-            // Iterate items
-            for (let itemOpenerBtn of itemOpenersButtons) {
-                // Add a click listener to each item to create a new modal
-                if (this.journal.changed) {
-                    this.loadItemsFields();
-                    itemOpenerBtn.addEventListener('click', () => {
-                        this.setDraggableItemSheets(itemOpenerBtn);
-                    });
-                }
-                if (this.map.changed) {
-                    this.loadTokens();
-                    itemOpenerBtn.addEventListener('drag', (e) => {
-                        this.setDraggableTokens(e);
-                    });
-                }
+        // Iterate items
+        for (let itemOpenerBtn of itemOpenersButtons) {
+            // Add a click listener to each item to create a new modal
+            if (this.journal.changed) {
+                this.loadItemsFields();
+                itemOpenerBtn.addEventListener('click', () => {
+                    this.setDraggableItemSheets(itemOpenerBtn);
+                });
+            }
+            if (this.map.changed) {
+                this.loadTokens();
+                itemOpenerBtn.addEventListener('drag', (e) => {
+                    this.setDraggableTokens(e);
+                });
             }
         }
     }
@@ -273,6 +271,7 @@ class Board {
 
     initiativeThrow(it) {
         const initLabel = q('#' + it.draggableContainerId + ' label[for=this_init]')[0];
+        if (!initLabel) return;
         const text = (it) => {
             let raw = this.dices['d20'].roll(1)[0];
             let initTierBreaker = it.getInitTierBreaker();
@@ -300,6 +299,7 @@ class Board {
     }
 
     savingThrows(it) {
+        const scoreProfChecks = q('#' + it.draggableContainerId + ' .score_prof');
         const text = (it, scoreName, isProf, save) => {
             let raw = this.dices['d20'].roll(1)[0];
             let scoreFName = it.getScore(scoreName).fname;
@@ -313,7 +313,6 @@ class Board {
                 display: '<span class="text-muted">' + display + '</span>'
             });
         }
-        let scoreProfChecks = q('#' + it.draggableContainerId + ' .score_prof');
         for (let score of scoreProfChecks) {
             let split = score.getAttribute('name').split('_');
             let scoreName = split[split.length - 1];
@@ -345,7 +344,7 @@ class Board {
     }
 
     skillThrows(it) {
-        this.skillChecks = q('#' + it.draggableContainerId + ' .skill_prof');
+        const skillChecks = q('#' + it.draggableContainerId + ' .skill_prof');
         const text = (it, skill) => {
             let skillName = skill.getAttribute('name').substring(11);
             let skillScore = it.getSkill(skillName).score;
@@ -361,7 +360,7 @@ class Board {
                 display: '<span class="text-muted">' + display + '</span>'
             });
         }
-        for (let skill of this.skillChecks) {
+        for (let skill of skillChecks) {
             let btn = skill.nextElementSibling;
             btn.click(() => {
                 let item = this.journal.searchItem(it.info.item_id);

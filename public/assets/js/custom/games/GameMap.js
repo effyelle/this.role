@@ -117,9 +117,11 @@ class GameMap {
             }
 
             // Show buttons
-            q('#edit_layer-btn')[0].removeClass('d-none');
-            q('#delete_layer-btn')[0].removeClass('d-none');
-            q('#select_layer-btn')[0].removeClass('d-none');
+            if (q('#edit_layer-btn')[0]) {
+                q('#edit_layer-btn')[0].removeClass('d-none');
+                q('#delete_layer-btn')[0].removeClass('d-none');
+                q('#select_layer-btn')[0].removeClass('d-none');
+            }
 
             // Return if no data has changed
             if (!this.mapHasChanged(data.layers, this.layers)

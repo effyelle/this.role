@@ -88,17 +88,7 @@ class Draggable {
                     this.maximizers[i].classList.add('d-none');
                     this.minimizers[i].classList.remove('d-none');
                 }
-                this.maximizers[i].ontouchend = () => {
-                    this.toggleTransition(this.containers[i], this.pointers[i], 'maximize');
-                    this.maximizers[i].classList.add('d-none');
-                    this.minimizers[i].classList.remove('d-none');
-                }
                 this.minimizers[i].onclick = () => {
-                    this.toggleTransition(this.containers[i], this.pointers[i], 'minimize');
-                    this.minimizers[i].classList.add('d-none');
-                    this.maximizers[i].classList.remove('d-none');
-                }
-                this.minimizers[i].ontouchend = () => {
                     this.toggleTransition(this.containers[i], this.pointers[i], 'minimize');
                     this.minimizers[i].classList.add('d-none');
                     this.maximizers[i].classList.remove('d-none');

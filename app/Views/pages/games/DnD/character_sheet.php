@@ -183,7 +183,7 @@
                                         <div class="flex-row-wrap justify-content-center align-items-center gap-3 my-3">
                                             <!--begin::Select spellcasting modifier-->
                                             <div class="form-control-solid flex-column gap-3">
-                                                <select id="spellcasting_ability"
+                                                <select id="spellcasting_ability" name="spellcasting_ability"
                                                         class="this-outline form-select form-select-sm">
                                                     <option value="-1">None</option>
                                                     <?php foreach ($scores as $short => $score) { ?>
@@ -194,13 +194,13 @@
                                                     SPELLCASTING ABILITY</label>
                                             </div>
                                             <div class="flex-column justify-content-center align-items-center gap-3">
-                                                <span type="text" data-from="spellcasting_ability"
+                                                <span type="text" data-from="spellcasting_ability" id="spell_save_dc"
                                                       class="combat-item_content py-2 px-3 this-outline">+0</span>
                                                 <label for="spell_save_dc" class="combat-item_title">
                                                     SPELL SAVE DC</label>
                                             </div>
                                             <div class="flex-column justify-content-center align-items-center gap-3">
-                                                <span type="text" data-from="spellcasting_ability"
+                                                <span type="text" data-from="spellcasting_ability" id="spell_atk_bonus"
                                                       class="combat-item_content py-2 px-3 this-outline">+0</span>
                                                 <label for="spell_atk_bonus" class="combat-item_title">
                                                     SPELL ATK BONUS</label>

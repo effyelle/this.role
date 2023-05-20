@@ -407,46 +407,44 @@ class Journal {
     saveResults(data) {
         // Iterate results
         for (let item of data.results) {
-            let viewer = false;
-            let editor = false;
-            // Check if viewer
-            if (item.item_viewers) {
-                item.item_viewers = JSON.parse(item.item_viewers);
-                for (let i of item.item_viewers) {
-                    if (i == session.user_id) viewer = true;
-                }
-            }
-            // Check if editor
-            if (item.item_editors) {
-                item.item_editors = JSON.parse(item.item_editors);
-                for (let i of item.item_editors) {
-                    if (i == session.user_id) editor = true;
-                }
-            }
-            // Save if conditions are met
-            if (session.user_id === dbGame.game_creator || viewer || editor) {
-                // Save a DND sheet for each item
-                this.items[Object.keys(this.items).length] = new this.SheetDnD(this.sheetsContainer, {
-                    itemInfo: item, folder: this.folder,
-                });
-            }
+            // Save a DND sheet for each item
+            this.items[Object.keys(this.items).length] = new this.SheetDnD(this.sheetsContainer, {
+                itemInfo: item, folder: this.folder,
+            });
         }
     }
 
     formatJournalItems() {
-        this.chatSelect = (item) => {
-            if (!this.select) return;
-            this.select.innerHTML += '<option value="' + item.item_id + '">' + item.item_name + '</option>';
-        }
         // Reset select HTML
         if (this.select) this.select.innerHTML = '<option selected value="username">' + session.user_username + '</option>';
         // Rerun items
         for (let i in this.items) {
             let item = this.items[i];
-            // Journal list
-            this.addItemBtnToList(item);
-            // Select for chat
-            if (item.info.item_type === 'character') this.chatSelect(item.info);
+            let viewer = false;
+            let editor = false;
+            // Check if viewer
+            if (item.info.item_viewers) {
+                const itemViewers = JSON.parse(item.info.item_viewers);
+                for (let i of itemViewers) {
+                    if (i == session.user_id) viewer = true;
+                }
+            }
+            // Check if editor
+            if (item.info.item_editors) {
+                const itemEditors = JSON.parse(item.info.item_editors);
+                for (let i of itemEditors) {
+                    if (i == session.user_id) editor = true;
+                }
+            }
+            // Save if conditions are met
+            if (session.user_id === dbGame.game_creator || viewer || editor) {
+                // Journal list
+                this.addItemBtnToList(item);
+                // Select for chat if character
+                if (item.info.item_type === 'character' && this.select) {
+                    this.select.innerHTML += '<option value="' + item.info.item_id + '">' + item.info.item_name + '</option>';
+                }
+            }
         }
     }
 
@@ -701,6 +699,9 @@ class Journal {
         //* begin::Inspiration *//
         this.Inspiration = it;
         //* end::Inspiration *//
+        //* begin::Spellcasting *//
+        this.Spellcasting = it;
+        //* end::Spellcasting *//
         //* begin::Ability score proficiencies *//
         this.ScoreProfs = it;
         //* end::Ability score proficienciess *//
@@ -725,7 +726,6 @@ class Journal {
         [this.inputFields, this.textAreas].forEach(field => {
             for (let f of field) {
                 f.blur(() => {
-                    console.log(f);
                     this.saveField(f, it.info.item_id);
                 });
             }
@@ -817,6 +817,10 @@ class Journal {
                 this.saveField(insp, it.info.item_id);
             });
         }
+    }
+
+    set Spellcasting(it) {
+        const spellAbilitySelect = q('#' + it.draggableContainerId + ' ')
     }
 
     set ScoreProfs(it) {

@@ -136,16 +136,15 @@ class Journal {
             return false;
         }
         this.getInitTierBreaker = () => {
-            // Add init modifiers (?)
             const tierBreaker = 1.045;
             let dex = this.getRawScoreModifier('dex');
             if (!dex) dex = 0;
-            return dex * tierBreaker;
+            return Math.round(dex * tierBreaker * 1000) / 1000;
         }
         this.getCarryingCapacity = () => {
             if (this.info.ability_scores) {
                 const str = JSON.parse(this.info.ability_scores).str.score;
-                return parseFloat(str) * 6.80389;
+                return Math.round(parseFloat(str) * 6.80389 * 100) / 100; // in KG
             }
         }
     }
@@ -874,9 +873,10 @@ class Journal {
         const curHitDice = q('#' + it.draggableContainerId + ' input[name=cur_hd]')[0];
         if (curHitDice) {
             // Limit hit dice to level
-            curHitDice.onchange = function (e) {
-                if (this.value < 0) this.value = 0;
-                if (this.value > it.getLevel()) this.value = it.getLevel();
+            curHitDice.onchange = (e) => {
+                it = this.searchItem(it.info.item_id);
+                if (curHitDice.value < 0) curHitDice.value = 0;
+                if (curHitDice.value > it.getLevel()) curHitDice.value = it.getLevel();
             }
         }
     }
@@ -932,7 +932,7 @@ class Journal {
                     }
                     f.value = f.nextElementSibling.innerHTML;
                 }
-                this.setWeightCalcs(t, it);
+                this.weightCalculate(t, it);
                 f.blur(() => {
                     if (f.nextElementSibling) {
                         if (f.getAttribute('type') === "checkbox") {
@@ -941,7 +941,7 @@ class Journal {
                         f.nextElementSibling.innerHTML = this.value;
                     }
                     this.saveTable(t);
-                    this.setWeightCalcs(t, it);
+                    this.weightCalculate(t, it);
                 });
             }
         }
@@ -1137,7 +1137,7 @@ class Journal {
         });
     }
 
-    setWeightCalcs(t, item) {
+    weightCalculate(t, item) {
         const it = this.searchItem(item.info.item_id);
         let units = q('#' + t.id + ' input.units');
         let weights = q('#' + t.id + ' input.weight');
@@ -1155,9 +1155,9 @@ class Journal {
                 overWeight = totalWeight - it.getCarryingCapacity();
             }
             let tw = q('#' + t.id + ' ~ div .total_weight')[0];
-            if (tw) tw.innerHTML = totalWeight;
+            if (tw) tw.innerHTML = '<span>' + totalWeight + '</span>';
             let ow = q('#' + t.id + ' ~ div .overweight')[0];
-            if (ow) ow.innerHTML = overWeight;
+            if (ow) ow.innerHTML = (overWeight > 0 ? '<span class="text-danger">' : '<span>') + overWeight + '</span>';
         }
     }
 

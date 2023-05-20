@@ -103,8 +103,10 @@ class GameMap {
             if (!data.response) {
                 // Reset select
                 if (this.select) this.select.innerHTML = '<option disabled selected>No layers available</option>';
-                // Select no background
-                this.showLayer(this.layersFolder + layerBg);
+                q('.this-game-transition .empty-layers')[0]
+                    .innerHTML = 'You have added no layers yet or old image was not found';
+                q('.this-game-transition .spinner-border').addClass('d-none');
+                q('.this-game-transition .empty-layers').removeClass('d-none');
                 // Reset layers
                 this.layers = {};
                 // Hide buttons

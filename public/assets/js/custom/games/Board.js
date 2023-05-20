@@ -276,7 +276,8 @@ class Board {
         const text = (it) => {
             let raw = this.dices['d20'].roll(1)[0];
             let initTierBreaker = it.getInitTierBreaker();
-            let roll = raw + initTierBreaker;
+            // Round to 3 decimals, otherwise sometimes it goes cray cray
+            let roll = Math.round((raw + initTierBreaker) * 1000) / 1000;
             let display = 'Rolling 1d20' + (initTierBreaker >= 0 ? '+' : '') + initTierBreaker + '(dex)=' + raw + (initTierBreaker >= 0 ? '+' : '') + initTierBreaker;
             return this.chat.formatRoll({
                 name: 'Initiative',

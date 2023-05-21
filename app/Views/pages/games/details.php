@@ -12,11 +12,11 @@
                     <div class="d-flex flex-row-wrap justify-content-between align-items-stretch align-content-center">
                         <div class="card-toolbar gap-2 fs-5 fs-lg-3">
                             <a href="/app/games/list" class="btn btn-sm btn-link fs-5 fs-lg-3">
-                                <span class="text-hover-primary">My Games</span>
+                                <span class="text-dark text-hover-primary fw-bolder">My Games</span>
                             </a>
                             <span> / </span>
-                            <div class="btn btn-sm px-0 cursor-default fs-5 fs-lg-3">
-                                <span class="game_title"></span>
+                            <div class="btn btn-sm px-0 cursor-default">
+                                <span class="game_title fs-5 fs-lg-3 fw-bolder"></span>
                                 <?php
                                 if (isset($game) && $game['game_creator'] === $_SESSION['user']['user_id']) {
                                     echo '<div class="form-control-solid">'

@@ -17,7 +17,7 @@
             <!--begin::Header-->
             <div class="card-header">
                 <div class="card-toolbar gap-5">
-                    <h2>Patch Notes</h2>
+                    <div class="fs-5 fs-lg-3 fw-bolder">Patch Notes</div>
                 </div>
             </div>
             <!--end::Header-->

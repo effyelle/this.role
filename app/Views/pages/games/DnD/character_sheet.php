@@ -584,7 +584,7 @@
                                 </div>
                                 <!--end::Tools & Custom Skills-->
                                 <!--begin::Other Features-->
-                                <div class="column this-outline p-3 d-none">
+                                <div class="column this-outline p-3">
                                     <!--begin::Title-->
                                     <div class="flex-row justify-content-between align-items-center w-100">
                                         <label for="" class="fs-3 p-3">

@@ -15,7 +15,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                 <div class="mx-auto w-100">
                     <div class="d-flex flex-row-wrap justify-content-between align-items-stretch align-content-center">
                         <div class="card-toolbar gap-5">
-                            <span class="btn btn-sm px-0 fs-5 fs-lg-3 cursor-default">My Games</span>
+                            <span class="btn btn-sm px-0 fs-5 fs-lg-3 fw-bolder cursor-default">My Games</span>
                         </div>
                         <div class="card-toolbar gap-5">
                             <button type="button" id="createGameBtn" class="btn btn-sm btn-danger align-self-start"

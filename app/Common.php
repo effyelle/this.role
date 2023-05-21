@@ -86,7 +86,7 @@ function update_session($user): void
 function validate(string $str): string
 {
     $str = trim($str);
-    if (preg_match('/script/', $str)) $str = '';
+    if (preg_match('/<script>/', $str)) $str = '';
     return $str;
 }
 

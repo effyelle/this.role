@@ -194,10 +194,6 @@ span.popup.show, .signup span.popup.show {
     border: 0 transparent;
 }
 
-.ff-sarina {
-    font-family: 'Sarina', cursive;
-}
-
 .ff-poiret {
     font-family: 'Poiret One', cursive;
 }
@@ -1419,4 +1415,8 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 
 .fs-8 .form-control {
     font-size: 0.85rem;
+}
+
+.globalmods {
+    padding: 0 0.25rem;
 }

@@ -140,7 +140,13 @@ class Journal {
             if (!dex) dex = 0;
             return Math.round(dex * tierBreaker * 1000) / 1000;
         }
-        this.getCarryingCapacity = () => {
+        this.getCarryingCapacityLb = () => {
+            if (this.info.ability_scores) {
+                const str = JSON.parse(this.info.ability_scores).str.score;
+                return Math.round(parseFloat(str) * 15 * 100) / 100; // in KG
+            }
+        }
+        this.getCarryingCapacityKg = () => {
             if (this.info.ability_scores) {
                 const str = JSON.parse(this.info.ability_scores).str.score;
                 return Math.round(parseFloat(str) * 6.80389 * 100) / 100; // in KG
@@ -477,6 +483,64 @@ class Journal {
         return false;
     }
 
+    saveField(object, id) {
+        let form = new FormData();
+        let objName = object.getAttribute('name');
+        let objVal = object.value;
+        if (objName === 'item_icon') {
+            objName = 'item_icon[]';
+            objVal = object.files[0];
+        }
+        if (objName.match(/this_prof/)) {
+            objVal = object.checked ? "1" : "0";
+        }
+        form.append(objName, objVal);
+        form.append('item_id', id);
+        console.log('saveField objName= ', objName);
+        console.log('saveField objVal= ', objVal)
+        return $.ajax({
+            type: "post",
+            url: this.url.save,
+            data: form,
+            processData: false,
+            contentType: false,
+            success: (data) => {
+                return data;
+            },
+            error: (e) => {
+                console.log(e.responseText);
+            }
+        });
+    }
+
+    saveTable(t) {
+        let name = t.id.substring(0, t.id.length - 2);
+        let id = t.id.substring(t.id.length - 1);
+        let form = {item_id: id};
+        form[name] = t.innerHTML;
+        return $.ajax({
+            type: "post",
+            url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
+            data: form,
+            dataType: "json",
+            success: (data) => {
+                if (data.response) {
+                    for (let i in this.items) {
+                        if (this.items[i].info.item_id === id) {
+                            for (let j in data.params) {
+                                this.items[i].info[j] = data.params[j];
+                            }
+                        }
+                    }
+                }
+                return data;
+            },
+            error: (e) => {
+                console.log(e.responseText);
+            }
+        });
+    }
+
     getHealthGroup(it) {
         this.deathSavesSuccess = q('#' + it.draggableContainerId + ' .death_saves.success');
         this.deathSavesFailure = q('#' + it.draggableContainerId + ' .death_saves.danger');
@@ -497,12 +561,16 @@ class Journal {
             if (!this_item || this_item === {}) continue;
             //* HERE LOAD ITEM INFO *//
             // this.getDataFromFields()
-
             // Fill from data base and listen to changes to save that data
             this.FieldListeners = this_item;
         }
     }
 
+    /**
+     * Receives an item and fills up the journal opened draggable item
+     *
+     * @param it
+     */
     fillDraggable(it) {
         this.fillDataFrom(it);
         if (it.info.item_type !== 'character') return;
@@ -512,10 +580,6 @@ class Journal {
         this.fillAbilityScores(it);
         this.fillSkills(it);
         this.fillHealth(it);
-        // this.fillClasses(it);
-        // Missing: table row titles ?
-        // Class list
-        // Hit dices select
     }
 
     fillBlurFields(it) {
@@ -745,10 +809,6 @@ class Journal {
         //* begin::Table *//
         this.Tables = it;
         //* end::Table *//
-
-        // * Set tables ? -> Abilities
-
-        // * Set Spellcasting ability-> Spell Save DC -> Spell attack bonus
     }
 
     set BlurFields(it) {
@@ -936,74 +996,12 @@ class Journal {
 
     set Tables(it) {
         this.characterTableButtons = [
+            q('#bag_btn' + it.info.item_id),
             q('#atk_spells_btn' + it.info.item_id),
             q('#global_mods_btn' + it.info.item_id),
             q('#tools_custskills_btn' + it.info.item_id),
-            q('#bag_btn' + it.info.item_id),
             q('#other_feats_btn' + it.info.item_id)
         ];
-        this.accordionMenus = (t) => {
-            let menus = q('#' + t.id + ' .menu-item.menu-accordion');
-            for (let m of menus) {
-                m.click((e) => {
-                    let btn = false;
-                    for (let child of m.children[0].children) {
-                        if (child.nodeName === "BUTTON") {
-                            btn = child;
-                        }
-                    }
-                    if (e.target === btn || e.target === btn.children[0]) {
-                        m.toggleClass('hover');
-                        m.toggleClass('show');
-                        this.saveTable(t);
-                    }
-                });
-            }
-        }
-        this.createNewRow = (t) => {
-            // Attacks and spells
-            if (t.classList.contains('attacks_spells_table')) {
-                t.innerHTML += this.rowAttacksSpells();
-            } // Global modifiers
-            else if (t.classList.contains('global_modifiers_table')) {
-                t.innerHTML += this.rowGlobalModifiers();
-            } // Bag
-            else if (t.classList.contains('bag_table')) {
-                t.innerHTML += this.rowBag();
-            } // Other features
-            else if (t.classList.contains('other_feats_table')) {
-                // Div to fill ????
-                t.innerHTML += this.rowCustomFeatures();
-            }
-        }
-        this.setSaveTableFields = (t) => {
-            let fields = q('#' + it.draggableContainerId + ' #' + t.id + ' .this_field');
-            for (let f of fields) {
-                if (f.nextElementSibling) {
-                    if (f.getAttribute('type') === "checkbox") {
-                        if (f.nextElementSibling.innerHTML === "1") {
-                            f.checked = true;
-                            f.value = "1";
-                        } else {
-                            f.checked = false;
-                            f.value = "0";
-                        }
-                    }
-                    f.value = f.nextElementSibling.innerHTML;
-                }
-                this.weightCalculate(t, it);
-                f.blur(() => {
-                    if (f.nextElementSibling) {
-                        if (f.getAttribute('type') === "checkbox") {
-                            if (f.checked) f.value = "1"; else f.value = "0";
-                        }
-                        f.nextElementSibling.innerHTML = this.value;
-                    }
-                    this.saveTable(t);
-                    this.weightCalculate(t, it);
-                });
-            }
-        }
         this.searchRow = (div) => {
             let row = div;
             while (row.parentElement && !row.parentElement.classList.contains('this_table')) {
@@ -1011,193 +1009,111 @@ class Journal {
             }
             return row;
         }
-        this.attacks = (t) => {
-            const item = this.searchItem(it.info.item_id);
-            let throwAtk = q('#' + t.id + ' button[name="throw_attack"]');
-            if (throwAtk.length > 0) {
-                for (let i = 0; i < throwAtk.length; i++) {
-                    let name = throwAtk[i].children[0];
-                    let attack = throwAtk[i].children[1];
-                    let dmg_n_type = throwAtk[i].children[2];
-                    if (name && attack && dmg_n_type) {
-                        /*let row = this.searchRow(throwAtk[0]);
-                        console.log(row);
-                        let nameInput = q('#' + t.id + ' input[placeholder="Name"]')[i];
-                        if (nameInput) name.innerHTML = nameInput.value;
-                        let atkModifiers = q('#' + t.id + ' .menu-sub-accordion .attack_mods .this_field');
-                        let savingThrows = q('#' + t.id + ' .menu-sub-accordion .saving_throw .this_field');
-                        let dmgModifiers = q('#' + t.id + ' .menu-sub-accordion .dmg_mods .this_field');
-                        console.log(atkModifiers);
-                        console.log(savingThrows);
-                        console.log(dmgModifiers);
-                        if (savingThrows.length === 3 && atkModifiers.length === 3 && dmgModifiers.length === 4) {
-                            // * begin::ATTACK * //
-                            attack.innerHTML = '';
-                            let atkScoreMod = atkModifiers[0].value;
-                            atkScoreMod = atkScoreMod !== "-1" ? item.getRawScoreModifier(atkScoreMod) : 0;
-                            let otherAtkMod = atkModifiers[1].value;
-                            otherAtkMod = !(otherAtkMod !== "" && otherAtkMod !== "0" && (!isNaN(otherAtkMod) || board.dices.isDiceFormat(otherAtkMod)))
-                                ? 0 : otherAtkMod;
-                            let prof = atkModifiers[2].value;
-                            prof = prof !== "0" ? item.getProficiency() : 0;
-                            let totalAttackModifier = (atkScoreMod + prof) + (!isNaN(otherAtkMod) ? parseInt(otherAtkMod) : " +" + otherAtkMod);
-                            attack.innerHTML += totalAttackModifier === 0 ? "" : 'Atk +' + totalAttackModifier;
-                            // * end::ATTACK * //
-
-                            // * begin::SAVING THROW * //
-                            let saveScoreMod = savingThrows[0].value;
-                            saveScoreMod = saveScoreMod === "-1" ? ""
-                                : saveScoreMod.toUpperCase();
-                            let vsDC = savingThrows[1].value;
-                            vsDC = saveScoreMod === "" ? ""
-                                : (vsDC !== "-1" ? " vs DC" + (8 + parseInt(item.getProfScoreModifier(vsDC))) : "");
-                            // Example: Saving Throw: CON vs DC16
-                            let totalSave = saveScoreMod !== "" ? "Saving Throw: " + saveScoreMod + vsDC : "";
-                            // * end::SAVING THROW * //
-
-                            // * begin::DAMAGE * //
-                            let plainDmg = dmgModifiers[0].value;
-                            plainDmg = plainDmg === "" ? ""
-                                : (!(!isNaN(plainDmg) || board.dices.isDiceFormat(plainDmg))
-                                    ? "Not a number or a valid roll dice" : " +" + plainDmg);
-                            console.log(plainDmg);
-                            let dmgScoreMod = dmgModifiers[1].value;
-                            dmgScoreMod = dmgScoreMod === "-1" ? "" : " +" + item.getRawScoreModifier(dmgScoreMod);
-                            let otherMod = dmgModifiers[2].value;
-                            otherMod = !(otherMod !== "" && otherMod !== "0" && (!isNaN(otherMod) || board.dices.isDiceFormat(otherMod)))
-                                ? "" : " +" + otherMod;
-                            let totalDamageModifier = plainDmg + dmgScoreMod + otherMod;
-                            let dmgType = dmgModifiers[3].value;
-                            dmg_n_type.innerHTML = "Dmg" + totalDamageModifier;
-                            // * END::DAMAGE * //
-                            throwAtk[i].click(function () {
-                                console.log(totalAttackModifier);
-                                console.log(totalSave);
-                                console.log(totalDamageModifier);
-                            });
-                        }*/
-                    }
-                }
-            }
-        }
-        this.setTableHeaders = (t) => {
-            // Attacks and spells
-            if (t.classList.contains('attacks_spells_table')) {
-                this.attacks(t);
-            } // Global modifiers
-            else if (t.classList.contains('global_modifiers_table')) {
-            } // Bag
-            else if (t.classList.contains('bag_table')) {
-            } // Other features
-            else if (t.classList.contains('other_feats_table')) {
-                //t.innerHTML += rowCustomFeatures();
-            }
-        }
         this.setRowDeletes = (t) => {
             let delBtns = q('#' + t.id + ' .delete_row');
             for (let btn of delBtns) {
                 btn.click(() => {
                     let row = this.searchRow(btn);
-                    console.log(t)
                     row.remove();
-                    console.log(t)
                     this.saveTable(t);
                 });
             }
         }
 
+        // * begin::Listen to tables * //
         for (let btn of this.characterTableButtons) {
             if (btn[0] && btn[0].parentNode.nextElementSibling) {
                 let table = btn[0].parentNode.nextElementSibling;
-                // Get table name
-                let tableName = table.id.substring(0, table.id.length - 2);
-                // If bag and empty, set header
-                if (tableName === 'bag' && it.info.bag === '') {
-                    table.innerHTML = '<!--begin::Head-->' + '<div class="flex-row justify-content-between text-gray-700 fw-bolder text-capitalize border-bottom-1px-gray-300">' + '    <div class="w-50px">UNITS</div>' + '    <div class="col-6">ITEM NAME</div>' + '    <div class="w-50px text-end">WEIGHT</div>' + '    <div class="delete-row w-25px"></div>' + '</div>' + '<!--end::Head-->';
-                }
-                // Fill table with info
-                //* FIRST LOAD WHEN OPENING ITEM MODAL *//
-                table.innerHTML += it.info[tableName];
-                //* NOW accordions have been potentially loaded, set them *//
+                // * begin::Fill tables * //
+                this.tableHeaders(table, it);
+                // * end::Fill tables * //
+                // * begin::Listeners for the tables content * //
                 this.accordionMenus(table);
-                //* Fill fields that are empty and set on blur listener to save them *//
-                this.setSaveTableFields(table);
-                //* Fill each header with ability info *//
-                this.setTableHeaders(table);
-                //* Set listeners to erase items *//
+                this.setRowListeners(table, it);
                 this.setRowDeletes(table);
-                // Set listener to save fields
+                // * end::Listeners for the tables content * //
                 btn[0].click(() => {
+                    // * begin::On click, add new row and reset listeners * //
                     this.createNewRow(table);
+                    // * end::On click, add new row and reset listeners * //
+                    // * begin::Reset listeners for the tables content * //
                     this.accordionMenus(table);
-                    this.setSaveTableFields(table);
-                    this.setTableHeaders(table);
+                    this.setRowListeners(table, it);
                     this.setRowDeletes(table);
+                    // * end::Reset listeners for the tables content * //
                 });
             }
         }
+        // * end::Listen to tables * //
     }
 
-    saveField(object, id) {
-        let form = new FormData();
-        let objName = object.getAttribute('name');
-        let objVal = object.value;
-        if (objName === 'item_icon') {
-            objName = 'item_icon[]';
-            objVal = object.files[0];
-        }
-        if (objName.match(/this_prof/)) {
-            objVal = object.checked ? "1" : "0";
-        }
-        form.append(objName, objVal);
-        form.append('item_id', id);
-        console.log('saveField objName= ', objName);
-        console.log('saveField objVal= ', objVal)
-        return $.ajax({
-            type: "post",
-            url: this.url.save,
-            data: form,
-            processData: false,
-            contentType: false,
-            success: (data) => {
-                return data;
-            },
-            error: (e) => {
-                console.log(e.responseText);
-            }
-        });
-    }
-
-    saveTable(t) {
-        let name = t.id.substring(0, t.id.length - 2);
-        let id = t.id.substring(t.id.length - 1);
-        let form = {item_id: id};
-        form[name] = t.innerHTML;
-        return $.ajax({
-            type: "post",
-            url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
-            data: form,
-            dataType: "json",
-            success: (data) => {
-                if (data.response) {
-                    for (let i in this.items) {
-                        if (this.items[i].info.item_id === id) {
-                            for (let j in data.params) {
-                                this.items[i].info[j] = data.params[j];
-                            }
-                        }
+    accordionMenus = (t) => {
+        let menus = q('#' + t.id + ' .menu-item.menu-accordion');
+        for (let m of menus) {
+            m.click((e) => {
+                let btn = false;
+                for (let child of m.children[0].children) {
+                    if (child.nodeName === "BUTTON") {
+                        btn = child;
                     }
                 }
-                return data;
-            },
-            error: (e) => {
-                console.log(e.responseText);
-            }
-        });
+                if (e.target === btn || e.target === btn.children[0]) {
+                    m.toggleClass('hover');
+                    m.toggleClass('show');
+                    this.saveTable(t);
+                }
+            });
+        }
     }
 
-    weightCalculate(t, item) {
-        const it = this.searchItem(item.info.item_id);
+    setRowListeners(t, it) {
+        let tableName = t.id.substring(0, t.id.length - 2);
+        let fields = q('#' + it.draggableContainerId + ' #' + t.id + ' .this_field');
+        this.fill = () => {
+            for (let f of fields) {
+                if (f.nextElementSibling) {
+                    // Fill values according to next HTML span
+                    if (f.getAttribute('type') === "checkbox") {
+                        f.checked = f.nextElementSibling.innerHTML === "1";
+                    }
+                    f.value = f.nextElementSibling.innerHTML;
+                }
+            }
+            it = this.searchItem(it.info.item_id);
+            switch (tableName) {
+                case 'bag':
+                    this.weightCalculate(t, it);
+                    break;
+                case 'attacks':
+                    this.writeAtkThrow(t, it);
+                    break;
+                case 'global_modifiers':
+                case 'tools_n_custom':
+                case 'custom_features':
+            }
+        }
+        this.fill();
+        for (let f of fields) {
+            f.blur(() => {
+                // * Save value to the next HTML span * //
+                if (f.nextElementSibling) {
+                    // Set value to [0,1] if checkbox
+                    if (f.getAttribute('type') === "checkbox") {
+                        if (f.checked) f.value = "1";
+                        else f.value = "0";
+                    }
+                    // Set html to next element
+                    f.nextElementSibling.innerHTML = f.value;
+                }
+                // Save table
+                this.saveTable(t);
+                // Reset data auto filling
+                this.fill();
+            });
+        }
+    }
+
+    weightCalculate(t, it) {
         let units = q('#' + t.id + ' input.units');
         let weights = q('#' + t.id + ' input.weight');
         if (units.length > 0 && units.length === weights.length) {
@@ -1210,8 +1126,8 @@ class Journal {
                     totalWeight += parseFloat(u) * parseFloat(w);
                 }
             }
-            if (totalWeight > it.getCarryingCapacity()) {
-                overWeight = totalWeight - it.getCarryingCapacity();
+            if (totalWeight > it.getCarryingCapacityLb()) {
+                overWeight = totalWeight - it.getCarryingCapacityLb();
             }
             let tw = q('#' + t.id + ' ~ div .total_weight')[0];
             if (tw) tw.innerHTML = '<span>' + totalWeight + '</span>';
@@ -1220,20 +1136,277 @@ class Journal {
         }
     }
 
+    writeAtkThrow(t, it) {
+        let throwAtkClick = q('#' + t.id + ' .throw_attack');
+        this.name = (click, name) => {
+            click.children[0].innerHTML = name.value;
+        };
+        this.attack = (click, atkRow) => {
+            it = this.searchItem(it.info.item_id);
+            let atkMod = it.getRawScoreModifier(atkRow[0].value);
+            let atkOther = atkRow[1].value !== '' && !isNaN(atkRow[1].value) ? atkRow[1].value : 0;
+            let atkProf = atkRow[2].checked ? it.getProficiency() : 0;
+            let attackModTotal = atkMod + parseInt(atkOther) + atkProf;
+            let symbol = attackModTotal >= 0 ? '+' : '';
+            click.children[1].innerHTML = 'atk ' + symbol + attackModTotal;
+        };
+        this.damage = (click, dmgRow) => {
+            let dmgDice = dmgRow[0].value;
+            let dmgMod = it.getRawScoreModifier(dmgRow[1].value);
+            let dmgOther = dmgRow[2].value !== '' ? dmgRow[2].value : 0;
+            let dmgModTotal = !isNaN(dmgOther) ? dmgMod + parseInt(dmgOther) : dmgMod !== 0 ? dmgMod + '+' + dmgOther : dmgOther;
+            let dmgType = dmgRow[3].value;
+            let symbol = dmgMod >= 0 ? '+' : '';
+            let damageModTotal = dmgDice + (dmgModTotal !== 0 ? symbol + dmgModTotal : '') + ' ' + dmgType;
+            click.children[2].innerHTML = 'dmg ' + damageModTotal;
+        };
+        for (let click of throwAtkClick) {
+            const row = this.searchRow(click);
+            const name = row.children[1].children[0].children[0];
+            const atkRow = [
+                row.children[1].children[1].children[0].children[1],
+                row.children[1].children[1].children[0].children[3],
+                row.children[1].children[1].children[0].children[5],
+            ];
+            const dmgRow = [
+                row.children[1].children[2].children[0].children[0].children[1],
+                row.children[1].children[2].children[0].children[0].children[3],
+                row.children[1].children[2].children[0].children[0].children[5],
+                row.children[1].children[2].children[0].children[1].children[1],
+            ];
+            this.name(click, name);
+            this.attack(click, atkRow);
+            this.damage(click, dmgRow);
+            name.onchange = () => {
+                click.children[0].innerHTML = name.value;
+            }
+            for (let atkCol of atkRow) {
+                atkCol.onchange = () => {
+                    this.attack(click, atkRow);
+                }
+            }
+            for (let dmgCol of dmgRow) {
+                dmgCol.onchange = () => {
+                    this.damage(click, dmgRow);
+                }
+            }
+            click.click(() => {
+                console.log('Throw attack! But not here.');
+            });
+        }
+    }
+
     abiliyScoresSelect() {
-        return '<select class="this_field form-control form-select w-50px" aria-selected="-1">' + '<option value="-1" selected>NONE</option>' + '<option value="str">STR</option>' + '<option value="dex">DEX</option>' + '<option value="con">CON</option>' + '<option value="int">INT</option>' + '<option value="wis">WIS</option>' + '<option value="cha">CHA</option>' + '</select>';
+        return '<select class="this_field form-control form-select w-65px ps-2" aria-selected="-1">' +
+            '<option value="none" selected>NONE</option>' +
+            '<option value="str">STR</option>' +
+            '<option value="dex">DEX</option>' +
+            '<option value="con">CON</option>' +
+            '<option value="int">INT</option>' +
+            '<option value="wis">WIS</option>' +
+            '<option value="cha">CHA</option>' +
+            '</select>' +
+            '<span class="d-none">-1</span>';
+    }
+
+    tableHeaders(t, it) {
+        t.innerHTML = '';
+        // Get table name
+        let tableName = t.id.substring(0, t.id.length - 2);
+        if (it.info[tableName] === '') {
+            // Add header
+            switch (tableName) {
+                case 'bag':
+                    t.innerHTML = this.headerBag();
+                    break;
+                case 'global_modifiers':
+                    t.innerHTML = this.headerGlobalMods();
+                    break;
+                case 'tools_n_custom':
+                    break;
+                case 'custom_features':
+                    break;
+            }
+            // A sample row
+            this.createNewRow(t);
+        }
+        //* FIRST LOAD WHEN OPENING ITEM MODAL *//
+        t.innerHTML += it.info[tableName];
+    }
+
+    headerBag() {
+        return '<!--begin::Head-->' +
+            '<div class="flex-row-wrap justify-content-between text-gray-700 fw-bolder text-capitalize border-bottom-1px-gray-300">' +
+            '    <div class="text-start w-50px">UNITS</div>' +
+            '    <div class="text-start">ITEM NAME</div>' +
+            '    <div class="text-end w-50px">WEIGHT</div>' +
+            '    <div class="text-center"></div>' +
+            '</div>' +
+            '<!--end::Head-->';
+    }
+
+    headerAttacks() {
+        return '<!--begin::Head-->' +
+            '<div class="flex-row-wrap justify-content-between text-gray-700 fw-bolder text-capitalize border-bottom-1px-gray-300">' +
+            '    <div class="text-start">NAME</div>' +
+            '    <div class="text-start">ATK/SAVE</div>' +
+            '    <div class="text-end">DMG</div>' +
+            '    <div class="text-center"></div>' +
+            '</div>' +
+            '<!--end::Head-->';
+    }
+
+    headerGlobalMods() {
+        return '<!--begin::Head-->' +
+            '<div class="flex-row-wrap justify-content-between text-gray-700 fw-bolder text-capitalize border-bottom-1px-gray-300">' +
+            '    <div class="text-start">NAME</div>' +
+            '    <div class="text-start">ATK</div>' +
+            '    <div class="text-start">DMG</div>' +
+            '    <div class="text-start">SAVE</div>' +
+            '    <div class="text-start">CA</div>' +
+            '    <div class="text-center ps-12"></div>' +
+            '</div>' +
+            '<!--end::Head-->';
+    }
+
+    createNewRow(t) {
+        // Attacks and spells
+        if (t.classList.contains('attacks_spells_table')) {
+            t.innerHTML += this.rowAttacksSpells();
+        } // Global modifiers
+        else if (t.classList.contains('global_modifiers_table')) {
+            t.innerHTML += this.rowGlobalModifiers();
+        } // Bag
+        else if (t.classList.contains('bag_table')) {
+            t.innerHTML += this.rowBag();
+        } // Other features
+        else if (t.classList.contains('other_feats_table')) {
+            // Div to fill ????
+            t.innerHTML += this.rowCustomFeatures();
+        }
+    }
+
+    rowBag() {
+        return '<!--begin::Row-->' +
+            ' <div class="flex-row justify-content-between align-items-center border-bottom-1px-gray-300 py-1 gap-1">' +
+            '    <div class="text-start w-50px">' +
+            '        <input type="number" value="0" placeholder="0"' +
+            '             class="this_field form-control units text-center"/>' +
+            '        <span class="d-none"></span>' +
+            '    </div>' +
+            '    <div class="text-start">' +
+            '        <input type="text" placeholder="Shield"' +
+            '             class="this_field form-control ps-2"/>' +
+            '        <span class="d-none"></span>' +
+            '    </div>' +
+            '    <div class="text-end w-50px">' +
+            '        <input type="number" step="0.5" placeholder="6.5"' +
+            '             class="this_field form-control text-center weight"' +
+            '             style="background-position: right;"/>' +
+            '        <span class="d-none"></span>' +
+            '    </div>' +
+            '    <!--begin:Menu item-->' +
+            '    <div class="menu-item d-flex align-self-end text-center">' +
+            '        <button class="btn btn-sm delete_row" style="padding: 1px;">' +
+            '            <i class="fa-solid fa-trash fs-9 text-danger" style="margin-left: 4px;margin-top: -1px;"></i>' +
+            '        </button>' +
+            '    </div>' +
+            '    <!--end:Menu item-->' +
+            ' </div>' +
+            ' <!--end::Row-->';
     }
 
     rowAttacksSpells() {
-        return '<!--begin::Menu Accordion-->' + '<div data-kt-menu-trigger="click" class="menu-item menu-accordion hover show">' + '    <!--begin:Menu link-->' + '    <div class="menu-link ps-0 gap-1">' + '        <button type="button" name="throw_attack" class="btn btn-sm p-0 menu-title gap-1 align-items-center text-hover-primary text-gray-700 fw-bolder text-capitalize border-bottom-1px-gray-300">' + '            <span class="menu-title gap-1 name">Name</span>' + '            <span class="menu-title gap-1 attack">Atk</span>' + '            <span class="menu-title gap-1 dmg_n_type">Dmg</span>' + '        </button>' + '        <button class="btn py-1 pe-0">' + '           <span class="menu-arrow" style="width: 1rem;height:1rem;"></span>' + '        </button>' + '    </div>' + '    <!--end:Menu link-->' + '    <!--begin:Menu sub-->' + '    <div class="menu-sub menu-sub-accordion ps-2 gap-2">' + '        <!--begin:Menu item-->' + '        <div class="menu-item">' + '           <input type="text" placeholder="Name"' + '               class="menu-title this_field form-control ps-2 fs-6 name"/>' + '           <span class="d-none"></span>' + '        </div>' + '        <!--end:Menu item-->' + '        <!--begin:Menu item-->' + '        <div class="menu-item border-bottom-1px-gray-300 pb-2">' + '           <div class="flex-row align-items-center justify-content-start gap-2 attack_mods">' + '               <span class="fw-bolder">Attack:</span>' + '               ' + this.abiliyScoresSelect() + '               <span class="d-none"></span>' + '               + <input type="text" placeholder="0"' + '                      class="this_field form-control w-25px"/>' + '               <span class="d-none"></span>' + '               <input type="checkbox" class="this_field form-control form-check-input">' + '               <span class="d-none"></span>' + '               <label for="" class="form-check-label fs-9 fw-bolder">PROF</label>' + '           </div>' + '        </div>' + '        <!--end:Menu item-->' + '        <!--begin:Menu item-->' + '        <div class="menu-item border-bottom-1px-gray-300 pb-2">' + '            <div class="flex-column dmg_mods">' + '                <div class="flex-row align-items-center justify-content-start gap-2">' + '                    <span class="fw-bolder">Damage:</span>' + '                    <input type="text" placeholder="1d6"' + '                         class="this_field form-control w-25px"/>' + '                    <span class="d-none"></span>' + '                    + ' + this.abiliyScoresSelect() + '                    <span class="d-none"></span>' + '                    + <input type="text" placeholder="0"' + '                         class="this_field form-control w-20px"/>' + '                    <span class="d-none"></span>' + '                </div>' + '                <div class="flex-row align-items-center justify-content-start gap-2">' + '                    <label for="" class="form-check-label fs-9 fw-bolder">TYPE</label>' + '                    <input type="text" placeholder="Slashing"' + '                         class="this_field form-control w-100px">' + '                    <span class="d-none"></span>' + '                </div>' + '            </div>' + '        </div>' + '        <!--end:Menu item-->' + '        <!--begin:Menu item-->' + '        <div class="menu-item pb-2">' + '            <div class="flex-column saving_throw">' + '                <div class="flex-row align-items-center justify-content-start gap-2">' + '                <span class="fw-bolder">Saving Throw:</span>' + '                ' + this.abiliyScoresSelect() + '                    <span class="d-none"></span>' + '                    <label class="fs-9 text-uppercase fw-bolder"> vs dc</label>' + '                ' + this.abiliyScoresSelect() + '                    <span class="d-none"></span>' + '                </div>' + '                <div class="flex-row align-items-center justify-content-start gap-2">' + '                    <label class="fs-9 text-uppercase fw-bolder"> SAVE EFFECT: </label>' + '                    <input type="text" placeholder="Half-damage"' + '                         class="this_field form-control w-100px">' + '                    <span class="d-none"></span>' + '                </div>' + '            </div>' + '        </div>' + '        <!--end:Menu item-->' + '        <!--begin:Menu item-->' + '        <div class="menu-item d-flex align-self-end position-relative mt--50px mb-5 me-3">' + '            <button class="btn btn-sm btn-danger delete_row" style="padding: 1px;">' + '                <i class="fa-solid fa-trash fs-9" style="margin-left: 4px;margin-top: -1px;"></i>' + '            </button>' + '        </div>' + '        <!--end:Menu item-->' + '    </div>' + '</div>' + '<!--end::Menu Accordion-->';
+        return '<!--begin::Menu Accordion-->' +
+            '<div data-kt-menu-trigger="click" id="atk_row" class="menu-item menu-accordion hover show border-bottom-1px-gray-300">' +
+            '    <!--begin:Menu link-->' +
+            '    <div class="menu-link gap-2">' +
+            '        <div class="flex-row-wrap menu-title gap-3 align-items-center text-hover-primary text-gray-700 fw-bolder text-capitalize throw_attack">' +
+            '            <span class="menu-title gap-1 px-3 border-end-1px-gray-300">Name</span>' +
+            '            <span class="menu-title gap-1 px-3 border-end-1px-gray-300">Atk/Save</span>' +
+            '            <span class="menu-title gap-1 px-3">Dmg</span>' +
+            '        </div>' +
+            '        <button class="btn py-1 pe-0">' +
+            '           <span class="menu-arrow" style="width: 1rem;height:1rem;"></span>' +
+            '        </button>' +
+            '    </div>' +
+            '    <!--end:Menu link-->' +
+            '    <!--begin:Menu sub-->' +
+            '    <div class="menu-sub menu-sub-accordion p-2 gap-2">' +
+            '        <!--begin:Menu item-->' +
+            '        <div class="menu-item">' +
+            '           <input type="text" placeholder="Name"' +
+            '               class="menu-title this_field form-control ps-2 fs-6 name"/>' +
+            '           <span class="d-none"></span>' +
+            '        </div>' +
+            '        <!--end:Menu item-->' +
+            '        <!--begin:Menu item-->' +
+            '        <div class="menu-item border-bottom-1px-gray-300 pb-2">' +
+            '           <div class="flex-row-wrap align-items-center justify-content-start gap-2 attack_mods">' +
+            '               <span class="fw-bolder">Attack:</span>' +
+            '               ' + this.abiliyScoresSelect() +
+            '               + <input type="text" placeholder="0"' +
+            '                      class="this_field form-control w-25px text-center"/>' +
+            '               <span class="d-none"></span>' +
+            '               <input type="checkbox" class="this_field form-control form-check-input">' +
+            '               <span class="d-none"></span>' +
+            '               <label for="" class="form-check-label fs-9 fw-bolder">PROF</label>' +
+            '           </div>' +
+            '        </div>' +
+            '        <!--end:Menu item-->' +
+            '        <!--begin:Menu item-->' +
+            '        <div class="menu-item border-bottom-1px-gray-300 pb-2">' +
+            '            <div class="flex-column dmg_mods gap-1">' +
+            '                <div class="flex-row-wrap align-items-center justify-content-start gap-2">' +
+            '                    <span class="fw-bolder">Damage:</span>' +
+            '                    <input type="text" placeholder="1d6"' +
+            '                         class="this_field form-control w-25px text-center"/>' +
+            '                    <span class="d-none"></span>' +
+            '                    + ' + this.abiliyScoresSelect() +
+            '                    + <input type="text" placeholder="0"' +
+            '                         class="this_field form-control w-20px text-center"/>' +
+            '                    <span class="d-none"></span>' +
+            '                </div>' +
+            '                <div class="flex-row-wrap align-items-center justify-content-start gap-2">' +
+            '                    <label for="" class="form-check-label fs-9 fw-bolder">TYPE</label>' +
+            '                    <input type="text" placeholder="Slashing"' +
+            '                         class="this_field form-control w-100px ps-1">' +
+            '                    <span class="d-none"></span>' +
+            '                </div>' +
+            '            </div>' +
+            '        </div>' +
+            '        <!--end:Menu item-->' +
+            '        <!--begin:Menu item-->' +
+            '        <div class="menu-item pb-2">' +
+            '            <div class="flex-column saving_throw gap-1">' +
+            '                <div class="flex-row-wrap align-items-center justify-content-start gap-2">' +
+            '                <span class="fw-bolder">Saving Throw:</span>' +
+            '                ' + this.abiliyScoresSelect() +
+            '                    <label class="fs-9 text-uppercase fw-bolder"> vs dc</label>' +
+            '                ' + this.abiliyScoresSelect() +
+            '                </div>' +
+            '                <div class="flex-row-wrap align-items-center justify-content-start gap-2">' +
+            '                    <label class="fs-9 text-uppercase fw-bolder"> SAVE EFFECT: </label>' +
+            '                    <input type="text" placeholder="Half-damage"' +
+            '                         class="this_field form-control w-100px ps-1">' +
+            '                    <span class="d-none"></span>' +
+            '                </div>' +
+            '            </div>' +
+            '        </div>' + '        <!--end:Menu item-->' +
+            '        <!--begin:Menu item-->' +
+            '        <div class="menu-item d-flex align-self-end position-relative" style="margin-top: -15px;">' +
+            '            <button class="btn btn-sm delete_row" style="padding: 1px;">' +
+            '                <i class="fa-solid fa-trash fs-9 text-danger" style="margin-left: 4px;margin-top: -1px;"></i>' +
+            '            </button>' +
+            '        </div>' +
+            '        <!--end:Menu item-->' +
+            '    </div>' +
+            '</div>' +
+            '<!--end::Menu Accordion-->';
     }
 
     rowGlobalModifiers() {
         return '<!--begin::Menu Accordion-->' + '<div data-kt-menu-trigger="click" class="menu-item menu-accordion hover show">' + '    <!--begin:Menu link-->' + '    <div class="menu-link text-gray-700 fw-bolder text-capitalize ps-0 gap-1">' + '        <div class="menu-title gap-1 align-items-center">' + '            <div class="menu-title gap-1">Name</div>' + '            <div class="menu-title gap-1">Attack</div>' + '            <div class="menu-title gap-1">Damage</div>' + '            <div class="menu-title gap-1">Save</div>' + '            <div class="menu-title gap-1">CA</div>' + '        </div>' + '        <button class="btn py-1 pe-0">' + '           <span class="menu-arrow" style="width: 1rem;height:1rem;"></span>' + '        </button>' + '    </div>' + '    <!--end:Menu link-->' + '    <!--begin:Menu sub-->' + '    <div class="menu-sub menu-sub-accordion ps-2 gap-2">' + '        <!--begin:Menu item-->' + '        <div class="menu-title">' + '           <input type="text" placeholder="Bless"' + '                class="menu-title this_field form-control ps-2 fs-6"/>' + '           <span class="d-none"></span>' + '        </div>' + '        <div class="flex-row align-items-center justify-content-start">' + '            <div class="flex-row gap-2 col-6">' + '                <span class="fw-bolder">Attack:</span>' + '                <input type="text" placeholder="1d4"' + '                     class="menu-title this_field form-control ps-2 fs-6 w-50px"/>' + '                <span class="d-none"></span>' + '            </div>' + '            <div class="flex-row gap-2">' + '                <span class="fw-bolder">Damage:</span>' + '                <input type="text" placeholder="1d4"' + '                     class="menu-title this_field form-control ps-2 fs-6 w-50px"/>' + '                <span class="d-none"></span>' + '            </div>' + '        </div>' + '        <div class="flex-row align-items-center justify-content-start">' + '            <div class="flex-row gap-2 col-6">' + '                <span class="fw-bolder">Skills:</span>' + '                <input type="text" placeholder="1d4"' + '                     class="menu-title this_field form-control ps-2 fs-6 w-50px"/>' + '                <span class="d-none"></span>' + '            </div>' + '            <div class="flex-row gap-2">' + '                   <span class="fw-bolder">CA:</span>' + '                   <input type="text" placeholder="1"' + '                        class="menu-title this_field form-control ps-2 fs-6 w-50px"/>' + '                   <span class="d-none"></span>' + '            </div>' + '        </div>' + '        <div class="flex-row align-items-center justify-content-start">' + '            <div class="flex-row gap-2">' + '                <span class="fw-bolder">Saving Throw:</span>' + '                <input type="text" placeholder="1d4"' + '                     class="menu-title this_field form-control ps-2 fs-6 w-50px"/>' + '                <span class="d-none"></span>' + '            </div>' + '        </div>' + '        <!--end:Menu item-->' + '        <!--begin:Menu item-->' + '        <div class="menu-item d-flex align-self-end position-relative mt--25px">' + '            <button class="btn btn-sm btn-danger delete_row" style="padding: 1px;">' + '                <i class="fa-solid fa-trash fs-9" style="margin-left: 4px;margin-top: -1px;"></i>' + '            </button>' + '        </div>' + '        <!--end:Menu item-->' + '    </div>' + '</div>' + '<!--end::Menu Accordion-->';
-    }
-
-    rowBag() {
-        return '<!--begin::Row-->' + ' <div class="flex-row justify-content-between align-items-center border-bottom-1px-gray-300">' + '    <div>' + '        <input type="number" value="0" placeholder="0"' + '             class="this_field form-control w-50px units"/>' + '        <span class="d-none"></span>' + '    </div>' + '    <div class="col-6">' + '        <input type="text" placeholder="Shield"' + '             class="this_field form-control"/>' + '        <span class="d-none"></span>' + '    </div>' + '    <div class="text-end">' + '        <input type="number" step="0.5" placeholder="1.5"' + '             class="this_field form-control text-center w-50px weight"' + '             style="background-position: right;"/>' + '        <span class="d-none"></span>' + '    </div>' + '    <!--begin:Menu item-->' + '    <div class="menu-item d-flex align-self-end">' + '        <button class="btn btn-sm btn-danger delete_row" style="padding: 1px;">' + '            <i class="fa-solid fa-trash fs-9" style="margin-left: 4px;margin-top: -1px;"></i>' + '        </button>' + '    </div>' + '    <!--end:Menu item-->' + ' </div>' + ' <!--end::Row-->';
     }
 
     rowCustomFeatures() {

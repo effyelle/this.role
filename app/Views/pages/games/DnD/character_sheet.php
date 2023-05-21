@@ -211,7 +211,7 @@
                                         <!--end::Row Spellcasting modifiers-->
                                         <!--begin::Row - Combat (general)-->
                                         <div class="flex-row-wrap justify-content-center align-items-center gap-3 mt-3 mb-6">
-                                            <div class="flex-row justify-content-center align-items-center">
+                                            <div class="flex-row justify-content-center align-items-center gap-3">
                                                 <!--begin::Class Armor (CA)-->
                                                 <div class="this-ca combat-item">
                                                     <div class="flex-column justify-content-center align-items-center">
@@ -238,7 +238,7 @@
                                                 </div>
                                                 <!--end::Initiative bonus-->
                                             </div>
-                                            <div class="flex-row justify-content-center align-items-center">
+                                            <div class="flex-row justify-content-center align-items-center gap-3">
                                                 <!--begin::Speed-->
                                                 <div class="this-outline combat-item">
                                                     <div class="flex-column justify-content-center align-items-center">
@@ -502,7 +502,7 @@
                                 <!--begin::Bag-->
                                 <div class="column this-outline p-3">
                                     <!--begin::Title-->
-                                    <div class="flex-row justify-content-between align-items-center w-100">
+                                    <div class="flex-row justify-content-between align-items-center">
                                         <label for="" class="fs-3 p-3">Bag</label>
                                         <button class="btn btn-sm" id="bag_btn<?= $data['item_id']; ?>">
                                             <i class="fa-solid fa-plus fa-xl text-dark"></i>
@@ -516,16 +516,16 @@
                                     <!--end::Table-->
                                     <!--begin::Footer-->
                                     <div class="px-3 fs-8 text-gray-700 fw-bolder text-capitalize mt-3">
-                                        <div class="flex-row align-items-center justify-content-between w-100">
+                                        <div class="flex-row align-items-center justify-content-between">
                                             <div>TOTAL WEIGHT</div>
-                                            <div class="col-2 ps-5 text-center">
-                                                <span class="total_weight me-1"> 0 </span>kg
+                                            <div class="ps-5 text-center">
+                                                <span class="total_weight me-1"> 0 </span>lb
                                             </div>
                                         </div>
-                                        <div class="flex-row align-items-center justify-content-between w-100">
+                                        <div class="flex-row align-items-center justify-content-between">
                                             <div>OVERWEIGHT</div>
-                                            <div class="col-2 ps-5 text-center">
-                                                <span class="overweight me-1"> 0 </span>kg
+                                            <div class="ps-5 text-center">
+                                                <span class="overweight me-1"> 0 </span>lb
                                             </div>
                                         </div>
                                     </div>
@@ -535,7 +535,7 @@
                                 <!--begin::Attacks & Spells-->
                                 <div class="column this-outline p-3">
                                     <!--begin::Title-->
-                                    <div class="flex-row justify-content-between align-items-center w-100 border-bottom-1px-gray-300">
+                                    <div class="flex-row justify-content-between align-items-center w-100">
                                         <label for="" class="fs-3 p-3">Attacks & Spells</label>
                                         <button class="btn btn-sm" id="atk_spells_btn<?= $data['item_id']; ?>">
                                             <i class="fa-solid fa-plus fa-xl text-dark"></i>
@@ -544,7 +544,7 @@
                                     <!--end::Title-->
                                     <!--begin::Table-->
                                     <div id="attacks_<?= $data['item_id']; ?>" data-kt-menu="true"
-                                         class="menu menu-column menu-rounded fs-8 px-3 attacks_spells_table this_table">
+                                         class="menu menu-column fs-8 px-3 attacks_spells_table this_table">
                                     </div>
                                     <!--end::Table-->
                                 </div>
@@ -552,7 +552,7 @@
                                 <!--begin::Global Modifiers-->
                                 <div class="column this-outline p-3">
                                     <!--begin::Title-->
-                                    <div class="flex-row justify-content-between align-items-center w-100 border-bottom-1px-gray-300">
+                                    <div class="flex-row justify-content-between align-items-center w-100">
                                         <label for="" class="fs-3 p-3">Global Modifiers</label>
                                         <button class="btn btn-sm" id="global_mods_btn<?= $data['item_id']; ?>">
                                             <i class="fa-solid fa-plus fa-xl text-dark"></i>
@@ -561,7 +561,7 @@
                                     <!--end::Title-->
                                     <!--begin::Table-->
                                     <div id="global_modifiers_<?= $data['item_id']; ?>" data-kt-menu="true"
-                                         class="menu menu-column menu-rounded fs-8 px-3 global_modifiers_table this_table">
+                                         class="menu menu-column fs-8 px-3 global_modifiers_table this_table">
                                     </div>
                                     <!--end::Table-->
                                 </div>
@@ -577,25 +577,16 @@
                                     </div>
                                     <!--end::Title-->
                                     <!--begin::Table-->
-                                    <table id="tools_n_custom_<?= $data['item_id']; ?>"
-                                           class="table dataTable fs-8 p-3 tools_custom_table this_table">
-                                        <thead class="text-gray-700 fw-bolder text-capitalize border-bottom border-gray-300">
-                                        <tr>
-                                            <th class="col-4">TOOL</th>
-                                            <th>ATTRIBUTE</th>
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
+                                    <div id="tools_n_custom<?= $data['item_id']; ?>" data-kt-menu="true"
+                                         class="menu menu-column fs-8 px-3 tools_custom_table this_table">
+                                    </div>
                                     <!--end::Table-->
                                 </div>
                                 <!--end::Tools & Custom Skills-->
                                 <!--begin::Other Features-->
-                                <div class="column this-outline p-3">
+                                <div class="column this-outline p-3 d-none">
                                     <!--begin::Title-->
-                                    <div class="flex-row justify-content-between align-items-center w-100 border-bottom-1px-gray-300">
+                                    <div class="flex-row justify-content-between align-items-center w-100">
                                         <label for="" class="fs-3 p-3">
                                             Other Features</label>
                                         <button class="btn btn-sm" id="other_feats_btn<?= $data['item_id']; ?>">
@@ -605,7 +596,7 @@
                                     <!--end::Title-->
                                     <!--begin::Table-->
                                     <div id="custom_features_<?= $data['item_id']; ?>" data-kt-menu="true"
-                                         class="menu menu-column menu-rounded fs-8 px-3 other_feats_table this_table">
+                                         class="menu menu-column fs-8 px-3 other_feats_table this_table">
                                     </div>
                                     <!--end::Table-->
                                 </div>

@@ -214,6 +214,7 @@ class Board {
         let tokens = JSON.parse(selectedLayer.layer_tokens);
         for (let i in tokens) {
             let item = this.journal.searchItem(i);
+            if (!item) return;
             this.map.gameBoard.innerHTML += this.map.tokenFormatting(item);
         }
         this.map.TokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
@@ -441,7 +442,7 @@ class Board {
             return this.chat.formatRoll({
                 name: 'Death save',
                 roll: '<span class="' + (raw === 1 ? 'text-danger' : (raw === 20 ? 'text-primary' : '')) + '"> ' + raw + '</span>',
-                display: '<span class="text-muted">Rolling 1d20 = ' + raw + (raw > 10 ? ' (success)' : ' (failure)') + '</span>'
+                display: '<span class="text-muted">Rolling 1d20 = ' + raw + (raw > 10 ? ' (success)' : ' (failure)') + '</span>',
             });
         }
         for (let dsBtn of deathSaveBtns) {

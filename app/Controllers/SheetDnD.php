@@ -112,32 +112,40 @@ class SheetDnD
             // * end::Classes * //*/
             //* begin::Ability Scores **//
             case (bool)preg_match('/this_prof|this_score/', $k):
-                $scores = json_decode($item['ability_scores'], true);
-                if ($scores) return ['ability_scores' => $this->getScores($scores, $k, $v)];
+                if ($v !== '') {
+                    $scores = json_decode($item['ability_scores'], true);
+                    if ($scores) return ['ability_scores' => $this->getScores($scores, $k, $v)];
+                }
                 break;
             //* end::Ability Scores **//
             //* begin::Skill Proficiencies **//
             case str_contains($k, 'this_skill'):
-                $skills = json_decode($item['skill_proficiencies'], true);
-                if ($skills) return ['skill_proficiencies' => $this->getSkills($skills, $k, $v)];
+                if ($v !== '') {
+                    $skills = json_decode($item['skill_proficiencies'], true);
+                    if ($skills) return ['skill_proficiencies' => $this->getSkills($skills, $k, $v)];
+                }
                 break;
             //* end::Skill Proficiencies **//
             case (bool)preg_match('/_hp|_hd|this_hit_dice/', $k):
-                $health = json_decode($item['health'], true);
-                if ($health) {
-                    $health['hit_points'][$k] = $v;
-                    return ['health' => $health];
+                if ($v !== '') {
+                    $health = json_decode($item['health'], true);
+                    if ($health) {
+                        $health['hit_points'][$k] = $v;
+                        return ['health' => $health];
+                    }
                 }
                 break;
             case (bool)preg_match('/this_death_save|this_cond|this_exhaustion/', $k):
-                $health = json_decode($item['health'], true);
-                if ($health) {
-                    $split = explode('_', $k);
-                    $type = $split[count($split) - 1];
-                    if (str_contains($k, 'this_death_save')) $health['death_saves'][$type] = $v;
-                    elseif (str_contains($k, 'this_cond')) $health['conditions'][$type] = $v;
-                    elseif (str_contains($k, 'this_exhaustion')) $health['conditions']['exhaustion']['lvl'] = $v;
-                    return ['health' => $health];
+                if ($v !== '') {
+                    $health = json_decode($item['health'], true);
+                    if ($health) {
+                        $split = explode('_', $k);
+                        $type = $split[count($split) - 1];
+                        if (str_contains($k, 'this_death_save')) $health['death_saves'][$type] = $v;
+                        elseif (str_contains($k, 'this_cond')) $health['conditions'][$type] = $v;
+                        elseif (str_contains($k, 'this_exhaustion')) $health['conditions']['exhaustion']['lvl'] = $v;
+                        return ['health' => $health];
+                    }
                 }
                 break;
         }

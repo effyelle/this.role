@@ -25,11 +25,10 @@
     <link href="/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css"/>
     <link href="/assets/css/style.bundle.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="/assets/css/custom_mp.css" type="text/css"/>
-    <?php if (isset($_SESSION['user']['user_theme']) && $_SESSION['user']['user_theme'] === 'dark'): ?>
-        <link rel="stylesheet" href="/assets/css/style.dark.bundle.css"/>
-        <link rel="stylesheet" href="/assets/css/custom_mp.dark.css"/>
-    <?php endif; ?>
     <!--end::CSSTemplates-->
+    <script>
+        const baseUrl = '<?= base_url() ?>';
+    </script>
 </head>
 <?php
 $pageSplit = explode('/', ($page ?? ''));

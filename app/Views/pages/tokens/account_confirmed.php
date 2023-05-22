@@ -10,7 +10,7 @@
                     <h2 class="m-auto">Your account was confirmed.</h2>
                 </div>
                 <div class="m-auto my-4 text-center">
-                    <a href="/app/login" class="link-info">Log in</a>
+                    <a href="<?= base_url() ?>/app/login" class="link-info">Log in</a>
                 </div>
             </div>
             <!--end::Header-->

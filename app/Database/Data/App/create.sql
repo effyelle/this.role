@@ -114,14 +114,5 @@ VALUES
 	('JL.ak.elBizco', '/assets/media/avatars/blank.png', 'Jose Luis El Bizco', 'com@com.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
 	('FF15', '/assets/media/avatars/blank.png', 'Fernando Fernandez', 'ffmail@email.f', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW());
 
-INSERT INTO games(game_creator, game_title, game_folder, game_icon)
-VALUES
-	(1, 'Timeless', '1682422516', 'game_icon.jpg');
-
-INSERT INTO game_player(game_player_id_game, game_player_id_user)
-VALUES (1,1);
-
-UPDATE users SET user_rol='masteradmin' WHERE user_email='epastor@gmail.com';
+UPDATE users SET user_rol='masteradmin' WHERE user_email='ericapastorgracia@gmail.com';
 UPDATE users SET user_rol='admin' WHERE user_email='nore.zgz@mail.com';
-
-UPDATE users SET user_confirmed=NULL WHERE user_username='effy.elle';

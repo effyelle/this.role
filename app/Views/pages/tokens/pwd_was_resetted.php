@@ -10,7 +10,7 @@
                     <h2 class="m-auto">Your password was resetted</h2>
                 </div>
                 <div class="card-toolbar gap-5 mt-5">
-                    <a href="/app/login" class="m-auto btn btn-link">Login</a>
+                    <a href="<?= base_url() ?>/app/login" class="m-auto btn btn-link">Login</a>
                 </div>
             </div>
             <!--end::Header-->

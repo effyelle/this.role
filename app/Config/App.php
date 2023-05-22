@@ -17,7 +17,10 @@ class App extends BaseConfig
      *
      *    http://example.com/
      */
+    // Localhost
     public string $baseURL = 'http://this.role.com';
+    // Server
+    // public string $baseURL = 'http://http://ec2-54-163-25-51.compute-1.amazonaws.com/index.php';
 
     /**
      * Allowed Hostnames in the Site URL other than the hostname in the baseURL.

@@ -16,7 +16,7 @@
     </div>
     <!--end::Form Field-->
     <div class="col-10 w-md-600px">
-        <a href="/app/reset_pwd"
+        <a href="<?= base_url() ?>/app/reset_pwd"
            class="d-block fw-bolder text-info text-hover-info fs-7 mx-auto text-center">Forgot password?</a>
     </div>
     <!--begin::Form Button-->
@@ -37,7 +37,7 @@
 <!--end::Form-->
 <div class="m-auto my-4 text-center">
     <p class="m-0">Still don't have an account?
-        <a href="/app/signup" class="link-info text-info text-hover-info">Sign up</a>
+        <a href="<?= base_url() ?>/app/signup" class="link-info text-info text-hover-info">Sign up</a>
     </p>
 </div>
 
@@ -63,21 +63,16 @@
 
         function sendForm(form) {
             toggleProgressSpinner();
-            $.ajax({
-                type: "POST",
-                url: "/account/login",
-                data: form,
-                dataType: "json",
-                success: function (data) {
-                    console.log(data)
-                    if (data['response']) {
-                        window.location.assign('/app/index');
-                        return;
-                    }
-                    toggleProgressSpinner(false);
-                    $('.modal_error_response').html('There was an error logging in.');
-                    $('#modal_error-toggle').trigger('click');
+            ajax("/account/login", form).done((data) => {
+                if (data['response']) {
+                    window.location.assign('/app/index');
+                    return;
                 }
+                toggleProgressSpinner(false);
+                $('.modal_error_response').html('There was an error logging in.');
+                $('#modal_error-toggle').trigger('click');
+            }).fail((e) => {
+                console.log(e.responseText);
             });
         }
     });

@@ -30,20 +30,18 @@ document.addEventListener('DOMContentLoaded', function () {
      */
     function sendResetPwdMail() {
         if (emailBox.val() !== '') {
-            $.ajax({
-                url: "/account/send_reset_password_email/" + emailBox.val(),
-                dataType: "json",
-                success: function (data) {
-                    console.log(data)
-                    if (!data['response']) {
-                        $('#modal_error-toggle').click();
-                        $('.modal_error_response').html(data['msg']);
-                    } else {
-                        $('#modal_success-toggle').click();
-                        $('.modal_success_response').html(data['msg']);
-                    }
+            ajax("/account/send_reset_password_email/" + emailBox.val()).done((data) => {
+                console.log(data)
+                if (!data['response']) {
+                    $('#modal_error-toggle').click();
+                    $('.modal_error_response').html(data['msg']);
+                } else {
+                    $('#modal_success-toggle').click();
+                    $('.modal_success_response').html(data['msg']);
                 }
-            })
+            }).fail((e) => {
+                console.log(e.responseText);
+            });
         }
     }
 
@@ -51,47 +49,41 @@ document.addEventListener('DOMContentLoaded', function () {
      * Deactivate account and close session
      */
     function deactivateAccount() {
-        $.ajax({
-            type: "get",
-            url: "/account/deactivate",
-            dataType: "json",
-            success: function (data) {
-                console.log(data);
-                if (data['response']) {
-                    $('#modal_success-toggle').click();
-                    $('.modal_success_response').html(
-                        'Your account has been deactivated<br>' +
-                        'You will be logged out'
-                    );
-                    $('#modal_data_sent').on('hidden.bs.modal', function () {
-                        window.location.reload();
-                    });
-                }
-                if (data['msg']) {
-                    $('#modal_error-toggle').click();
-                    $('.modal_error_response').html(data['msg']);
-                }
+        ajax("/account/deactivate").done((data) => {
+            if (data['response']) {
+                $('#modal_success-toggle').click();
+                $('.modal_success_response').html(
+                    'Your account has been deactivated<br>' +
+                    'You will be logged out'
+                );
+                $('#modal_data_sent').on('hidden.bs.modal', function () {
+                    window.location.reload();
+                });
             }
-        })
+            if (data['msg']) {
+                $('#modal_error-toggle').click();
+                $('.modal_error_response').html(data['msg']);
+            }
+        }).fail((e) => {
+            console.log(e.responseText);
+        });
     }
 
     const usernameInput = $('#username');
 
     function sendConfEmail() {
         if (emailBox.val() !== '' && usernameInput.val() !== '') {
-            $.ajax({
-                url: "/app/resend_email_confirmation/",
-                dataType: "json",
-                success: function (data) {
-                    if (!data['response']) {
-                        $('#modal_error-toggle').click();
-                        $('.modal_error_response').html(data['msg']);
-                    } else {
-                        $('#modal_success-toggle').click();
-                        $('.modal_success_response').html(data['msg']);
-                    }
+            ajax("/app/resend_email_confirmation/").done((data) => {
+                if (!data['response']) {
+                    $('#modal_error-toggle').click();
+                    $('.modal_error_response').html(data['msg']);
+                } else {
+                    $('#modal_success-toggle').click();
+                    $('.modal_success_response').html(data['msg']);
                 }
-            })
+            }).fail((e) => {
+                console.log(e.responseText);
+            });
         }
     }
 

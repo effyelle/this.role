@@ -23,7 +23,7 @@ function initGame() {
                 form.append('layer_name', this.lName.value);
                 $.ajax({
                     type: "post",
-                    url: "/app/games_ajax/add_map/" + dbGame.game_id,
+                    url: baseUrl + "/app/games_ajax/add_map/" + dbGame.game_id,
                     data: form,
                     processData: false,
                     contentType: false,
@@ -66,7 +66,7 @@ function initGame() {
 
                 $.ajax({
                     type: "post",
-                    url: '/app/games_ajax/edit_layer/' + dbGame.game_id,
+                    url: baseUrl +'/app/games_ajax/edit_layer/' + dbGame.game_id,
                     data: form,
                     processData: false,
                     contentType: false,

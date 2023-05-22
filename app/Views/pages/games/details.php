@@ -11,7 +11,7 @@
                 <div class="mx-auto w-100">
                     <div class="d-flex flex-row-wrap justify-content-between align-items-stretch align-content-center">
                         <div class="card-toolbar gap-2 fs-5 fs-lg-3">
-                            <a href="/app/games/list" class="btn btn-sm btn-link fs-5 fs-lg-3">
+                            <a href="<?= base_url() ?>/app/games/list" class="btn btn-sm btn-link fs-5 fs-lg-3">
                                 <span class="text-dark text-hover-primary fw-bolder">My Games</span>
                             </a>
                             <span> / </span>
@@ -59,7 +59,7 @@
                     <p class="game_details"></p>
                     <!--end::Game details-->
                     <!--begin::Launch link-->
-                    <a href="/app/games/launch/<?= $game['game_id'] ?>" target="_blank"
+                    <a href="<?= base_url() ?>/app/games/launch/<?= $game['game_id'] ?>" target="_blank"
                        class="btn btn-link btn-sm">Launch game</a>
                     <!--end::Launch link-->
                 </div>
@@ -107,27 +107,21 @@
         });
         // Invite link, create through AJAX
         inviteLinkBtn.click(function () {
-            $.ajax({
-                type: "get",
-                url: "/app/games_ajax/create_invite_url/<?=$game['game_id']?>",
-                dataType: "json",
-                success: function (data) {
-                    if (data && data['response'] && data['url']) {
-                        $('.modal_success_response').html(
-                            'This is your new invite url!<br/>' +
-                            'Remember it expires in one day<br/>' +
-                            '<b>' + data['url'] + '</b>'
-                        );
-                        $('#modal_success-toggle').click();
-                        return;
-                    }
-                    $('.modal_error_response').html(data['msg']);
-                    $('#modal_error-toggle').click();
-                },
-                error: function (e) {
-                    console.log("Error: ", e.getError());
+            ajax("/app/games_ajax/create_invite_url/<?=$game['game_id']?>").done((data) => {
+                if (data && data['response'] && data['url']) {
+                    $('.modal_success_response').html(
+                        'This is your new invite url!<br/>' +
+                        'Remember it expires in one day<br/>' +
+                        '<b>' + data['url'] + '</b>'
+                    );
+                    $('#modal_success-toggle').click();
+                    return;
                 }
-            })
+                $('.modal_error_response').html(data['msg']);
+                $('#modal_error-toggle').click();
+            }).fail((e) => {
+                console.log(e.responseText);
+            });
         })
         // Change DOM icon on input change
         $('#change-game_icon').change(function () {
@@ -172,27 +166,21 @@
         }
 
         function deleteGame() {
-            $.ajax({
-                type: "get",
-                url: "/app/games/ajax_del_game/" + game.game_id,
-                dataType: "json",
-                success: function (data) {
-                    if (data['response']) {
-                        $('.modal_success_response').html('Game deleted successfully');
-                        $('#modal_success-toggle').click();
-                        setTimeout(() => {
-                            window.location.assign('/app/games/list');
-                        }, 2500);
-                        return;
-                    }
-                    $('.modal_error_response').html(data['msg']);
-                    $('#modal_error-toggle').click();
-                },
-                error: function (e) {
-                    $('.modal_error_response').html('Something went wrong<br>' + e);
-                    $('#modal_error-toggle').click();
-                    console.log("Error: ", e);
+            ajax("/app/games/ajax_del_game/" + game.game_id).done((data) => {
+                if (data['response']) {
+                    $('.modal_success_response').html('Game deleted successfully');
+                    $('#modal_success-toggle').click();
+                    setTimeout(() => {
+                        window.location.assign('/app/games/list');
+                    }, 2500);
+                    return;
                 }
+                $('.modal_error_response').html(data['msg']);
+                $('#modal_error-toggle').click();
+            }).fail((e) => {
+                $('.modal_error_response').html('Something went wrong<br>' + e);
+                $('#modal_error-toggle').click();
+                console.log(e.responseText)
             });
         }
     });

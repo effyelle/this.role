@@ -1,13 +1,12 @@
 $(document).ready(function () {
     generateDatatables();
-
     updateSession();
 });
 
 function ajax(url, form = {}, type = 'post', processing = 'json') {
     return $.ajax({
         type: type,
-        url: url,
+        url: baseUrl + url,
         dataType: processing,
         data: form,
         success: (data) => {
@@ -21,12 +20,12 @@ function ajax(url, form = {}, type = 'post', processing = 'json') {
 }
 
 function updateSession(callback = null) {
-    $.ajax({
-        type: "get", url: "/account/myprofile", dataType: "json", success: function (data) {
-            console.log("User logged: ", data);
-            if (callback) callback(data);
-        }
-    });
+    ajax("/account/myprofile").done((data) => {
+        console.log("User logged: ", data);
+    }).fail((e) => {
+        if (callback) callback();
+        console.log(e.responseText);
+    })
 }
 
 function generateDatatables() {
@@ -228,7 +227,7 @@ function spanPopup(popup) {
 
 function urlExists(url) {
     let http = $.ajax({
-        type: 'head', url: url, async: false
+        type: 'head', url: baseUrl + url, async: false
     });
     return http.status === 200;
 }

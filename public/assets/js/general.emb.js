@@ -37,37 +37,6 @@ function copyClipboard(textToCopy) {
     toastr.success('Copiado al portapapeles');
 }
 
-// ON PRESS ENTER INSIDE INPUT searchClient
-$('#searchClient').keypress(function (e) {
-    if (e.which == 13) {//Enter key pressed
-        // IF VALUE ENTERED IS A NUMBER BETWEEN 1 AND 99999
-        if (this.value > 0 && this.value < 99999) {
-            // AJAX TO app/search_no_master_contract passing the value entered as id_clientes_intranet via POST
-            $.ajax({
-                type: "POST",
-                url: "/app/search_no_master_contract",
-                data: {id_clientes_intranet: this.value},
-                dataType: "json ",
-                success: function (response) {
-                    if (response !== 'NOT_FOUND') {
-                        // REDIRECT WEBPAGE TO general/contracts/detail
-                        window.location.href = '/general/contracts/detail/' + response + '/comercial';
-                    } else {
-                        // SHOW TOASTER
-                        toastr.error('ID Cliente Intranet - Incorrecto');
-                        // CLEAR
-                        $('#searchClient').val('');
-                    }
-                }
-            });
-        } else {
-            // SHOW TOASTER
-            toastr.error('ID Cliente Intranet - Incorrecto');
-            $('#searchClient').val('');
-        }
-    }
-});
-
 addEventListener('beforeunload', (event) => {
     blockUIGeneral.block();
 });

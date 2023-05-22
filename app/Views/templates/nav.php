@@ -21,7 +21,7 @@
             </div>
             <!--end::Aside small screen toggle-->
             <!--begin::Logo-->
-            <a href="/" class="d-flex align-items-center">
+            <a href="<?= base_url() ?>/" class="d-flex align-items-center">
                 <img class="w-40px w-lg-55px" src="/assets/media/logos/icon64x64.png" alt=""/>
                 <div class="ms-5">
                     <div class="ff-poiret fs-4 fw-bolder text-white d-flex flex-column">
@@ -93,12 +93,12 @@
                     <!--end::Menu separator-->
                     <!--begin::Menu item-->
                     <div class="menu-item px-5">
-                        <a href="/app/myprofile" class="menu-link px-5">My Profile</a>
+                        <a href="<?= base_url() ?>/app/myprofile" class="menu-link px-5">My Profile</a>
                     </div>
                     <!--end::Menu item-->
                     <!--begin::Menu item-->
                     <div class="menu-item px-5">
-                        <a href="/app/myissues" class="menu-link px-5">My Issues</a>
+                        <a href="<?= base_url() ?>/app/myissues" class="menu-link px-5">My Issues</a>
                     </div>
                     <!--end::Menu item-->
                     <!--begin::Separator-->
@@ -110,7 +110,7 @@
                     <!--end::Separator-->
                     <!--begin::Menu item-->
                     <div class="menu-item px-5">
-                        <a href="/app/logout" class="menu-link px-5">Logout</a>
+                        <a href="<?= base_url() ?>/app/logout" class="menu-link px-5">Logout</a>
                     </div>
                     <!--end::Menu item-->
                 </div>

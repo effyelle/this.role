@@ -56,21 +56,16 @@
             $('.send_answer_btn')[i].addEventListener('click', function () {
                 let answer = $('.issue_answer')[i];
                 if (answer.value.length > 0) {
-                    $.ajax({
-                        type: "post",
-                        url: "/account/send_issue_msg",
-                        data: {
-                            "msg": answer.value,
-                            "issue_id": $('.issue_id')[i].value
-                        },
-                        dataType: "json",
-                        success: function (data) {
-                            console.log(data);
-                            if (data['response']) {
-                                $('#modal_success-toggle').click();
-                                $('#modal_data_sent')
-                            }
+                    ajax("/account/send_issue_msg", {
+                        "msg": answer.value,
+                        "issue_id": $('.issue_id')[i].value
+                    }).done((data) => {
+                        if (data['response']) {
+                            $('#modal_success-toggle').click();
+                            $('#modal_data_sent')
                         }
+                    }).fail((e) => {
+                        console.log(e.responseText);
                     });
                 }
             });

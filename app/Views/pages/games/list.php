@@ -38,7 +38,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
 
                                     <div class="d-flex flex-column justify-content-between align-items-center box-shadow-700 border-radius-5px p-6">
                                         <!--begin::Link to details-->
-                                        <a href="/app/games/details/<?= $game['game_id'] ?>">
+                                        <a href="<?= base_url() ?>/app/games/details/<?= $game['game_id'] ?>">
                                             <!--begin::Icon-->
                                             <div class="d-flex flex-column">
                                                 <div class="symbol symbol-125px symbol-sm-150px symbol-lg-150px symbol-xl-200px circle game-img">
@@ -64,7 +64,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                                         </a>
                                         <!--end::Link to details-->
                                         <!--begin::Launch link-->
-                                        <a href="/app/games/launch/<?= $game['game_id'] ?>" target="_blank"
+                                        <a href="<?= base_url() ?>/app/games/launch/<?= $game['game_id'] ?>" target="_blank"
                                            class="btn btn-link btn-sm">Launch game</a>
                                         <!--end::Launch link-->
                                     </div>

@@ -28,24 +28,17 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         toggleProgressSpinner();
-        $.ajax({
-            type: "get",
-            url: "/app/games_ajax/ajax_join/<?=$game['game_id'] ?? null; ?>",
-            dataType: "json",
-            success: function (data) {
-                console.log(data);
-                if (data['response']) {
-                    $('.indicator-label').html(
-                        'You joined <?=$game['game_title'] ?? null; ?>' +
-                        '<br/>' +
-                        '<a href="/app/games/list">Go to My Games</a>'
-                    );
-                } else $('.indicator-label').html(data['msg']);
-                toggleProgressSpinner(false);
-            },
-            error: function (e) {
-                console.log("Error", e);
-            }
-        })
+        ajax("/app/games_ajax/ajax_join/<?=$game['game_id'] ?? null; ?>").done((data) => {
+            if (data['response']) {
+                $('.indicator-label').html(
+                    'You joined <?=$game['game_title'] ?? null; ?>' +
+                    '<br/>' +
+                    '<a href="<?= base_url() ?>/app/games/list">Go to My Games</a>'
+                );
+            } else $('.indicator-label').html(data['msg']);
+            toggleProgressSpinner(false);
+        }).fail((e) => {
+            console.log(e.responseText);
+        });
     });
 </script>

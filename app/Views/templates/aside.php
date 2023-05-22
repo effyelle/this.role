@@ -16,7 +16,7 @@
                 <div class="menu menu-column menu-rounded fw-bold fs-5 gap-6 mt-6" id="#kt_aside_menu" data-kt-menu="true">
                     <!--begin::Menu Item-->
                     <div class="menu-item">
-                        <a class="menu-link <?php if ($title === 'Home') echo 'hover'; ?>" href="/app/index" title=""
+                        <a class="menu-link <?php if ($title === 'Home') echo 'hover'; ?>" href="<?= base_url() ?>/app/index" title=""
                            data-bs-toggle="tooltip" data-bs-trigger="hover"
                            data-bs-dismiss="click" data-bs-placement="right"
                            data-bs-original-title="Welcome to This.Role!">
@@ -30,7 +30,7 @@
                     <!--begin::Menu Item-->
                     <div class="menu-item">
                         <a class="menu-link <?php if ($page === 'games/list' || $page === 'games/details') echo 'hover'; ?>"
-                           href="/app/games/list" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
+                           href="<?= base_url() ?>/app/games/list" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
                            data-bs-placement="right" data-bs-original-title="This is your games!" title="">
                             <span class="menu-icon">
                                 <i class="fa fa-solid fa-dice-d20 fa-lg hover-flip"></i>
@@ -41,7 +41,7 @@
                     <!--end::Menu Item-->
                     <!--begin::Menu Item-->
                     <div class="menu-item">
-                        <a class="menu-link <?php if ($title === 'About') echo 'hover'; ?>" href="/app/about" title=""
+                        <a class="menu-link <?php if ($title === 'About') echo 'hover'; ?>" href="<?= base_url() ?>/app/about" title=""
                            data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss="click"
                            data-bs-placement="right" data-bs-original-title="How did we started this?">
                             <span class="menu-icon">
@@ -74,7 +74,7 @@
                                 <!--begin:Menu item-->
                                 <div class="menu-item">
                                     <!--begin:Menu link-->
-                                    <a class="menu-link" href="/app/admin/users">
+                                    <a class="menu-link" href="<?= base_url() ?>/app/admin/users">
 										<span class="menu-bullet">
                                             <i class="fa fa-solid fa-user"></i>
 										</span>
@@ -86,7 +86,7 @@
                                 <!--begin:Menu item-->
                                 <div class="menu-item d-none">
                                     <!--begin:Menu link-->
-                                    <a class="menu-link" href="/app/admin/games">
+                                    <a class="menu-link" href="<?= base_url() ?>/app/admin/games">
 										<span class="menu-bullet">
                                             <i class="fa fa-solid fa-dice-d20"></i>
 										</span>

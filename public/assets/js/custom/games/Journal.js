@@ -500,7 +500,7 @@ class Journal {
         console.log('saveField objVal= ', objVal)
         return $.ajax({
             type: "post",
-            url: this.url.save,
+            url: baseUrl + this.url.save,
             data: form,
             processData: false,
             contentType: false,
@@ -518,26 +518,19 @@ class Journal {
         let id = t.id.substring(t.id.length - 1);
         let form = {item_id: id};
         form[name] = t.innerHTML;
-        return $.ajax({
-            type: "post",
-            url: "/app/games_ajax/save_sheet/" + dbGame.game_id,
-            data: form,
-            dataType: "json",
-            success: (data) => {
-                if (data.response) {
-                    for (let i in this.items) {
-                        if (this.items[i].info.item_id === id) {
-                            for (let j in data.params) {
-                                this.items[i].info[j] = data.params[j];
-                            }
+        return ajax("/app/games_ajax/save_sheet/" + dbGame.game_id, form).done((data) => {
+            if (data.response) {
+                for (let i in this.items) {
+                    if (this.items[i].info.item_id === id) {
+                        for (let j in data.params) {
+                            this.items[i].info[j] = data.params[j];
                         }
                     }
                 }
-                return data;
-            },
-            error: (e) => {
-                console.log(e.responseText);
             }
+            return data;
+        }).fail((e) => {
+            console.log(e.responseText);
         });
     }
 
@@ -1211,7 +1204,7 @@ class Journal {
             ];
             for (let i = 0; i < click.length; i++) {
                 click[i].innerHTML = inputs[i].value !== '' ? inputs[i].value : (inputs[i].getAttribute('placeholder') === 'Bless' ? 'Name' : '_');
-                inputs[i].onchange=()=>{
+                inputs[i].onchange = () => {
                     click[i].innerHTML = inputs[i].value !== '' ? inputs[i].value : (inputs[i].getAttribute('placeholder') === 'Bless' ? 'Name' : '_');
                 }
             }

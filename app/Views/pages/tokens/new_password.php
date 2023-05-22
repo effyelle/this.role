@@ -70,25 +70,14 @@
                 return;
             }
             let form = getForm('#resetpwd-form');
-            $.ajax({
-                type: "post",
-                url: "/account/reset_password",
-                data: form,
-                dataType: "json",
-                success: function (data) {
-                    console.log('??')
-                    console.log(data);
-                    if (data['response']) {
-                        window.location.assign('/app/pwd_was_resetted');
-                        return;
-                    }
-                    error.html(data['msg']);
-                },
-                fail: function (e) {
-                    console.log("Error: ", e.getError());
-                },always:function(){
-                    console.log('??')
+            ajax("/account/reset_password", form).done((data) => {
+                if (data['response']) {
+                    window.location.assign('/app/pwd_was_resetted');
+                    return;
                 }
+                error.html(data['msg']);
+            }).fail((e) => {
+                console.log(e.responseText);
             });
         }
     });

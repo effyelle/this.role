@@ -65,7 +65,7 @@
 </form>
 <!--begin::Form-->
 <div class="m-auto my-4 text-center">
-    <p>Already have an account? <a href="/app/login" class="link-info">Log in</a></p>
+    <p>Already have an account? <a href="<?= base_url() ?>/app/login" class="link-info">Log in</a></p>
 
 </div>
 
@@ -84,26 +84,19 @@
         function sendForm(form) {
             $('#ajax_signup-response').html('');
             toggleProgressSpinner();
-            $.ajax({
-                type: "POST",
-                url: "/account/signup",
-                data: form,
-                dataType: "json",
-                success: function (data) {
-                    console.log(data);
-                    if (data['response']) {
-                        window.location.assign('/account/created');
-                        return;
-                    }
-                    toggleProgressSpinner(false);
-                    console.log(data.msg)
-                    $('#ajax_signup-response').html(data.mail);
-                    if (data['msg'].match(/email/)) $('#email').addClass('is-invalid');
-                },
-                fail: function (e) {
-                    $('#ajax_signup-response').html('There was an unespected error');
-                    console.log("Error: ", e.getError());
+            ajax("/account/signup", form).done((data) => {
+                console.log(data);
+                if (data['response']) {
+                    window.location.assign('/account/created');
+                    return;
                 }
+                toggleProgressSpinner(false);
+                console.log(data.msg)
+                $('#ajax_signup-response').html(data.mail);
+                if (data['msg'].match(/email/)) $('#email').addClass('is-invalid');
+            }).fail((e) => {
+                $('#ajax_signup-response').html('There was an unespected error');
+                console.log("Error: ", e.responseText);
             });
         }
 

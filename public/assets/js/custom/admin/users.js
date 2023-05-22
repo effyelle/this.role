@@ -20,32 +20,25 @@ document.addEventListener('DOMContentLoaded', function () {
     $('#save_user_btn').click(function () {
         toggleProgressSpinner(true);
         let form = getForm('#edit_user');
-        $.ajax({
-            type: "post",
-            url: "/app/admin_ajax/update_user",
-            data: form,
-            dataType: "json",
-            success: function (data) {
-                console.log(data);
-                if (data['response']) {
-                    $('#modal_success-toggle').click();
-                    if (data.msg && typeof data.msg === 'object' && data.msg.length !== 0) {
-                        const response = data['msg'];
-                        let totalResponse = '<b>The following errors where encountered:</b>';
-                        for (let i in response) {
-                            totalResponse += '<br/>' + response[i];
-                        }
-                        $('.modal_success_response').html(totalResponse);
+        ajax("/app/admin_ajax/update_user", form).done((data) => {
+            if (data['response']) {
+                $('#modal_success-toggle').click();
+                if (data.msg && typeof data.msg === 'object' && data.msg.length !== 0) {
+                    const response = data['msg'];
+                    let totalResponse = '<b>The following errors where encountered:</b>';
+                    for (let i in response) {
+                        totalResponse += '<br/>' + response[i];
                     }
-                } else {
-                    $('#modal_error-toggle').click();
-                    $('#modal_error .modal_error_response').html(data['msg']);
+                    $('.modal_success_response').html(totalResponse);
                 }
-                toggleProgressSpinner(false);
-            }, error: function (e) {
-                toggleProgressSpinner(false);
-                console.log(e.responseText);
+            } else {
+                $('#modal_error-toggle').click();
+                $('#modal_error .modal_error_response').html(data['msg']);
             }
+            toggleProgressSpinner(false);
+        }).fail((e) => {
+            toggleProgressSpinner(false);
+            console.log(e.responseText);
         });
     });
 
@@ -57,20 +50,15 @@ document.addEventListener('DOMContentLoaded', function () {
         $('.send_answer_btn')[i].addEventListener('click', function () {
             let answer = $('.issue_answer')[i].value;
             if (answer.length > 0) {
-                $.ajax({
-                    type: "post",
-                    url: "/account/send_issue_msg",
-                    data: {
-                        "msg": answer,
-                        "issue_id": $('.issue_id')[i].value
-                    },
-                    dataType: "json",
-                    success: function (data) {
-                        console.log(data);
-                        $('#modal_success-toggle').click();
-                    }, error: function (e) {
-                        $('#modal_error-toggle').click();
-                    }
+                ajax("/account/send_issue_msg", {
+                    "msg": answer,
+                    "issue_id": $('.issue_id')[i].value
+                }).done((data) => {
+                    console.log(data);
+                    $('#modal_success-toggle').click();
+                }).fail((e) => {
+                    $('#modal_error-toggle').click();
+                    console.log(e.responseText);
                 });
             }
         });

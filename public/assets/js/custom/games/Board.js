@@ -214,17 +214,21 @@ class Board {
         let tokens = JSON.parse(selectedLayer.layer_tokens);
         for (let i in tokens) {
             let item = this.journal.searchItem(i);
-            if (!item) return;
-            this.map.gameBoard.innerHTML += this.map.tokenFormatting(item);
+            if (!item) continue;
+            if(!(this.map.tokensDraggable && this.map.tokensDraggable.findContainer('token_' + item.info.item_id))) {
+                this.map.tokenC.innerHTML += this.map.tokenFormatting(item);
+            }
         }
         this.map.TokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
         for (let i in tokens) {
             let item = this.journal.searchItem(i);
+            if (!item) continue;
             let newToken = this.map.tokensDraggable.findContainer('token_' + item.info.item_id);
             newToken.setAxis(tokens[i].left, tokens[i].top);
+            newToken.setProportions();
         }
         this.map.hearTokenThings();
-        this.map.container = q('#' + this.map.container.id)[0];
+        this.map.img = q('#' + this.map.img.id)[0];
         // this.map.setMapListeners();
     }
 
@@ -251,8 +255,9 @@ class Board {
                 this.map.gameBoard.innerHTML += this.map.tokenFormatting(item);
                 this.map.tokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
                 let newToken = this.map.tokensDraggable.findContainer('token_' + item.info.item_id);
-                const coords = this.map.getPixels(dragendEvt, newToken);
-                newToken.setAxis(coords.x + 'px', coords.y + 'px');
+                const coords = this.map.getPercentage(dragendEvt, newToken);
+                newToken.setAxis(coords.x + '%', coords.y + '%');
+                newToken.setProportions();
                 this.map.saveToken(newToken);
                 this.map.hearTokenThings();
             }

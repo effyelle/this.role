@@ -160,15 +160,9 @@ function initGame() {
         board.chat.getChat();
         board.journal.Chat = board.chat;
         board.map.loadLayers().done(() => {
-            board.journal.initJournal(board).done(() => {
+            board.journal.initJournal().done(() => {
                 board.setItems();
             });
         });
-        /*journal.getJournalAjax().done((data) => {
-            if (data.results && data.results.length === journal.items.length) {
-                if (!dataChanged(data)) return;
-                journal.reload();
-            }
-        });*/
     }
 }

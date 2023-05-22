@@ -173,7 +173,7 @@ class Journal {
         this.changed = bool;
     }
 
-    initJournal(board = null) {
+    initJournal() {
         // Get data
         return ajax(this.url.get).done((data) => {
             // Checck data is not null

@@ -106,6 +106,10 @@ class Draggable {
                 this.containers[i].style.left = x;
                 this.containers[i].style.top = y;
             }
+            this.containers[i].setProportions = () => {
+                this.containers[i].style.width = '8%';
+                this.containers[i].style.height = this.containers[i].offsetWidth + 'px';
+            }
         }
         /*
          * / * RESET COORDINATES ON PAGE RESIZE * / *

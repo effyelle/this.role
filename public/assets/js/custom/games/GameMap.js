@@ -1,7 +1,8 @@
 class GameMap {
     constructor() {
         this.gameBoard = q('.this-game')[0]; // this is the superior one
-        this.container = q('#this_game')[0];
+        this.zoom = ('#this_zoom')[0];
+        this.img = q('#this_game')[0];
         this.tokenC = q('#tokens_container')[0];
         this.layersFolder = '/assets/media/games/' + dbGame.game_folder + '/layers/';
         this.select = q('#change_layer')[0];
@@ -23,7 +24,7 @@ class GameMap {
 
     setMapListeners() {
         const zoom = (e) => {
-            let w = this.container.style.width;
+            let w = this.img.style.width;
             let measure = function (msrStr) {
                 console.log(msrStr)
                 for (let i = 0; i < msrStr.length; i++) {
@@ -38,18 +39,18 @@ class GameMap {
             }
             let msrW = measure(w);
             msrW.size = msrW.size - (parseFloat(e.deltaY) / 10 * 5);
-            this.container.style.width = msrW.size + msrW.name;
+            this.img.style.width = msrW.size + msrW.name;
             console.log(e.deltaY)
             console.log(e.clientX)
             console.log(e.clientY)
         }
-        this.container.removeEventListener('wheel', zoom);
-        this.container.addEventListener('wheel', zoom);
+        this.img.removeEventListener('wheel', zoom);
+        this.img.addEventListener('wheel', zoom);
         const rightClick = (e) => {
             console.log(e);
         }
-        this.container.removeEventListener('contextmenu', rightClick);
-        this.container.addEventListener('contextmenu', rightClick);
+        this.img.removeEventListener('contextmenu', rightClick);
+        this.img.addEventListener('contextmenu', rightClick);
     }
 
     mapHasChanged(dbLayers, thisLayers) {
@@ -74,13 +75,13 @@ class GameMap {
         q('.this-game-transition .spinner-border').addClass('d-none');
         q('.this-game-transition .empty-layers').addClass('d-none');
         if (urlExists(urlImg)) {
-            this.container.src = urlImg;
-            this.container.style.width = this.gameBoard.offsetWidth + 'px';
-            this.container.removeClass('d-none');
+            this.img.src = urlImg;
+            this.img.style.width = this.gameBoard.offsetWidth + 'px';
+            this.img.removeClass('d-none');
             return;
         }
-        this.container.addClass('d-none');
-        this.container.style.transition = 'all 1s ease';
+        this.img.addClass('d-none');
+        this.img.style.transition = 'all 1s ease';
         q('.this-game-transition .empty-layers')[0]
             .innerHTML = 'You have added no layers yet or old image was not found';
         q('.this-game-transition .spinner-border').addClass('d-none');
@@ -131,7 +132,7 @@ class GameMap {
             }
             this.MapChanged = true;
             // Return if container is not found
-            if (!this.container) return;
+            if (!this.img) return;
 
             // Refill game data
             dbGame = data.game;
@@ -139,8 +140,8 @@ class GameMap {
             let layerSelected = false;
 
             // Reset container
-            this.container.src = 'none';
-            this.container.style.transition = 'all 1s ease';
+            this.img.src = 'none';
+            this.img.style.transition = 'all 1s ease';
             // Reset select if exists
             if (this.select) this.select.innerHTML = '';
             // Iterate layers (means user is the creator)
@@ -191,8 +192,8 @@ class GameMap {
     }
 
     tokenFormatting = (item) => {
-        return '<div id="token_' + item.info.item_id + '" style="top: 100vh; left: 100vw;"' +
-            ' class="symbol symbol-75px circle position-absolute cursor-move">' +
+        return '<div id="token_' + item.info.item_id + '" style="top: 100vh; left: 100vw;width: 75px;height: 75px;"' +
+            ' class="symbol circle position-absolute cursor-move">' +
             '<span class="symbol-label circle" style="background-image: url(' + item.icon() + ')"></span>' +
             '</div>';
     }
@@ -233,9 +234,9 @@ class GameMap {
                 // Define if token has been selected
                 let tokenSelected = !this.tokensDraggable.hasMoved;
                 // Save token if it moved
-                const coords = this.getPixels(event, token);
-                token.style.left = coords.x + 'px';
-                token.style.top = coords.y + 'px';
+                const coords = this.getPercentage(event, token);
+                token.style.left = coords.x + '%';
+                token.style.top = coords.y + '%';
                 if (!tokenSelected) this.saveToken(token);
                 //* begin::Open item AC & health *//
                 //* end::Open item AC & health *//

@@ -604,8 +604,8 @@ class Games extends BaseController
             if ($layer = $this->layermodel->get(['layer_id' => $id])) {
                 $layertokens = json_decode($layer[0]['layer_tokens'], true);
                 $newtokens = [];
-                foreach ($layertokens as $id => $token) {
-                    if ($id != $_POST['item_id']) $newtokens[$id] = $token;
+                foreach ($layertokens as $k => $token) {
+                    if ($k != $_POST['item_id']) $newtokens[$k] = $token;
                 }
                 $data['msg'] = 'Layer could not be updated';
                 $data['newtokens'] = $newtokens;

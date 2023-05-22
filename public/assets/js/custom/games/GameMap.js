@@ -1,8 +1,8 @@
 class GameMap {
     constructor() {
         this.gameBoard = q('.this-game')[0]; // this is the superior one
-        this.zoom = ('#this_zoom')[0];
-        this.img = q('#this_game')[0];
+        this.zoom = q('#this_zoom')[0];
+        this.img = q('#this_img')[0];
         this.tokenC = q('#tokens_container')[0];
         this.layersFolder = '/assets/media/games/' + dbGame.game_folder + '/layers/';
         this.select = q('#change_layer')[0];
@@ -12,6 +12,7 @@ class GameMap {
         this.layers = {};
         this.offsetTop = 110; // Pixels
         this.offsetStart = 374; // Pixels
+        this.setMapListeners();
     }
 
     set Layers(layer) {
@@ -24,9 +25,7 @@ class GameMap {
 
     setMapListeners() {
         const zoom = (e) => {
-            let w = this.img.style.width;
             let measure = function (msrStr) {
-                console.log(msrStr)
                 for (let i = 0; i < msrStr.length; i++) {
                     // continue searching if character is not empty and is a number
                     if (msrStr.charAt(i) !== '' && !isNaN(msrStr.charAt(i))) continue;
@@ -37,20 +36,48 @@ class GameMap {
                     }
                 }
             }
-            let msrW = measure(w);
+            let msrW = measure(this.zoom.style.width);
+            let msrH = measure(this.zoom.style.height);
             msrW.size = msrW.size - (parseFloat(e.deltaY) / 10 * 5);
-            this.img.style.width = msrW.size + msrW.name;
-            console.log(e.deltaY)
-            console.log(e.clientX)
-            console.log(e.clientY)
+            msrH.size = msrW.size * 2;
+            this.zoom.style.width = msrW.size + msrW.name;
+            this.zoom.style.height = msrH.size + msrH.name;
+            if (this.tokensDraggable) {
+                for (let token of this.tokensDraggable.containers) {
+                    token.setProportions('6%');
+                }
+            }
         }
-        this.img.removeEventListener('wheel', zoom);
-        this.img.addEventListener('wheel', zoom);
+        const smScreenZomm = (e) => {
+            if (e.touches && e.touches.length > 1) {
+                console.log(e.touches);
+            }
+        }
+        // Add listeners
+        this.zoom.addEventListener('wheel', zoom); // PC
+        this.zoom.addEventListener('touchstart', smScreenZomm); // Phone & Tablet
         const rightClick = (e) => {
-            console.log(e);
+            e.preventDefault();
         }
-        this.img.removeEventListener('contextmenu', rightClick);
-        this.img.addEventListener('contextmenu', rightClick);
+        const readMap = (e) => {
+            // Check if right click
+            if (e.button === 2) {
+                const leftOld = e.layerX;
+                const topOld = e.layerY;
+                this.zoom.onmousemove = (e) => {
+                    // Check if right click
+                    const leftNew = e.layerX - leftOld;
+                    const topNew = e.layerY - topOld;
+                    this.zoom.style.left = this.zoom.offsetLeft + leftNew + 'px';
+                    this.zoom.style.top = this.zoom.offsetTop + topNew + 'px';
+                }
+            }
+        }
+        this.zoom.addEventListener('contextmenu', rightClick);
+        this.zoom.addEventListener('mousedown', readMap);
+        this.zoom.addEventListener('mouseup', () => {
+            this.zoom.onmousemove = null;
+        });
     }
 
     mapHasChanged(dbLayers, thisLayers) {
@@ -76,7 +103,6 @@ class GameMap {
         q('.this-game-transition .empty-layers').addClass('d-none');
         if (urlExists(urlImg)) {
             this.img.src = urlImg;
-            this.img.style.width = this.gameBoard.offsetWidth + 'px';
             this.img.removeClass('d-none');
             return;
         }
@@ -214,33 +240,23 @@ class GameMap {
         return ajax('/app/games_ajax/delete_token/' + this.selectedLayer(), {item_id: itemID});
     }
 
-    getPercentage(e, c) {
-        let boardW = this.gameBoard.offsetWidth //  100% of width
-        let boardH = this.gameBoard.offsetHeight // 100% of height
-        let pointerX = e.pageX - this.offsetStart - c.offsetWidth / 2;
-        let pointerY = e.pageY - this.offsetTop - c.offsetHeight / 2;
-        return {x: pointerX / boardW * 100, y: pointerY / boardH * 100}
-    }
-
-    getPixels(e, c) {
-        let pointerX = e.pageX - this.offsetStart - c.offsetWidth / 2;
-        let pointerY = e.pageY - this.offsetTop - c.offsetHeight / 2;
-        return {x: pointerX, y: pointerY}
-    }
-
     hearTokenThings() {
         for (let token of this.tokensDraggable.containers) {
             token.addEventListener('mouseup', (event) => {
                 // Define if token has been selected
                 let tokenSelected = !this.tokensDraggable.hasMoved;
                 // Save token if it moved
-                const coords = this.getPercentage(event, token);
+                const coords = {
+                    x: token.offsetLeft / this.zoom.offsetWidth * 100,
+                    y: token.offsetTop / this.zoom.offsetHeight * 100
+                };
                 token.style.left = coords.x + '%';
                 token.style.top = coords.y + '%';
                 if (!tokenSelected) this.saveToken(token);
                 //* begin::Open item AC & health *//
+                // ????
                 //* end::Open item AC & health *//
-                //* begin::Remove token listener *//
+                //* begin::Listen to remove token *//
                 if (!tokenSelected) {
                     document.onkeyup = null;
                     return;
@@ -253,7 +269,7 @@ class GameMap {
                         });
                     }
                 }
-                //* end::Remove token listener *//
+                //* end::Listen to remove token *//
             });
         }
     }

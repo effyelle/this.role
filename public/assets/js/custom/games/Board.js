@@ -133,7 +133,7 @@ class Board {
                     this.setDraggableItemSheets(itemOpenerBtn);
                 });
             }
-            if (this.map.changed) {
+            if (this.map.changed || this.journal.changed) {
                 this.loadTokens();
                 itemOpenerBtn.addEventListener('drag', (e) => {
                     this.setDraggableTokens(e);
@@ -204,7 +204,11 @@ class Board {
     }
 
     loadTokens() {
-        if (!(this.map.gameBoard)) return;
+        // Reset tokens
+        if (this.map.tokensDraggable) {
+            this.map.TokensDraggable = null;
+            this.map.tokenC.innerHTML = '';
+        }
         // Erase all
         for (let child of this.map.gameBoard.children) {
             if (child.classList.contains('symbol')) child.remove();
@@ -215,7 +219,7 @@ class Board {
         for (let i in tokens) {
             let item = this.journal.searchItem(i);
             if (!item) continue;
-            if(!(this.map.tokensDraggable && this.map.tokensDraggable.findContainer('token_' + item.info.item_id))) {
+            if (!(this.map.tokensDraggable && this.map.tokensDraggable.findContainer('token_' + item.info.item_id))) {
                 this.map.tokenC.innerHTML += this.map.tokenFormatting(item);
             }
         }
@@ -225,11 +229,11 @@ class Board {
             if (!item) continue;
             let newToken = this.map.tokensDraggable.findContainer('token_' + item.info.item_id);
             newToken.setAxis(tokens[i].left, tokens[i].top);
-            newToken.setProportions();
+            newToken.setProportions('6%');
         }
         this.map.hearTokenThings();
         this.map.img = q('#' + this.map.img.id)[0];
-        // this.map.setMapListeners();
+        this.map.zoom = q('#this_zoom')[0];
     }
 
     setDraggableTokens(ondragEvt) {
@@ -249,17 +253,21 @@ class Board {
             if (dragendEvt.pageX > this.map.offsetStart && dragendEvt.pageY > this.map.offsetTop) {
                 // Double check token has not already been added
                 if (q('#token_' + item.info.item_id).length !== 0) return;
-                // If game board div is not found return
-                if (!this.map.gameBoard) return;
                 // Add token to game board
-                this.map.gameBoard.innerHTML += this.map.tokenFormatting(item);
-                this.map.tokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
+                this.map.tokenC.innerHTML += this.map.tokenFormatting(item);
+                this.map.TokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
                 let newToken = this.map.tokensDraggable.findContainer('token_' + item.info.item_id);
-                const coords = this.map.getPercentage(dragendEvt, newToken);
+                // Percentage of mouse position
+                const coords = {
+                    x: (dragendEvt.clientX - this.map.offsetStart) / this.map.zoom.offsetWidth * 100,
+                    y: (dragendEvt.clientY - this.map.offsetTop) / this.map.zoom.offsetHeight * 100
+                };
                 newToken.setAxis(coords.x + '%', coords.y + '%');
-                newToken.setProportions();
+                newToken.setProportions('6%');
                 this.map.saveToken(newToken);
                 this.map.hearTokenThings();
+                this.map.img = q('#' + this.map.img.id)[0];
+                this.map.zoom = q('#this_zoom')[0];
             }
         }
     }

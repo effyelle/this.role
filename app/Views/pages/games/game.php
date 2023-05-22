@@ -1,13 +1,16 @@
 <div class="this-game w-100 h-100 bg-white position-relative overflow-hidden">
-    <div id="this_zoom position-relative" style="width: 1080px;top: 0;left: 0;">
-        <img id="this_game" draggable="false" class="position-absolute this-game-layer d-none" alt="Map Layer"/>
-        <div id="tokens_container" class=""></div>
+    <div class="position-absolute h-100 w-100">
+        <div id="this_zoom" class="position-relative overflow-hidden" style="width: 1080px;height:2160px;">
+            <div id="tokens_container" class="position-absolute w-100 h-100"></div>
+            <img id="this_img" draggable="false" alt="Map Image" class="position-absolute this-game-layer d-none w-100"/>
+        </div>
     </div>
     <div class="this-game-transition w-100 h-100 flex-row justify-content-center align-items-center bg-gray-100">
         <span class="empty-layers d-none fs-4 text-center text-primary"></span>
         <span class="spinner-border align-middle ms-2"></span>
     </div>
 </div>
+
 <?php if (isset($game) && isset($_SESSION['user']) && $_SESSION['user']['user_id'] === $game['game_creator']): ?>
 
     <!--begin::Modal-->

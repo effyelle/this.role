@@ -106,8 +106,8 @@ class Draggable {
                 this.containers[i].style.left = x;
                 this.containers[i].style.top = y;
             }
-            this.containers[i].setProportions = () => {
-                this.containers[i].style.width = '8%';
+            this.containers[i].setProportions = (n) => {
+                this.containers[i].style.width = n;
                 this.containers[i].style.height = this.containers[i].offsetWidth + 'px';
             }
         }
@@ -195,9 +195,15 @@ class Draggable {
         // Active drag on mouse down
         // On mouse move, move the container along with the cursor
         p.onmousemove = (e) => {
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+            e.preventDefault();
             this.elementDrag(c, p, e);
         }
         p.ontouchmove = (e) => {
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+            e.preventDefault();
             this.elementDrag(c, p, e);
         }
         // On mouse up, listeners on drag

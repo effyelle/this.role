@@ -3,7 +3,7 @@
     <!--begin::Col-->
     <div class="mb-xl-10">
         <!--begin::List Widget 6-->
-        <form action="/app/games/details/<?= $game['game_id'] ?? '' ?>" method="post" enctype="multipart/form-data"
+        <form action="<?= base_url(); ?>app/games/details/<?= $game['game_id'] ?? '' ?>" method="post" enctype="multipart/form-data"
               autocomplete="off"
               class="card pb-4">
             <!--begin::Header-->

@@ -88,7 +88,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
     <div class="modal-dialog">
         <!--begin::Form-->
         <form id="create_game_form" autocomplete="off" method="post" enctype="multipart/form-data"
-              action="/app/games/list"
+              action="<?= base_url(); ?>app/games/list"
               class="modal-content">
             <!--begin::Header-->
             <div class="modal-header">

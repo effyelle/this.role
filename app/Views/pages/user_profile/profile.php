@@ -1,4 +1,4 @@
-<form action="/app/myprofile" method="post" enctype="multipart/form-data" autocomplete="off" id="myprofile"
+<form action="<?= base_url(); ?>app/myprofile" method="post" enctype="multipart/form-data" autocomplete="off" id="myprofile"
       class="tab-pane fade <?= isset($tab) && $tab === 'myprofile' ? ' show active' : "" ?>">
     <!--begin::Header-->
     <div class="card-header align-content-center border-0">

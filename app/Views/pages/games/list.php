@@ -151,7 +151,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
     document.addEventListener('DOMContentLoaded', function () {
 
         $('#game_icon').change(function () {
-            readImageChange(this, $('.game_icon_holder'));
+            readImageChange(this, q('.game_icon_holder')[0]);
         });
 
         $('#create_game_btn').click(function () {

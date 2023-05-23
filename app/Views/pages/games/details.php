@@ -3,7 +3,8 @@
     <!--begin::Col-->
     <div class="mb-xl-10">
         <!--begin::List Widget 6-->
-        <form action="<?= base_url(); ?>app/games/details/<?= $game['game_id'] ?? '' ?>" method="post" enctype="multipart/form-data"
+        <form action="<?= base_url(); ?>app/games/details/<?= $game['game_id'] ?? '' ?>" method="post"
+              enctype="multipart/form-data"
               autocomplete="off"
               class="card pb-4">
             <!--begin::Header-->
@@ -125,7 +126,7 @@
         })
         // Change DOM icon on input change
         $('#change-game_icon').change(function () {
-            readImageChange(this, $('.game_icon-holder'));
+            readImageChange(this, q('.game_icon-holder')[0]);
         });
         // Delete game
         $('.del_game-btn').click(function () {

@@ -126,7 +126,7 @@ nb-configuration.xml
 /.phpunit.*.cache
 
 # Project Config
-/app/Config/*
+# /app/Config/*
 
 # Uploaded media through project
 /public/assets/media/avatars/*

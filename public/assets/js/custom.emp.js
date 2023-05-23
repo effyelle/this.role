@@ -233,7 +233,7 @@ function spanPopup(popup) {
 
 function urlExists(url) {
     let http = $.ajax({
-        type: 'head', url: baseUrl + url, async: false
+        type: 'head', url: url, async: false
     });
     return http.status === 200;
 }

@@ -145,24 +145,17 @@
         function sendIssue() {
             toggleProgressSpinner();
             let form = getForm('#contact_support');
-            $.ajax({
-                type: "post",
-                url: "/account/send_issue",
-                data: form,
-                dataType: "json",
-                success: function (data) {
-                    console.log(data)
-                    if (data['response']) {
-                        $('#modal_success-toggle').click();
-                    } else {
-                        $('#modal_error-toggle').click();
-                    }
-                    toggleProgressSpinner(false);
-                },
-                error: function (e) {
-                    console.log(e);
-                    toggleProgressSpinner(false);
+            ajax("/account/send_issue", form).done((data) => {
+                console.log(data)
+                if (data['response']) {
+                    $('#modal_success-toggle').click();
+                } else {
+                    $('#modal_error-toggle').click();
                 }
+                toggleProgressSpinner(false);
+            }).fail((e) => {
+                console.log(e.responseText);
+                toggleProgressSpinner(false);
             });
         }
     });

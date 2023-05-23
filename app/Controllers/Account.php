@@ -192,7 +192,7 @@ class Account extends BaseController
                     ? '<span class="fs-4">Your email was updated, an email has been sent for confirmation</span>'
                     : ($email_response === false
                         ? 'There was a problem adding the token'
-                        : 'Mail could not be sent');
+                        : 'Mail could not be sent=> ' . $email_response);
             }
         } // Fields missing
         else $error = 'Rellena todos los campos';

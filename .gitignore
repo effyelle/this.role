@@ -127,6 +127,7 @@ nb-configuration.xml
 
 # Project Config
 /app/Config/*
+.env
 
 # Uploaded media through project
 /public/assets/media/avatars/*

@@ -85,14 +85,14 @@
             $('#ajax_signup-response').html('');
             toggleProgressSpinner();
             ajax("/account/signup", form).done((data) => {
-                console.log(data);
-                if (data['response']) {
+                if (data.response) {
                     go_url('/account/created');
                     return;
                 }
                 toggleProgressSpinner(false);
-                $('#ajax_signup-response').html(data.mail);
-                if (data['msg'].match(/email/)) $('#email').addClass('is-invalid');
+                if (!data.msg) return;
+                $('#ajax_signup-response').html(data.msg);
+                if (data.msg.match(/email/)) $('#email').addClass('is-invalid');
             }).fail((e) => {
                 $('#ajax_signup-response').html('There was an unespected error');
                 console.log("Error: ", e.responseText);

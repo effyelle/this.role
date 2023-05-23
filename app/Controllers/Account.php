@@ -384,7 +384,6 @@ class Account extends BaseController
         // Update all matching usernames in messages with the new username
         if (is_array($all_issues) && count($all_issues) > 0) {
             foreach ($all_issues as $v) {
-                var_dump($v);
                 // Decode json
                 $msgs = json_decode($v['issue_msg']);
                 // Go through each message

@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
         toggleProgressSpinner(true);
         let form = getForm('#edit_user');
         ajax("/app/admin_ajax/update_user", form).done((data) => {
-            if (data['response']) {
+            if (data.response) {
                 $('#modal_success-toggle').click();
                 if (data.msg && typeof data.msg === 'object' && data.msg.length !== 0) {
                     const response = data['msg'];

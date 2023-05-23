@@ -65,7 +65,7 @@
             toggleProgressSpinner();
             ajax("/account/login", form).done((data) => {
                 if (data['response']) {
-                    window.location.assign('/app/index');
+                    go_url(baseUrl + '/app/index');
                     return;
                 }
                 toggleProgressSpinner(false);

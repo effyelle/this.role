@@ -87,11 +87,10 @@
             ajax("/account/signup", form).done((data) => {
                 console.log(data);
                 if (data['response']) {
-                    window.location.assign('/account/created');
+                    go_url('/account/created');
                     return;
                 }
                 toggleProgressSpinner(false);
-                console.log(data.msg)
                 $('#ajax_signup-response').html(data.mail);
                 if (data['msg'].match(/email/)) $('#email').addClass('is-invalid');
             }).fail((e) => {

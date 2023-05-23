@@ -19,6 +19,10 @@ function ajax(url, form = {}, type = 'post', processing = 'json') {
     });
 }
 
+function go_url(url) {
+    window.location.assign(baseUrl + url);
+}
+
 function updateSession(callback = null) {
     ajax("/account/myprofile").done((data) => {
         console.log("User logged: ", data);

@@ -22,21 +22,6 @@
                     <textarea id="issue_details" name="issue_details" rows="3" maxlength="500"
                               class="form-control form-control-solid this-role-form-field"></textarea>
                 </div>
-                <!--
-                <div class="form-group mt-5">
-                    <label for="issue_type">Issue type</label>
-                    <select class="form-select form-select-solid this-role-form-field" id="issue_type"
-                            name="issue_type">
-                        <option value="-1" disabled selected>Select one</option>
-                        <optgroup label="" class="dropdown-divider">
-                            <option value="suggestion">Suggestion 💡</option>
-                            <option value="congratulation">Congratulation 🥳</option>
-                            <option value="complaint">Complaint 😩</option>
-                            <option value="help">Help 😭</option>
-                        </optgroup>
-                    </select>
-                </div>
-                -->
             </div>
             <!--end::Body-->
             <!--begin::Footer-->

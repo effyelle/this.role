@@ -109,7 +109,7 @@ class Account extends BaseController
                 'response' => false,
                 'msg' => $email_response === false
                     ? 'There was a problem adding the token'
-                    : 'Mail could not be sent',
+                    : 'Mail could not be sent=> ' . $email_response,
                 'email_response' => $email_response
             ]);
             return;

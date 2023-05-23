@@ -100,12 +100,12 @@ class App extends BaseController
 
     function pwd_email(): string
     {
-        return view('templates/mail/reset_pwd_html.php', ['token' => '1234566789']);
+        return view('templates/mail/reset_pwd_html.php', ['token' => $this->now]);
     }
 
     function conf_account_email(): string
     {
-        return view('templates/mail/confirm_account_html.php', ['token' => '1234567890']);
+        return view('templates/mail/confirm_account_html.php', ['token' => $this->now]);
     }
 
     function send_confirmation_email(): string

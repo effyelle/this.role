@@ -13,7 +13,7 @@
             <!--end::Header-->
             <!--begin::Body-->
             <div class="card-body py-6 w-50 mx-auto">
-                <form action="/app/send_confirmation_email" method="post" autocomplete="on"
+                <form action="<?= base_url(); ?>app/send_confirmation_email" method="post" autocomplete="on"
                       class="m-auto my-4 text-center">
                     <label for="email" class="form-label"></label>
                     <input type="email" id="email" name="email" placeholder="Your email..." required

@@ -22,7 +22,6 @@ function ajax(url, form = {}, type = 'post', processing = 'json') {
 function go_url(url) {
     let split = baseUrl.split('/');
     let baseUrlBase = split[split.length - 1];
-    alert(baseUrlBase);
     window.location.assign(baseUrlBase + url);
 }
 

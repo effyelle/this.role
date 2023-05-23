@@ -243,14 +243,14 @@ class Account extends BaseController
      * @param $user
      * @return bool|string
      */
-    function sendConfirmationEmail($email, $user): bool|string
+    function sendConfirmationEmail($email, $user = null): bool|string
     {
         // Generate token
         $token = $this->generateToken($email);
         if (!$token) return false;
         // Send email
         $this->mailer->setTo($email);
-        $this->mailer->setSubject('Welcome ' . $user . '! Please, confirm your Account.');
+        $this->mailer->setSubject('Welcome ' . ($user ?? '') . '! Please, confirm your Account.');
         $this->mailer->setMessage(view('templates/mail/confirm_account_html', ['token' => $token]));
         $this->mailer->setAltMessage(view('templates/mail/confirm_account_txt', ['token' => $token]));
         $this->mailer->setReplyTo(null);

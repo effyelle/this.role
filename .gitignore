@@ -127,6 +127,7 @@ nb-configuration.xml
 
 # Project Config
 /app/Config/*
+/app/Controllers/BaseController.php
 .env
 
 # Uploaded media through project

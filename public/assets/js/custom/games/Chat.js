@@ -149,10 +149,22 @@ class Chat {
     getChat() {
         return ajax(this.url.get).done((data) => {
             if (data.response && data.msgs) {
-                if (Object.keys(this.messages).length === data.msgs.length) return;
-                this.messages = data.msgs;
+                let dataChanged = false;
+                if (Object.keys(this.messages).length === data.msgs.length) {
+                    for (let i in data.msgs) {
+                        if (data.msgs[i].chat_id !== this.messages[i].chat_id) {
+                            dataChanged = true;
+                            break;
+                        }
+                    }
+                } else {
+                    dataChanged = true;
+                }
+                if (dataChanged) {
+                    this.messages = data.msgs;
+                    this.formatMessages();
+                }
             }
-            this.formatMessages();
         });
     }
 

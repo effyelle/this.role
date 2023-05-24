@@ -12,7 +12,6 @@ CREATE TABLE users(
 	user_email VARCHAR(100),
 	user_pwd VARCHAR(200),
 	user_rol ENUM('user', 'admin', 'masteradmin') DEFAULT "user",
-	user_bday DATE DEFAULT NULL,
 	user_confirmed DATETIME DEFAULT NULL,
 	user_deleted DATETIME DEFAULT NULL
 );
@@ -39,7 +38,6 @@ CREATE TABLE games(
 	game_icon VARCHAR(200),
 	game_layer_selected INT DEFAULT -1,
 	game_folder VARCHAR(200),
-	game_gallery JSON,
 	game_deleted DATETIME DEFAULT NULL,
 	FOREIGN KEY(game_creator) REFERENCES users(user_id)
 );
@@ -47,6 +45,7 @@ CREATE TABLE games(
 CREATE TABLE game_player(
 	game_player_id_user INT UNSIGNED,
 	game_player_id_game INT UNSIGNED,
+	game_display_username VARCHAR(50),
 	FOREIGN KEY(game_player_id_user) REFERENCES users(user_id),
 	FOREIGN KEY(game_player_id_game) REFERENCES games(game_id)
 );
@@ -77,7 +76,6 @@ CREATE TABLE game_journal(
 	health JSON,
 	attacks LONGTEXT,
 	global_modifiers LONGTEXT,
-	tools_n_custom LONGTEXT,
 	bag LONGTEXT,
 	custom_features LONGTEXT,
 	notes LONGTEXT,
@@ -93,13 +91,6 @@ CREATE TABLE game_layers(
 	FOREIGN KEY (layer_id_game) REFERENCES games(game_id)
 );
 
-CREATE TABLE game_token(
-	token_id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-	token_id_layer INT UNSIGNED,
-	token_coords JSON,
-	FOREIGN KEY (token_id_layer) REFERENCES game_layers(layer_id)
-);
-
 CREATE TABLE invite_url(
 	url VARCHAR(200) PRIMARY KEY,
 	id_game INT UNSIGNED,
@@ -109,10 +100,11 @@ CREATE TABLE invite_url(
 
 INSERT INTO users(user_username, user_avatar, user_fname, user_email, user_pwd, user_confirmed)
 VALUES
-	('effs', '/assets/media/avatars/1682490340.png', 'La Effy', 'ericapastorgracia@gmail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
+	('effs', '/assets/media/avatars/1682490340.png', 'Effy', 'ericapastorgracia@gmail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
 	('marioe23', '/assets/media/avatars/blank.png', 'Mario Sancho', 'nore.zgz@mail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
-	('JL.ak.elBizco', '/assets/media/avatars/blank.png', 'Jose Luis El Bizco', 'com@com.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
-	('FF15', '/assets/media/avatars/blank.png', 'Fernando Fernandez', 'ffmail@email.f', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW());
+	('si-si-si-simba', '/assets/media/avatars/blank.png', 'Simba Villano', 'simba@villano.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
+	('FF15', '/assets/media/avatars/blank.png', 'Fernando Fernandez', 'ffmail@email.f', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
+	('el.pepi.7', '/assets/media/avatars/blank.png', 'Pepito Grillo 21', 'pepi.grillo.7@mail.es', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW());
 
 UPDATE users SET user_rol='masteradmin' WHERE user_email='ericapastorgracia@gmail.com';
 UPDATE users SET user_rol='admin' WHERE user_email='nore.zgz@mail.com';

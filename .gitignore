@@ -86,6 +86,26 @@ phpunit
 vendor/
 
 #-------------------------
+# CodeIgniter
+#-------------------------
+system/
+app/.htaccess
+app/Config/
+app/Database/
+app/Filters/
+app/Helpers/
+app/Language/
+app/Libraries/
+app/ThirdParty/
+app/index.html
+composer.json
+LICENSE
+phpunit.xml.dist
+preload.php
+README.md
+writable/
+
+#-------------------------
 # IDE / Development Files
 #-------------------------
 
@@ -124,11 +144,6 @@ nb-configuration.xml
 /results/
 /phpunit*.xml
 /.phpunit.*.cache
-
-# Project Config
-/app/Config/*
-/app/Controllers/BaseController.php
-.env
 
 # Uploaded media through project
 /public/assets/*

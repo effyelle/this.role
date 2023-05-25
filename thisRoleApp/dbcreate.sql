@@ -100,7 +100,7 @@ CREATE TABLE invite_url(
 
 INSERT INTO users(user_username, user_avatar, user_fname, user_email, user_pwd, user_confirmed)
 VALUES
-	('effs', '/assets/media/avatars/1682490340.png', 'Effy', 'ericapastorgracia@gmail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
+	('effs', '/assets/media/avatars/blank.png', 'Effy', 'ericapastorgracia@gmail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
 	('marioe23', '/assets/media/avatars/blank.png', 'Mario Sancho', 'nore.zgz@mail.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
 	('si-si-si-simba', '/assets/media/avatars/blank.png', 'Simba Villano', 'simba@villano.com', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),
 	('FF15', '/assets/media/avatars/blank.png', 'Fernando Fernandez', 'ffmail@email.f', '$2y$10$dyfwQ78Udrf23ZtJ2eq5BuiVtP1NuzqDPcXTbXr.7t65PKFTEJ1eC', NOW()),

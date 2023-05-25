@@ -155,7 +155,8 @@ nb-configuration.xml
 thisRoleApp/public/assets/media/avatars/*
 !thisRoleApp/public/assets/media/avatars/blank.png
 thisRoleApp/public/assets/media/games/*
+!thisRoleApp/public/assets/media/games/blank.png
 !thisRoleApp/public/assets/media/games/dices/
 !thisRoleApp/public/assets/media/games/journal/
-!thisRoleApp/public/assets/media/games/sample_journal/icons
+!thisRoleApp/public/assets/media/games/sample_journal_icons
 !thisRoleApp/public/assets/media/games/sample_layers/

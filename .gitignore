@@ -52,15 +52,19 @@ writable/cache/*
 !writable/cache/index.html
 
 writable/logs/*
+thisRoleApp/writable/logs/*
 !writable/logs/index.html
 
 writable/session/*
+thisRoleApp/writable/session/*
 !writable/session/index.html
 
 writable/uploads/*
+thisRoleApp/writable/uploads/*
 !writable/uploads/index.html
 
 writable/debugbar/*
+thisRoleApp/writable/debugbar/*
 
 php_errors.log
 
@@ -148,3 +152,4 @@ nb-configuration.xml
 
 # Uploaded media through project
 thisRoleApp/public/assets/media/uploads/
+thisRoleApp/writable/debugbar/debugbar_1685018775.040208.json

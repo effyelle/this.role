@@ -77,6 +77,7 @@ CREATE TABLE game_journal(
 	attacks LONGTEXT,
 	global_modifiers LONGTEXT,
 	bag LONGTEXT,
+	tools_n_custom LONGTEXT,
 	custom_features LONGTEXT,
 	notes LONGTEXT,
 	backstory LONGTEXT

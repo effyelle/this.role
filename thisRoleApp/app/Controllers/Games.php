@@ -221,7 +221,7 @@ class Games extends BaseController
         );
         $url = time();
         if ($this->gamesmodel->new(['url' => $url, 'id_game' => $id], $this->gamesmodel->relatedTable)) {
-            return json_encode(['response' => true, 'url' => $this->baseURL . '/app/games/join/' . $url]);
+            return json_encode(['response' => true, 'url' => (new \Config\App)->baseURL . '/app/games/join/' . $url]);
         }
         return json_encode(['response' => false, 'msg' => 'Url could not be created']);
     }

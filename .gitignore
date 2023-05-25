@@ -58,6 +58,7 @@ thisRoleApp/writable/logs/*
 writable/session/*
 thisRoleApp/writable/session/*
 !writable/session/index.html
+!thisRoleApp/writable/session/index.html
 
 writable/uploads/*
 thisRoleApp/writable/uploads/*
@@ -151,5 +152,5 @@ nb-configuration.xml
 /.phpunit.*.cache
 
 # Uploaded media through project
-thisRoleApp/public/assets/media/uploads/
-thisRoleApp/writable/debugbar/debugbar_1685018775.040208.json
+thisRoleApp/public/assets/media/avatars/*
+!thisRoleApp/public/assets/media/avatars/blank.png

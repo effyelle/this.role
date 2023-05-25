@@ -168,7 +168,7 @@ class Account extends BaseController
                     // Delete old file
                     if ($oldAvatar !== $this->defaultAvatar && is_file(FCPATH . $oldAvatar)) {
                         if (!unlink(FCPATH . $oldAvatar)) {
-                            $error = 'No se pudo borrar el avatar antiguo';
+                            $error = 'old avatar could not be deleted.';
                         }
                     }
                     // Return error if file was not uploaded

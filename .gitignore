@@ -104,6 +104,7 @@ thisRoleApp/phpunit.xml.dist
 thisRoleApp/preload.php
 thisRoleApp/README.md
 thisRoleApp/writable/
+thisRoleApp/tests/
 
 #-------------------------
 # IDE / Development Files

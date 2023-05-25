@@ -1,0 +1,168 @@
+{
+  "item_name": "",
+  "item_type": "",
+  "info": {
+    "class": "",
+    "subclass": "",
+    "lvl": "",
+    "background": "",
+    "inspiration": "0",
+    "spellcasting": "none",
+    "race": "",
+    "walkspeed": "0",
+    "characteristics": {
+      "personality_traits": "",
+      "ideals": "",
+      "bonds": "",
+      "flaws": ""
+    }
+  },
+  "xp": "0",
+  "ability_scores": {
+    "str": {
+      "fname": "strength",
+      "score": "10",
+      "is_prof": "0"
+    },
+    "dex": {
+      "fname": "dexterity",
+      "score": "10",
+      "is_prof": "0"
+    },
+    "con": {
+      "fname": "constitution",
+      "score": "10",
+      "is_prof": "0"
+    },
+    "int": {
+      "fname": "intelligence",
+      "score": "10",
+      "is_prof": "0"
+    },
+    "wis": {
+      "fname": "wisdom",
+      "score": "10",
+      "is_prof": "0"
+    },
+    "cha": {
+      "fname": "charisma",
+      "score": "10",
+      "is_prof": "0"
+    }
+  },
+  "skill_proficiencies": {
+    "acrobatics": {
+      "is_prof": "0",
+      "score": "dex"
+    },
+    "arcana": {
+      "is_prof": "0",
+      "score": "int"
+    },
+    "athletics": {
+      "is_prof": "0",
+      "score": "str"
+    },
+    "deception": {
+      "is_prof": "0",
+      "score": "cha"
+    },
+    "history": {
+      "is_prof": "0",
+      "score": "int"
+    },
+    "insight": {
+      "is_prof": "0",
+      "score": "wis"
+    },
+    "intimidation": {
+      "is_prof": "0",
+      "score": "cha"
+    },
+    "investigation": {
+      "is_prof": "0",
+      "score": "int"
+    },
+    "medicine": {
+      "is_prof": "0",
+      "score": "wis"
+    },
+    "nature": {
+      "is_prof": "0",
+      "score": "int"
+    },
+    "perception": {
+      "is_prof": "0",
+      "score": "wis"
+    },
+    "performance": {
+      "is_prof": "0",
+      "score": "cha"
+    },
+    "persuasion": {
+      "is_prof": "0",
+      "score": "cha"
+    },
+    "religion": {
+      "is_prof": "0",
+      "score": "int"
+    },
+    "sleight_of_hand": {
+      "is_prof": "0",
+      "score": "dex"
+    },
+    "stealth": {
+      "is_prof": "0",
+      "score": "dex"
+    },
+    "survival": {
+      "is_prof": "0",
+      "score": "wis"
+    }
+  },
+  "health": {
+    "hit_points": {
+      "this_hit_dice": "d6",
+      "cur_hp": "0",
+      "total_hp": "0",
+      "temp_hp": "0",
+      "cur_hd": "1"
+    },
+    "death_saves": {
+      "successes": "0",
+      "failures": "0"
+    },
+    "conditions": {
+      "exhaustion": {
+        "lvl": "0",
+        "1": "Disadvantage on ability checks",
+        "2": "Speed halved",
+        "3": "Disadvantage on attack rolls and saving throws",
+        "4": "Hit point maximum halved",
+        "5": "Speed reduced to 0",
+        "6": "Death"
+      },
+      "blinded": "0",
+      "charmed": "0",
+      "deafened": "0",
+      "frightened": "0",
+      "grappled": "0",
+      "incapacitated": "0",
+      "invisible": "0",
+      "paralized": "0",
+      "petrified": "0",
+      "poisoned": "0",
+      "prone": "0",
+      "restrained": "0",
+      "stunned": "0",
+      "unconscious": "0"
+    }
+  },
+  "attacks": "",
+  "global_modifiers": "",
+  "tools_n_custom": "",
+  "bag": "",
+  "custom_features": "",
+  "notes": "",
+  "backstory": ""
+}

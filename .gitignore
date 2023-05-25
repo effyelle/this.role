@@ -88,22 +88,22 @@ vendor/
 #-------------------------
 # CodeIgniter
 #-------------------------
-system/
-app/.htaccess
-app/Config/
-app/Database/
-app/Filters/
-app/Helpers/
-app/Language/
-app/Libraries/
-app/ThirdParty/
-app/index.html
-composer.json
-LICENSE
-phpunit.xml.dist
-preload.php
-README.md
-writable/
+thisRoleApp/system/
+thisRoleApp/app/.htaccess
+thisRoleApp/app/Config/
+thisRoleApp/app/Database/
+thisRoleApp/app/Filters/
+thisRoleApp/app/Helpers/
+thisRoleApp/app/Language/
+thisRoleApp/app/Libraries/
+thisRoleApp/app/ThirdParty/
+thisRoleApp/app/index.html
+thisRoleApp/composer.json
+thisRoleApp/LICENSE
+thisRoleApp/phpunit.xml.dist
+thisRoleApp/preload.php
+thisRoleApp/README.md
+thisRoleApp/writable/
 
 #-------------------------
 # IDE / Development Files
@@ -146,4 +146,6 @@ nb-configuration.xml
 /.phpunit.*.cache
 
 # Uploaded media through project
-/public/assets/*
+thisRoleApp/public/assets/media/avatars/*
+thisRoleApp/public/assets/media/games/*
+thisRoleApp/public/assets/masterpanelmedia/

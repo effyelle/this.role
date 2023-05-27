@@ -96,7 +96,7 @@ class GameMap {
             if (e.button === 2) {
                 readMap(e);
             }
-            if (e.button === 0) {
+            /*if (e.button === 0) {
                 this.zoom.onmousedown = () => {
                     doubleClick = true;
                 }
@@ -108,7 +108,7 @@ class GameMap {
                     this.zoom.onmousedown = null;
                     this.zoom.ontouchmove = null;
                 };
-            }
+            }*/
         });
         this.zoom.addEventListener('mouseup', () => {
             this.zoom.onmousemove = null;

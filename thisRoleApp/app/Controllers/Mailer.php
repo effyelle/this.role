@@ -19,6 +19,7 @@ class Mailer
         $this->mail->Password = 'Aqws!123';
         $this->mail->SMTPSecure = 'tls';
         $this->mail->Port = 587;
+        $this->mail->isHTML();
     }
 
     function send_mail_($subject, $message, $email): string|bool

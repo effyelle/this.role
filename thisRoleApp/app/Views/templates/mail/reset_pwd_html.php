@@ -28,8 +28,7 @@
             </a>
         </p>
     </div>
-    <img src="https://i.pinimg.com/originals/9a/0f/5c/9a0f5c401202f52f30e7215a8df63e1e.png"
-         alt="Dragons!" style="margin:10px auto;width:280px;height:280px;"/>
+    <div style="background-image:url('https://i.pinimg.com/originals/9a/0f/5c/9a0f5c401202f52f30e7215a8df63e1e.png');background-position: center;background-size:cover;margin:10px auto;width:280px;height:280px;"></div>
     <p style="margin:10px auto;font-size:14px;top:250px;font-weight:400">
         <i>If you didn't initialize this process, you can ignore this email</i>
     </p>

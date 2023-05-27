@@ -78,6 +78,7 @@ class GameMap {
         }
         this.zoom.addEventListener('contextmenu', rightClick);
         this.zoom.addEventListener('touchstart', (e) => {
+            console.log(e)
             let doubleClick = false;
             this.zoom.ontouchstart = () => {
                 doubleClick = true;

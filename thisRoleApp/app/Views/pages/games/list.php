@@ -40,12 +40,12 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                                         <!--begin::Link to details-->
                                         <a href="<?= base_url() ?>/app/games/details/<?= $game['game_id'] ?>">
                                             <!--begin::Icon-->
-                                            <div class="d-flex flex-column">
+                                            <div class="d-flex flex-column align-items-center">
                                                 <div class="symbol symbol-125px symbol-sm-150px symbol-lg-150px symbol-xl-200px circle game-img">
-                                                <span class="symbol-label circle game-img"
-                                                      style=" background: url('/assets/media/games/<?= ($game['game_folder'] ?? '') . '/' . ($game['game_icon'] ?? '') ?>') no-repeat;
-                                                              background-size: cover;">
-                                                </span>
+                                                    <span class="symbol-label circle game-img"
+                                                          style=" background: url('/assets/media/games/<?= ($game['game_folder'] ?? '') . '/' . ($game['game_icon'] ?? '') ?>') no-repeat;
+                                                                  background-size: cover;">
+                                                    </span>
                                                 </div>
                                             </div>
                                             <!--end::Icon-->
@@ -64,7 +64,8 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                                         </a>
                                         <!--end::Link to details-->
                                         <!--begin::Launch link-->
-                                        <a href="<?= base_url() ?>/app/games/launch/<?= $game['game_id'] ?>" target="_blank"
+                                        <a href="<?= base_url() ?>/app/games/launch/<?= $game['game_id'] ?>"
+                                           target="_blank"
                                            class="btn btn-link btn-sm">Launch game</a>
                                         <!--end::Launch link-->
                                     </div>

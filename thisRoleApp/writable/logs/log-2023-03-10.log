@@ -1,0 +1,7 @@
+CRITICAL - 2023-03-10 08:09:11 --> Class "ClickHouseDB\Client" not found
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(178): save_log_ch('login', '4', '')
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->check_login()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}

@@ -1,0 +1,284 @@
+CRITICAL - 2023-03-01 08:19:51 --> Class "ClickHouseDB\Client" not found
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(178): save_log_ch('login', '2', '')
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->check_login()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-03-01 08:20:28 --> Class "ClickHouseDB\Client" not found
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(178): save_log_ch('login', '4', '')
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->check_login()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-03-01 08:21:55 --> Call to undefined method App\Models\NewsModel::getAlerts
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(18): CodeIgniter\Model->__call('getAlerts', Array)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(232): App\Controllers\News->news_view()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->alerts()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-03-01 08:22:10 --> Call to undefined method App\Models\NewsModel::getAlerts
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(18): CodeIgniter\Model->__call('getAlerts', Array)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(232): App\Controllers\News->news_view()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->alerts()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-03-01 08:22:17 --> Call to undefined method App\Models\NewsModel::getAlerts
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(18): CodeIgniter\Model->__call('getAlerts', Array)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(232): App\Controllers\News->news_view()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->alerts()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-03-01 08:26:27 --> Call to undefined method App\Models\NewsModel::getAlerts
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(18): CodeIgniter\Model->__call('getAlerts', Array)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(231): App\Controllers\News->news_view()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->alerts()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-03-01 08:46:20 --> Undefined variable $alerts
+#0 C:\xampp\htdocs\masterpanel\app\Views\news.php(11): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined varia...', 'C:\\xampp\\htdocs...', 11)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\View\View.php(210): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\Common.php(1089): CodeIgniter\View\View->render('news', Array, true)
+#4 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(19): view('news')
+#5 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(231): App\Controllers\News->news_view()
+#6 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->alerts()
+#7 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#8 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#10 {main}
+CRITICAL - 2023-03-01 08:46:28 --> Undefined variable $alerts
+#0 C:\xampp\htdocs\masterpanel\app\Views\news.php(11): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined varia...', 'C:\\xampp\\htdocs...', 11)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\View\View.php(210): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\Common.php(1089): CodeIgniter\View\View->render('news', Array, true)
+#4 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(19): view('news')
+#5 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(231): App\Controllers\News->news_view()
+#6 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->alerts()
+#7 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#8 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#10 {main}
+CRITICAL - 2023-03-01 08:46:29 --> Undefined variable $alerts
+#0 C:\xampp\htdocs\masterpanel\app\Views\news.php(11): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined varia...', 'C:\\xampp\\htdocs...', 11)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\View\View.php(210): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\Common.php(1089): CodeIgniter\View\View->render('news', Array, true)
+#4 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(19): view('news')
+#5 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(231): App\Controllers\News->news_view()
+#6 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->alerts()
+#7 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#8 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#10 {main}
+CRITICAL - 2023-03-01 09:15:55 --> View themes, no current section.
+#0 C:\xampp\htdocs\masterpanel\app\Views\calendar.php(6): CodeIgniter\View\View->endSection()
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\View\View.php(210): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\Common.php(1089): CodeIgniter\View\View->render('calendar', Array, true)
+#4 C:\xampp\htdocs\masterpanel\app\Controllers\Calendar.php(20): view('calendar', Array)
+#5 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(226): App\Controllers\Calendar->index()
+#6 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->calendar()
+#7 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#8 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#10 {main}
+ERROR - 2023-03-01 09:24:53 --> Unknown column 'emb_alers.id_user' in 'on clause'
+CRITICAL - 2023-03-01 09:24:53 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(24): App\Models\NewsModel->getAlerts(4)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 09:25:06 --> Unknown column 'emb_alers.id_user' in 'on clause'
+CRITICAL - 2023-03-01 09:25:06 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(24): App\Models\NewsModel->getAlerts(4)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 09:25:19 --> Unknown column 'emb_alers.id_user' in 'on clause'
+CRITICAL - 2023-03-01 09:25:19 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(24): App\Models\NewsModel->getAlerts(4)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 09:25:39 --> Unknown column 'emb_alers.id_user' in 'on clause'
+CRITICAL - 2023-03-01 09:25:39 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(24): App\Models\NewsModel->getAlerts(4)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 09:27:11 --> Unknown column 'emb_alers.id_user' in 'on clause'
+CRITICAL - 2023-03-01 09:27:11 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(24): App\Models\NewsModel->getAlerts(4)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 09:27:23 --> Unknown column 'emb_alers.id_user' in 'on clause'
+CRITICAL - 2023-03-01 09:27:23 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(24): App\Models\NewsModel->getAlerts(4)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 09:28:10 --> Unknown column 'emb_alers.id_alert' in 'on clause'
+CRITICAL - 2023-03-01 09:28:10 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(24): App\Models\NewsModel->getAlerts(4)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 09:28:47 --> Unknown column 'emb_alers.id_alert' in 'on clause'
+CRITICAL - 2023-03-01 09:28:47 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(24): App\Models\NewsModel->getAlerts(4)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 09:29:12 --> Unknown column 'emb_alers.id_alert' in 'on clause'
+CRITICAL - 2023-03-01 09:29:12 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(24): App\Models\NewsModel->getAlerts(4)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 09:31:33 --> Unknown column 'emb_alers.id_alert' in 'on clause'
+CRITICAL - 2023-03-01 09:31:33 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(24): App\Models\NewsModel->getAlerts(4)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 09:32:24 --> Unknown column 'emb_alers.id_alert' in 'on clause'
+CRITICAL - 2023-03-01 09:32:24 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(24): App\Models\NewsModel->getAlerts(4)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(236): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->get_alerts()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-03-01 09:32:35 --> Value of type null is not callable
+#0 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->get_alerts()
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+ERROR - 2023-03-01 09:32:38 --> Unknown column 'emb_alers.id_alert' in 'on clause'
+CRITICAL - 2023-03-01 09:32:38 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(24): App\Models\NewsModel->getAlerts(4)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(237): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->get_alerts()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2023-03-01 09:37:00 --> Column 'id_user' in field list is ambiguous
+CRITICAL - 2023-03-01 09:37:00 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(28): App\Models\NewsModel->getAlerts(4)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 09:45:09 --> Unknown column 'emb_users.id_user' in 'field list'
+CRITICAL - 2023-03-01 09:45:09 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(28): App\Models\NewsModel->getAlerts()
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 09:45:29 --> Unknown column 'emb_users.id_user' in 'field list'
+CRITICAL - 2023-03-01 09:45:29 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(28): App\Models\NewsModel->getAlerts()
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-03-01 10:26:00 --> App\Models\NewsModel::getAlerts(): Return value must be of type array, CodeIgniter\Database\MySQLi\Result returned
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(28): App\Models\NewsModel->getAlerts(2)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-03-01 10:26:19 --> App\Models\NewsModel::getAlerts(): Return value must be of type array, CodeIgniter\Database\MySQLi\Result returned
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(28): App\Models\NewsModel->getAlerts(2)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 10:36:57 --> Table 'emb_panel.emb_alert' doesn't exist
+CRITICAL - 2023-03-01 10:36:57 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(29): App\Models\NewsModel->getAlerts()
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 10:37:56 --> Table 'emb_panel.emb_alert' doesn't exist
+CRITICAL - 2023-03-01 10:37:56 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(29): App\Models\NewsModel->getAlerts()
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 10:38:19 --> Table 'emb_panel.emb_alert' doesn't exist
+CRITICAL - 2023-03-01 10:38:19 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(29): App\Models\NewsModel->getAlerts()
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 10:39:45 --> Table 'emb_panel.emb_alert' doesn't exist
+CRITICAL - 2023-03-01 10:39:45 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(29): App\Models\NewsModel->getAlerts()
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 10:39:55 --> Table 'emb_panel.emb_alert' doesn't exist
+CRITICAL - 2023-03-01 10:39:55 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(28): App\Models\NewsModel->getAlerts()
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-03-01 10:41:51 --> Table 'emb_panel.emb_alert' doesn't exist
+CRITICAL - 2023-03-01 10:41:51 --> Call to a member function getResultArray() on bool
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(29): App\Models\NewsModel->getAlerts()
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\News->get_alerts()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\News))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}

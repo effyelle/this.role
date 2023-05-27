@@ -1,0 +1,233 @@
+CRITICAL - 2023-04-20 08:43:32 --> Undefined variable $response
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(169): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined varia...', 'C:\\xampp\\htdocs...', 169)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 08:45:45 --> Undefined variable $response
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(169): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined varia...', 'C:\\xampp\\htdocs...', 169)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 08:46:29 --> Undefined variable $response
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(169): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined varia...', 'C:\\xampp\\htdocs...', 169)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 09:28:46 --> Undefined variable $response
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(169): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined varia...', 'C:\\xampp\\htdocs...', 169)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 09:29:26 --> Undefined variable $response
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(169): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined varia...', 'C:\\xampp\\htdocs...', 169)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 09:48:55 --> App\Controllers\Booking::proximasReservas(): Argument #1 ($type) must be of type int, string given, called in C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php on line 28
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(28): App\Controllers\Booking->proximasReservas('room')
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->indexRooms()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 09:49:51 --> App\Controllers\Booking::proximasReservas(): Argument #1 ($type) must be of type int, string given, called in C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php on line 28
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(28): App\Controllers\Booking->proximasReservas('room')
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->indexRooms()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 09:50:24 --> App\Controllers\Booking::proximasReservas(): Argument #1 ($type) must be of type int, string given, called in C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php on line 28
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(28): App\Controllers\Booking->proximasReservas('room')
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->indexRooms()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 09:50:27 --> App\Controllers\Booking::proximasReservas(): Argument #1 ($type) must be of type int, string given, called in C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php on line 28
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(28): App\Controllers\Booking->proximasReservas('room')
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->indexRooms()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 09:50:37 --> App\Controllers\Booking::proximasReservas(): Argument #1 ($type) must be of type int, string given, called in C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php on line 28
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(28): App\Controllers\Booking->proximasReservas('room')
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->indexRooms()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 09:52:18 --> App\Controllers\Booking::proximasReservas(): Argument #1 ($type) must be of type int, string given, called in C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php on line 28
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(28): App\Controllers\Booking->proximasReservas('room')
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->indexRooms()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 09:59:13 --> Undefined array key 0
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(171): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array...', 'C:\\xampp\\htdocs...', 171)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 10:10:54 --> Undefined array key 0
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(173): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array...', 'C:\\xampp\\htdocs...', 173)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 10:14:11 --> Undefined array key 0
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(173): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array...', 'C:\\xampp\\htdocs...', 173)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 10:14:14 --> Undefined array key 0
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(173): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array...', 'C:\\xampp\\htdocs...', 173)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 10:14:36 --> Undefined array key 0
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(173): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array...', 'C:\\xampp\\htdocs...', 173)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 10:14:52 --> Undefined array key 0
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(173): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array...', 'C:\\xampp\\htdocs...', 173)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 10:15:09 --> Undefined array key 0
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(175): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array...', 'C:\\xampp\\htdocs...', 175)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 10:15:15 --> Undefined variable $bookin
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(175): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined varia...', 'C:\\xampp\\htdocs...', 175)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 10:34:33 --> syntax error, unexpected token "if"
+#0 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\Autoloader\Autoloader.php(241): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\xampp\\htdocs...')
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\Autoloader\Autoloader.php(219): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Controllers...')
+#2 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(337): CodeIgniter\Autoloader\Autoloader->loadClass('App\\Controllers...')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#5 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2023-04-20 10:46:32 --> Undefined array key "id_reserva"
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(291): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array...', 'C:\\xampp\\htdocs...', 291)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(166): App\Controllers\Booking->esReservable(Array, Array)
+#2 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#5 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2023-04-20 10:48:14 --> Undefined array key 0
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(165): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array...', 'C:\\xampp\\htdocs...', 165)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 10:48:30 --> Undefined array key 0
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(165): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array...', 'C:\\xampp\\htdocs...', 165)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 10:56:57 --> Undefined array key "id_reserva"
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(291): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array...', 'C:\\xampp\\htdocs...', 291)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(166): App\Controllers\Booking->esReservable(Array, Array)
+#2 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#5 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2023-04-20 10:57:35 --> Undefined array key "id_reserva"
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(294): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array...', 'C:\\xampp\\htdocs...', 294)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(166): App\Controllers\Booking->esReservable(Array, Array)
+#2 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#5 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2023-04-20 10:58:09 --> Undefined array key "id_reserva"
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(293): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array...', 'C:\\xampp\\htdocs...', 293)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(166): App\Controllers\Booking->esReservable(Array, Array)
+#2 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#5 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2023-04-20 10:58:48 --> Can only throw objects
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(166): App\Controllers\Booking->esReservable(Array, Array)
+#1 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->editarReserva()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms('editarReserva')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2023-04-20 13:48:48 --> Undefined variable $prox
+#0 C:\xampp\htdocs\masterpanel\app\Views\manage_rooms.php(58): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined varia...', 'C:\\xampp\\htdocs...', 58)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\View\View.php(210): include('C:\\xampp\\htdocs...')
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\Common.php(1089): CodeIgniter\View\View->render('manage_rooms', Array, true)
+#4 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(32): view('manage_rooms', Array)
+#5 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(338): App\Controllers\Booking->indexRooms()
+#6 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_rooms()
+#7 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#8 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#10 {main}

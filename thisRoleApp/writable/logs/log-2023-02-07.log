@@ -1,0 +1,108 @@
+CRITICAL - 2023-02-07 10:05:14 --> Object of class stdClass could not be converted to string
+#0 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\Database\Query.php(318): strtr('SELECT *\nFROM `...', Array)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\Database\Query.php(293): CodeIgniter\Database\Query->matchNamedBinds('SELECT *\nFROM `...', Array)
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\Database\Query.php(150): CodeIgniter\Database\Query->compileBinds()
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\Database\BaseConnection.php(598): CodeIgniter\Database\Query->getQuery()
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\Database\BaseBuilder.php(1455): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#5 C:\xampp\htdocs\masterpanel\app\Models\CalendarModel.php(49): CodeIgniter\Database\BaseBuilder->get()
+#6 C:\xampp\htdocs\masterpanel\app\Controllers\Calendar.php(99): App\Models\CalendarModel->getLastEvent()
+#7 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\Calendar->add_event()
+#8 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Calendar))
+#9 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#11 {main}
+CRITICAL - 2023-02-07 10:06:19 --> App\Models\CalendarModel::getLastEvent(): Return value must be of type array, stdClass returned
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Calendar.php(99): App\Models\CalendarModel->getLastEvent()
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\Calendar->add_event()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Calendar))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-02-07 10:18:29 --> App\Controllers\Calendar::format_full_calendar_event(): Argument #1 ($evt) must be of type array, stdClass given, called in C:\xampp\htdocs\masterpanel\app\Controllers\Calendar.php on line 97
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Calendar.php(97): App\Controllers\Calendar->format_full_calendar_event(Object(stdClass))
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\Calendar->add_event()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Calendar))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-02-07 10:20:59 --> App\Controllers\Calendar::format_full_calendar_event(): Argument #1 ($evt) must be of type array, stdClass given, called in C:\xampp\htdocs\masterpanel\app\Controllers\Calendar.php on line 97
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Calendar.php(97): App\Controllers\Calendar->format_full_calendar_event(Object(stdClass))
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\Calendar->add_event()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Calendar))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-02-07 10:21:44 --> App\Controllers\Calendar::format_full_calendar_event(): Argument #1 ($evt) must be of type array, stdClass given, called in C:\xampp\htdocs\masterpanel\app\Controllers\Calendar.php on line 97
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Calendar.php(97): App\Controllers\Calendar->format_full_calendar_event(Object(stdClass))
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\Calendar->add_event()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Calendar))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-02-07 10:21:49 --> App\Controllers\Calendar::format_full_calendar_event(): Argument #1 ($evt) must be of type array, stdClass given, called in C:\xampp\htdocs\masterpanel\app\Controllers\Calendar.php on line 97
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Calendar.php(97): App\Controllers\Calendar->format_full_calendar_event(Object(stdClass))
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\Calendar->add_event()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Calendar))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-02-07 10:23:26 --> App\Controllers\Calendar::format_full_calendar_event(): Argument #1 ($evt) must be of type array, stdClass given, called in C:\xampp\htdocs\masterpanel\app\Controllers\Calendar.php on line 97
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Calendar.php(97): App\Controllers\Calendar->format_full_calendar_event(Object(stdClass))
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\Calendar->add_event()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Calendar))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-02-07 10:24:57 --> Cannot use object of type stdClass as array
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Calendar.php(97): App\Controllers\Calendar->format_full_calendar_event(Object(stdClass))
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\Calendar->add_event()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Calendar))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-02-07 10:28:45 --> Cannot use object of type stdClass as array
+#0 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\Calendar->add_event()
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Calendar))
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2023-02-07 10:28:56 --> Cannot use object of type stdClass as array
+#0 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\Calendar->add_event()
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Calendar))
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2023-02-07 10:29:11 --> Cannot use object of type stdClass as array
+#0 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\Calendar->add_event()
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Calendar))
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2023-02-07 10:29:36 --> Cannot use object of type stdClass as array
+#0 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\Calendar->add_event()
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Calendar))
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2023-02-07 10:29:54 --> Cannot use object of type stdClass as array
+#0 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\Calendar->add_event()
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Calendar))
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2023-02-07 10:34:12 --> Too few arguments to function App\Models\CalendarModel::getLastEvent(), 0 passed in C:\xampp\htdocs\masterpanel\app\Controllers\Calendar.php on line 97 and exactly 1 expected
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Calendar.php(97): App\Models\CalendarModel->getLastEvent()
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\Calendar->add_event()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Calendar))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-02-07 10:35:37 --> syntax error, unexpected token "if"
+#0 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\Autoloader\Autoloader.php(241): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\xampp\\htdocs...')
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\Autoloader\Autoloader.php(219): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Controllers...')
+#2 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(109): CodeIgniter\Autoloader\Autoloader->loadClass('App\\Controllers...')
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->calendar()
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#5 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}

@@ -1,0 +1,34 @@
+CRITICAL - 2023-03-08 08:25:41 --> Class "ClickHouseDB\Client" not found
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(178): save_log_ch('login', '4', '')
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->check_login()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-03-08 10:02:30 --> Class "ClickHouseDB\Client" not found
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(178): save_log_ch('login', '2', '')
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->check_login()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-03-08 10:26:45 --> Invalid file: alerts.news
+#0 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('alerts.news')
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\Common.php(1089): CodeIgniter\View\View->render('alerts.news', Array, true)
+#2 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(20): view('alerts.news')
+#3 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(231): App\Controllers\News->news_view()
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->alerts()
+#5 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#6 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2023-03-08 10:27:14 --> Invalid file: alerts.news
+#0 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('alerts.news')
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\Common.php(1089): CodeIgniter\View\View->render('alerts.news', Array, true)
+#2 C:\xampp\htdocs\masterpanel\app\Controllers\News.php(20): view('alerts.news')
+#3 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(231): App\Controllers\News->news_view()
+#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->alerts()
+#5 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#6 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}

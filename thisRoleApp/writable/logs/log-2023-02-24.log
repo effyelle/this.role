@@ -1,0 +1,18 @@
+CRITICAL - 2023-02-24 08:24:42 --> Class "ClickHouseDB\Client" not found
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(174): save_log_ch('login', '4', '')
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->check_login()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2023-02-24 09:42:58 --> Undefined array key "userId"
+#0 C:\xampp\htdocs\masterpanel\app\Controllers\Calendar.php(141): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array...', 'C:\\xampp\\htdocs...', 141)
+#1 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\Calendar->delete_event()
+#2 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Calendar))
+#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2023-02-24 09:43:27 --> Unknown column 'emb_calendar' in 'where clause'
+ERROR - 2023-02-24 09:48:08 --> Unknown column 'emb_calendar' in 'where clause'
+ERROR - 2023-02-24 09:50:03 --> Unknown column 'emb_calendar' in 'where clause'
+ERROR - 2023-02-24 09:50:20 --> Unknown column 'emb_calendar' in 'where clause'

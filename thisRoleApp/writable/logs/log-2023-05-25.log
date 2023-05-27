@@ -1,0 +1,4 @@
+CRITICAL - 2023-05-25 20:18:02 --> Call to undefined method CodeIgniter\CodeIgniter::setContext()
+#0 {main}
+CRITICAL - 2023-05-25 20:18:02 --> Call to undefined method CodeIgniter\CodeIgniter::setContext()
+#0 {main}

@@ -1,9 +1,0 @@
-CRITICAL - 2023-04-25 08:19:11 --> Undefined array key 1
-#0 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(319): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array...', 'C:\\xampp\\htdocs...', 319)
-#1 C:\xampp\htdocs\masterpanel\app\Controllers\Booking.php(65): App\Controllers\Booking->paramsGenerator()
-#2 C:\xampp\htdocs\masterpanel\app\Controllers\App.php(332): App\Controllers\Booking->reservar()
-#3 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(832): App\Controllers\App->manage_cars('reservar')
-#4 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(419): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\App))
-#5 C:\xampp\htdocs\masterpanel\vendor\codeigniter4\framework\system\CodeIgniter.php(326): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
-#6 C:\xampp\htdocs\masterpanel\public\index.php(37): CodeIgniter\CodeIgniter->run()
-#7 {main}

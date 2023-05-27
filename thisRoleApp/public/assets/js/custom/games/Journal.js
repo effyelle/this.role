@@ -211,13 +211,14 @@ class Journal {
                     let dbItem = data.results[i];
                     // Search for its equal item from journal
                     let thisItem = this.searchItem(dbItem.item_id).info;
+                    console.log(dbItem);
+                    console.log(thisItem);
                     if (thisItem) {
                         for (let j in dbItem) {
                             // Compare their values
                             if (typeof thisItem[j] === 'object') thisItem[j] = JSON.stringify(thisItem[j]);
                             if (dbItem[j] != thisItem[j] && !(dbItem[j] === null && thisItem[j] === null) && !(dbItem[j] === 'null' && thisItem[j] === 'null') && !(dbItem[j] === null && thisItem[j] === 'null')) {
                                 // Save new values into this.items.info
-                                console.log(data)
                                 this.saveResults(data);
                                 this.JournalChanged = true;
                                 break;
@@ -518,20 +519,7 @@ class Journal {
         let id = t.id.substring(t.id.length - 1);
         let form = {item_id: id};
         form[name] = t.innerHTML;
-        return ajax("/app/games_ajax/save_sheet/" + dbGame.game_id, form).done((data) => {
-            if (data.response) {
-                for (let i in this.items) {
-                    if (this.items[i].info.item_id === id) {
-                        for (let j in data.params) {
-                            this.items[i].info[j] = data.params[j];
-                        }
-                    }
-                }
-            }
-            return data;
-        }).fail((e) => {
-            console.log(e.responseText);
-        });
+        return ajax("/app/games_ajax/save_sheet/" + dbGame.game_id, form);
     }
 
     getHealthGroup(it) {

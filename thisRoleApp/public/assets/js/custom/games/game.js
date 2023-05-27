@@ -154,7 +154,7 @@ function initGame() {
     thisShouldBeAWebSocket();
 
     //* Interval to get page responses in "real" time *//
-    setInterval(thisShouldBeAWebSocket, 5500);
+    setInterval(thisShouldBeAWebSocket, 500);
 
     function thisShouldBeAWebSocket() {
         board.chat.getChat();

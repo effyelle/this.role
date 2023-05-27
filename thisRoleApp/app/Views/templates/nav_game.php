@@ -120,6 +120,19 @@
                                 </div>
                             </div>
                             <!--end::Separator-->
+                            <div class="menu-item">
+                                <div class="form-control-solid col-10 mb-4 mx-auto">
+                                    <label for="player_name">Display Name</label>
+                                    <input type="text" id="player_name" class="form-control this-role-form-field py-0"/>
+                                </div>
+                            </div>
+                            <!--begin::Sparator-->
+                            <div class="menu-item">
+                                <div class="menu-content p-0">
+                                    <div class="separator mx-1"></div>
+                                </div>
+                            </div>
+                            <!--end::Separator-->
                             <?php if (isset($game) && isset($_SESSION['user']) &&
                                 $game['game_creator'] === $_SESSION['user']['user_id']) { ?>
                                 <!--begin::Menu Accordion-->

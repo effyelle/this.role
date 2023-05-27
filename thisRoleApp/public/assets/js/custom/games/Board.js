@@ -14,17 +14,27 @@ class Board {
         };
         this.imgFolder = '/assets/media/games/' + dbGame.game_folder + '/gallery/';
         this.mapLayers = [];
-        //* begin::Chat *//
+        // * begin::Chat * //
         this.chat = new Chat('#chat_messages');
         if (!this.chat.error) this.setChat();
         else this.response("Could not init chat: " + this.chat.error);
-        //* end::Chat *//
-        //* begin::Map *//
+        // * end::Chat * //
+        // * begin::Map * //
         this.map = new GameMap();
-        //* end::Map *//
-        //* begin::Journal *//
+        // * end::Map * //
+        // * begin::Journal * //
         this.journal = new Journal('journal');
-        //* end::Journal *//
+        // * end::Journal * //
+        // * begin::User settings * //
+        if (this.journal.playername) {
+            // Find playername
+            const playername = this.findPlayer(session.user_id).game_display_username;
+            // Fill player name
+            this.journal.playername.value = playername ? playername : session.user_username;
+            // Listen to it changing
+            this.setPlayername();
+        }
+        // * end::User settings * //
     }
 
     response(txt, error = true) {
@@ -51,7 +61,7 @@ class Board {
                     }
                 }
             }
-            return {icon: session.user_avatar, name: session.user_username}
+            return {icon: session.user_avatar, name: this.journal.playername.value}
         }
         this.chat.Select = '#charsheet_selected';
         this.chat.ChatBubble = '#chat';
@@ -75,6 +85,28 @@ class Board {
         }
         //* Next rolls to listen are the ones from the journal items *//
         // -> Incomplete
+    }
+
+    findPlayer(id) {
+        for (let player of players) {
+            if (player.user_id === id) {
+                return player;
+            }
+        }
+        return {game_display_username: null};
+    }
+
+    setPlayername() {
+        this.journal.playername.onchange = (e) => {
+            ajax('app/games_ajax/save_playername/' + dbGame.game_id, {
+                user_id: session.user_id,
+                playername: this.journal.playername.value
+            }).done((data) => {
+                if (data.response) {
+                    q('#charsheet_selected option[value=username]')[0].innerHTML = this.journal.playername.value;
+                }
+            });
+        }
     }
 
     /**
@@ -425,6 +457,7 @@ class Board {
         const text = (it) => {
             let raw = this.dices['d20'].roll(1)[0];
             let checkings = raw === 20 || raw === 1 ? 2 : 1;
+            const gif = q('#death_save_modal #gif')[0];
             if (raw > 10) {
                 const deathSavesSuccess = q('#' + it.draggableContainerId + ' .death_saves.success');
                 for (let success of deathSavesSuccess) {
@@ -433,7 +466,13 @@ class Board {
                         this.journal.saveField(success, it.info.item_id);
                         checkings--;
                         if (!success.nextElementSibling) {
-                            alert("Gz! You survived!");
+                            $('#death_save_modal #death_save_response').html('Gz! You survived!');
+                            if (gif) {
+                                gif.style.height = '0';
+                                gif.style.width = '0';
+                            }
+                            $('#death_save_modal .btn.btn-primary').html('Continue');
+                            $('#death_save_modal_toggle').click();
                         }
                         if (checkings === 0) break;
                     }
@@ -446,7 +485,15 @@ class Board {
                         this.journal.saveField(fail, it.info.item_id);
                         checkings--;
                         if (!fail.nextElementSibling) {
-                            alert("I hope you have a cleric or a druid on your party...");
+                            $('#death_save_modal #death_save_response').html("I hope you have a cleric or a druid on your party...");
+                            if (gif) {
+                                gif.style.height = '280px';
+                                gif.style.width = '280px';
+                                gif.style.backgroundImage = "url(https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNjMyNWRjZTQwZjRjMGYzMjY1ZGViZDhjOWRjZmNkMWIxYzhiYmQyNSZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/TJawtKM6OCKkvwCIqX/giphy.gif)";
+                                gif.style.backgroundSize = 'contain';
+                            }
+                            $('#death_save_modal .btn.btn-primary').html('Exit');
+                            $('#death_save_modal_toggle').click();
                         }
                         if (checkings === 0) break;
                     }

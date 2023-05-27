@@ -25,6 +25,9 @@ class GameMap {
 
     setMapListeners() {
         const zoom = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
             let measure = function (msrStr) {
                 for (let i = 0; i < msrStr.length; i++) {
                     // continue searching if character is not empty and is a number
@@ -104,6 +107,8 @@ class GameMap {
         if (urlExists(urlImg)) {
             this.img.src = urlImg;
             this.img.removeClass('d-none');
+            console.log(this.gameBoard.offsetHeight)
+            this.zoom.style.height=this.gameBoard.offsetHeight;
             return;
         }
         this.img.addClass('d-none');
@@ -230,7 +235,10 @@ class GameMap {
             top: token.style.top,
             left: token.style.left
         }
-        ajax('/app/games_ajax/save_token/' + this.selectedLayer(), {coords: post, item_id: itemID}).done((data) => {
+        return ajax('/app/games_ajax/save_token/' + this.selectedLayer(), {
+            coords: post,
+            item_id: itemID
+        }).done((data) => {
             console.log(data);
         });
     }
@@ -252,14 +260,21 @@ class GameMap {
                 };
                 token.style.left = coords.x + '%';
                 token.style.top = coords.y + '%';
-                if (!tokenSelected) this.saveToken(token);
-                //* begin::Open item AC & health *//
-                // ????
-                //* end::Open item AC & health *//
-                //* begin::Listen to remove token *//
                 if (!tokenSelected) {
+                    token.classList.remove('token_selected');
                     document.onkeyup = null;
+                    this.saveToken(token);
                     return;
+                }
+                //* begin::Listen to remove token *//
+                for (let t of this.tokensDraggable.containers) {
+                    t.classList.remove('token_selected');
+                }
+                token.classList.add('token_selected');
+                document.onclick = (e) => {
+                    if (!(e.target === token || e.target === token.children[0])) {
+                        token.classList.remove('token_selected');
+                    }
                 }
                 document.onkeyup = (e) => {
                     if (e.key === 'Delete') {

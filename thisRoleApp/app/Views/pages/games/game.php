@@ -2,7 +2,8 @@
     <div class="position-absolute h-100 w-100">
         <div id="this_zoom" class="position-relative overflow-hidden" style="width: 1080px;height:2160px;">
             <div id="tokens_container" class="position-absolute w-100 h-100"></div>
-            <img id="this_img" draggable="false" alt="Map Image" class="position-absolute this-game-layer d-none w-100"/>
+            <img id="this_img" draggable="false" alt="Map Image"
+                 class="position-absolute this-game-layer d-none w-100"/>
         </div>
     </div>
     <div class="this-game-transition w-100 h-100 flex-row justify-content-center align-items-center bg-gray-100">
@@ -142,6 +143,28 @@
         </div>
     </div>
     <!--end::Modal-->
+    <!--begin::Modal Toggle-->
+    <button class="d-none" id="death_save_modal_toggle" data-bs-target="#death_save_modal"
+            data-bs-toggle="modal"></button>
+    <!--end::Modal Toggle-->
+    <!--begin::Modal-->
+    <div class="modal fade" tabindex="-1" id="death_save_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="mb-5">
+                        <p id="death_save_response"></p>
+                        <div id="gif" class="m-auto"
+                             style="background-position: center;background-size: contain;background-repeat: no-repeat;"></div>
+                    </div>
+                    <div class="d-flex flex-row justify-content-center">
+                        <button class="btn btn-primary" data-bs-dismiss="modal" tabindex="-1">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end::Modal-->
 <?php endif; ?>
 <!--begin::Draggable Modals-->
 <div id="draggable-modals_container"></div>
@@ -156,8 +179,9 @@
 <script type="text/javascript" src="/assets/js/custom/apps/draggable/Draggable.js"></script>
 <script>
     // * Game details * //
-    let dbGame =<?php echo json_encode($game ?? []) ?>;
-    let session =<?php echo json_encode($_SESSION['user'] ?? []) ?>;
+    let dbGame = <?= json_encode($game ?? []) ?>;
+    let session = <?= json_encode($_SESSION['user'] ?? []) ?>;
+    let players = <?= json_encode($players ?? [])?>;
     document.addEventListener('DOMContentLoaded', function () {
         if (dbGame !== [] && dbGame.game_id) {
             // Pass game details to set board, chat and journal

@@ -169,6 +169,7 @@ class Games extends BaseController
     function launch(int $id): string
     {
         $data = [];
+        $view = 'games/not_found';
         $game = $this->gamesmodel->get(['game_id' => $id]);
         if (count($game) === 1) {
             $data = [
@@ -177,9 +178,9 @@ class Games extends BaseController
             ];
             $players = $this->usermodel->get(['game_player_id_game' => $id], ['game_player' => 'game_player_id_user=user_id']);
             if (count($players) > 0) $data['players'] = $players;
-            return template('games/game', $data);
+            $view = 'games/game';
         }
-        return template('games/not_found');
+        return template($view, $data);
     }
 
     /**
@@ -238,7 +239,6 @@ class Games extends BaseController
         $sessionUser = $_SESSION['user']['user_id'];
         $game = $this->gamesmodel->get(['game_id' => $id]);
         if (count($game) === 1) {
-            $game = $game[0];
             // Return if the session user was game creator
             if (count($this->playermodel->get(['game_player_id_user' => $sessionUser])) > 0) {
                 return json_encode(['response' => false, 'msg' => 'You already joined this game']);
@@ -613,6 +613,21 @@ class Games extends BaseController
                     $data = ['response' => true, 'msg' => null];
                 }
             }
+        }
+        return json_encode($data);
+    }
+
+    function save_playername($id): string
+    {
+        $data = [
+            'response' => false,
+            'msg' => 'Missing data'
+        ];
+        if (isset($_POST['user_id']) && isset($_POST['playername'])) {
+            $data = ['response' => $this->playermodel->updt(
+                ['game_display_username' => $_POST['playername']], // data
+                ['game_player_id_game' => $id, 'game_player_id_user' => $_POST['user_id']] // where
+            )];
         }
         return json_encode($data);
     }

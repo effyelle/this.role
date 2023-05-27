@@ -10,6 +10,7 @@ class Journal {
         this.itemClass = id + '_item';
         this.sheetsContainer = 'draggable-modals_container';
         this.select = q('#charsheet_selected')[0];
+        this.playername = q('#player_name')[0];
         this.items = {}
         // Init journal
         this.selectItem = q('#change_item')[0];
@@ -183,7 +184,12 @@ class Journal {
                     this.JournalChanged = true;
                     this.items = {};
                 }
+                // Reset journal list
                 q('#' + this.container)[0].innerHTML = '';
+                // Reset select HTML
+                let playerName = this.playername ? this.playername.value : session.user_username;
+                if (this.select) this.select.innerHTML = '<option selected value="username">' + playerName + '</option>';
+                // Reset journal draggables
                 if (this.journalDraggable) {
                     for (let jSheet of this.journalDraggable.containers) {
                         jSheet.remove();
@@ -199,6 +205,9 @@ class Journal {
                 this.items = {}
                 //* Save items into this.items *//
                 this.saveResults(data);
+                // Reset select HTML
+                let playerName = this.playername ? this.playername.value : session.user_username;
+                if (this.select) this.select.innerHTML = '<option selected value="username">' + playerName + '</option>';
                 // Show list
                 this.formatJournalItems();
                 // Load admin select
@@ -211,13 +220,12 @@ class Journal {
                     let dbItem = data.results[i];
                     // Search for its equal item from journal
                     let thisItem = this.searchItem(dbItem.item_id).info;
-                    console.log(dbItem);
-                    console.log(thisItem);
                     if (thisItem) {
                         for (let j in dbItem) {
                             // Compare their values
                             if (typeof thisItem[j] === 'object') thisItem[j] = JSON.stringify(thisItem[j]);
-                            if (dbItem[j] != thisItem[j] && !(dbItem[j] === null && thisItem[j] === null) && !(dbItem[j] === 'null' && thisItem[j] === 'null') && !(dbItem[j] === null && thisItem[j] === 'null')) {
+                            if (dbItem[j] != thisItem[j] && !(dbItem[j] === null && thisItem[j] === null) &&
+                                !(dbItem[j] === 'null' && thisItem[j] === 'null') && !(dbItem[j] === null && thisItem[j] === 'null')) {
                                 // Save new values into this.items.info
                                 this.saveResults(data);
                                 this.JournalChanged = true;
@@ -426,6 +434,7 @@ class Journal {
     }
 
     saveResults(data) {
+        this.items = {};
         // Iterate results
         for (let item of data.results) {
             // Save a DND sheet for each item
@@ -436,8 +445,6 @@ class Journal {
     }
 
     formatJournalItems() {
-        // Reset select HTML
-        if (this.select) this.select.innerHTML = '<option selected value="username">' + session.user_username + '</option>';
         // Rerun items
         for (let i in this.items) {
             let item = this.items[i];

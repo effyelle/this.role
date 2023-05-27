@@ -50,6 +50,8 @@ Vagrantfile
 #-------------------------
 writable/cache/*
 !writable/cache/index.html
+thisRoleApp/writable/cache/*
+!thisRoleApp/writable/cache/index.html
 
 writable/logs/*
 thisRoleApp/writable/logs/*

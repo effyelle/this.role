@@ -51,43 +51,44 @@ class GameMap {
                 }
             }
         }
-        const smScreenZomm = (e) => {
-            if (e.touches && e.touches.length > 1) {
-                console.log(e.touches);
-            }
-        }
         // Add listeners
         this.zoom.addEventListener('wheel', zoom); // PC
-        this.zoom.addEventListener('touchstart', smScreenZomm); // Phone & Tablet
         const rightClick = (e) => {
             e.preventDefault();
         }
         const readMap = (e) => {
-            const moveMap = (e) => {
+            // Check if right click\
+            const leftOld = e.touches && e.touches.length === 1
+                ? e.touches[0].clientX
+                : e.layerX;
+            const topOld = e.touches && e.touches.length === 1
+                ? e.touches[0].clientY
+                : e.layerY;
+            this.zoom.onmousemove = (e) => {
                 // Check if right click
                 const leftNew = e.layerX - leftOld;
                 const topNew = e.layerY - topOld;
                 this.zoom.style.left = this.zoom.offsetLeft + leftNew + 'px';
                 this.zoom.style.top = this.zoom.offsetTop + topNew + 'px';
-            }
-            // Check if right click
-            const leftOld = e.layerX;
-            const topOld = e.layerY;
-            this.zoom.onmousemove = moveMap;
-            this.zoom.ontouchmove = moveMap;
+            };
+            let zoomCLeft = this.zoom.offsetLeft;
+            let zoomCTop = this.zoom.offsetTop;
+            this.zoom.ontouchmove = (e) => {
+                this.zoom.style.left = zoomCLeft + (e.touches[0].clientX - leftOld) + 'px';
+                this.zoom.style.top = zoomCTop + (e.touches[0].clientY - topOld) + 'px';
+            };
         }
         this.zoom.addEventListener('contextmenu', rightClick);
         this.zoom.addEventListener('touchstart', (e) => {
-            console.log(e)
             let doubleClick = false;
             this.zoom.ontouchstart = () => {
                 doubleClick = true;
             }
             setTimeout(() => {
-                if (doubleClick) {
-                    readMap(e);
-                }
-                this.zoom.onmousedown = null;
+                if (doubleClick) readMap(e);
+                doubleClick = false;
+                this.zoom.ontouchstart = null;
+                this.zoom.onmousemove = null;
             }, 300);
         })
         this.zoom.addEventListener('mousedown', (e) => {
@@ -100,11 +101,13 @@ class GameMap {
                     doubleClick = true;
                 }
                 setTimeout(() => {
-                    if (doubleClick) {
-                        readMap(e);
-                    }
-                    this.zoom.onmousedown = null;
+                    if (doubleClick) readMap(e);
                 }, 300);
+                this.zoom.ontouchend = () => {
+                    console.log('end touch');
+                    this.zoom.onmousedown = null;
+                    this.zoom.ontouchmove = null;
+                };
             }
         });
         this.zoom.addEventListener('mouseup', () => {

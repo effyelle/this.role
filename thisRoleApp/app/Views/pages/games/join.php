@@ -29,13 +29,13 @@
     document.addEventListener('DOMContentLoaded', function () {
         toggleProgressSpinner();
         ajax("/app/games_ajax/ajax_join/<?=$game['game_id'] ?? null; ?>").done((data) => {
-            if (data['response']) {
+            if (data.response) {
                 $('.indicator-label').html(
                     'You joined <?=$game['game_title'] ?? null; ?>' +
                     '<br/>' +
                     '<a href="<?= base_url() ?>/app/games/list">Go to My Games</a>'
                 );
-            } else $('.indicator-label').html(data['msg']);
+            } else $('.indicator-label').html(data.msg);
             toggleProgressSpinner(false);
         }).fail((e) => {
             console.log(e.responseText);

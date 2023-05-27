@@ -86,7 +86,7 @@
     const game =<?php echo json_encode($game ?? [])?>;
     // On content loaded
     document.addEventListener('DOMContentLoaded', function () {
-        const gameIconHolder = $('.game_icon-holder');
+        const gameIconHolder = $('.game_icon-holder')[0];
         const gameTitle = $('.game_title');
         const gameTitleInput = $('#game_title-input');
         const gameDetails = $('.game_details');
@@ -126,7 +126,7 @@
         })
         // Change DOM icon on input change
         $('#change-game_icon').change(function () {
-            readImageChange(this, q('.game_icon-holder')[0]);
+            readImageChange(this, gameIconHolder);
         });
         // Delete game
         $('.del_game-btn').click(function () {
@@ -141,9 +141,10 @@
             if (game.game_title) gameTitle.html(game.game_title);
             if (game.game_details) gameDetails.html(game.game_details);
             if (game.game_icon) {
-                gameIconHolder.css('background-image', 'url("/assets/media/games/' + game.game_folder + '/' + game.game_icon + '")');
-                gameIconHolder.css('background-size', 'cover');
+                gameIconHolder.style.backgroundImage = 'url("/assets/media/games/' + game.game_folder + '/' + game.game_icon + '")';
+                return;
             }
+            gameIconHolder.style.backgroundImage = 'url("/assets/media/avatars/blank.png")';
         }
 
         function toggleGameEdition(editable = true) {

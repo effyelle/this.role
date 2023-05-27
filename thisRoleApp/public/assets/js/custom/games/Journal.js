@@ -403,7 +403,6 @@ class Journal {
             if (Object.keys(players).length > 0) {
                 post.players = players;
             }
-            console.log(post)
             return post;
         }
         this.saveJournalItem = () => {
@@ -411,14 +410,13 @@ class Journal {
             // Check if item id is saved -> This tells the difference between a new item and an update
             ajax('/app/games_ajax/set_journal_item/' + dbGame.game_id, this.getJournalModalForm())
                 .done((data) => {
-                    console.log(data);
                     if (data.response) {
                         // Dismiss journal modal
                         $('.modal_success_response').html(data.msg);
                         $('#modal_success-toggle').click();
-                    } else if (data.msg) {
-                        $('#modal_journal .error').show();
+                        return;
                     }
+                    $('#modal_journal .error').show();
                     toggleProgressSpinner(false);
                 }).fail((e) => {
                 console.log("Error: ", e.responseText);

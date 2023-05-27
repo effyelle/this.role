@@ -66,7 +66,7 @@ function initGame() {
 
                 $.ajax({
                     type: "post",
-                    url: baseUrl +'/app/games_ajax/edit_layer/' + dbGame.game_id,
+                    url: baseUrl + '/app/games_ajax/edit_layer/' + dbGame.game_id,
                     data: form,
                     processData: false,
                     contentType: false,
@@ -154,10 +154,19 @@ function initGame() {
     thisShouldBeAWebSocket();
 
     //* Interval to get page responses in "real" time *//
-    setInterval(thisShouldBeAWebSocket, 500);
+    const rtInterval = setInterval(thisShouldBeAWebSocket, 500);
 
     function thisShouldBeAWebSocket() {
-        board.chat.getChat();
+        board.chat.getChat().done((data) => {
+            if (!data.response && data.msg && data.msg.match(/not logged/)) {
+                $('.modal_error_response').html('Seems you were loged out. You will be redirected.');
+                $('#modal_error-toggle').click();
+                $('#modal_error').on('hidden.bs.modal', function () {
+                    window.location.reload();
+                });
+                clearInterval(rtInterval);
+            }
+        });
         board.journal.Chat = board.chat;
         board.map.loadLayers().done(() => {
             board.journal.initJournal().done(() => {

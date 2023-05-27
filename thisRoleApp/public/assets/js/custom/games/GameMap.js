@@ -64,20 +64,34 @@ class GameMap {
         }
         const readMap = (e) => {
             // Check if right click
-            if (e.button === 2) {
-                const leftOld = e.layerX;
-                const topOld = e.layerY;
-                this.zoom.onmousemove = (e) => {
-                    // Check if right click
-                    const leftNew = e.layerX - leftOld;
-                    const topNew = e.layerY - topOld;
-                    this.zoom.style.left = this.zoom.offsetLeft + leftNew + 'px';
-                    this.zoom.style.top = this.zoom.offsetTop + topNew + 'px';
-                }
+            const leftOld = e.layerX;
+            const topOld = e.layerY;
+            this.zoom.onmousemove = (e) => {
+                // Check if right click
+                const leftNew = e.layerX - leftOld;
+                const topNew = e.layerY - topOld;
+                this.zoom.style.left = this.zoom.offsetLeft + leftNew + 'px';
+                this.zoom.style.top = this.zoom.offsetTop + topNew + 'px';
             }
         }
         this.zoom.addEventListener('contextmenu', rightClick);
-        this.zoom.addEventListener('mousedown', readMap);
+        this.zoom.addEventListener('mousedown', (e) => {
+            let doubleClick = false;
+            if (e.button === 2) {
+                readMap(e);
+            }
+            if (e.button === 0) {
+                this.zoom.onmousedown = () => {
+                    doubleClick = true;
+                }
+                setTimeout(() => {
+                    if (doubleClick) {
+                        readMap(e);
+                    }
+                    this.zoom.onmousedown = null;
+                }, 300);
+            }
+        });
         this.zoom.addEventListener('mouseup', () => {
             this.zoom.onmousemove = null;
         });
@@ -107,8 +121,7 @@ class GameMap {
         if (urlExists(urlImg)) {
             this.img.src = urlImg;
             this.img.removeClass('d-none');
-            console.log(this.gameBoard.offsetHeight)
-            this.zoom.style.height=this.gameBoard.offsetHeight;
+            this.zoom.style.height = this.gameBoard.offsetHeight;
             return;
         }
         this.img.addClass('d-none');

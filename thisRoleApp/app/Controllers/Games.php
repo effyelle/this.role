@@ -195,8 +195,7 @@ class Games extends BaseController
     {
         $game = $this->gamesmodel->get(['url_expires > ' => $this->now, 'url' => $id], [$this->gamesmodel->relatedTable => 'game_id=id_game']);
         if (count($game) === 1) {
-            $game = $game[0];
-            return template('games/join', ['game' => $game]);
+            return template('games/join', ['game' => $game[0]]);
         }
         return template('games/not_found');
     }
@@ -240,7 +239,7 @@ class Games extends BaseController
         $game = $this->gamesmodel->get(['game_id' => $id]);
         if (count($game) === 1) {
             // Return if the session user was game creator
-            if (count($this->playermodel->get(['game_player_id_user' => $sessionUser])) > 0) {
+            if (count($this->playermodel->get(['game_player_id_user' => $sessionUser, 'game_player_id_game' => $id])) > 0) {
                 return json_encode(['response' => false, 'msg' => 'You already joined this game']);
             }
             if ($this->playermodel->new(['game_player_id_game' => $id, 'game_player_id_user' => $sessionUser])) {

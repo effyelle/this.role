@@ -9,7 +9,7 @@
                 <div class="ms-5">
                     <div class="ff-poiret fs-4 fw-bolder text-white d-flex flex-column">
                         <span>THIS.</span>
-                        <span class="ms-6">ROfLE</span>
+                        <span class="ms-6">ROLE</span>
                     </div>
                 </div>
             </a>

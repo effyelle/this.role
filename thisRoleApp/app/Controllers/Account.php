@@ -9,19 +9,14 @@ class Account extends BaseController
     protected mixed $usermodel;
     protected mixed $tokenmodel;
     protected mixed $issuesmodel;
-    protected mixed $mailer;
     protected string $now;
     protected string $defaultAvatar = '/assets/media/avatars/blank.png';
 
-    /**
-     * Construct of this class will always set up users model and the mailer.
-     */
     function __construct()
     {
         $this->usermodel = model('UsersModel');
         $this->tokenmodel = model('TokenModel');
         $this->issuesmodel = model('IssuesModel');
-        $this->mailer = \Config\Services::email();
         $this->now = date('Y-m-d H:i:s', time());
     }
 
@@ -249,13 +244,11 @@ class Account extends BaseController
         $token = $this->generateToken($email);
         if (!$token) return false;
         // Send email
-        $this->mailer->setTo($email);
-        $this->mailer->setSubject('Welcome ' . ($user ?? '') . '! Please, confirm your Account.');
-        $this->mailer->setMessage(view('templates/mail/confirm_account_html', ['token' => $token]));
-        $this->mailer->setAltMessage(view('templates/mail/confirm_account_txt', ['token' => $token]));
-        $this->mailer->setReplyTo(null);
-        if ($this->mailer->send()) return true;
-        return $this->mailer->printDebugger();
+        $mail = new Mailer();
+        $subject = 'Welcome ' . ($user ?? '') . '! Please, confirm your Account.';
+        $message = view('templates/mail/confirm_account_html', ['token' => $token]);
+        $target_mail = $email;
+        return $mail->send_mail_($subject, $message, $target_mail);
     }
 
     /**
@@ -269,15 +262,11 @@ class Account extends BaseController
         $token = $this->generateToken($email);
         if (!$token) return false;
         // Send email
-        $this->mailer->setTo($email);
-        $this->mailer->setSubject("Hello, $user! Here is your password reset");
-        $this->mailer->setMessage(view('templates/mail/reset_pwd_html', ['token' => $token]));
-        $this->mailer->setAltMessage(view('templates/mail/reset_pwd_txt', ['token' => $token]));
-        $this->mailer->setReplyTo(null);
-        // Return true if email was send
-        if ($this->mailer->send()) return true;
-        // Return error if it was not
-        return $this->mailer->printDebugger();
+        $mail = new Mailer();
+        $subject = 'Hello, ' . $user . '! Here is your password reset';
+        $message = view('templates/mail/reset_pwd_html', ['token' => $token]);
+        $target_mail = $email;
+        return $mail->send_mail_($subject, $message, $target_mail);
     }
 
     function confirm($token): string

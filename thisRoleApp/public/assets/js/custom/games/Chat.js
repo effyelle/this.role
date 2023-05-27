@@ -68,7 +68,7 @@ class Chat {
         for (let r of rolls) {
             rollSum += r;
             tooltip += '<span class="' +
-                (r == 1 ? 'text-danger' : (r == dice.charAt(1) ? 'text-primary' : 'text-muted'))
+                (r == 1 ? 'text-danger' : (r == dice.substring(1) ? 'text-primary' : 'text-muted'))
                 + '">' + r + '</span> + ';
         }
         // title="(' + tooltip + ')" data-bs-toggle="tooltip" data-bs-trigger="hover"

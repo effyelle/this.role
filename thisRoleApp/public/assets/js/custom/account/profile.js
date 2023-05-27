@@ -31,14 +31,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function sendResetPwdMail() {
         if (emailBox.val() !== '') {
             ajax("/account/send_reset_password_email/" + emailBox.val()).done((data) => {
-                console.log(data)
-                if (!data['response']) {
+                if (!data.response) {
                     $('#modal_error-toggle').click();
-                    $('.modal_error_response').html(data['msg']);
-                } else {
-                    $('#modal_success-toggle').click();
-                    $('.modal_success_response').html(data['msg']);
+                    if (data.msg) $('.modal_error_response').html(data.msg);
+                    return;
                 }
+                $('#modal_success-toggle').click();
+                $('.modal_success_response').html(data.msg);
             }).fail((e) => {
                 console.log(e.responseText);
             });
@@ -50,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
      */
     function deactivateAccount() {
         ajax("/account/deactivate").done((data) => {
-            if (data['response']) {
+            if (data.response) {
                 $('#modal_success-toggle').click();
                 $('.modal_success_response').html(
                     'Your account has been deactivated<br>' +

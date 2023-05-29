@@ -165,17 +165,19 @@ class GameMap {
             // If data response false, there are no layers added at all
             if (!data.response) {
                 // Reset select
-                if (this.select) this.select.innerHTML = '<option disabled selected>No layers available</option>';
+                if (this.select) {
+                    this.select.innerHTML = '<option disabled selected>No layers available</option>';
+                    // Hide creator buttons
+                    q('#edit_layer-btn')[0].addClass('d-none');
+                    q('#delete_layer-btn')[0].addClass('d-none');
+                    q('#select_layer-btn')[0].addClass('d-none');
+                }
                 q('.this-game-transition .empty-layers')[0]
                     .innerHTML = 'You have added no layers yet or old image was not found';
                 q('.this-game-transition .spinner-border').addClass('d-none');
                 q('.this-game-transition .empty-layers').removeClass('d-none');
                 // Reset layers
                 this.layers = {};
-                // Hide buttons
-                q('#edit_layer-btn')[0].addClass('d-none');
-                q('#delete_layer-btn')[0].addClass('d-none');
-                q('#select_layer-btn')[0].addClass('d-none');
                 return;
             }
 

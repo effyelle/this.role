@@ -72,7 +72,7 @@
                         . '</div>';
                     echo '<div class="flex-row-wrap justify-content-between align-items-center">'
                         . '    <button type="button" class="btn btn-sm btn-garnet invite_link-btn">Get Invite Link</button>'
-                        . '    <button type="button" class="btn btn-sm btn-dark del_game-btn">Delete Game</button>'
+                        . '    <button type="button" class="btn btn-sm btn-dark del_game-btn ms-auto">Delete Game</button>'
                         . '</div>';
                 } ?>
                 <div class="text-danger text-center"><?= $error ?? ''; ?></div>
@@ -112,7 +112,7 @@
                 if (data && data['response'] && data['url']) {
                     $('.modal_success_response').html(
                         'This is your new invite url!<br/>' +
-                        'Remember it expires in one day<br/>' +
+                        'It expires in one day<br/>' +
                         '<b>' + data['url'] + '</b>'
                     );
                     $('#modal_success-toggle').click();

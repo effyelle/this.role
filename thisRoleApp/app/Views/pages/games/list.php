@@ -31,7 +31,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
             <div class="card-body mx-12">
                 <div id="games-list" class="m-auto">
                     <div class="flex-row-wrap row-cols-1 row-cols-md-2 row-cols-lg-1 row-cols-xl-2 justify-content-start align-items-stretch">
-                        <?php if (isset($games_list)): ?>
+                        <?php if (isset($games_list)) { ?>
                             <?php foreach ($games_list as $game): ?>
                                 <!--begin::Item-->
                                 <div class="py-6 px-12 mb-3 game_item_list">
@@ -68,7 +68,9 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                                 </div>
                                 <!--end::Item-->
                             <?php endforeach; ?>
-                        <?php endif; ?>
+                        <?php } else { ?>
+                            <div class="fs-4 my-4 w-100 text-center text-info">There are no games here yet, you can start by creating one!</div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>

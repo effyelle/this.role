@@ -1441,7 +1441,30 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     height: 100%;
 }
 
+.symbol-label {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: var(--bs-gray-400);
+    background-position: center center;
+}
+
 .token_selected > .symbol-label {
     box-shadow: 0 0 3px 3px var(--this-role-light);
     border: 1px solid var(--this-role-ocher);
+}
+
+.resize-vertical {
+    resize: vertical !important;
+}
+
+.resize-horizontal {
+    resize: horizontal !important;
+}
+
+.resize-none {
+    resize: none !important;
+}
+
+.resize-both {
+    resize: both !important;
 }

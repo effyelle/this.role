@@ -103,7 +103,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                 <div class="form-group mt-5">
                     <label for="game_details">Game Details</label>
                     <textarea id="game_details" name="game_details" rows="3" maxlength="500"
-                              class="form-control form-control-solid this-role-form-field"></textarea>
+                              class="form-control form-control-solid this-role-form-field resize-vertical"></textarea>
                 </div>
                 <div class="form-group mt-5 d-flex flex-column flex-sm-row justify-content-center align-items-center row-cols-sm-2">
                     <div class="d-flex flex-column justify-content-center align-items-center gap-3 col-6">
@@ -115,7 +115,7 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                     <div class="col-6">
                         <span class="symbol symbol-125px symbol-sm-150px symbol-md-175px symbol-xl-200px circle">
                             <span class="symbol-label circle game_icon_holder"
-                                  style="background: url('/assets/media/games/default_game/frame.png'); background-size: cover">
+                                  style="background-image: url('/assets/media/games/blank.jpg');">
                             </span>
                         </span>
                     </div>

@@ -145,7 +145,7 @@ class GameMap {
         this.img.addClass('d-none');
         this.img.style.transition = 'all 1s ease';
         q('.this-game-transition .empty-layers')[0]
-            .innerHTML = 'You have added no layers yet or old image was not found';
+            .innerHTML = '';
         q('.this-game-transition .spinner-border').addClass('d-none');
         q('.this-game-transition .empty-layers').removeClass('d-none');
     }
@@ -173,7 +173,7 @@ class GameMap {
                     q('#select_layer-btn')[0].addClass('d-none');
                 }
                 q('.this-game-transition .empty-layers')[0]
-                    .innerHTML = 'You have added no layers yet or old image was not found';
+                    .innerHTML = '';
                 q('.this-game-transition .spinner-border').addClass('d-none');
                 q('.this-game-transition .empty-layers').removeClass('d-none');
                 // Reset layers

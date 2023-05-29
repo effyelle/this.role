@@ -10,6 +10,11 @@ class Chat {
             save: '/app/games_ajax/set_chat/' + dbGame.game_id,
             get: '/app/games_ajax/get_chat/' + dbGame.game_id
         }
+        this.FirstLoad = true;
+    }
+
+    set FirstLoad(bool) {
+        this.firstLoad = bool;
     }
 
     set From(f) {
@@ -148,8 +153,9 @@ class Chat {
      */
     getChat() {
         return ajax(this.url.get).done((data) => {
+            let dataChanged = false;
             if (data.response && data.msgs) {
-                let dataChanged = true;
+                dataChanged = true;
                 if (Object.keys(this.messages).length === data.msgs.length) {
                     dataChanged = false;
                     for (let i in data.msgs) {
@@ -161,9 +167,14 @@ class Chat {
                 }
                 if (dataChanged) {
                     this.messages = data.msgs;
+                    this.formatMessages();
                 }
+                return;
             }
-            this.formatMessages();
+            if (this.firstLoad) {
+                this.formatMessages();
+                this.FirstLoad = false;
+            }
         });
     }
 

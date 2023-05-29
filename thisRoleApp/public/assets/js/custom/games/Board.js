@@ -71,7 +71,9 @@ class Board {
                 this.text = () => {
                     let nDices = 1;
                     let input = q('#roll-' + btn.value)[0];
-                    if (input && input.value !== "" && !isNaN(input.value)) nDices = input.value;
+                    if (input && input.value !== "" && !isNaN(input.value)) {
+                        nDices = parseInt(input.value);
+                    }
                     return this.chat.formatBasicRoll(btn.value, nDices, this.dices[btn.value].roll(nDices));
                 }
                 let thisFrom = this.chat.from();

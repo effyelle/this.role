@@ -56,7 +56,7 @@
             $('.send_answer_btn')[i].addEventListener('click', function () {
                 let answer = $('.issue_answer')[i];
                 if (answer.value.length > 0) {
-                    ajax("/account/send_issue_msg", {
+                    ajax("account/send_issue_msg", {
                         "msg": answer.value,
                         "issue_id": $('.issue_id')[i].value
                     }).done((data) => {

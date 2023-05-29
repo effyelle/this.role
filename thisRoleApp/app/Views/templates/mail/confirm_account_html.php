@@ -33,7 +33,7 @@
             <b style="font-size:17px;"> This.Role!</b>
         </p>
         <p style="margin:0 auto;">To confirm your account, please follow
-            <a href="<?= base_url() ?>/account/confirm/<?= $token ?>" style="color:#ffb1a0;">
+            <a href="<?= base_url() ?>account/confirm/<?= $token ?>" style="color:#ffb1a0;">
                 <b> this link</b>
             </a>
         </p>

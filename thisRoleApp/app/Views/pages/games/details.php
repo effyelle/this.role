@@ -12,7 +12,7 @@
                 <div class="mx-auto w-100">
                     <div class="d-flex flex-row-wrap justify-content-between align-items-stretch align-content-center">
                         <div class="card-toolbar gap-2 fs-5 fs-lg-3">
-                            <a href="<?= base_url() ?>/app/games/list" class="btn btn-sm btn-link fs-5 fs-lg-3">
+                            <a href="<?= base_url() ?>app/games/list" class="btn btn-sm btn-link fs-5 fs-lg-3">
                                 <span class="text-dark text-hover-primary fw-bolder">My Games</span>
                             </a>
                             <span> / </span>
@@ -60,7 +60,7 @@
                     <p class="game_details"></p>
                     <!--end::Game details-->
                     <!--begin::Launch link-->
-                    <a href="<?= base_url() ?>/app/games/launch/<?= $game['game_id'] ?>" target="_blank"
+                    <a href="<?= base_url() ?>app/games/launch/<?= $game['game_id'] ?>" target="_blank"
                        class="btn btn-link btn-sm">Launch game</a>
                     <!--end::Launch link-->
                 </div>

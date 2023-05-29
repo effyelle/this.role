@@ -145,7 +145,7 @@
         function sendIssue() {
             toggleProgressSpinner();
             let form = getForm('#contact_support');
-            ajax("/account/send_issue", form).done((data) => {
+            ajax("account/send_issue", form).done((data) => {
                 console.log(data)
                 if (data['response']) {
                     $('#modal_success-toggle').click();

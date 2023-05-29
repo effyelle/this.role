@@ -16,7 +16,7 @@
     </div>
     <!--end::Form Field-->
     <div class="col-10 w-md-600px">
-        <a href="<?= base_url() ?>/app/reset_pwd"
+        <a href="<?= base_url() ?>app/reset_pwd"
            class="d-block fw-bolder text-info text-hover-info fs-7 mx-auto text-center">Forgot password?</a>
     </div>
     <!--begin::Form Button-->
@@ -37,7 +37,7 @@
 <!--end::Form-->
 <div class="m-auto my-4 text-center">
     <p class="m-0">Still don't have an account?
-        <a href="<?= base_url() ?>/app/signup" class="link-info text-info text-hover-info">Sign up</a>
+        <a href="<?= base_url() ?>app/signup" class="link-info text-info text-hover-info">Sign up</a>
     </p>
 </div>
 
@@ -63,7 +63,7 @@
 
         function sendForm(form) {
             toggleProgressSpinner();
-            ajax("/account/login", form).done((data) => {
+            ajax("account/login", form).done((data) => {
                 if (data['response']) {
                     go_url(baseUrl + '/app/index');
                     return;

@@ -65,7 +65,7 @@
 </form>
 <!--begin::Form-->
 <div class="m-auto my-4 text-center">
-    <p>Already have an account? <a href="<?= base_url() ?>/app/login" class="link-info">Log in</a></p>
+    <p>Already have an account? <a href="<?= base_url() ?>app/login" class="link-info">Log in</a></p>
 
 </div>
 
@@ -84,7 +84,7 @@
         function sendForm(form) {
             $('#ajax_signup-response').html('');
             toggleProgressSpinner();
-            ajax("/account/signup", form).done((data) => {
+            ajax("account/signup", form).done((data) => {
                 if (data.response) {
                     go_url('/account/created');
                     return;

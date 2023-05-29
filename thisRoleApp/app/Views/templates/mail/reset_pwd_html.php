@@ -23,7 +23,7 @@
     <div style="margin:10px auto;">
         <p style="margin:0 auto;">The Solar Dragon told us about your forgotten password!</p>
         <p style="margin:0 auto;">To reset it, please follow
-            <a href="<?= base_url() ?>/account/resetpwd/<?= $token ?>" style="color:#2b9685;">
+            <a href="<?= base_url() ?>account/resetpwd/<?= $token ?>" style="color:#2b9685;">
                 <b>this link</b>
             </a>
         </p>

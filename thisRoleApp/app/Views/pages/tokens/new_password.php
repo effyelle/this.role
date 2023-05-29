@@ -70,7 +70,7 @@
                 return;
             }
             let form = getForm('#resetpwd-form');
-            return ajax("/account/reset_password", form).done((data) => {
+            return ajax("account/reset_password", form).done((data) => {
                 if (data['response']) {
                     go_url('/app/pwd_was_resetted');
                     return;

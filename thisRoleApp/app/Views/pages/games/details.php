@@ -144,7 +144,7 @@
                 gameIconHolder.style.backgroundImage = 'url("/assets/media/games/' + game.game_folder + '/' + game.game_icon + '")';
                 return;
             }
-            gameIconHolder.style.backgroundImage = 'url("/assets/media/avatars/blank.png")';
+            gameIconHolder.style.backgroundImage = 'url("/assets/media/avatars/blank.jpg")';
         }
 
         function toggleGameEdition(editable = true) {

@@ -34,18 +34,14 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
                         <?php if (isset($games_list)): ?>
                             <?php foreach ($games_list as $game): ?>
                                 <!--begin::Item-->
-                                <div class="py-6 px-12 mb-3">
-
+                                <div class="py-6 px-12 mb-3 game_item_list">
                                     <div class="d-flex flex-column justify-content-between align-items-center box-shadow-700 border-radius-5px p-6">
                                         <!--begin::Link to details-->
-                                        <a href="<?= base_url() ?>app/games/details/<?= $game['game_id'] ?>">
+                                        <a href="<?= base_url() ?>app/games/details/<?= $game['game_id']; ?>">
                                             <!--begin::Icon-->
                                             <div class="d-flex flex-column align-items-center">
-                                                <div class="symbol symbol-125px symbol-sm-150px symbol-lg-150px symbol-xl-200px circle game-img">
-                                                    <span class="symbol-label circle game-img"
-                                                          style=" background: url('/assets/media/games/<?= ($game['game_folder'] ?? '') . '/' . ($game['game_icon'] ?? '') ?>') no-repeat;
-                                                                  background-size: cover;">
-                                                    </span>
+                                                <div class="symbol symbol-125px symbol-sm-150px symbol-lg-150px symbol-xl-200px circle game_icon">
+                                                    <span class="symbol-label circle"></span>
                                                 </div>
                                             </div>
                                             <!--end::Icon-->
@@ -150,26 +146,70 @@ $gamesPicFolder = '/assets/uploads/games/game_profile/';
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        /**
+         * Load game info if $games_list from PHP is declared
+         */
+        <?php if (isset($games_list)) { ?>
+        /**
+         * Array with player games
+         *
+         * @type {object}
+         */
+        const gameList = <?=json_encode($games_list ?? []);?>;
+        /**
+         * HTML object of games items in list
+         *
+         * @type {NodeListOf<Element>}
+         */
+        const gameItemsList = q('.game_item_list');
+        // * Fill game icons on the list upon page load * //
+        /**
+         * HTML object of icons in games list
+         *
+         * @type {NodeListOf<Element>}
+         */
+        const gameIconsList = q('.game_icon .symbol-label');
 
-        $('#game_icon').change(function () {
-            readImageChange(this, q('.game_icon_holder')[0]);
-        });
+        for (let i = 0; i < gameItemsList.length; i++) {
+            let itemIcon = '/assets/media/games/blank.jpg';
+            let dbIcon = '/assets/media/games/' + gameList[i].game_folder + '/' + gameList[i].game_icon;
+            if (urlExists(dbIcon)) itemIcon = dbIcon;
+            gameIconsList[i].style.backgroundImage = 'url("' + itemIcon + '")';
+        }
+        <?php } ?>
 
-        $('#create_game_btn').click(function () {
-            let btnLabel = $('.indicator-label');
-            let btnProgress = $('.indicator-progress');
-            let form_error = $('#create_game_form .form_error');
-            form_error.addClass('d-none');
-            btnLabel.hide();
-            btnProgress.show();
-            if ($('#game_title').val() !== '') {
-                $('#create_game_form').submit();
-            }
-            setTimeout(function () {
-                form_error.removeClass('d-none');
-                btnLabel.show();
-                btnProgress.hide();
-            }, 500);
-        });
+        // * Change icon holder upon change * //
+        /**
+         * HTML object of game icon in new game modal
+         *
+         * @type {Element}
+         */
+        const modalGameIcon = q('#game_icon')[0];
+        if (modalGameIcon) {
+            modalGameIcon.change(function () {
+                readImageChange(this, q('.game_icon_holder')[0]);
+            });
+        }
+
+        // * Create game * //
+        const createGameBtn = q('#create_game_btn')[0];
+        if (createGameBtn) {
+            createGameBtn.click(function () {
+                let btnLabel = $('.indicator-label');
+                let btnProgress = $('.indicator-progress');
+                let form_error = $('#create_game_form .form_error');
+                form_error.addClass('d-none');
+                btnLabel.hide();
+                btnProgress.show();
+                if ($('#game_title').val() !== '') {
+                    $('#create_game_form').submit();
+                }
+                setTimeout(function () {
+                    form_error.removeClass('d-none');
+                    btnLabel.show();
+                    btnProgress.hide();
+                }, 500);
+            });
+        }
     });
 </script>

@@ -161,9 +161,9 @@ class Chat {
                 }
                 if (dataChanged) {
                     this.messages = data.msgs;
-                    this.formatMessages();
                 }
             }
+            this.formatMessages();
         });
     }
 

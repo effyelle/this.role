@@ -53,7 +53,7 @@ class Board {
                 if (!isNaN(this.chat.select.value)) {
                     let it = this.journal.searchItem(parseInt(this.chat.select.value));
                     if (it) {
-                        let icon = '/assets/media/games/blank.png';
+                        let icon = '/assets/media/avatars/blank.png';
                         if (urlExists(it.folder + it.info.item_icon)) {
                             icon = it.folder + it.info.item_icon;
                         }

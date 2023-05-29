@@ -46,7 +46,7 @@ class Journal {
         this.icon = () => {
             let icon = this.folder + this.info.item_icon;
             if (urlExists(icon)) return icon;
-            return '/assets/media/games/blank.png';
+            return '/assets/media/avatars/blank.png';
         }
         this.openItem = async (htmlText) => {
             q('#' + this.modalsContainer)[0].innerHTML += htmlText;

@@ -78,7 +78,13 @@
                                 </div>
                                 <!--end::Title-->
                                 <!--begin::Journal JS-->
-                                <div id="journal" class="menu-item"></div>
+                                <div id="journal" class="menu-item">
+                                    <!--begin::Journal spinner-->
+                                    <div class="h-50px flex-row justify-content-center align-items-center">
+                                        <span class="spinner-border align-middle ms-2"></span>
+                                    </div>
+                                    <!--end::Journal spinner-->
+                                </div>
                                 <!--end::Journal JS-->
                                 <!--begin::Separator-->
                                 <div class="menu-item">

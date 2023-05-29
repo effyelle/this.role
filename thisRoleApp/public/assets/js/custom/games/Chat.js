@@ -171,6 +171,13 @@ class Chat {
                 }
                 return;
             }
+            // Reload if chat was emptied for whatever reason
+            if (Object.keys(this.messages).length > 0) {
+                this.messages = {};
+                this.formatMessages();
+                return;
+            }
+            // This executes on page first load and only if chat was empty
             if (this.firstLoad) {
                 this.formatMessages();
                 this.FirstLoad = false;

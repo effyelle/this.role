@@ -9,16 +9,23 @@ class Mailer
 {
     protected mixed $mail;
 
+    protected string $serviceHost = 'smtp.office365.com';
+    protected string $fromEmail = 'this.role@outlook.com';
+    protected string $fromName = 'This.Role';
+    protected string $pwd = 'Aqws!123';
+    protected string $SMTPsec = 'tls';
+    protected int $port = 587;
+
     function __construct()
     {
         $this->mail = new PHPMailer(true);
         $this->mail->isSMTP();
-        $this->mail->Host = 'smtp.office365.com';
+        $this->mail->Host = $this->serviceHost;
         $this->mail->SMTPAuth = true;
-        $this->mail->Username = 'this.role@outlook.com';
-        $this->mail->Password = 'Aqws!123';
-        $this->mail->SMTPSecure = 'tls';
-        $this->mail->Port = 587;
+        $this->mail->Username = $this->fromEmail;
+        $this->mail->Password = $this->pwd;
+        $this->mail->SMTPSecure = $this->SMTPsec;
+        $this->mail->Port = $this->port;
         $this->mail->isHTML();
     }
 
@@ -27,7 +34,7 @@ class Mailer
         try {
             $this->mail->Subject = $subject;
             $this->mail->Body = $message;
-            $this->mail->setFrom('this.role@outlook.com', 'This.Role');
+            $this->mail->setFrom($this->fromEmail, $this->fromName);
             $this->mail->addAddress($email);
             return $this->mail->send();
 

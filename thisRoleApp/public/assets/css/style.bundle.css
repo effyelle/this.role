@@ -39336,7 +39336,7 @@ a:hover {
     min-height: 70px;
     padding: 0 2.25rem;
     background-color: transparent;
-    border-bottom: 1px solid #f5f3ef
+    border-bottom: 1px solid #f5f3ef;
 }
 
 .card .card-header .card-title {

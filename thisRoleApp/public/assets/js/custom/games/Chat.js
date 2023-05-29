@@ -191,9 +191,6 @@ class Chat {
      * @param data
      */
     saveChat(data = {icon: "", msg: "", sender: "", msgType: ""}) {
-        return ajax(this.url.save, data).done((data) => {
-            if (!data.response) console.log("ERROR: " + data);
-            return data;
-        });
+        return ajax(this.url.save, data);
     }
 }

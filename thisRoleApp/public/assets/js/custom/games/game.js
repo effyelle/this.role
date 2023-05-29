@@ -40,9 +40,6 @@ function initGame() {
                         }
                         $('.modal_error_response').html(data.img);
                         $('#modal_error-toggle').click();
-                    },
-                    error: (e) => {
-                        console.log("Error: ", e);
                     }
                 });
                 return;
@@ -81,9 +78,6 @@ function initGame() {
                         }
                         $('.modal_error_response').html(img);
                         $('#modal_error-toggle').click();
-                    },
-                    error: (e) => {
-                        console.log("Error: ", e);
                     }
                 });
                 return;

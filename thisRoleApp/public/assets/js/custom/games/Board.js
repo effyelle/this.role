@@ -230,8 +230,6 @@ class Board {
             // Set listeners
             this.journal.listenToOpenedItems(item);
             this.hearDicesThrows();
-        }).fail((e) => {
-            console.log(e.responseText);
         });
     }
 

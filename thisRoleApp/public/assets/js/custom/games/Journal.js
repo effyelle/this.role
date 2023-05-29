@@ -235,9 +235,6 @@ class Journal {
                     }
                 }
             }
-        }).fail((e) => {
-            //* Init journal for admin *//
-            console.log("Error: ", e.responseText);
         });
     }
 
@@ -316,13 +313,10 @@ class Journal {
                     }
                     $('.modal_error_response').html(data.msg);
                     $('#modal_error-toggle').click();
-                }).fail((e) => {
-                console.log("Error: ", e.responseText);
-            });
+                });
         }
         if (this.selectItem && this.deleteItemBtn && Object.keys(this.items).length > 0) {
             this.deleteItemBtn.click(() => {
-                console.log('hey')
                 openConfirmation(this.deleteJournalItem);
             });
         }
@@ -419,7 +413,6 @@ class Journal {
                     $('#modal_journal .error').show();
                     toggleProgressSpinner(false);
                 }).fail((e) => {
-                console.log("Error: ", e.responseText);
                 toggleProgressSpinner(false);
             });
         }
@@ -502,8 +495,6 @@ class Journal {
         }
         form.append(objName, objVal);
         form.append('item_id', id);
-        console.log('saveField objName= ', objName);
-        console.log('saveField objVal= ', objVal)
         return $.ajax({
             type: "post",
             url: baseUrl + this.url.save,
@@ -512,9 +503,6 @@ class Journal {
             contentType: false,
             success: (data) => {
                 return data;
-            },
-            error: (e) => {
-                console.log(e.responseText);
             }
         });
     }
@@ -618,7 +606,6 @@ class Journal {
         const classes = JSON.parse(it.info.classes);
         for (let c of classes) {
             if (c.main === "1") {
-                console.log(c)
                 addClass(c);
             }
         }
@@ -933,9 +920,6 @@ class Journal {
         const checks = this.getHealthGroup(it);
         for (let checkGroup of checks) {
             for (let check of checkGroup) {
-                check.onchange = () => {
-                    console.log('e')
-                }
                 check.click((e) => {
                     e.preventDefault();
                     if (!check.classList.contains('condition')) {

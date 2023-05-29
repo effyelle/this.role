@@ -92,23 +92,9 @@ class GameMap {
             }, 300);
         })
         this.zoom.addEventListener('mousedown', (e) => {
-            let doubleClick = false;
             if (e.button === 2) {
                 readMap(e);
             }
-            /*if (e.button === 0) {
-                this.zoom.onmousedown = () => {
-                    doubleClick = true;
-                }
-                setTimeout(() => {
-                    if (doubleClick) readMap(e);
-                }, 300);
-                this.zoom.ontouchend = () => {
-                    console.log('end touch');
-                    this.zoom.onmousedown = null;
-                    this.zoom.ontouchmove = null;
-                };
-            }*/
         });
         this.zoom.addEventListener('mouseup', () => {
             this.zoom.onmousemove = null;
@@ -160,8 +146,6 @@ class GameMap {
     loadLayers() {
         return ajax(this.url.get).done((data) => {
             let layerBg = 'Empty!';
-            // console.log("Data layers length = ", data.layers.length)
-            // console.log("Client layers length = ", Object.keys(this.layers).length)
             // If data response false, there are no layers added at all
             if (!data.response) {
                 // Reset select
@@ -271,8 +255,6 @@ class GameMap {
         return ajax('/app/games_ajax/save_token/' + this.selectedLayer(), {
             coords: post,
             item_id: itemID
-        }).done((data) => {
-            console.log(data);
         });
     }
 
@@ -312,9 +294,7 @@ class GameMap {
                 document.onkeyup = (e) => {
                     if (e.key === 'Delete') {
                         token.remove();
-                        this.deleteToken(token).done((data) => {
-                            console.log(data);
-                        });
+                        this.deleteToken(token);
                     }
                 }
                 //* end::Listen to remove token *//

@@ -64,7 +64,11 @@
         function sendForm(form) {
             toggleProgressSpinner();
             ajax("account/login", form).done((data) => {
-                if (data['response']) {
+                if (data.response) {
+                    if (window.location.href.match(/logout/)) {
+                        go_url('/app/index');
+                        return;
+                    }
                     window.location.reload();
                     return;
                 }

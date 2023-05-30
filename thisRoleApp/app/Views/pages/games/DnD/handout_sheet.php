@@ -23,10 +23,9 @@
                     <div class="flex-column align-content-center align-items-center justify-content-center">
                         <!--begin::Content-->
                         <div id="draggable_<?= $data['item_id'] ?>-character"
-                             class="py-8 px-2 tab-pane fade show active">
+                             class="py-8 px-2 w-100 h-100 tab-pane fade show active">
                             <button value="10" id="<?= $data['item_id'] ?>" class="d-none this-item-id"></button>
-                            <div class="flex-row-wrap gap-5 justify-content-center align-items-center"
-                                 style="width: 800px">
+                            <div class="flex-row-wrap gap-5 justify-content-center align-items-center w-80 h-75">
                                 <div class="column this-outline w-100 h-100">
                                     <div class="flex-row-wrap justify-content-center p-4 gap-5 w-100 h-100">
                                         <!--begin::Col-->
@@ -52,8 +51,8 @@
                                                 <div class="d-flex flex-column align-items-center w-100 h-100">
                                                     <input id="item_icon" name="item_icon" type="file"
                                                            class="d-none this-role-form-field"/>
-                                                    <span class="item_icon-holder w-100 h-100" style="background-image: url(/assets/media/avatars/blank.png);
-                                              background-size: cover;background-position: center center;min-height: 50vh;"></span>
+                                                    <span class="item_icon-holder w-100 h-100"
+                                                          style="min-height: 50vh;"></span>
                                                 </div>
                                                 <!--end::Image-->
                                                 <?php if ($data['game_creator'] === $_SESSION['user']['user_id']) { ?>

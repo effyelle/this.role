@@ -163,15 +163,19 @@ class Board {
             // Add a click listener to each item to create a new modal
             if (this.journal.changed) {
                 this.loadItemsFields();
-                itemOpenerBtn.addEventListener('click', () => {
-                    this.setDraggableItemSheets(itemOpenerBtn);
-                });
+                if (this.journal.changed === 'length') {
+                    itemOpenerBtn.addEventListener('click', () => {
+                        this.setDraggableItemSheets(itemOpenerBtn);
+                    });
+                }
             }
             if (this.map.changed || this.journal.changed) {
                 this.loadTokens();
-                itemOpenerBtn.addEventListener('drag', (e) => {
-                    this.setDraggableTokens(e);
-                });
+                if (this.journal.changed === 'length') {
+                    itemOpenerBtn.addEventListener('drag', (e) => {
+                        this.setDraggableTokens(e);
+                    });
+                }
             }
         }
     }

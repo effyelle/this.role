@@ -181,7 +181,7 @@ class Journal {
             this.JournalChanged = false;
             if (!data.results) {
                 if (this.items !== {}) {
-                    this.JournalChanged = true;
+                    this.JournalChanged = 'length';
                     this.items = {};
                 }
                 // Reset journal list
@@ -200,7 +200,7 @@ class Journal {
             // If the length of both arrays is not the same, items have changed
             // -> (Items have been added or deleted)
             if (data.results.length !== Object.keys(this.items).length) {
-                this.JournalChanged = true;
+                this.JournalChanged = 'length';
                 q('#' + this.container)[0].innerHTML = '';
                 this.items = {}
                 //* Save items into this.items *//
@@ -228,7 +228,7 @@ class Journal {
                                 !(dbItem[j] === 'null' && thisItem[j] === 'null') && !(dbItem[j] === null && thisItem[j] === 'null')) {
                                 // Save new values into this.items.info
                                 this.saveResults(data);
-                                this.JournalChanged = true;
+                                this.JournalChanged = 'info';
                                 break;
                             }
                         }
@@ -470,7 +470,19 @@ class Journal {
     addItemBtnToList(item) {
         // Check image data, if it does not exist, put a default one
         q('#' + this.container)[0].innerHTML += '' + '<!--begin::Menu Item-->' + ' <div class="menu-item ' + this.itemClass + '">' + // Assign item ID to button for later accessing
-            '     <button type="button" class="btn menu-link col-12"' + (item.info.item_type === 'character' ? ' draggable="true"' : '') + ' value="' + item.info.item_id + '">' + '         <!--begin::Symbol-->' + '         <div class="me-2 symbol symbol-20px symbol-md-30px">' + '             <span class="symbol-label circle item_icon-holder"' + '                  style="background-image: url(' + item.icon() + ');' + '                      background-size: cover; background-position: center center;">' + '             </span>' + '         </div>' + '         <!--end::Symbol-->' + '         <span class="menu-title fw-bolder fs-7 text-gray-600 text-hover-dark">' + item.info.item_name + '</span>' + '     </button>' + ' </div>' + ' <!--end::Menu Item-->';
+            '     <button type="button" class="btn menu-link col-12"' + (item.info.item_type === 'character' ? ' draggable="true"' : '') + ' value="' + item.info.item_id + '">' +
+            '         <!--begin::Symbol-->' +
+            '         <div class="me-2 symbol symbol-20px symbol-md-30px">' +
+            '             <span class="symbol-label circle item_icon-holder"' +
+            '                  style="background-image: url(' + item.icon() + ');' +
+            '                      background-size: cover; background-position: center center;">' +
+            '             </span>' +
+            '         </div>' +
+            '         <!--end::Symbol-->' +
+            '         <span class="menu-title fw-bolder fs-7 text-gray-600 text-hover-dark">' + item.info.item_name + '</span>' +
+            '     </button>' +
+            ' </div>' +
+            ' <!--end::Menu Item-->';
     }
 
     searchItem(id) {
@@ -547,8 +559,8 @@ class Journal {
      */
     fillDraggable(it) {
         this.fillDataFrom(it);
-        if (it.info.item_type !== 'character') return;
         this.fillBlurFields(it);
+        if (it.info.item_type !== 'character') return;
         this.fillInspiration(it);
         this.fillSpellcasting(it);
         this.fillAbilityScores(it);
@@ -565,6 +577,8 @@ class Journal {
                 if (divName.match(/item_icon/)) {
                     it.iconHolder = q('#' + it.draggableContainerId + ' .item_icon-holder');
                     if (it.iconHolder[0]) it.iconHolder[0].style.backgroundImage = 'url("' + it.icon() + '")';
+                    const listIcon = q('#' + this.container + ' button[value="' + it.info.item_id + '"] span.item_icon-holder');
+                    if (listIcon[0]) listIcon[0].style.backgroundImage = 'url("' + it.icon() + '")';
                 } // it.info.info
                 else if (divName.match(/class|subclass|lvl|race|background|walkspeed/)) {
                     f.value = JSON.parse(it.info.info)[divName];
@@ -799,6 +813,8 @@ class Journal {
     set ItemImage(it) {
         const iconInput = q('#' + it.draggableContainerId + ' .this-role-form-field[name="item_icon"]')[0];
         iconInput.change(() => {
+            //readImageChange(iconInput, q('#' + it.draggableContainerId + ' span.item_icon-holder')[0]);
+            //readImageChange(iconInput, q('#' + this.container + ' button[value="' + it.info.item_id + '"] span.item_icon-holder')[0]);
             this.saveField(iconInput, it.info.item_id).done((data) => {
                 data = JSON.parse(data);
                 if (data.response) return;

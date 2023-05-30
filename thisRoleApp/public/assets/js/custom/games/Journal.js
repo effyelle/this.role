@@ -408,9 +408,9 @@ class Journal {
                         // Dismiss journal modal
                         $('.modal_success_response').html(data.msg);
                         $('#modal_success-toggle').click();
-                        return;
+                    } else {
+                        $('#modal_journal .error').show();
                     }
-                    $('#modal_journal .error').show();
                     toggleProgressSpinner(false);
                 }).fail((e) => {
                 toggleProgressSpinner(false);

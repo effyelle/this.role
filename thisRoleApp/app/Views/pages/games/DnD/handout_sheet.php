@@ -52,7 +52,7 @@
                                                     <input id="item_icon" name="item_icon" type="file"
                                                            class="d-none this-role-form-field"/>
                                                     <span class="item_icon-holder w-100 h-100"
-                                                          style="min-height: 50vh;"></span>
+                                                          style="min-height: 50vh;background-repeat: no-repeat;background-position: center center;background-size: cover;"></span>
                                                 </div>
                                                 <!--end::Image-->
                                                 <?php if ($data['game_creator'] === $_SESSION['user']['user_id']) { ?>

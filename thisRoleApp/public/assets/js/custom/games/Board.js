@@ -172,6 +172,9 @@ class Board {
             if (this.map.changed || this.journal.changed) {
                 this.loadTokens();
                 if (this.journal.changed === 'length') {
+                    itemOpenerBtn.addEventListener('touchstart', (e) => {
+                        this.setDragTokensTouch(itemOpenerBtn);
+                    });
                     itemOpenerBtn.addEventListener('drag', (e) => {
                         this.setDraggableTokens(e);
                     });
@@ -272,39 +275,66 @@ class Board {
         this.map.zoom = q('#this_zoom')[0];
     }
 
+    addDraggableToken(dragendEvt, item) {
+        // Check the mouse went inside the map
+        if (dragendEvt.pageX > this.map.offsetStart && dragendEvt.pageY > this.map.offsetTop) {
+            // Double check token has not already been added
+            if (q('#token_' + item.info.item_id).length !== 0) return;
+            // * Add token to game board * //
+            this.map.tokenC.innerHTML += this.map.tokenFormatting(item);
+            this.map.TokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
+            let newToken = this.map.tokensDraggable.findContainer('token_' + item.info.item_id);
+            // Percentage of mouse position
+            const coords = {
+                x: (dragendEvt.clientX - this.map.offsetStart) / this.map.zoom.offsetWidth * 100,
+                y: (dragendEvt.clientY - this.map.offsetTop) / this.map.zoom.offsetHeight * 100
+            };
+            newToken.setAxis(coords.x + '%', coords.y + '%');
+            newToken.setProportions('6%');
+            this.map.saveToken(newToken);
+            this.map.hearTokenThings();
+            this.map.img = q('#' + this.map.img.id)[0];
+            this.map.zoom = q('#this_zoom')[0];
+        }
+    }
+
+    setDragTokensTouch(btn) {
+        if (!(this.map && this.map.selectedLayer() && this.map.layers)) return;
+        document.ontouchend = null;
+        document.ontouchmove = (touchMove) => {
+            document.ontouchend = null;
+            document.ontouchend = (touchEnv) => {
+                // Search item
+                let item = this.journal.searchItem(btn.value);
+                if (!item) return;
+                let layertokens = JSON.parse(this.map.layers[this.map.selectedLayer()].layer_tokens);
+                // Check layer, if it has the token already
+                for (let i in layertokens) {
+                    // If token already exists, do not ad another one
+                    if (i === item.info.item_id) return;
+                }
+                const dragendEvt = touchMove.touches[0];
+                this.addDraggableToken(dragendEvt, item);
+            };
+        };
+    }
+
     setDraggableTokens(ondragEvt) {
         let btn = ondragEvt.target;
         btn.ondragend = (dragendEvt) => {
             // Return if there is no layer selected
             if (!(this.map && this.map.selectedLayer() && this.map.layers)) return;
-            // Serach item
+            // Search item
             let item = this.journal.searchItem(btn.value);
+            if (!item) return;
             let layertokens = JSON.parse(this.map.layers[this.map.selectedLayer()].layer_tokens);
             // Check layer, if it has the token already
             for (let i in layertokens) {
                 // If token already exists, do not ad another one
                 if (i === item.info.item_id) return;
             }
-
-            if (dragendEvt.pageX > this.map.offsetStart && dragendEvt.pageY > this.map.offsetTop) {
-                // Double check token has not already been added
-                if (q('#token_' + item.info.item_id).length !== 0) return;
-                // Add token to game board
-                this.map.tokenC.innerHTML += this.map.tokenFormatting(item);
-                this.map.TokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
-                let newToken = this.map.tokensDraggable.findContainer('token_' + item.info.item_id);
-                // Percentage of mouse position
-                const coords = {
-                    x: (dragendEvt.clientX - this.map.offsetStart) / this.map.zoom.offsetWidth * 100,
-                    y: (dragendEvt.clientY - this.map.offsetTop) / this.map.zoom.offsetHeight * 100
-                };
-                newToken.setAxis(coords.x + '%', coords.y + '%');
-                newToken.setProportions('6%');
-                this.map.saveToken(newToken);
-                this.map.hearTokenThings();
-                this.map.img = q('#' + this.map.img.id)[0];
-                this.map.zoom = q('#this_zoom')[0];
-            }
+            // Check the mouse went inside the map
+            this.addDraggableToken(dragendEvt, item);
         }
     }
 

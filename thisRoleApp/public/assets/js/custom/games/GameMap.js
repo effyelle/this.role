@@ -64,6 +64,8 @@ class GameMap {
             const topOld = e.touches && e.touches.length === 1
                 ? e.touches[0].clientY
                 : e.layerY;
+            console.log(leftOld)
+            console.log(topOld)
             this.zoom.onmousemove = (e) => {
                 // Check if right click
                 const leftNew = e.layerX - leftOld;

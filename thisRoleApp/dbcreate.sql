@@ -104,8 +104,8 @@ VALUES
 	('effs', '/assets/media/avatars/blank.png', 'Effy', 'ericapastorgracia@gmail.com', '$2y$10$nn1ux4fH2SK8VW0POY38n.B.5T0YpOsMYWhXEFCkKEcd9n/WYJWqW', NOW()),
 	('marioe23', '/assets/media/avatars/blank.png', 'Mario Sancho', 'nore.zgz@mail.com', '$2y$10$nn1ux4fH2SK8VW0POY38n.B.5T0YpOsMYWhXEFCkKEcd9n/WYJWqW', NOW()),
 	('ff15', '/assets/media/avatars/blank.png', 'Fernando Fernandez', 'ffmail@email.f', '$2y$10$nn1ux4fH2SK8VW0POY38n.B.5T0YpOsMYWhXEFCkKEcd9n/WYJWqW', NOW()),
-	('el.pepi.7', '/assets/media/avatars/blank.png', 'Pepito Grillo 21', 'pepi.grillo.7@mail.es', '$2y$10$nn1ux4fH2SK8VW0POY38n.B.5T0YpOsMYWhXEFCkKEcd9n/WYJWqW', NOW())
-	('si-si-si-simba', '/assets/media/avatars/blank.png', 'Simba Villano', 'simba@villano.com', '$2y$10$nn1ux4fH2SK8VW0POY38n.B.5T0YpOsMYWhXEFCkKEcd9n/WYJWqW', NOW()),;
+	('el.pepi.7', '/assets/media/avatars/blank.png', 'Pepito Grillo 21', 'pepi.grillo.7@mail.es', '$2y$10$nn1ux4fH2SK8VW0POY38n.B.5T0YpOsMYWhXEFCkKEcd9n/WYJWqW', NOW()),
+	('si-si-si-simba', '/assets/media/avatars/blank.png', 'Simba Villano', 'simba@villano.com', '$2y$10$nn1ux4fH2SK8VW0POY38n.B.5T0YpOsMYWhXEFCkKEcd9n/WYJWqW', NOW());
 
 UPDATE users SET user_rol='masteradmin' WHERE user_email='ericapastorgracia@gmail.com';
 UPDATE users SET user_rol='admin' WHERE user_email='nore.zgz@mail.com';

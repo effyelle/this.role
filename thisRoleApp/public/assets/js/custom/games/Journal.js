@@ -590,14 +590,18 @@ class Journal {
                 else if (divName.match(/_hd|_hp/)) {
                     f.value = JSON.parse(it.info.health).hit_points[divName];
                 } else {
-                    if (divName.match(/item_name/)) {
-                        const listName = q('#' + this.container + ' button[value="' + it.info.item_id + '"] span.menu-title')[0];
-                        if (listName) listName.innerHTML = it.info[divName];
-                    }
                     f.value = it.info[divName];
                 }
             }
         });
+        // Fill up name
+        // This cannot be automatized because there's not always an input for name, soemtimes it can be an <h4>
+        const listName = q('#' + this.container + ' button[value="' + it.info.item_id + '"] span.menu-title')[0];
+        if (listName) listName.innerHTML = it.info.item_name;
+        const itemName = q('#' + it.draggableContainerId + ' [data-from="item_name"]');
+        for (let n of itemName) {
+            n.innerHTML = it.info.item_name;
+        }
     }
 
     fillClasses(it) {

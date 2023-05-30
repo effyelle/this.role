@@ -590,6 +590,10 @@ class Journal {
                 else if (divName.match(/_hd|_hp/)) {
                     f.value = JSON.parse(it.info.health).hit_points[divName];
                 } else {
+                    if (divName.match(/item_name/)) {
+                        const listName = q('#' + this.container + ' button[value="' + it.info.item_id + '"] span.menu-title')[0];
+                        if (listName) listName.innerHTML = it.info[divName];
+                    }
                     f.value = it.info[divName];
                 }
             }

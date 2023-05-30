@@ -76,8 +76,7 @@
                                                 <div class="form-control-solid">
                                                     <div class="flex-column">
                                                         <input type="text" value="<?= $data['item_name'] ?? "" ?>"
-                                                               id="item_name"
-                                                               name="item_name"
+                                                               id="item_name" name="item_name"
                                                                class="form-control form-control-sm this-role-form-field ff-poiret fs-5 fw-boldest"/>
                                                         <label for="item_name">Character Name</label>
                                                     </div>

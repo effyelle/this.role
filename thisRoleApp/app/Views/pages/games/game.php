@@ -143,29 +143,29 @@
         </div>
     </div>
     <!--end::Modal-->
-    <!--begin::Modal Toggle-->
-    <button class="d-none" id="death_save_modal_toggle" data-bs-target="#death_save_modal"
-            data-bs-toggle="modal"></button>
-    <!--end::Modal Toggle-->
-    <!--begin::Modal-->
-    <div class="modal fade" tabindex="-1" id="death_save_modal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="mb-5">
-                        <p id="death_save_response"></p>
-                        <div id="gif" class="m-auto"
-                             style="background-position: center;background-size: contain;background-repeat: no-repeat;"></div>
-                    </div>
-                    <div class="d-flex flex-row justify-content-center">
-                        <button class="btn btn-primary" data-bs-dismiss="modal" tabindex="-1">OK</button>
-                    </div>
+<?php endif; ?>
+<!--begin::Modal Toggle-->
+<button class="d-none" id="death_save_modal_toggle" data-bs-target="#death_save_modal"
+        data-bs-toggle="modal"></button>
+<!--end::Modal Toggle-->
+<!--begin::Modal-->
+<div class="modal fade" tabindex="-1" id="death_save_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="mb-5">
+                    <p id="death_save_response"></p>
+                    <div id="gif" class="m-auto"
+                         style="background-position: center;background-size: contain;background-repeat: no-repeat;"></div>
+                </div>
+                <div class="d-flex flex-row justify-content-center">
+                    <button class="btn btn-primary" data-bs-dismiss="modal" tabindex="-1">OK</button>
                 </div>
             </div>
         </div>
     </div>
-    <!--end::Modal-->
-<?php endif; ?>
+</div>
+<!--end::Modal-->
 <!--begin::Draggable Modals-->
 <div id="draggable-modals_container"></div>
 <!--emd::Draggable Modals-->

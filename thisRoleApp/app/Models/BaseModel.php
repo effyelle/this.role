@@ -70,11 +70,11 @@ class BaseModel extends Model
     }
 
     /**
-     * @param $data -must receive as keys the table column names and as values the values to insert
-     *
+     * @param array $data -associative array that must receive as keys the table column names and as values the values to insert
      * @return bool
+     * @param null $table
      */
-    function new($data, $table = null): bool
+    function new(array $data, $table = null): bool
     {
         if (!isset($table)) $table = $this->table;
         return db::connect()->table($table)->insert($data);
@@ -85,7 +85,10 @@ class BaseModel extends Model
         return db::connect()->table($this->table)->delete($where);
     }
 
-    function maxID()
+    /**
+     * @return array|object|null
+     */
+    function maxID(): array|object|null
     {
         return db::connect()
             ->table($this->table)

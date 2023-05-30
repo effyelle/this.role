@@ -2,8 +2,6 @@
 
 namespace App\Controllers;
 
-use org\bovigo\vfs\content\SeekableFileContent;
-
 class Account extends BaseController
 {
     protected mixed $usermodel;

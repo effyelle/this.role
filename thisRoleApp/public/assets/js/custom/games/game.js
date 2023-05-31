@@ -1,4 +1,5 @@
 function initGame() {
+    console.log(baseUrl)
     // * Board intance * //
     const board = new Board('.btn.dice');
 

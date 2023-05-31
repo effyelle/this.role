@@ -291,18 +291,19 @@ class GameMap {
                     t.classList.remove('token_selected');
                 }
                 token.classList.add('token_selected');
+                document.onkeyup = (e) => {
+                    if (e.key === 'Delete') {
+                        token.remove();
+                        this.deleteToken(token);
+                    }
+                }
                 document.onclick = (e) => {
                     if (!(
                         e.target === token || e.target === token.children[0] ||
                         e.target === token.children[0].children[0] || e.target === token.children[0].children[1]
                     )) {
                         token.classList.remove('token_selected');
-                    }
-                }
-                document.onkeyup = (e) => {
-                    if (e.key === 'Delete') {
-                        token.remove();
-                        this.deleteToken(token);
+                        document.onkeyup = null;
                     }
                 }
                 //* end::Listen to remove token *//
@@ -319,7 +320,7 @@ class GameMap {
                 }
             }
             token.addEventListener('mouseup', notDeleting);
-            token.addEventListener('mousedown', hearDeleting);
+            //token.addEventListener('mousedown', hearDeleting);
         }
     }
 }

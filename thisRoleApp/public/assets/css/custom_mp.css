@@ -1449,7 +1449,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 }
 
 .token_selected > .symbol > .symbol-label {
-    box-shadow: 0 0 3px 3px var(--this-role-light);
+    box-shadow: 0 0 3px 2px var(--this-role-light);
     border: 1px solid var(--this-role-ocher);
 }
 

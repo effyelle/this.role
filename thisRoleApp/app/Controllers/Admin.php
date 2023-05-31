@@ -4,9 +4,29 @@ namespace App\Controllers;
 
 class Admin extends BaseController
 {
+
+    /**
+     * Instance of UsersModel class
+     * @var mixed|\App\Models\UsersModel|null
+     */
     protected mixed $usermodel;
+
+    /**
+     * Instance of IssuesModel class
+     * @var mixed|\App\Models\IssuesModel|null
+     */
     protected mixed $issuesmodel;
+
+    /**
+     * Instance of GamesModel class
+     * @var mixed|\App\Models\GamesModel|null
+     */
     protected mixed $gamesmodel;
+
+    /**
+     * Variable to save current datetime stamp in the desired format.
+     * @var string
+     */
     protected string $now;
 
     public function __construct()
@@ -18,10 +38,10 @@ class Admin extends BaseController
     }
 
     /**
-     * -----------------------------------------------------------------------------------------------------------------
-     * Get all users
-     * -----------------------------------------------------------------------------------------------------------------
-     * Redirects the the admin view for users with a list of all users.
+     * ---
+     * ADMIN USERS VIEW
+     * ---
+     * Redirects to the admin view for users with a list of all users.
      *
      * @return string
      */
@@ -33,6 +53,16 @@ class Admin extends BaseController
         return template('admin/users', $data);
     }
 
+    /**
+     * ---
+     * ADMIN GAMES VIEW
+     * ---
+     * Redirects to the admin view for games with a list of all games.
+     *
+     * WARNING: This area is still under development
+     *
+     * @return string
+     */
     function games(): string
     {
         $data = [];
@@ -40,6 +70,21 @@ class Admin extends BaseController
         return template('admin/games', $data);
     }
 
+    /**
+     * ---
+     * CHECK LAST ADMINS/MASTERADMINS
+     * ---
+     * A more detailed checking than {@link Account::canDeleteUser()} of the admin/masteradmin state before updating a
+     * user. It compares if the user is going to be deactivated, demoted o promoted before the update.
+     *
+     * This method is called from the Users Admin section.
+     *
+     * @param array $target_user
+     * @param array $new_data
+     * @param string $rol
+     *
+     * @return bool
+     */
     function canEditAdmin(array $target_user, array $new_data, string $rol = 'admin'): bool
     {
         // If user is to be deleted
@@ -54,7 +99,13 @@ class Admin extends BaseController
     }
 
     /**
-     * Update user from Admin side
+     * ---
+     * UPDATE USER
+     * ---
+     * Updates user from admin side. Checks if email and/or username are already taken. If promoting/demoting or
+     * deactivating an admin/masteradmin, check user is not the last of its rol via {@link canEditAdmin()}.
+     *
+     * There are some parts of this method that are currently under supervision so they have been commented.
      *
      * @return string
      */
@@ -123,6 +174,7 @@ class Admin extends BaseController
         } elseif ($data['user_email'] !== $post['email']) {
             // Unconfirm user if email changed
             $data['user_email'] = $post['email'];
+            // $data['user_confirmed'] = null;
             $emailChanged = true;
         }
 
@@ -141,15 +193,14 @@ class Admin extends BaseController
             $data['user_deleted'] = $post['user_status'] === 'inactive' ? $this->now : null;
         }
 
-        ///////////////////
-        // Update issues //
-        ///////////////////
+        // At this point, user can be edited and username and email are unique
+
+        // * begin::Update issues * //
         if ((new Account())->updateIssuesMessages($old_userdata['user_username'], $data['user_username'])) {
             // Update user
             if ($this->usermodel->updt($data, $where)) {
                 // If email changes unconfirm user
                 if ($emailChanged) {
-                    $data['user_confirmed'] = null;
                     // Send confirmation email
                     // (new Account())->sendConfirmationEmail($data['email']);
                 }
@@ -157,12 +208,21 @@ class Admin extends BaseController
             }
         }
         return json_encode(['response' => false]);
+        // * end::Update issues * //
     }
 
+    /**
+     * ---
+     * UPDATE GAME
+     * ---
+     * This function is still under development
+     *
+     * @return string
+     */
     public function update_game(): string
     {
-        $response = ['res' => false];
-
-        return json_encode($response);
+        $data ['response'] = false;
+        // Update here and fill $data
+        return json_encode($data);
     }
 }

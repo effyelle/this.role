@@ -153,6 +153,9 @@ nb-configuration.xml
 /phpunit*.xml
 /.phpunit.*.cache
 
+# PHPDocumentor
+.phpdoc/
+
 # Uploaded media through project
 thisRoleApp/public/assets/media/avatars/*
 !thisRoleApp/public/assets/media/avatars/blank.png

@@ -4,24 +4,6 @@ namespace App\Controllers;
 
 class SheetDnD
 {
-    public string $name;
-    public string $type;
-    public string $icon;
-    public array $info;
-    public array $classes;
-    public string $xp;
-    public array $ability_scores;
-    public array $expertises;
-    public array $health;
-    public array $attack;
-    public array $global_modifier;
-    public array $tool_or_custom;
-    public array $bag_item;
-    public array $bag;
-    public array $custom_feature;
-    public string $notes;
-    public string $backstory;
-
     function __init($name, $type = 'character'): array
     {
         return $this->$type($name);

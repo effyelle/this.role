@@ -152,6 +152,11 @@ class Admin extends BaseController
         }
         // Set default data if not set by post
         if (!isset($post['user_rol'])) $post['user_rol'] = $old_userdata['user_rol'];
+        else {
+            if ($post['user_rol'] === 'masteradmin' && $_SESSION['user']['user_rol'] === 'admin') {
+                return json_encode(['response' => false, 'msg' => 'You cannot grant permissions to yourself.']);
+            }
+        }
         if (!isset($post['user_status'])) $post['user_status'] = $old_userdata['user_deleted'] === null ? 'active' : 'inactive';
 
         // Save $_POST data only for full name

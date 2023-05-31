@@ -34,13 +34,6 @@ class Account extends BaseController
      */
     protected string $defaultAvatar = '/assets/media/avatars/blank.png';
 
-    /**
-     * ---
-     * ACCOUNT CONSTRUCTOR
-     * ---
-     * Set up required model instances.
-     * Save current datetime stamp into a string for MySLQ format.
-     */
     function __construct()
     {
         $this->usermodel = model('UsersModel');
@@ -173,24 +166,19 @@ class Account extends BaseController
         $newUsername = validate($_POST['username']);
         $newFullName = validate($_POST['fname']);
         $newEmail = validate($_POST['email']);
-        //
-        // Check if username and email are taken by another user
-        //
+        // * Check if username and email are taken by another user * //
         if ($newUsername !== '' && $newFullName !== '' && $newEmail !== '') {
             // Save old email and old username to variables
             $oldEmail = $_SESSION['user']['user_email'];
             $oldUsername = $_SESSION['user']['user_username'];
-            if ( // Check if username or email are already taken
-                // Compare old username to new username
+            if (// Check if username or email changed and are already taken
                 ($oldUsername !== $newUsername && $this->usermodel->get(['user_username' => $newUsername])) ||
-                // Compare old email to new email
                 ($oldEmail !== $newEmail && $this->usermodel->get(['user_email' => $newEmail]))
             ) { // If one of them match, return an error
-                $response = 'The username or email are already in use.';
+                return 'The username or email are already in use.';
             }
 
-            /* Begin::Filling up $data=[] */
-
+            // * Begin::Filling up $data=[] * //
             $data = [
                 'user_username' => $newUsername,
                 'user_fname' => $newFullName,
@@ -204,19 +192,11 @@ class Account extends BaseController
                 $img = upload_img('avatar', 'assets/media/avatars');
                 if (preg_match('/[0-9]/', $img)) {
                     $data['user_avatar'] = '/' . $img;
-                    $oldAvatar = $_SESSION['user']['user_avatar'];
-                    // Delete old file
-                    if ($oldAvatar !== $this->defaultAvatar && is_file(FCPATH . $oldAvatar)) {
-                        if (!unlink(FCPATH . $oldAvatar)) {
-                            $response = 'old avatar could not be deleted.';
-                        }
-                    }
                     // Return error if file was not uploaded
                 } else $response = $img;
-                /* End::Upload new avatar */
+                // * End::Upload new avatar * //
             }
-
-            /* End::Filling up $data=[] */
+            // * End::Filling up $data=[] * //
 
             // Update user in Database
             if ($this->usermodel->updt(
@@ -254,7 +234,7 @@ class Account extends BaseController
     {
         $error = '';
         if (isset($_POST['fname'])) {
-            $this->updateProfile();
+            $error = $this->updateProfile();
         }
         $data = ['error' => $error, 'tab' => $tab];
         if ($issues = $this->issuesmodel->get(['issue_user' => $_SESSION['user']['user_username']])) $data['issues_list'] = $issues;
@@ -456,7 +436,9 @@ class Account extends BaseController
      * ---
      * CHECK LAST ADMINS/MASTERADMINS
      * ---
-     * Check if an admin or masteradmin can be demoted/promoted or deactivated by checking if that user is the last one.
+     * Check if an admin or masteradmin can be deactivated by checking if that user is the last one.
+     *
+     * This function is called from My Profile section in HTML.
      *
      * @param string $rol
      * @return bool

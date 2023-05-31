@@ -86,7 +86,7 @@
             toggleProgressSpinner();
             ajax("account/signup", form).done((data) => {
                 if (data.response) {
-                    go_url('/account/created');
+                    go_url('account/created');
                     return;
                 }
                 toggleProgressSpinner(false);

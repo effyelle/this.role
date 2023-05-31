@@ -76,7 +76,7 @@ class App extends BaseController
     function logout(): string
     {
         if (isset($_SESSION['user'])) session_destroy();
-        return $this->index();
+        return template('login', ['unlogged' => 'unlogged']);
     }
 
     /**

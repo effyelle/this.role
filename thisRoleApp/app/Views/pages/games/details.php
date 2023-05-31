@@ -173,7 +173,7 @@
                     $('.modal_success_response').html('Game deleted successfully');
                     $('#modal_success-toggle').click();
                     setTimeout(() => {
-                        go_url('/app/games/list');
+                        go_url('app/games/list');
                     }, 2500);
                     return;
                 }

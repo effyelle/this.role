@@ -63,6 +63,10 @@ class Mailer
      * ---
      * Parameters are required.
      *
+     * Return {@link PHPMailer::send()} function response.
+     *
+     * Upon catching an Exception, return the error message.
+     *
      * @param $subject
      * @param $message
      * @param $email

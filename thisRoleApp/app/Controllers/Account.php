@@ -2,6 +2,12 @@
 
 namespace App\Controllers;
 
+/**
+ * \App\Controllers\Account manages all basic user actions and responses, such as creating an account, logging in,
+ * updating user details, deactivating the account, sending a confirmation or password recovery email, redirecting to
+ * the user's profile or messages, manage user issues, and generate the necessary tokens. About half of these
+ * functions print a response encoded in .json format because they are called from Javascript via AJAX.
+ */
 class Account extends BaseController
 {
     /**

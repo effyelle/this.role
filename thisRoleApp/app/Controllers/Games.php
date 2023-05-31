@@ -2,6 +2,12 @@
 
 namespace App\Controllers;
 
+/**
+ * \App\Controllers\Games contains most of the calls to tables in the database that have to do with the game: maps,
+ * journal items, tokens and game-user relationship. It mostly contains functions that are called through AJAX, since
+ * the game has to work in real time, returning, in 98% of cases, a response encoded in .json format that is later
+ * processed on the client side with Javascript.
+ */
 class Games extends BaseController
 {
     /**

@@ -2,6 +2,15 @@
 
 namespace App\Controllers;
 
+/**
+ * This is the controller that almost 90% of the application requests go through. The reason for that is that the
+ * session checks are done in the constructor. if a user is logged in, the time elapsed since the last activity that
+ * the user had on the page is checked through the {@link Common::check_user()} method, and if the user still exists
+ * through the {@link Common::user_exists()} method. These functions are global (created in the /app/Common.php file),
+ * so you can use them from any application file if you need to. check_user() is also in charge of updating the session
+ * data in real time, which allows knowing if the user is logged in or not before loading any information anywhere on
+ * the web.
+ */
 class App extends BaseController
 {
     public function __construct()

@@ -5,6 +5,11 @@ namespace App\Controllers;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+/**
+ * \App\Controllers\Mailer is a wrapper for \PHPMailer\PHPMailer\PHPMailer in the /vendor folder. That is, it manages
+ * the settings of the class in charge of sending emails. Along with the \App\Controllers\SheetDnD, this controller
+ * does not make direct calls to any models and does not return HTML views.
+ */
 class Mailer
 {
     /**

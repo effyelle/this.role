@@ -2,6 +2,12 @@
 
 namespace App\Controllers;
 
+/**
+ * \App\Controllers\SheetDnD, like \App\Controllers\Mailer, does not make direct calls to any models and does not return
+ * HTML views. This class is in charge of managing the data received through ajax type "post" that have to do with the
+ * character files, as well as generating the default fields for a new file, depending on the type of file. To generate
+ * the character tokens, a character_DnD.json file is used.
+ */
 class SheetDnD
 {
     /**

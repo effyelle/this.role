@@ -2,6 +2,18 @@
 
 namespace App\Controllers;
 
+/**
+ * \App\Controllers\Admin is responsible for handling the requests that are made from the administrator part of the web.
+ * Returns views that display a list of users and their data, as well as a list of all messages to support.
+ * Requests from this controller are made to update users according to the role of the administrator who requests it.
+ *
+ * Changing an email for a user from this section of the web does not currently require email confirmation.
+ *
+ * The most important thing to note is that any method in \App\Controllers\Admin is called from \App\Controller\App.
+ * The \App\Controllers\App::admin function receives a parameter that will be the name of the \App\Controllers\Admin
+ * method that you want to execute, it checks if the user that calls it is indeed an administrator or a master
+ * administrator; if it is not, you are redirected to the index.
+ */
 class Admin extends BaseController
 {
 

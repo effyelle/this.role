@@ -1448,7 +1448,7 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
     background-position: center center;
 }
 
-.token_selected > .symbol-label {
+.token_selected > .symbol > .symbol-label {
     box-shadow: 0 0 3px 3px var(--this-role-light);
     border: 1px solid var(--this-role-ocher);
 }
@@ -1467,4 +1467,18 @@ textarea.form-control.form-control-solid.this-role-form-field:focus {
 
 .resize-both {
     resize: both !important;
+}
+
+.loading_circle.spinner-border:not(.show) {
+    display: none;
+}
+
+.loading_circle.spinner-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: 2.5s linear infinite spinner-border;
+    width: 100%;
+    height: 100%;
+    color: var(--this-role-green);
 }

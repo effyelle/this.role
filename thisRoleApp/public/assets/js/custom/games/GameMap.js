@@ -243,8 +243,11 @@ class GameMap {
 
     tokenFormatting = (item) => {
         return '<div id="token_' + item.info.item_id + '" style="top: 100vh; left: 100vw;width: 75px;height: 75px;"' +
-            ' class="symbol circle position-absolute cursor-move">' +
-            '<span class="symbol-label circle" style="background-image: url(' + item.icon() + ')"></span>' +
+            '       class="symbol circle position-absolute cursor-move">' +
+            '   <div class="position-relative symbol circle w-100 h-100">' +
+            '       <span class="symbol-label circle" style="background-image: url(' + item.icon() + ')"></span>' +
+            '       <span class="loading_circle spinner-border"></span>' +
+            '   </div>' +
             '</div>';
     }
 
@@ -267,7 +270,7 @@ class GameMap {
 
     hearTokenThings() {
         for (let token of this.tokensDraggable.containers) {
-            token.addEventListener('mouseup', (event) => {
+            const notDeleting = (evt) => {
                 // Define if token has been selected
                 let tokenSelected = !this.tokensDraggable.hasMoved;
                 // Save token if it moved
@@ -289,7 +292,10 @@ class GameMap {
                 }
                 token.classList.add('token_selected');
                 document.onclick = (e) => {
-                    if (!(e.target === token || e.target === token.children[0])) {
+                    if (!(
+                        e.target === token || e.target === token.children[0] ||
+                        e.target === token.children[0].children[0] || e.target === token.children[0].children[1]
+                    )) {
                         token.classList.remove('token_selected');
                     }
                 }
@@ -300,7 +306,20 @@ class GameMap {
                     }
                 }
                 //* end::Listen to remove token *//
-            });
+            }
+            const hearDeleting = (evt) => {
+                let timer = 0;
+                const counter = setInterval(() => {
+                    timer++;
+                    console.log(timer)
+                }, 100);
+                token.onmouseup = () => {
+                    console.log(timer);
+                    clearInterval(counter);
+                }
+            }
+            token.addEventListener('mouseup', notDeleting);
+            token.addEventListener('mousedown', hearDeleting);
         }
     }
 }

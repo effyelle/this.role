@@ -282,6 +282,7 @@ class Board {
             if (q('#token_' + item.info.item_id).length !== 0) return;
             // * Add token to game board * //
             this.map.tokenC.innerHTML += this.map.tokenFormatting(item);
+            $('#token_' + item.info.item_id +' .indicator-progress').show();
             this.map.TokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
             let newToken = this.map.tokensDraggable.findContainer('token_' + item.info.item_id);
             // Percentage of mouse position
@@ -291,8 +292,9 @@ class Board {
             };
             newToken.setAxis(coords.x + '%', coords.y + '%');
             newToken.setProportions('6%');
-            this.map.saveToken(newToken);
-            this.map.hearTokenThings();
+            this.map.saveToken(newToken).done(()=>{
+                this.map.hearTokenThings();
+            });
             this.map.img = q('#' + this.map.img.id)[0];
             this.map.zoom = q('#this_zoom')[0];
         }

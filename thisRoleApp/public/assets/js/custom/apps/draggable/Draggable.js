@@ -18,7 +18,9 @@ class Draggable {
      *
      * - opt.zIndex (string) -> Sets a zIndex to work with
      * - opt.open (string) -> Sets openers (HTML Objects) to click and show the draggable
-     * - ope.close (string) -> Sets closers (HTML Objects) to click and hide the draggable
+     * - opt.close (string) -> Sets closers (HTML Objects) to click and hide the draggable
+     * - opt.max (string) -> Sets a maximizer for the container to expand
+     * - opt.min (string) -> Sets a minimizer for the container to shrug
      *
      * Add any other settings you might need in options and use them freely.
      *
@@ -127,12 +129,29 @@ class Draggable {
         }
     }
 
+    /**
+     * ---
+     * Find container by ID
+     * ---
+     *
+     * @param id
+     *
+     * @returns {HTMLElement}
+     */
     findContainer(id) {
         for (let c of this.containers) {
             if (c.id === id) return c;
         }
     }
 
+    /**
+     * ---
+     * Close draggable
+     * ---
+     * Destroy item according to an index given.
+     *
+     * @param index
+     */
     close = (index) => {
         if (this.closeTargets.length === 0) {
             this.pointers[index].remove();
@@ -146,6 +165,15 @@ class Draggable {
         }
     }
 
+    /**
+     * ---
+     * Toggle min-max transition
+     * ---
+     *
+     * @param c
+     * @param p
+     * @param mode
+     */
     toggleTransition = (c, p, mode) => {
         c.style.transition = 'all 0.3s ease';
         switch (mode) {
@@ -169,6 +197,19 @@ class Draggable {
         }, 500);
     }
 
+    /**
+     * ---
+     * Switch zIndex
+     * ---
+     * Change all containers to have the zIndex given in the class attributes, then set the container received by
+     * parameter zIndex to the same default zIndex but summing +10.
+     *
+     * This is used to bring the focused item to the front of the page.
+     *
+     * If the zIndex is not adequate to your page, you can change its default value in the {constructor@param opt}
+     *
+     * @param c ->HTMLElement
+     */
     zIndexSwitch = (c) => {
         for (let j = 0; j < this.pointers.length; j++) {
             // Leave those that are not being clicked behind

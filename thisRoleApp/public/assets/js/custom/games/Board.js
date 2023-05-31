@@ -99,6 +99,7 @@ class Board {
                     return this.chat.formatBasicRoll(btn.value, nDices, this.dices[btn.value].roll(nDices));
                 }
                 let thisFrom = this.chat.from();
+                console.log(thisFrom)
                 this.chat.saveChat({
                     icon: thisFrom.icon,
                     msg: this.text(),

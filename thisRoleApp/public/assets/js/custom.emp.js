@@ -10,7 +10,6 @@ function ajax(url, form = {}, type = 'post', processing = 'json') {
         dataType: processing,
         data: form,
         success: (data) => {
-            console.log(data);
             return data;
         },
         error: (e) => {

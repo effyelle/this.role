@@ -4,12 +4,43 @@ namespace App\Controllers;
 
 class Account extends BaseController
 {
+    /**
+     * Instance of UsersModel class
+     * @var mixed|\App\Models\UsersModel|null
+     */
     protected mixed $usermodel;
+
+    /**
+     * Instance of TokenModel class
+     * @var mixed|\App\Models\TokenModel|null
+     */
     protected mixed $tokenmodel;
+
+    /**
+     * Instance of IssuesModel class
+     * @var mixed|\App\Models\IssuesModel|null
+     */
     protected mixed $issuesmodel;
+
+    /**
+     * Variable to save current datetime stamp in the desired format.
+     * @var string
+     */
     protected string $now;
+    /**
+     * Default avatar for users
+     *
+     * @var string
+     */
     protected string $defaultAvatar = '/assets/media/avatars/blank.png';
 
+    /**
+     * ---
+     * ACCOUNT CONSTRUCTOR
+     * ---
+     * Set up required model instances.
+     * Save current datetime stamp into a string for MySLQ format.
+     */
     function __construct()
     {
         $this->usermodel = model('UsersModel');
@@ -317,7 +348,7 @@ class Account extends BaseController
      * Returns a string with an HTML view according to the response of these actions.
      *
      * @param $token
-     * 
+     *
      * @return string
      */
     function confirm($token): string

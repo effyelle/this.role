@@ -28,7 +28,7 @@
                         isset($_SESSION['user']['user_fname']) && $_SESSION['user']['user_email'] !== '' &&
                         $_SESSION['user']['user_avatar'] !== '/assets/media/avatars/blank.png')
                     ) {
-                        echo 'Complete your profile to enjoy all services in our web! 💡';
+                        echo 'Your profile is not complete! 💡';
                     }
                     ?>
                 </div>

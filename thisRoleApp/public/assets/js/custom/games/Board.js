@@ -1,7 +1,7 @@
 class Board {
     /**
      * Board constructor
-     * -----------------------------------------------------------------------------------------------------------------
+     * ---
      * @param dicesClass
      * @param options
      */
@@ -35,6 +35,28 @@ class Board {
             this.setPlayername();
         }
         // * end::User settings * //
+    }
+
+    /**
+     * Object Dice
+     * ---
+     * @param sides
+     * @constructor
+     */
+    Dice = function (sides) {
+        this.sides = sides;
+        this.roll = function (n) {
+            if (!n) n = 1;
+            let rolls = [];
+            for (let i = 0; i < n; i++) {
+                let roll = Math.round(Math.random() * this.sides);
+                while (roll <= 0 || roll > this.sides) {
+                    roll = Math.round(Math.random() * this.sides);
+                }
+                rolls[i] = roll;
+            }
+            return rolls;
+        }
     }
 
     response(txt, error = true) {
@@ -112,30 +134,8 @@ class Board {
     }
 
     /**
-     * Object Dice
-     * -----------------------------------------------------------------------------------------------------------------
-     * @param sides
-     * @constructor
-     */
-    Dice = function (sides) {
-        this.sides = sides;
-        this.roll = function (n) {
-            if (!n) n = 1;
-            let rolls = [];
-            for (let i = 0; i < n; i++) {
-                let roll = Math.round(Math.random() * this.sides);
-                while (roll <= 0 || roll > this.sides) {
-                    roll = Math.round(Math.random() * this.sides);
-                }
-                rolls[i] = roll;
-            }
-            return rolls;
-        }
-    }
-
-    /**
      * Create dices objects
-     * -----------------------------------------------------------------------------------------------------------------
+     * ---
      * @param buttons
      */
     set CreateDices(buttons) {

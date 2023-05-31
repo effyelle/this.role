@@ -155,6 +155,7 @@ nb-configuration.xml
 
 # PHPDocumentor
 .phpdoc/
+thisRoleApp/docs/*
 
 # Uploaded media through project
 thisRoleApp/public/assets/media/avatars/*

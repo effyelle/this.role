@@ -27,7 +27,7 @@ class Mailer
     /**
      * @var string
      */
-    protected string $fromEmail = 'this.role@outlook.es';
+    protected string $fromEmail = 'this.role@outlook.com';
 
     /**
      * @var string
@@ -37,7 +37,7 @@ class Mailer
     /**
      * @var string
      */
-    protected string $pwd = '@_Druid7';
+    protected string $pwd = 'Aqws!123';
 
     /**
      * @var string

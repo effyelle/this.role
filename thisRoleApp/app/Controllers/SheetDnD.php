@@ -4,11 +4,31 @@ namespace App\Controllers;
 
 class SheetDnD
 {
-    function __init($name, $type = 'character'): array
+    /**
+     * ---
+     * GET SHEET DATA
+     * ---
+     * Name for game item sheet is required.
+     * Returns game item sheet data according to the sheet type received. If none is given, character data is returned.
+     *
+     * @param string $name
+     * @param string $type
+     *
+     * @return array
+     */
+    function __init(string $name, string $type = 'character'): array
     {
         return $this->$type($name);
     }
 
+    /**
+     * ---
+     * HANDOUT SHEET DATA
+     * ---
+     * @param $name
+     *
+     * @return array
+     */
     function handout($name): array
     {
         return [
@@ -17,6 +37,16 @@ class SheetDnD
         ];
     }
 
+    /**
+     * ---
+     * CHARACTER SHEET DATA
+     * ---
+     * Uses file '/public/assets/js/custom/games/character_DnD.json' to get data for a new item sheet.
+     *
+     * @param $name
+     *
+     * @return array|bool
+     */
     function character($name): array|bool
     {
         $sheet = file_get_contents(FCPATH . '/assets/js/custom/games/character_DnD.json');
@@ -28,6 +58,13 @@ class SheetDnD
         return $sheet;
     }
 
+    /**
+     * ---
+     * EDIT ITEM VISIBILITY
+     * ---
+     * @param $post
+     * @return array
+     */
     function _edit_view($post): array
     {
         // * begin::Save players can see or edit if it was set * //
@@ -47,6 +84,16 @@ class SheetDnD
         return $post;
     }
 
+    /**
+     * ---
+     * PROCESS DATA FOR INSERT
+     * ---
+     * Processes arrays and objects into json format, leaving all other variable types unchanged.
+     *
+     * @param array $post
+     *
+     * @return array
+     */
     function _json_process(array $post): array
     {
         foreach ($post as $k => $v) {
@@ -59,6 +106,17 @@ class SheetDnD
         return $post;
     }
 
+    /**
+     * ---
+     * PROCESS POST
+     * ---
+     * Process item data and updates if necessary according to post parameters given.
+     *
+     * @param $params - $_POST: $k for HTML form name, $v for value
+     * @param $item
+     *
+     * @return array|bool
+     */
     function _process_post($params, $item): array|bool
     {
         $k = array_keys($params)[0];
@@ -132,6 +190,17 @@ class SheetDnD
         return false;
     }
 
+    /**
+     * ---
+     * GET CLASSES ARRAY
+     * ---
+     *
+     * @param array $classes
+     * @param string $k
+     * @param string $v
+     *
+     * @return array
+     */
     function getClasses(array $classes, string $k, string $v): array
     {
         for ($i = 0; $i < count($classes); $i++) {
@@ -150,6 +219,17 @@ class SheetDnD
         return $classes;
     }
 
+    /**
+     * ---
+     * GET ABILITY SCORES ARRAY
+     * ---
+     *
+     * @param array $scores
+     * @param string $k
+     * @param string $v
+     *
+     * @return array
+     */
     function getScores(array $scores, string $k, string $v): array
     {
         foreach ($scores as $name => $score) {
@@ -161,6 +241,17 @@ class SheetDnD
         return $scores;
     }
 
+    /**
+     * ---
+     * GET SKILLS ARRAY
+     * ---
+     *
+     * @param array $skills
+     * @param string $k
+     * @param string $v
+     *
+     * @return array
+     */
     function getSkills(array $skills, string $k, string $v): array
     {
         foreach ($skills as $name => $skill) {
@@ -171,6 +262,17 @@ class SheetDnD
         return $skills;
     }
 
+    /**
+     * ---
+     * GET HEALTH ARRAY
+     * ---
+     *
+     * @param array $health
+     * @param string $k
+     * @param string $v
+     *
+     * @return array
+     */
     function getHealth(array $health, string $k, string $v): array
     {
         $health['hit_points'][$k] = $v;

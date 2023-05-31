@@ -66,7 +66,6 @@
 <!--begin::Form-->
 <div class="m-auto my-4 text-center">
     <p>Already have an account? <a href="<?= base_url() ?>app/login" class="link-info">Log in</a></p>
-
 </div>
 
 <script>

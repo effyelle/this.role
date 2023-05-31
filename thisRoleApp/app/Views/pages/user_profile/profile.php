@@ -23,7 +23,7 @@
                 <!--begin::Row-->
                 <div class="text-info fs-6 text-center">
                     <?php
-                    if (!(isset($_SESSION['user']['user_confirmed']) &&
+                    if (!(//isset($_SESSION['user']['user_confirmed']) &&
                         isset($_SESSION['user']['user_username']) && $_SESSION['user']['user_username'] !== '' &&
                         isset($_SESSION['user']['user_fname']) && $_SESSION['user']['user_email'] !== '' &&
                         $_SESSION['user']['user_avatar'] !== '/assets/media/avatars/blank.png')
@@ -70,11 +70,11 @@
                                    class="form-control bg-transparent this-role-form-field"/>
                             <?php
                             if (!isset($_SESSION['user']['user_confirmed'])) {
-                                echo '<div class="text-danger fs-7 required">This email has not been confirmed yet</div>' .
+                                /*echo '<div class="text-danger fs-7 required">This email has not been confirmed yet</div>' .
                                     '<button type="button" id="resend-conf_email" class="btn btn-warning py-1 px-3"' .
                                     '    data-bs-toggle="modal" data-bs-target="#modal_confirmation">' .
                                     '      Resend code' .
-                                    '</button>';
+                                    '</button>';*/
                             }
                             ?>
                         </div>
@@ -103,8 +103,8 @@
                         <!--end::Avatar-->
                         <!--end::Buttons-->
                         <div class="d-flex flex-column justify-content-center align-items-center gap-5 mt-2 w-100">
-                            <button type="button" id="resetPwdBtn" class="btn btn-sm btn-secondary"
-                                    data-bs-toggle="modal" data-bs-target="#modal_confirmation">
+                            <button type="button" id="" class="btn btn-sm btn-secondary"
+                                    data-bs-toggle="modal" data-bs-target="#modal_resetpwd">
                                 Reset password
                             </button>
                             <button type="button" id="deactivateProfile" class="btn btn-sm btn-dark"
@@ -129,5 +129,72 @@
     </div>
     <!--end::Body-->
 </form>
+
+<!--begin::Modal-->
+<div class="modal fade" tabindex="-1" id="modal_resetpwd">
+    <div class="modal-dialog">
+        <!--begin::Form-->
+        <div class="modal-content">
+            <!--begin::Header-->
+            <div class="modal-header">
+                <h3 class="modal-title">Reset password</h3>
+            </div>
+            <!--end::Header-->
+            <!--begin::Body-->
+            <div class="modal-body py-6 mx-auto">
+                <form autocomplete="off" id="resetpwd-form" class="m-auto my-4 text-center">
+                    <div class="text-center text-danger mb-6" id="error">
+                        <?= $error ?? '' ?>
+                    </div>
+                    <!--begin::Row-->
+                    <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
+                        <!--begin::Form Field-->
+                        <div class="my-4 position-relative">
+                            <label for="pwd" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">
+                                Password
+                            </label>
+                            <input type="password" id="pwd" name="pwd" required
+                                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
+                        </div>
+                        <!--end::Form Field-->
+                    </div>
+                    <!--end::Row-->
+                    <!--begin::Row-->
+                    <div class="d-flex flex-row flex-wrap gap-12 justify-content-center">
+                        <!--begin::Form Field-->
+                        <div class="my-4 position-relative">
+                            <label for="pwd-repeat" class="ff-poiret account-option bg-brush h2 z-index-3 my-2">
+                                Repeat Password
+                            </label>
+                            <input type="password" id="pwd-repeat" required
+                                   class="form-control form-control-solid ajax-login bg-transparent text-center mb-6 this-role-form-field"/>
+                        </div>
+                        <!--end::Form Field-->
+                    </div>
+                    <!--end::Row-->
+                </form>
+            </div>
+            <!--end::Body-->
+            <!--begin::Footer-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" id="resetPwdBtn" class="btn btn-primary">
+                    <!--begin::Indicator label-->
+                    <span class="indicator-label">Send</span>
+                    <!--end::Indicator label-->
+                    <!--begin::Indicator progress-->
+                    <span class="indicator-progress">
+                        Please wait...
+                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                    <!--end::Indicator progress-->
+                </button>
+            </div>
+            <!--end::Footer-->
+        </div>
+        <!--end::Form-->
+    </div>
+</div>
+<!--end::Modal-->
 <!--end::List Widget 6-->
 <script src="/assets/js/custom/account/profile.js"></script>

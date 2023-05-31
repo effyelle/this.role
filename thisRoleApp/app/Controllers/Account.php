@@ -122,7 +122,9 @@ class Account extends BaseController
             echo json_encode(['response' => false, 'msg' => 'The email is already in use.']);
             return;
         }
+        // * WARNING - Email being rejected for spam * //
         // Send confirmation email and insert new user into Database
+        /*
         $email_response = $this->sendConfirmationEmail($email, $username);
         // If $email_response returns false means token could not be created.
         // If it returns a string it is a debug message and email could not be sent.
@@ -136,12 +138,14 @@ class Account extends BaseController
             ]);
             return;
         }
+        */
         $pwd = password_hash($pwd, PASSWORD_DEFAULT);
         if (!$this->usermodel->new([
             'user_username' => $username,
             'user_email' => $email,
             'user_pwd' => $pwd,
-            'user_avatar' => $this->defaultAvatar
+            'user_avatar' => $this->defaultAvatar,
+            'user_confirmed' => $this->now // Comment this line if email is working
         ])) {
             echo json_encode(['response' => false, 'msg' => 'User could not be added']);
             return;
@@ -191,7 +195,7 @@ class Account extends BaseController
                 'user_email' => $newEmail
             ];
             // Unconfirm account if email was changed
-            if ($newEmail !== $oldEmail) $data['user_confirmed'] = null;
+            // if ($newEmail !== $oldEmail) $data['user_confirmed'] = null;
 
             if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === 0) {
                 /* Begin::Upload new avatar */
@@ -211,7 +215,7 @@ class Account extends BaseController
             // If successfull, update session
             )) update_session($this->usermodel->get(['user_email' => $newEmail])[0]);
             // Send confirmation account email if email was changed
-            if ($newEmail !== $oldEmail) {
+            /*if ($newEmail !== $oldEmail) {
                 $email_response = $this->sendConfirmationEmail($newEmail, $newUsername);
                 // Return error if email could not be sent
                 $response = ($email_response === true)
@@ -219,7 +223,7 @@ class Account extends BaseController
                     : ($email_response === false
                         ? 'There was a problem adding the token'
                         : 'Mail could not be sent=> ' . $email_response);
-            }
+            }*/
         } // Fields missing
         else $response = 'Rellena todos los campos';
         return $response;
@@ -397,25 +401,18 @@ class Account extends BaseController
     function reset_password(): void
     {
         // Check request fields
-        if (isset($_POST['pwd']) && isset($_POST['token'])) {
+        if (isset($_POST['pwd']) && isset($_SESSION['user'])) {
             // Hash new password
             $hash = password_hash($_POST['pwd'], PASSWORD_DEFAULT);
             // Get email from token
-            $email = $this->tokenmodel->get(['token' => $_POST['token']])[0]['token_user'];
+            $email = $_SESSION['user']['user_email'];
             // Update fields
             if ($this->usermodel->updt(
                 ['user_pwd' => $hash], // data
                 ['user_email' => $email] // where
             )) {
-                // If fields were updated, expire token and destroy any session that could exist
-                $this->tokenmodel->updt(
-                    ['token_expires' => $this->now], // data
-                    ['token' => $_POST['token'] // where
-                    ]);
-                if (isset($_SESSION['user'])) {
-                    session_unset();
-                    session_destroy();
-                }
+                session_unset();
+                session_destroy();
                 echo json_encode(['response' => true]);
                 return;
             }

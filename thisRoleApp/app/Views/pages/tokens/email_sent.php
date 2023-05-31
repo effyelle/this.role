@@ -9,8 +9,13 @@
                 <div class="card-toolbar gap-5 py-8">
                     <h1 class="m-auto my-6">All set!</h1>
                 </div>
-                <div class="card-toolbar gap-5 py-8">
+                <div class="card-toolbar gap-5">
+                    <!--
                     <h4 class="m-auto">Please check your email</h4>
+                    -->
+                    <div class="m-auto my-4 text-center">
+                        <p><a href="<?= base_url() ?>app/login" class="link-info">Log in</a></p>
+                    </div>
                 </div>
             </div>
             <!--end::Header-->

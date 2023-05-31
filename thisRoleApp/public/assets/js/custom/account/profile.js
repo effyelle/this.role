@@ -1,9 +1,35 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Reset password listener
     const resetPwdBtn = $('#resetPwdBtn');
-    resetPwdBtn.click(function () {
-        openConfirmation(sendResetPwdMail);
+
+    $('#modal_resetpwd .form-control.ajax-login').keyup(function (e) {
+        if (e.originalEvent.key === 'Enter') resetPwdBtn.click();
     });
+
+    resetPwdBtn.click(resetPwd);
+
+    function resetPwd() {
+        const pwd = $('#pwd');
+        const error = $('#error');
+        if (!(pwd.val()).match(/^.*(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$/)) {
+            error.html('Minimum eight characters: one uppercase letter, one lowercase letter, one number and one special character (@#$%^&+=)');
+            return;
+        }
+        if (!(pwd.val() === $('#pwd-repeat').val())) {
+            error.html('Passwords should match');
+            return;
+        }
+        let form = getForm('#resetpwd-form');
+        return ajax("account/reset_password", form).done((data) => {
+            if (data.response) {
+                go_url('app/pwd_was_resetted');
+                return;
+            }
+            error.html(data['msg']);
+        }).fail((e) => {
+            console.log(e.responseText);
+        });
+    }
 
     // Deactivate profile listener
     const deactivateProfile = $('#deactivateProfile');

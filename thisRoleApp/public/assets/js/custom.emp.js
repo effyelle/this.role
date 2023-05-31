@@ -20,9 +20,7 @@ function ajax(url, form = {}, type = 'post', processing = 'json') {
 }
 
 function go_url(url) {
-    let split = baseUrl.split('/');
-    let baseUrlBase = split[split.length - 1];
-    window.location.assign(baseUrlBase + url);
+    window.location.assign(baseUrl + url);
 }
 
 function updateSession(callback = null) {

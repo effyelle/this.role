@@ -19,18 +19,18 @@ class Account extends BaseController
     }
 
     /**
-     * -----------------------------------------------------------------------------------------------------------------
+     * ---
      * LOGIN
-     * -----------------------------------------------------------------------------------------------------------------
+     * ---
      * Verify user exists and password is correct and send a response through json_encode. This function is to be called
      * from a Javascript AJAX.
      *
-     * -----------------------------------------------------------------------------------------------------------------
+     * ---
      * Parameters via $_REQUEST:
      * - $_POST['username']: username to check account exists
      * - $_POST['pwd']: password to verify
      *
-     * -----------------------------------------------------------------------------------------------------------------
+     * ---
      * After login, the user data will be saved in $_SESSION. Session has to be already initialized at this point.
      *
      * @return void
@@ -60,13 +60,12 @@ class Account extends BaseController
     }
 
     /**
-     * -----------------------------------------------------------------------------------------------------------------
+     * ---
      * SIGNUP
-     * -----------------------------------------------------------------------------------------------------------------
-     * Checks is username and email already exist in Database. If they don't, attempts to create a new user.
+     * ---
+     * Check if username and email already exist in Database. If they don't, attempts to create a new user.
      *
-     * -----------------------------------------------------------------------------------------------------------------
-     * Parameters via $_REQUEST:
+     * Parameters via $_POST:
      * - $_POST['username']
      * - $_POST['email']
      * - $_POST['pwd']
@@ -120,9 +119,26 @@ class Account extends BaseController
         echo json_encode(['response' => true]);
     }
 
+    /**
+     * ---
+     * UPDATE PROFILE
+     * ---
+     * Check if username and email were changed and if they match existing ones in database. If not, send a confirmation
+     * email if it was changed. Attempt to upload new avatar if it was set.
+     *
+     * Returns a string with a response message.
+     *
+     * Parameters via $_POST
+     *  - username
+     *  - fname
+     *  - email
+     * Possible parameter via $_FILES -> avatar
+     *
+     * @return string
+     */
     function updateProfile(): string
     {
-        $error = '';
+        $response = '';
         $newUsername = validate($_POST['username']);
         $newFullName = validate($_POST['fname']);
         $newEmail = validate($_POST['email']);
@@ -139,7 +155,7 @@ class Account extends BaseController
                 // Compare old email to new email
                 ($oldEmail !== $newEmail && $this->usermodel->get(['user_email' => $newEmail]))
             ) { // If one of them match, return an error
-                $error = 'The username or email are already in use.';
+                $response = 'The username or email are already in use.';
             }
 
             /* Begin::Filling up $data=[] */
@@ -161,11 +177,11 @@ class Account extends BaseController
                     // Delete old file
                     if ($oldAvatar !== $this->defaultAvatar && is_file(FCPATH . $oldAvatar)) {
                         if (!unlink(FCPATH . $oldAvatar)) {
-                            $error = 'old avatar could not be deleted.';
+                            $response = 'old avatar could not be deleted.';
                         }
                     }
                     // Return error if file was not uploaded
-                } else $error = $img;
+                } else $response = $img;
                 /* End::Upload new avatar */
             }
 
@@ -181,18 +197,29 @@ class Account extends BaseController
             if ($newEmail !== $oldEmail) {
                 $email_response = $this->sendConfirmationEmail($newEmail, $newUsername);
                 // Return error if email could not be sent
-                $error = ($email_response === true)
+                $response = ($email_response === true)
                     ? '<span class="fs-4">Your email was updated, an email has been sent for confirmation</span>'
                     : ($email_response === false
                         ? 'There was a problem adding the token'
                         : 'Mail could not be sent=> ' . $email_response);
             }
         } // Fields missing
-        else $error = 'Rellena todos los campos';
-        return $error;
+        else $response = 'Rellena todos los campos';
+        return $response;
     }
 
-    function profile_issues($tab = 'myprofile'): string
+    /**
+     * ---
+     * USER PROFILE
+     * ---
+     * Redirect to user profile tab according to parameters. Send possible user issues messages to HTML in the $data
+     * array. Returns the and HTML view.
+     *
+     * @param string $tab
+     *
+     * @return string
+     */
+    function profile_issues(string $tab = 'myprofile'): string
     {
         $error = '';
         if (isset($_POST['fname'])) {
@@ -204,11 +231,15 @@ class Account extends BaseController
     }
 
     /**
-     * -----------------------------------------------------------------------------------------------------------------
-     * Generate Token for email
-     * -----------------------------------------------------------------------------------------------------------------
+     * ---
+     * GENERATE TOKEN FOR EMAILING
+     * ---
+     * Token is generated by current timestamp using the PHP function {@link time()}. Email receive will be used to
+     * expire the date of all previous tokens for that user, then adding the new one to database. Returns the token if
+     * sucessfull, or false if not.
      *
      * @param string $email
+     *
      * @return string|bool
      */
     private function generateToken(string $email): string|bool
@@ -227,13 +258,15 @@ class Account extends BaseController
     }
 
     /**
-     * -----------------------------------------------------------------------------------------------------------------
-     * Confirmation email
-     * -----------------------------------------------------------------------------------------------------------------
-     * Generates token and includes it in the email body sent to the address given.
+     * ---
+     * SEND ACCOUNT CONFIRMATION EMAIL
+     * ---
+     * Generates token via {@link generateToken()} and includes it in the email body sent to the address given.
+     * Returns true if email was sent successfully and an error response if not.
      *
      * @param $email
      * @param $user
+     *
      * @return bool|string
      */
     function sendConfirmationEmail($email, $user = null): bool|string
@@ -250,8 +283,15 @@ class Account extends BaseController
     }
 
     /**
+     * ---
+     * SEND EMAIL FOR PASSWORD RESET
+     * ---
+     * Generate a token via {@link generateToken()} and then attempt to send it to the email given.
+     * Returns true if email was sent successfully and an error response if not.
+     *
      * @param $email
      * @param $user
+     *
      * @return bool|string
      */
     function sendResetPasswordEmail($email, $user): bool|string
@@ -267,6 +307,19 @@ class Account extends BaseController
         return $mail->send_mail_($subject, $message, $target_mail);
     }
 
+    /**
+     * ---
+     * CONFIRM ACCOUNT
+     * ---
+     * Checks if the received token exists and has not expired. If token is valid, it attempts to update the
+     * user_confirmed field in database and expire the token recently used.
+     *
+     * Returns a string with an HTML view according to the response of these actions.
+     *
+     * @param $token
+     * 
+     * @return string
+     */
     function confirm($token): string
     {
         $t = $this->tokenmodel->get(['token' => $token, 'token_expires >' => $this->now]);
@@ -288,6 +341,17 @@ class Account extends BaseController
         return template('tokens/account_confirmed', ['unlogged' => 'unlogged']);
     }
 
+    /**
+     * ---
+     * PASSWORD RESET VIEW
+     * ---
+     * Checks if the received token exists and has not expired.
+     * Returns the user to the password reset form if token is valid, or to a response page of 'token expired' if not.
+     *
+     * @param $token
+     *
+     * @return string
+     */
     function resetpwd($token): string
     {
         // Declare data
@@ -301,6 +365,18 @@ class Account extends BaseController
         return template('tokens/new_password', $data);
     }
 
+    /**
+     * ---
+     * RESET PASSWORD
+     * ---
+     * Attempts to update the password for the user with the password and token given, making the token exprire.
+     *
+     * Parameters via $_POST
+     *  - token: the token used to get to this method
+     *  - pwd: the new password
+     *
+     * @return void
+     */
     function reset_password(): void
     {
         // Check request fields
@@ -332,22 +408,51 @@ class Account extends BaseController
         echo json_encode(['response' => false, 'msg' => 'Fields are missing', 'data' => $_POST]);
     }
 
+    /**
+     * ---
+     * ACCOUNT WAS CREATED VIEW
+     * ---
+     * Returns a string with and HTML view.
+     *
+     * @return string
+     */
     function created(): string
     {
         return template('tokens/email_sent', ['unlogged' => 'unlogged']);
     }
 
-    function canDelete(string $rol = 'admin'): bool
+    /**
+     * ---
+     * CHECK LAST ADMINS/MASTERADMINS
+     * ---
+     * Check if an admin or masteradmin can be demoted/promoted or deactivated by checking if that user is the last one.
+     *
+     * @param string $rol
+     * @return bool
+     */
+    function canDeleteUser(string $rol = 'admin'): bool
     {
         return !($_SESSION['user']['user_rol'] === $rol &&
             count($this->usermodel->get(['user_rol' => $rol, 'user_deleted' => null])) === 1);
     }
 
+    /**
+     * ---
+     * DEACTIVATE ACCOUNT
+     * ---
+     * Checks if user can be deactivated via {@link canDeleteUser}.
+     * If so, update user_deleted field in database to the current datetime and destroy the user session.
+     *
+     * @return void
+     */
     function deactivate(): void
     {
         if (isset($_SESSION['user'])) {
-            if (!$this->canDelete() || !$this->canDelete('masteradmin')) {
-                echo json_encode(['response' => false, 'msg' => 'You are the last admin. Promote another to delete your account.']);
+            if (!$this->canDeleteUser() || !$this->canDeleteUser('masteradmin')) {
+                echo json_encode([
+                    'response' => false,
+                    'msg' => 'You are the last admin. Promote another to delete your account.'
+                ]);
                 return;
             }
             if ($this->usermodel->updt(
@@ -363,7 +468,18 @@ class Account extends BaseController
         echo json_encode(['response' => false]);
     }
 
-    function updateIssuesMessages($old_username, $new_username): bool
+    /**
+     * ---
+     * UPDATE USERNAME IN ISSUES TABLE
+     * ---
+     * Update old username according to parameters so that messages show the new one.
+     *
+     * @param string $old_username
+     * @param string $new_username
+     *
+     * @return bool
+     */
+    function updateIssuesMessages(string $old_username, string $new_username): bool
     {
         // Get all issues
         $all_issues = $this->issuesmodel->get();
@@ -398,6 +514,15 @@ class Account extends BaseController
         return true;
     }
 
+    /**
+     * ---
+     * NEW ISSUE
+     * ---
+     * Insert a new issue into issues table and print a response accordingly.
+     * This method begins a new chain of issues, it doesnt not insert a message into an existing issue.
+     *
+     * @return void
+     */
     function send_issue(): void
     {
         if (isset($_SESSION['user'])) {
@@ -421,6 +546,14 @@ class Account extends BaseController
         echo json_encode(['response' => false]);
     }
 
+    /**
+     * ---
+     * NEW ISSUE MESSAGE
+     * ---
+     * Insert a new message into an existing issue. This method DOES NOT generate new issues.
+     *
+     * @return void
+     */
     function send_issue_msg(): void
     {
         if (isset($_SESSION['user'])) {
@@ -447,10 +580,6 @@ class Account extends BaseController
         echo json_encode(['response' => false]);
     }
 
-    /* *****************************************************************************************************************
-     * AJAX CALLS ******************************************************************************************************
-     ******************************************************************************************************************/
-
     /**
      * AJAX call to get session for debugging
      *
@@ -472,9 +601,13 @@ class Account extends BaseController
     }
 
     /**
-     * AJAX call to send a Password Recovery Email
+     * ---
+     * SEND RESET PASSWORD EMAIL
+     * ---
+     * AJAX call to send a Password Recovery Email. Prints a response accordingly.
      *
      * @param $email
+     *
      * @return void
      */
     function send_reset_password_email($email): void

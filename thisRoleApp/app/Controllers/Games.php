@@ -2,8 +2,6 @@
 
 namespace App\Controllers;
 
-use JsonException;
-
 class Games extends BaseController
 {
     protected mixed $gamesmodel;

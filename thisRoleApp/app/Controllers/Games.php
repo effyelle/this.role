@@ -4,14 +4,60 @@ namespace App\Controllers;
 
 class Games extends BaseController
 {
+    /**
+     * Instance of GamesModel class
+     *
+     * @var mixed|\App\Models\GamesModel|null
+     */
     protected mixed $gamesmodel;
+
+    /**
+     * Instance of GameChatModel class
+     *
+     * @var mixed|\App\Models\GameChatModel|null
+     */
     protected mixed $gamechatmodel;
+
+    /**
+     * Instance of UsersModel class
+     *
+     * @var mixed|\App\Models\UsersModel|null
+     */
     protected mixed $usermodel;
+
+    /**
+     * Instance of GameJournalModel class
+     *
+     * @var mixed|\App\Models\GameJournalModel|null
+     */
     protected mixed $journalmodel;
-    protected mixed $sheetmodel;
+
+    /**
+     * Instance of GamePlayerModel class
+     *
+     * @var mixed|\App\Models\GamePlayerModel|null
+     */
     protected mixed $playermodel;
+
+    /**
+     * Instance of GameLayersModel class
+     *
+     * @var mixed|\App\Models\GameLayersModel|null
+     */
     protected mixed $layermodel;
+
+    /**
+     * Variable to save current datetime stamp in the desired format.
+     *
+     * @var string
+     */
     protected string $now;
+
+    /**
+     * Default folder for games media
+     *
+     * @var string
+     */
     protected string $mediaGames = FCPATH . 'assets/media/games/';
 
     function __construct()
@@ -20,13 +66,16 @@ class Games extends BaseController
         $this->gamechatmodel = model('GameChatModel');
         $this->usermodel = model('UsersModel');
         $this->journalmodel = model('GameJournalModel');
-        $this->sheetmodel = model('GameSheetModel');
         $this->playermodel = model('GamePlayerModel');
         $this->layermodel = model('GameLayersModel');
         $this->now = date('Y-m-d H:i:s', time());
     }
 
     /**
+     * ---
+     * GAMES LIST VIEW
+     * ---
+     *
      * Redirect to a game list for the logged user, showing those games in which
      * the user participates or those who the user has created
      *
@@ -95,8 +144,11 @@ class Games extends BaseController
     }
 
     /**
-     * Redirect to a detailed page for game where user (if creator) can edit
-     * game details, title and icon
+     * ---
+     * GAME DETAILS VIEW
+     * ---
+     *
+     * Redirect to a detailed page for game where user (if creator) can edit game details, title and icon
      *
      * @param int $id
      *
@@ -158,7 +210,11 @@ class Games extends BaseController
     }
 
     /**
-     * Launch game page
+     * ---
+     * GAME VIEW
+     * ---
+     *
+     * Launch game page with game information.
      *
      * @param int $id
      *
@@ -182,6 +238,9 @@ class Games extends BaseController
     }
 
     /**
+     * ---
+     * JOIN GAME
+     * ---
      * Redirect to the join game page where an ajax call to {@link ajax_join}
      * will attempt to include user in a game
      *
@@ -198,34 +257,13 @@ class Games extends BaseController
         return template('games/not_found');
     }
 
-    /* ********************************************************************
-     ***************************** AJAX CALLS *****************************
-     **********************************************************************/
-
     /**
-     * Create a url to join a game
+     * ---
+     * JOIN GAME AJAX
+     * ---
+     * Add user to a game if it exists and has not already joined.
      *
-     * @param $id
-     *
-     * @return string
-     */
-    function create_invite_url($id): string
-    {
-        // Expire old urls
-        $this->gamesmodel->updt(
-            ['url_expires' => $this->now], // data
-            ['id_game' => $id], // where
-            $this->gamesmodel->relatedTable // table
-        );
-        $url = time();
-        if ($this->gamesmodel->new(['url' => $url, 'id_game' => $id], $this->gamesmodel->relatedTable)) {
-            return json_encode(['response' => true, 'url' => (new \Config\App)->baseURL . '/app/games/join/' . $url]);
-        }
-        return json_encode(['response' => false, 'msg' => 'Url could not be created']);
-    }
-
-    /**
-     * Add user to a game
+     * This is an AJAX call.
      *
      * @param $id
      *
@@ -248,6 +286,45 @@ class Games extends BaseController
         return json_encode(['response' => false, 'msg' => 'Game not found']);
     }
 
+    /**
+     * ---
+     * CREATE INVITE URL
+     * ---
+     * Create an url to join a game.
+     *
+     * This is an AJAX call.
+     *
+     * @param $id
+     *
+     * @return string
+     */
+    function create_invite_url($id): string
+    {
+        // Expire old urls
+        $this->gamesmodel->updt(
+            ['url_expires' => $this->now], // data
+            ['id_game' => $id], // where
+            $this->gamesmodel->relatedTable // table
+        );
+        $url = time();
+        if ($this->gamesmodel->new(['url' => $url, 'id_game' => $id], $this->gamesmodel->relatedTable)) {
+            return json_encode(['response' => true, 'url' => (new \Config\App)->baseURL . '/app/games/join/' . $url]);
+        }
+        return json_encode(['response' => false, 'msg' => 'Url could not be created']);
+    }
+
+    /**
+     * ---
+     * DELETE GAME
+     * ---
+     * Set a game as 'deleted'.
+     *
+     * This is an AJAX call.
+     *
+     * @param $id
+     *
+     * @return string
+     */
     function ajax_del_game($id): string
     {
         if ($this->gamesmodel->updt(
@@ -259,6 +336,16 @@ class Games extends BaseController
         return json_encode(['response' => false, 'msg' => 'Game could not be deleted']);
     }
 
+    /**
+     * ---
+     * SAVE GAME CHAT
+     * ---
+     * This is an AJAX call.
+     *
+     * @param $id
+     *
+     * @return string
+     */
     function set_chat($id): string
     {
         if (isset($_POST['msg']) && isset($_POST['sender']) && isset($_POST['msgType']) && isset($_POST['icon'])) {
@@ -275,6 +362,16 @@ class Games extends BaseController
         return json_encode(['response' => false, 'msg' => 'Message could not be sent']);
     }
 
+    /**
+     * ---
+     * GET GAME CHAT
+     * ---
+     * This is an AJAX call.
+     *
+     * @param $id
+     *
+     * @return string
+     */
     function get_chat($id): string
     {
         if ($gameChat = $this->gamechatmodel->get(['chat_game_id' => $id], null, ['chat_id' => 'desc'])) {
@@ -283,6 +380,16 @@ class Games extends BaseController
         return json_encode(['response' => false, 'msg' => 'Messages could not be loaded']);
     }
 
+    /**
+     * ---
+     * GET JOURNAL ITEMS
+     * ---
+     * This is an AJAX call.
+     *
+     * @param $id
+     *
+     * @return string
+     */
     function get_journal_items($id): string
     {
         if ($journal = $this->journalmodel->get(['item_id_game' => $id], null, ['item_name' => 'ASC'])) {
@@ -291,6 +398,18 @@ class Games extends BaseController
         return json_encode(['response' => false]);
     }
 
+    /**
+     * ---
+     * SAVE JOURNAL ITEM
+     * ---
+     * This is an AJAX call.
+     *
+     * This function uses a {@link \App\Controllers\SheetDnD} instance to create the needed fields for database.
+     *
+     * @param $id
+     *
+     * @return string
+     */
     function set_journal_item($id): string
     {
         $data['response'] = false;
@@ -337,6 +456,16 @@ class Games extends BaseController
         return json_encode($data);
     }
 
+    /**
+     * ---
+     * DELETE JOURNAL ITEM
+     * ---
+     * This is an AJAX call.
+     *
+     * @param $id
+     *
+     * @return string
+     */
     function delete_journal_item($id): string
     {
         $data = [
@@ -353,6 +482,16 @@ class Games extends BaseController
         return json_encode($data);
     }
 
+    /**
+     * ---
+     * JOURNAL ITEM SHEET VIEW
+     * ---
+     * This is an AJAX call.
+     *
+     * @param $id
+     *
+     * @return string
+     */
     function sheet($id): string
     {
         $item = $this->journalmodel->get(['item_id' => $id], ['games' => 'game_id=item_id_game'])[0];
@@ -363,6 +502,14 @@ class Games extends BaseController
         };
     }
 
+    /**
+     * ---
+     * SAVE JOURNAL ICON
+     * ---
+     * This is an AJAX call.
+     *
+     * @return bool
+     */
     function saveJournalIcon(): bool
     {
         // Search for old file
@@ -398,6 +545,18 @@ class Games extends BaseController
         return false;
     }
 
+    /**
+     * ---
+     * SAVE JOURNAL ITEM SHEET
+     * ---
+     * This is an AJAX call.
+     *
+     * This function uses a {@link \App\Controllers\SheetDnD} instance to manage the fields of database sheet.
+     *
+     * @param $id
+     *
+     * @return string
+     */
     function save_sheet($id): string
     {
         $data['response'] = false;
@@ -441,11 +600,16 @@ class Games extends BaseController
         return json_encode($data);
     }
 
-    function saveAbilityScores($param): mixed
-    {
-        return $param;
-    }
-
+    /**
+     * ---
+     * ADD GAME MAP/LAYER
+     * ---
+     * This is an AJAX call.
+     *
+     * @param $id
+     *
+     * @return string
+     */
     function add_map($id): string
     {
         $data = [
@@ -484,6 +648,16 @@ class Games extends BaseController
         return json_encode(['data' => $data]);
     }
 
+    /**
+     * ---
+     * GET MAP MAYERS
+     * ---
+     * This is an AJAX call.
+     *
+     * @param $id
+     *
+     * @return string
+     */
     function get_layers($id): string
     {
         $data['response'] = false;
@@ -496,6 +670,16 @@ class Games extends BaseController
         return json_encode($data);
     }
 
+    /**
+     * ---
+     * EDIT MAP LAYER
+     * ---
+     * This is an AJAX call.
+     *
+     * @param $id
+     *
+     * @return string
+     */
     function edit_layer($id): string
     {
         // Declare response on false
@@ -542,6 +726,16 @@ class Games extends BaseController
         return json_encode(['data' => $data]);
     }
 
+    /**
+     * ---
+     * SET SELECTER LAYER
+     * ---
+     * This is an AJAX call.
+     *
+     * @param $id
+     *
+     * @return string
+     */
     function set_selected_layer($id): string
     {
         $data = ['response' => false];
@@ -555,6 +749,16 @@ class Games extends BaseController
         return json_encode($data);
     }
 
+    /**
+     * ---
+     * DELETE MAP LAYER
+     * ---
+     * This is an AJAX call.
+     *
+     * @param $id
+     *
+     * @return string
+     */
     function delete_layer($id): string
     {
         $data['response'] = false;
@@ -570,6 +774,16 @@ class Games extends BaseController
         return json_encode($data);
     }
 
+    /**
+     * ---
+     * SAVE LAYER TOKENS
+     * ---
+     * This is an AJAX call.
+     *
+     * @param $id
+     *
+     * @return string
+     */
     function save_token($id): string
     {
         $data = [
@@ -590,6 +804,16 @@ class Games extends BaseController
         return json_encode($data);
     }
 
+    /**
+     * ---
+     * DELETE MAP TOKEN
+     * ---
+     * This is an AJAX call.
+     *
+     * @param $id
+     *
+     * @return string
+     */
     function delete_token($id): string
     {
         $data = [
@@ -614,6 +838,16 @@ class Games extends BaseController
         return json_encode($data);
     }
 
+    /**
+     * ---
+     * SAVE PLAYERNAME FOR GAME
+     * ---
+     * This is an AJAX call.
+     *
+     * @param $id
+     *
+     * @return string
+     */
     function save_playername($id): string
     {
         $data = [

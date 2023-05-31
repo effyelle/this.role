@@ -16,7 +16,7 @@
     </div>
     <!--end::Form Field-->
     <div class="col-10 w-md-600px">
-        <a href="<?= base_url() ?>app/reset_pwd"
+        <a href="<?= base_url() ?>app/password_recovery"
            class="d-block fw-bolder text-info text-hover-info fs-7 mx-auto text-center">Forgot password?</a>
     </div>
     <!--begin::Form Button-->

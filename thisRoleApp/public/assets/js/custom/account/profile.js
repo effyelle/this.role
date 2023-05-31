@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 go_url('app/pwd_was_resetted');
                 return;
             }
-            error.html(data['msg']);
+            error.html(data.msg);
         }).fail((e) => {
             console.log(e.responseText);
         });

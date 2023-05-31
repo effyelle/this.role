@@ -401,15 +401,18 @@ class Account extends BaseController
     function reset_password(): void
     {
         // Check request fields
-        if (isset($_POST['pwd']) && isset($_SESSION['user'])) {
+        if (isset($_POST['pwd']) &&
+            (isset($_SESSION['user']) || isset($_POST['username']))
+        ) {
             // Hash new password
             $hash = password_hash($_POST['pwd'], PASSWORD_DEFAULT);
             // Get email from token
-            $email = $_SESSION['user']['user_email'];
+            if (!isset($_POST['username'])) $username = $_SESSION['user']['user_username'];
+            else $username = $_POST['username'];
             // Update fields
             if ($this->usermodel->updt(
                 ['user_pwd' => $hash], // data
-                ['user_email' => $email] // where
+                ['user_username' => $username] // where
             )) {
                 session_unset();
                 session_destroy();

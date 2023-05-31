@@ -338,7 +338,7 @@ class App extends BaseController
      *
      * @return string
      */
-    function reset_pwd(): string
+    function password_recovery(): string
     {
         return template('tokens/reset_password_request', ['unlogged' => 'unlogged']);
     }

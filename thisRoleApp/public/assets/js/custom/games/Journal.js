@@ -528,6 +528,8 @@ class Journal {
             contentType: false,
             success: (data) => {
                 return data;
+            }, error: (e) => {
+                console.log(e.responseText);
             }
         });
     }

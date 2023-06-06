@@ -250,7 +250,8 @@ class GameMap {
     }
 
     saveToken(token) {
-        let itemID = token.id.charAt(token.id.length - 1);
+        let split = token.id.split('_');
+        let itemID = split[split.length - 1];
         let post = {
             top: token.style.top,
             left: token.style.left
@@ -281,7 +282,9 @@ class GameMap {
                 if (!tokenSelected) {
                     token.classList.remove('token_selected');
                     document.onkeyup = null;
-                    this.saveToken(token);
+                    this.saveToken(token).done((data) => {
+                        console.log(data);
+                    });
                     return;
                 }
                 //* begin::Listen to remove token *//

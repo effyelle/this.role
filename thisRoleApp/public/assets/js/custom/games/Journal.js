@@ -554,7 +554,8 @@ class Journal {
         this.itemsOpened = q('.' + item.draggableContainerClass);
         //* Rerun opened items to add listeners *//
         for (let itemOpened of this.itemsOpened) {
-            let id = itemOpened.id.charAt(itemOpened.id.length - 1);
+            let split = itemOpened.id.split('_');
+            let id = split[split.length - 1];
             let this_item = this.searchItem(id);
             // Go to next opened draggable DOM item if journal item is not found
             if (!this_item || this_item === {}) continue;

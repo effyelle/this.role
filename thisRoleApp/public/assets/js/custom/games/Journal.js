@@ -190,7 +190,7 @@ class Journal {
                 let playerName = this.playername ? this.playername.value : session.user_username;
                 if (this.select) this.select.innerHTML = '<option selected value="username">' + playerName + '</option>';
                 // Reset journal draggables
-                if (this.journalDraggable) {
+                if (this.journalDraggable && this.journalDraggable.containers) {
                     for (let jSheet of this.journalDraggable.containers) {
                         jSheet.remove();
                     }
@@ -200,14 +200,15 @@ class Journal {
             // If the length of both arrays is not the same, items have changed
             // -> (Items have been added or deleted)
             if (data.results.length !== Object.keys(this.items).length) {
+                // Reset select HTML
+                let playerName = this.playername ? this.playername.value : session.user_username;
+                if (this.select) this.select.innerHTML = '<option selected value="username">' + playerName + '</option>';
                 this.JournalChanged = 'length';
                 q('#' + this.container)[0].innerHTML = '';
                 this.items = {}
                 //* Save items into this.items *//
                 this.saveResults(data);
                 // Reset select HTML
-                let playerName = this.playername ? this.playername.value : session.user_username;
-                if (this.select) this.select.innerHTML = '<option selected value="username">' + playerName + '</option>';
                 // Show list
                 this.formatJournalItems();
                 // Load admin select
@@ -228,6 +229,10 @@ class Journal {
                                 !(dbItem[j] === 'null' && thisItem[j] === 'null') && !(dbItem[j] === null && thisItem[j] === 'null')) {
                                 // Save new values into this.items.info
                                 this.saveResults(data);
+                                let playerName = this.playername ? this.playername.value : session.user_username;
+                                if (this.select) this.select.innerHTML = '<option selected value="username">' + playerName + '</option>';
+                                this.loadAdminSelect();
+                                this.loadChatSelect();
                                 this.JournalChanged = 'info';
                                 break;
                             }
@@ -435,6 +440,17 @@ class Journal {
         }
     }
 
+    loadChatSelect() {
+        // Rerun items
+        for (let i in this.items) {
+            let item = this.items[i];
+            // Select for chat if character
+            if (item.info.item_type === 'character' && this.select) {
+                this.select.innerHTML += '<option value="' + item.info.item_id + '">' + item.info.item_name + '</option>';
+            }
+        }
+    }
+
     formatJournalItems() {
         // Rerun items
         for (let i in this.items) {
@@ -459,18 +475,15 @@ class Journal {
             if (session.user_id === dbGame.game_creator || viewer || editor) {
                 // Journal list
                 this.addItemBtnToList(item);
-                // Select for chat if character
-                if (item.info.item_type === 'character' && this.select) {
-                    this.select.innerHTML += '<option value="' + item.info.item_id + '">' + item.info.item_name + '</option>';
-                }
             }
         }
+        this.loadChatSelect();
     }
 
     addItemBtnToList(item) {
         // Check image data, if it does not exist, put a default one
         q('#' + this.container)[0].innerHTML += '' + '<!--begin::Menu Item-->' + ' <div class="menu-item ' + this.itemClass + '">' + // Assign item ID to button for later accessing
-            '     <button type="button" class="btn menu-link col-12"' + (item.info.item_type === 'character' ? ' draggable="true"' : '') + ' value="' + item.info.item_id + '">' +
+            '     <button type="button" class="btn menu-link col-12" draggable="true" value="' + item.info.item_id + '">' +
             '         <!--begin::Symbol-->' +
             '         <div class="me-2 symbol symbol-20px symbol-md-30px">' +
             '             <span class="symbol-label circle item_icon-holder"' +

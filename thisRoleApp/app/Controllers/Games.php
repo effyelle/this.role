@@ -230,15 +230,25 @@ class Games extends BaseController
     {
         $data = [];
         $view = 'games/not_found';
-        $game = $this->gamesmodel->get(['game_id' => $id]);
+        $game = $this->gamesmodel->get(['game_id' => $id, 'game_deleted' => null]);
         if (count($game) === 1) {
-            $data = [
-                'game' => $game[0],
-                'title' => $game[0]['game_title']
-            ];
             $players = $this->usermodel->get(['game_player_id_game' => $id], ['game_player' => 'game_player_id_user=user_id']);
-            if (count($players) > 0) $data['players'] = $players;
-            $view = 'games/game';
+            if (count($players) > 0) {
+                $data['players'] = $players;
+                $isPlayer = false;
+                foreach ($players as $player) {
+                    if ($player['game_player_id_user'] === $_SESSION['user']['user_id']) {
+                        $isPlayer = true;
+                    }
+                    if ($isPlayer) {
+                        $data = [
+                            'game' => $game[0],
+                            'title' => $game[0]['game_title']
+                        ];
+                        $view = 'games/game';
+                    }
+                }
+            }
         }
         return template($view, $data);
     }

@@ -213,6 +213,9 @@ class Board {
                 // Return message error if length is not 1
                 $('.modal_error_response').html('Item could not be opened');
                 $('#modal_error-toggle').click();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
                 return;
             }
             this.journal.JournalDraggable = new Draggable('.' + item.draggableContainerClass, '.' + item.draggableContainerClass + ' .cursor-move', {
@@ -282,7 +285,7 @@ class Board {
             if (q('#token_' + item.info.item_id).length !== 0) return;
             // * Add token to game board * //
             this.map.tokenC.innerHTML += this.map.tokenFormatting(item);
-            $('#token_' + item.info.item_id +' .indicator-progress').show();
+            $('#token_' + item.info.item_id + ' .indicator-progress').show();
             this.map.TokensDraggable = new Draggable('.symbol.cursor-move', null, {zIndex: 1100});
             let newToken = this.map.tokensDraggable.findContainer('token_' + item.info.item_id);
             // Percentage of mouse position
@@ -292,7 +295,7 @@ class Board {
             };
             newToken.setAxis(coords.x + '%', coords.y + '%');
             newToken.setProportions('6%');
-            this.map.saveToken(newToken).done(()=>{
+            this.map.saveToken(newToken).done(() => {
                 this.map.hearTokenThings();
             });
             this.map.img = q('#' + this.map.img.id)[0];

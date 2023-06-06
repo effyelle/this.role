@@ -37,10 +37,13 @@ class SheetDnD
      */
     function handout($name): array
     {
-        return [
-            'item_name' => $name,
-            'item_type' => 'handout'
-        ];
+        $sheet = file_get_contents(FCPATH . '/assets/js/custom/games/character_DnD.json');
+        if ($sheet) {
+            $sheet = json_decode($sheet, true);
+            $sheet['item_name'] = $name;
+            $sheet['item_type'] = 'handout';
+        }
+        return $sheet;
     }
 
     /**

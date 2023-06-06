@@ -29,7 +29,7 @@ function updateSession(callback = null) {
     }).fail((e) => {
         if (callback) callback();
         console.log(e.responseText);
-    })
+    });
 }
 
 function generateDatatables() {

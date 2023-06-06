@@ -46,7 +46,7 @@ class BaseModel extends Model
                 $builder->where($k, $v);
             }
         }
-        // Oder by
+        // Order by
         if (isset($orderBy)) {
             foreach ($orderBy as $k => $v) {
                 $builder->orderBy($k, $v);

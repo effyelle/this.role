@@ -12,6 +12,14 @@
     </div>
 </div>
 
+<?php
+echo "Game:<br>";
+var_dump($game);
+echo "<br>Players:<br>";
+var_dump($players);
+echo "<br>";
+?>
+
 <?php if (isset($game) && isset($_SESSION['user']) && $_SESSION['user']['user_id'] === $game['game_creator']): ?>
 
     <!--begin::Modal-->

@@ -310,10 +310,8 @@ class GameMap {
                 let timer = 0;
                 const counter = setInterval(() => {
                     timer++;
-                    console.log(timer)
                 }, 100);
                 token.onmouseup = () => {
-                    console.log(timer);
                     clearInterval(counter);
                 }
             }

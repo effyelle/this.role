@@ -232,9 +232,7 @@ class Games extends BaseController
         $view = 'games/not_found';
         $game = $this->gamesmodel->get(['game_id' => $id, 'game_deleted' => null]);
         if (count($game) === 1) {
-            $players = $this->usermodel->get(['game_player_id_game' => $id], ['game_player' => 'game_player_id_user=user_id']);
-            if (count($players) > 0) {
-                $data['players'] = $players;
+            if ($players = $this->usermodel->get(['game_player_id_game' => $id], ['game_player' => 'game_player_id_user=user_id'])) {
                 $isPlayer = false;
                 foreach ($players as $player) {
                     if ($player['game_player_id_user'] === $_SESSION['user']['user_id']) {
@@ -243,7 +241,8 @@ class Games extends BaseController
                     if ($isPlayer) {
                         $data = [
                             'game' => $game[0],
-                            'title' => $game[0]['game_title']
+                            'title' => $game[0]['game_title'],
+                            'players' => $players
                         ];
                         $view = 'games/game';
                     }

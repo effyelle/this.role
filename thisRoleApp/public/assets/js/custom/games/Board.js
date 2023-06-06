@@ -188,8 +188,9 @@ class Board {
         if (this.journal.journalDraggable && this.journal.journalDraggable.containers) {
             const draggables = this.journal.journalDraggable.containers;
             for (let draggable of draggables) {
-                if (!draggable) return;
-                let itemID = draggable.id.substring(draggable.id.length - 1);
+                if (!draggable) continue;
+                let split = draggable.id.split('_');
+                let itemID = split[split.length - 1];
                 let it = this.journal.searchItem(itemID);
                 if (!it) {
                     draggable.remove();

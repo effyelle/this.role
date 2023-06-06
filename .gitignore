@@ -97,7 +97,7 @@ vendor/
 #-------------------------
 # thisRoleApp/system/
 # thisRoleApp/app/.htaccess
-# thisRoleApp/app/Config/
+thisRoleApp/app/Config/
 # thisRoleApp/app/Database/
 # thisRoleApp/app/Filters/
 # thisRoleApp/app/Helpers/

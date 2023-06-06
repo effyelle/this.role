@@ -263,7 +263,8 @@ class GameMap {
     }
 
     deleteToken(token) {
-        let itemID = token.id.charAt(token.id.length - 1);
+        let split = token.id.split('_');
+        let itemID = split[split.length - 1];
         return ajax('/app/games_ajax/delete_token/' + this.selectedLayer(), {item_id: itemID});
     }
 

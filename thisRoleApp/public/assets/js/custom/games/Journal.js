@@ -366,15 +366,17 @@ class Journal {
                 canSeeCheckbox.checked = checked;
                 canEditCheckbox.checked = checked;
                 if (viewers) {
+                    let split = canSeeCheckbox.id.split('-');
                     for (let v of viewers) {
-                        if (v == canSeeCheckbox.id.charAt(0)) checked = true;
+                        if (v == split[0]) checked = true;
                     }
                     canSeeCheckbox.checked = checked;
                 }
                 checked = false;
                 if (editors) {
+                    let split = canEditCheckbox.id.split('-');
                     for (let e of editors) {
-                        if (e == canEditCheckbox.id.charAt(0)) checked = true;
+                        if (e == split[0]) checked = true;
                     }
                     canEditCheckbox.checked = checked;
                 }
@@ -395,7 +397,8 @@ class Journal {
             [canSee, canEdit].forEach(obj => {
                 for (let o of obj) {
                     if (o.checked) {
-                        players[o.id] = o.id.substring(2);
+                        let split = o.id.split('-');
+                        players[o.id] = split[1];
                     }
                 }
             });
@@ -535,8 +538,9 @@ class Journal {
     }
 
     saveTable(t) {
-        let name = t.id.substring(0, t.id.length - 2);
-        let id = t.id.substring(t.id.length - 1);
+        let split = t.id.split('_');
+        let name = split[0];
+        let id = split[1];
         let form = {item_id: id};
         form[name] = t.innerHTML;
         return ajax("/app/games_ajax/save_sheet/" + dbGame.game_id, form);
@@ -1077,7 +1081,8 @@ class Journal {
     }
 
     setRowListeners(t, it) {
-        let tableName = t.id.substring(0, t.id.length - 2);
+        let split = t.id.split('_');
+        let tableName = split[0];
         let fields = q('#' + it.draggableContainerId + ' #' + t.id + ' .this_field');
         this.fill = () => {
             for (let f of fields) {
@@ -1244,8 +1249,9 @@ class Journal {
     tableHeaders(t, it) {
         t.innerHTML = '';
         // Get table name
-        let tableName = t.id.substring(0, t.id.length - 2);
-        if (it.info[tableName] === '') {
+        let split = t.id.split('_');
+        let tableName = split[0];
+        if (!it.info[tableName] || it.info[tableName] === '') {
             // Add header
             switch (tableName) {
                 case 'bag':
@@ -1261,6 +1267,7 @@ class Journal {
             }
             // A sample row
             this.createNewRow(t);
+            return;
         }
         //* FIRST LOAD WHEN OPENING ITEM MODAL *//
         t.innerHTML += it.info[tableName];

@@ -526,9 +526,10 @@ class Journal {
     }
 
     saveTable(t) {
-        let split = t.id.split('_');
-        let name = split[0];
-        let id = split[1];
+        let name = t.id.substring(0, t.id.lastIndexOf('_'));
+        let id = t.id.substring(t.id.lastIndexOf('_')+1);
+        console.log(name)
+        console.log(id)
         let form = {item_id: id};
         form[name] = t.innerHTML;
         return ajax("/app/games_ajax/save_sheet/" + dbGame.game_id, form);
@@ -998,11 +999,11 @@ class Journal {
 
     set Tables(it) {
         this.characterTableButtons = [
-            q('#bag_btn' + it.info.item_id),
-            q('#atk_spells_btn' + it.info.item_id),
-            q('#global_mods_btn' + it.info.item_id),
-            q('#tools_custskills_btn' + it.info.item_id),
-            q('#other_feats_btn' + it.info.item_id)
+            q('#bag_btn_' + it.info.item_id),
+            q('#atk_spells_btn_' + it.info.item_id),
+            q('#global_mods_btn_' + it.info.item_id),
+            q('#tools_custskills_btn_' + it.info.item_id),
+            q('#other_feats_btn_' + it.info.item_id)
         ];
         this.searchRow = (div) => {
             let row = div;
@@ -1027,7 +1028,7 @@ class Journal {
             if (btn[0] && btn[0].parentNode.nextElementSibling) {
                 let table = btn[0].parentNode.nextElementSibling;
                 // * begin::Fill tables * //
-                this.tableHeaders(table, it);
+                this.fillTable(table, it);
                 // * end::Fill tables * //
                 // * begin::Listeners for the tables content * //
                 this.accordionMenus(table);
@@ -1237,11 +1238,10 @@ class Journal {
             '<span class="d-none">-1</span>';
     }
 
-    tableHeaders(t, it) {
+    fillTable(t, it) {
         t.innerHTML = '';
         // Get table name
-        let split = t.id.split('_');
-        let tableName = split[0];
+        let tableName = t.id.substring(0, t.id.lastIndexOf('_'));
         if (!it.info[tableName] || it.info[tableName] === '') {
             // Add header
             switch (tableName) {

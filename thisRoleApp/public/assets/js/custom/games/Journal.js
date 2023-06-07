@@ -528,8 +528,6 @@ class Journal {
     saveTable(t) {
         let name = t.id.substring(0, t.id.lastIndexOf('_'));
         let id = t.id.substring(t.id.lastIndexOf('_')+1);
-        console.log(name)
-        console.log(id)
         let form = {item_id: id};
         form[name] = t.innerHTML;
         return ajax("/app/games_ajax/save_sheet/" + dbGame.game_id, form);

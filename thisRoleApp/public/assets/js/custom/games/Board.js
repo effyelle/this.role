@@ -155,6 +155,11 @@ class Board {
     }
 
     setItems() {
+        if (this.journal.changed) {
+            console.log(this.journal)
+            this.journal.formatJournalItems();
+            if (this.journal.adminParent) this.journal.loadAdminSelect();
+        }
         // Save button items from DOM
         const itemOpenersButtons = q('.' + this.journal.itemClass + ' button.menu-link');
         // Check data and items have the same length -> means they have been created accordingly
@@ -163,22 +168,18 @@ class Board {
             // Add a click listener to each item to create a new modal
             if (this.journal.changed) {
                 this.loadItemsFields();
-                if (this.journal.changed === 'length') {
-                    itemOpenerBtn.addEventListener('click', () => {
-                        this.setDraggableItemSheets(itemOpenerBtn);
-                    });
-                }
+                itemOpenerBtn.addEventListener('click', () => {
+                    this.setDraggableItemSheets(itemOpenerBtn);
+                });
             }
             if (this.map.changed || this.journal.changed) {
                 this.loadTokens();
-                if (this.journal.changed === 'length') {
-                    itemOpenerBtn.addEventListener('touchstart', (e) => {
-                        this.setDragTokensTouch(itemOpenerBtn);
-                    });
-                    itemOpenerBtn.addEventListener('drag', (e) => {
-                        this.setDraggableTokens(e);
-                    });
-                }
+                itemOpenerBtn.addEventListener('touchstart', (e) => {
+                    this.setDragTokensTouch(itemOpenerBtn);
+                });
+                itemOpenerBtn.addEventListener('drag', (e) => {
+                    this.setDraggableTokens(e);
+                });
             }
         }
     }

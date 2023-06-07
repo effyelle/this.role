@@ -184,11 +184,6 @@ class Journal {
                     this.JournalChanged = 'length';
                     this.items = {};
                 }
-                // Reset journal list
-                q('#' + this.container)[0].innerHTML = '';
-                // Reset select HTML
-                let playerName = this.playername ? this.playername.value : session.user_username;
-                if (this.select) this.select.innerHTML = '<option selected value="username">' + playerName + '</option>';
                 // Reset journal draggables
                 if (this.journalDraggable && this.journalDraggable.containers) {
                     for (let jSheet of this.journalDraggable.containers) {
@@ -200,52 +195,40 @@ class Journal {
             // If the length of both arrays is not the same, items have changed
             // -> (Items have been added or deleted)
             if (data.results.length !== Object.keys(this.items).length) {
-                // Reset select HTML
-                let playerName = this.playername ? this.playername.value : session.user_username;
-                if (this.select) this.select.innerHTML = '<option selected value="username">' + playerName + '</option>';
-                this.JournalChanged = 'length';
                 q('#' + this.container)[0].innerHTML = '';
                 this.items = {}
                 //* Save items into this.items *//
                 this.saveResults(data);
-                // Reset select HTML
-                // Show list
-                this.formatJournalItems();
-                // Load admin select
-                if (this.adminParent) this.loadAdminSelect();
+                this.JournalChanged = 'length';
+                return data;
             }
-            // Check if inner info has changed to update draggable opened items
-            if (!this.changed) {
-                for (let i in data.results) {
-                    // Save Database item
-                    let dbItem = data.results[i];
-                    // Search for its equal item from journal
-                    let thisItem = this.searchItem(dbItem.item_id).info;
-                    if (thisItem) {
-                        for (let j in dbItem) {
-                            // Compare their values
-                            if (typeof thisItem[j] === 'object') thisItem[j] = JSON.stringify(thisItem[j]);
-                            if (dbItem[j] != thisItem[j] && !(dbItem[j] === null && thisItem[j] === null) &&
-                                !(dbItem[j] === 'null' && thisItem[j] === 'null') && !(dbItem[j] === null && thisItem[j] === 'null')) {
-                                // Save new values into this.items.info
-                                this.saveResults(data);
-                                let playerName = this.playername ? this.playername.value : session.user_username;
-                                if (this.select) this.select.innerHTML = '<option selected value="username">' + playerName + '</option>';
-                                this.loadAdminSelect();
-                                this.formatJournalItems();
-                                this.JournalChanged = 'info';
-                                break;
-                            }
+            // * Check if inner INFO has changed to update draggable opened items * //
+            for (let i in data.results) {
+                // Save Database item
+                let dbItem = data.results[i];
+                // Search for its equal item from journal
+                let thisItem = this.searchItem(dbItem.item_id).info;
+                if (thisItem) {
+                    for (let j in dbItem) {
+                        // Compare their values
+                        if (typeof thisItem[j] === 'object') thisItem[j] = JSON.stringify(thisItem[j]);
+                        if (dbItem[j] != thisItem[j] && !(dbItem[j] === null && thisItem[j] === null) &&
+                            !(dbItem[j] === 'null' && thisItem[j] === 'null') && !(dbItem[j] === null && thisItem[j] === 'null')) {
+                            this.JournalChanged = 'info';
+                            // Save new values into this.items.info
+                            this.saveResults(data);
+                            break;
                         }
                     }
                 }
             }
+            return data;
         });
     }
 
     loadAdminSelect() {
         // * begin::Select Items * //
-        this.loadAdminItems = () => {
+        const loadAdminItems = () => {
             this.selectItem.innerHTML = '';
             if (Object.keys(this.items).length > 0) {
                 for (let i in this.items) {
@@ -262,7 +245,7 @@ class Journal {
             this.toggleEditItem.addClass('d-none');
             this.deleteItemBtn.addClass('d-none');
         }
-        if (this.selectItem) this.loadAdminItems();
+        if (this.selectItem) loadAdminItems();
         // * end::Select Items * //
 
         // * begin::Empty modal * //
@@ -444,6 +427,9 @@ class Journal {
     }
 
     loadChatSelect() {
+        // Reset select HTML
+        let playerName = this.playername ? this.playername.value : session.user_username;
+        if (this.select) this.select.innerHTML = '<option selected value="username">' + playerName + '</option>';
         // Rerun items
         for (let i in this.items) {
             let item = this.items[i];

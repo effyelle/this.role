@@ -503,7 +503,7 @@
                                     <!--begin::Title-->
                                     <div class="flex-row justify-content-between align-items-center">
                                         <label for="" class="fs-3 p-3">Bag</label>
-                                        <button class="btn btn-sm" id="bag_btn<?= $data['item_id']; ?>">
+                                        <button class="btn btn-sm" id="bag_btn_<?= $data['item_id']; ?>">
                                             <i class="fa-solid fa-plus fa-xl text-dark"></i>
                                         </button>
                                     </div>
@@ -536,7 +536,7 @@
                                     <!--begin::Title-->
                                     <div class="flex-row justify-content-between align-items-center w-100">
                                         <label for="" class="fs-3 p-3">Attacks & Spells</label>
-                                        <button class="btn btn-sm" id="atk_spells_btn<?= $data['item_id']; ?>">
+                                        <button class="btn btn-sm" id="atk_spells_btn_<?= $data['item_id']; ?>">
                                             <i class="fa-solid fa-plus fa-xl text-dark"></i>
                                         </button>
                                     </div>
@@ -553,7 +553,7 @@
                                     <!--begin::Title-->
                                     <div class="flex-row justify-content-between align-items-center w-100">
                                         <label for="" class="fs-3 p-3">Global Modifiers</label>
-                                        <button class="btn btn-sm" id="global_mods_btn<?= $data['item_id']; ?>">
+                                        <button class="btn btn-sm" id="global_mods_btn_<?= $data['item_id']; ?>">
                                             <i class="fa-solid fa-plus fa-xl text-dark"></i>
                                         </button>
                                     </div>
@@ -570,7 +570,7 @@
                                     <!--begin::Title-->
                                     <div class="flex-row justify-content-between align-items-center w-100">
                                         <label for="" class="fs-3 p-3">Tools & Custom Skills</label>
-                                        <button class="btn btn-sm" id="tools_custskills_btn<?= $data['item_id']; ?>">
+                                        <button class="btn btn-sm" id="tools_custskills_btn_<?= $data['item_id']; ?>">
                                             <i class="fa-solid fa-plus fa-xl text-dark"></i>
                                         </button>
                                     </div>
@@ -588,7 +588,7 @@
                                     <div class="flex-row justify-content-between align-items-center w-100">
                                         <label for="" class="fs-3 p-3">
                                             Other Features</label>
-                                        <button class="btn btn-sm" id="other_feats_btn<?= $data['item_id']; ?>">
+                                        <button class="btn btn-sm" id="other_feats_btn_<?= $data['item_id']; ?>">
                                             <i class="fa-solid fa-plus fa-xl text-dark"></i>
                                         </button>
                                     </div>

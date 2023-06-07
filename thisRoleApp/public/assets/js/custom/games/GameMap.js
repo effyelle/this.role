@@ -283,9 +283,7 @@ class GameMap {
                 if (!tokenSelected) {
                     token.classList.remove('token_selected');
                     document.onkeyup = null;
-                    this.saveToken(token).done((data) => {
-                        console.log(data);
-                    });
+                    this.saveToken(token);
                     return;
                 }
                 //* begin::Listen to remove token *//

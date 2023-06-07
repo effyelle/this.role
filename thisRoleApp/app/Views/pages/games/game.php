@@ -12,20 +12,11 @@
     </div>
 </div>
 
-<?php
-echo "Game:<br>";
-var_dump($game);
-echo "<br>Players:<br>";
-var_dump($players);
-echo "<br>";
-?>
-
 <?php if (isset($game) && isset($_SESSION['user']) && $_SESSION['user']['user_id'] === $game['game_creator']): ?>
-
     <!--begin::Modal-->
     <div class="modal fade" tabindex="-1" id="add_layer-modal">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <form autocomplete="off" class="modal-content">
                 <div class="modal-header">
                     <h4>Add Layer</h4>
                 </div>
@@ -71,14 +62,14 @@ echo "<br>";
                         <!--end::Indicator progress-->
                     </button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
     <!--end::Modal-->
     <!--begin::Modal-->
     <div class="modal fade" tabindex="-1" id="modal_journal">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <form autocomplete="off" class="modal-content">
                 <div class="modal-header">
                     <h4>Add journal item</h4>
                 </div>
@@ -147,11 +138,12 @@ echo "<br>";
                         <!--end::Indicator progress-->
                     </button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
     <!--end::Modal-->
 <?php endif; ?>
+
 <!--begin::Modal Toggle-->
 <button class="d-none" id="death_save_modal_toggle" data-bs-target="#death_save_modal"
         data-bs-toggle="modal"></button>

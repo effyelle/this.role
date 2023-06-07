@@ -232,7 +232,7 @@ class Journal {
                                 let playerName = this.playername ? this.playername.value : session.user_username;
                                 if (this.select) this.select.innerHTML = '<option selected value="username">' + playerName + '</option>';
                                 this.loadAdminSelect();
-                                this.loadChatSelect();
+                                this.formatJournalItems();
                                 this.JournalChanged = 'info';
                                 break;
                             }
@@ -246,8 +246,8 @@ class Journal {
     loadAdminSelect() {
         // * begin::Select Items * //
         this.loadAdminItems = () => {
+            this.selectItem.innerHTML = '';
             if (Object.keys(this.items).length > 0) {
-                this.selectItem.innerHTML = '';
                 for (let i in this.items) {
                     let item = this.items[i].info;
                     this.selectItem.innerHTML += '<option value="' + item.item_id + '">' + item.item_name + '</option>';
@@ -455,6 +455,7 @@ class Journal {
     }
 
     formatJournalItems() {
+        q('#' + this.container)[0].innerHTML = '';
         // Rerun items
         for (let i in this.items) {
             let item = this.items[i];

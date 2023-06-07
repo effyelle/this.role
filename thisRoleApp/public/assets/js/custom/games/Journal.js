@@ -43,16 +43,17 @@ class Journal {
         this.draggableContainerId = 'draggable_' + this.info.item_id;
         this.draggableContainerClass = 'journal_item_modal';
         this.folder = params.folder;
-        this.icon = () => {
+        this.getIcon = () => {
             let icon = this.folder + this.info.item_icon;
             if (urlExists(icon)) return icon;
             return '/assets/media/avatars/blank.png';
         }
+        this.icon = this.getIcon();
         this.openItem = async (htmlText) => {
             q('#' + this.modalsContainer)[0].innerHTML += htmlText;
             this.iconHolder = q('#' + this.draggableContainerId + ' .item_icon-holder');
             if (this.iconHolder.length > 0) {
-                this.iconHolder[0].style.backgroundImage = 'url("' + this.icon() + '")';
+                this.iconHolder[0].style.backgroundImage = 'url("' + this.icon + '")';
             }
         }
         this.getLevel = () => {
@@ -477,7 +478,7 @@ class Journal {
             '         <!--begin::Symbol-->' +
             '         <div class="me-2 symbol symbol-20px symbol-md-30px">' +
             '             <span class="symbol-label circle item_icon-holder"' +
-            '                  style="background-image: url(' + item.icon() + ');' +
+            '                  style="background-image: url(' + item.icon + ');' +
             '                      background-size: cover; background-position: center center;">' +
             '             </span>' +
             '         </div>' +
@@ -583,9 +584,9 @@ class Journal {
                 let divName = f.getAttribute('name');
                 if (divName.match(/item_icon/)) {
                     it.iconHolder = q('#' + it.draggableContainerId + ' .item_icon-holder');
-                    if (it.iconHolder[0]) it.iconHolder[0].style.backgroundImage = 'url("' + it.icon() + '")';
+                    if (it.iconHolder[0]) it.iconHolder[0].style.backgroundImage = 'url("' + it.icon + '")';
                     const listIcon = q('#' + this.container + ' button[value="' + it.info.item_id + '"] span.item_icon-holder');
-                    if (listIcon[0]) listIcon[0].style.backgroundImage = 'url("' + it.icon() + '")';
+                    if (listIcon[0]) listIcon[0].style.backgroundImage = 'url("' + it.icon + '")';
                 } // it.info.info
                 else if (divName.match(/class|subclass|lvl|race|background|walkspeed/)) {
                     f.value = JSON.parse(it.info.info)[divName];

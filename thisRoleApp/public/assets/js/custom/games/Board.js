@@ -74,13 +74,7 @@ class Board {
             if (this.chat.select) {
                 if (!isNaN(this.chat.select.value)) {
                     let it = this.journal.searchItem(parseInt(this.chat.select.value));
-                    if (it) {
-                        let icon = '/assets/media/avatars/blank.png';
-                        if (urlExists(it.folder + it.info.item_icon)) {
-                            icon = it.folder + it.info.item_icon;
-                        }
-                        return {icon: icon, name: it.info.item_name};
-                    }
+                    if (it) return {icon: it.icon, name: it.info.item_name};
                 }
             }
             return {icon: session.user_avatar, name: this.journal.playername.value}

@@ -243,7 +243,7 @@ class GameMap {
         return '<div id="token_' + item.info.item_id + '" style="top: 100vh; left: 100vw;width: 75px;height: 75px;"' +
             '       class="symbol circle position-absolute cursor-move">' +
             '   <div class="position-relative symbol circle w-100 h-100">' +
-            '       <span class="symbol-label circle" style="background-image: url(' + item.icon() + ')"></span>' +
+            '       <span class="symbol-label circle" style="background-image: url(' + item.icon + ')"></span>' +
             '       <span class="loading_circle spinner-border"></span>' +
             '   </div>' +
             '</div>';

@@ -1071,6 +1071,9 @@ class Journal {
     setRowListeners(t, it) {
         let split = t.id.split('_');
         let tableName = split[0];
+        for (let i = 1; i < split.length; i++) {
+            if (i != split.length - 1) tableName += '_' + split[i];
+        }
         let fields = q('#' + it.draggableContainerId + ' #' + t.id + ' .this_field');
         this.fill = () => {
             for (let f of fields) {

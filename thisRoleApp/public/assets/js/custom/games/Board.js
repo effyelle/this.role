@@ -150,7 +150,6 @@ class Board {
 
     setItems() {
         if (this.journal.changed) {
-            console.log(this.journal)
             this.journal.formatJournalItems();
             if (this.journal.adminParent) this.journal.loadAdminSelect();
         }
